@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Topic {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  question     String
+  options      String   // JSON string of options array
+  correctIndex Int      // Index of correct answer (0-based)
+  explanation  String
+  references   String   // JSON string of references array
+  difficulty   String   @default("medium") // easy, medium, hard
+  topicId      String
+  topic        Topic    @relation(fields: [topicId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([topicId])
+  @@index([difficulty])
+}
+
+model ExamSession {
+  id          String   @id @default(cuid())
+  userId      String?  // Optional user ID for tracking
+  topicId     String
+  questions   String   // JSON string of question IDs array
+  answers     String   // JSON string of user answers array
+  score       Int?
+  totalTime   Int?     // Time taken in seconds
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([topicId])
+}
+
+model UserProgress {
+  id               String   @id @default(cuid())
+  userId           String
+  topicId          String
+  totalQuestions   Int      @default(0)
+  correctAnswers   Int      @default(0)
+  averageTime      Float?   // Average time per question
+  lastStudied      DateTime @default(now())
+  strengthLevel    String   @default("beginner") // beginner, intermediate, advanced
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, topicId])
+  @@index([userId])
+}
