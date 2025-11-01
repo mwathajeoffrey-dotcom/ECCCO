@@ -14,10 +14,20 @@ export interface Question {
   imageDescription?: string; // Detailed description for accessibility and learning
   clinicalScenario?: string; // Real-world context
   patientPresentation?: {
-    age?: string;
-    gender?: string;
-    chiefComplaint?: string;
-    vitals?: string;
+    age: number | string;
+    gender: string;
+    chiefComplaint: string;
+    vitalSigns?: {
+      heartRate: number;
+      bloodPressure: string;
+      temperature: number;
+      respiratoryRate: number;
+      oxygenSaturation: number;
+    };
+    vitals?: string; // Backward compatibility
+    currentMedications?: string[];
+    allergies?: string[];
+    pastMedicalHistory?: string[];
     physicalExam?: string;
     labsImaging?: string;
   };

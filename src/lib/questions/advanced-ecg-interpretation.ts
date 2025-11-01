@@ -6,12 +6,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'Based on the ECG findings described below, what is the most likely diagnosis?',
     clinicalScenario: 'A 45-year-old construction worker presents to the ED with sudden onset chest pain while lifting heavy equipment.',
     patientPresentation: {
-      age: '45 years old',
+      age: 45,
       gender: 'Male',
       chiefComplaint: 'Sudden onset crushing chest pain radiating to left arm',
-      vitals: 'BP 160/95, HR 95, RR 18, O2 Sat 96% RA, Temp 98.6°F',
-      physicalExam: 'Diaphoretic, anxious, S1S2 regular, no murmurs, clear lungs',
-      labsImaging: 'Troponin pending, CXR shows clear lungs'
+      vitalSigns: {
+        heartRate: 95,
+        bloodPressure: '160/95',
+        temperature: 98.6,
+        respiratoryRate: 18,
+        oxygenSaturation: 96
+      }
     },
     imageDescription: 'ECG Shows: Lead II rhythm strip reveals regular QRS complexes at 95 bpm. Leads II, III, aVF show 4mm ST elevation with hyperacute T waves. Lead aVR shows 1mm ST depression. Precordial leads V1-V6 show no acute changes. Q waves are absent.',
     options: [
@@ -45,12 +49,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most appropriate immediate management for this rhythm?',
     clinicalScenario: 'A 72-year-old woman with known heart failure is brought by EMS for weakness and dizziness.',
     patientPresentation: {
-      age: '72 years old',
+      age: 72,
       gender: 'Female',
       chiefComplaint: 'Weakness, dizziness, and near-syncope for 2 hours',
-      vitals: 'BP 85/50, HR 35, RR 20, O2 Sat 94% RA, Temp 97.8°F',
-      physicalExam: 'Pale, cool skin, JVD present, S3 gallop, bilateral rales',
-      labsImaging: 'BUN/Cr elevated, BNP 1200, CXR shows pulmonary edema'
+      vitalSigns: {
+        heartRate: 35,
+        bloodPressure: '85/50',
+        temperature: 97.8,
+        respiratoryRate: 20,
+        oxygenSaturation: 94
+      }
     },
     imageDescription: 'ECG Shows: Ventricular rate 35 bpm with wide QRS complexes (140ms). P waves are visible at rate of 75 bpm with no relationship to QRS complexes. AV dissociation is present. QRS morphology shows LBBB pattern. No capture or fusion beats visible.',
     options: [

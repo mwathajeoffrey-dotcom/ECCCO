@@ -17,19 +17,22 @@ interface Question {
   imageDescription?: string;
   clinicalScenario?: string;
   patientPresentation?: {
-    age: number;
+    age: number | string;
     gender: string;
     chiefComplaint: string;
-    vitalSigns: {
+    vitalSigns?: {
       heartRate: number;
       bloodPressure: string;
       temperature: number;
       respiratoryRate: number;
       oxygenSaturation: number;
     };
+    vitals?: string; // Backward compatibility
     currentMedications?: string[];
     allergies?: string[];
     pastMedicalHistory?: string[];
+    physicalExam?: string;
+    labsImaging?: string;
   };
   learningObjectives?: string[];
   clinicalPearls?: string[];
@@ -293,14 +296,20 @@ export default function ExamInterface() {
                       <div className="bg-gray-50 rounded-lg p-4 mb-4">
                         <h4 className="font-semibold text-gray-900 mb-2">Patient Details</h4>
                         <div className="text-sm text-gray-700">
-                          <p>{question.patientPresentation.age}yo {question.patientPresentation.gender}, {question.patientPresentation.chiefComplaint}</p>
-                          <p className="mt-1">
-                            <span className="font-medium">Vitals:</span> HR {question.patientPresentation.vitalSigns.heartRate}, 
-                            BP {question.patientPresentation.vitalSigns.bloodPressure}, 
-                            Temp {question.patientPresentation.vitalSigns.temperature}°F, 
-                            RR {question.patientPresentation.vitalSigns.respiratoryRate}, 
-                            SpO2 {question.patientPresentation.vitalSigns.oxygenSaturation}%
-                          </p>
+                          <p>{typeof question.patientPresentation.age === 'number' ? `${question.patientPresentation.age}yo` : question.patientPresentation.age} {question.patientPresentation.gender}, {question.patientPresentation.chiefComplaint}</p>
+                          {question.patientPresentation.vitalSigns ? (
+                            <p className="mt-1">
+                              <span className="font-medium">Vitals:</span> HR {question.patientPresentation.vitalSigns.heartRate}, 
+                              BP {question.patientPresentation.vitalSigns.bloodPressure}, 
+                              Temp {question.patientPresentation.vitalSigns.temperature}°F, 
+                              RR {question.patientPresentation.vitalSigns.respiratoryRate}, 
+                              SpO2 {question.patientPresentation.vitalSigns.oxygenSaturation}%
+                            </p>
+                          ) : question.patientPresentation.vitals ? (
+                            <p className="mt-1">
+                              <span className="font-medium">Vitals:</span> {question.patientPresentation.vitals}
+                            </p>
+                          ) : null}
                         </div>
                       </div>
                     )}
@@ -513,19 +522,23 @@ export default function ExamInterface() {
                   <h3 className="font-semibold text-gray-900 mb-3">Patient Presentation</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm"><span className="font-medium">Age:</span> {currentQuestion.patientPresentation.age} years</p>
+                      <p className="text-sm"><span className="font-medium">Age:</span> {typeof currentQuestion.patientPresentation.age === 'number' ? `${currentQuestion.patientPresentation.age} years` : currentQuestion.patientPresentation.age}</p>
                       <p className="text-sm"><span className="font-medium">Gender:</span> {currentQuestion.patientPresentation.gender}</p>
                       <p className="text-sm"><span className="font-medium">Chief Complaint:</span> {currentQuestion.patientPresentation.chiefComplaint}</p>
                     </div>
                     <div>
                       <h4 className="font-medium text-sm mb-2">Vital Signs</h4>
-                      <div className="text-xs space-y-1">
-                        <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
-                        <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
-                        <p>Temp: {currentQuestion.patientPresentation.vitalSigns.temperature}°F</p>
-                        <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
-                        <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
-                      </div>
+                      {currentQuestion.patientPresentation.vitalSigns ? (
+                        <div className="text-xs space-y-1">
+                          <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
+                          <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
+                          <p>Temp: {currentQuestion.patientPresentation.vitalSigns.temperature}°F</p>
+                          <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
+                          <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
+                        </div>
+                      ) : currentQuestion.patientPresentation.vitals ? (
+                        <p className="text-xs">{currentQuestion.patientPresentation.vitals}</p>
+                      ) : null}
                     </div>
                   </div>
                   {currentQuestion.patientPresentation.pastMedicalHistory && (
