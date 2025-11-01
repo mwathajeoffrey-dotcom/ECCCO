@@ -1,33 +1,96 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Question } from '@/lib/questions/types';
 
-// Simple mock questions for production deployment
-const mockQuestions = [
-  {
-    id: 'q1',
-    question: 'What is the initial treatment for ventricular fibrillation?',
-    options: ['Defibrillation', 'Cardioversion', 'Epinephrine', 'Amiodarone'],
-    correctIndex: 0,
-    explanation: 'Immediate defibrillation is the treatment of choice for ventricular fibrillation.',
-    references: ['AHA Guidelines'],
-    difficulty: 'medium',
-    topicId: 'cardiac-emergencies'
-  },
-  {
-    id: 'q2',
-    question: 'What is the normal range for arterial pH?',
-    options: ['7.25-7.35', '7.35-7.45', '7.45-7.55', '7.30-7.40'],
-    correctIndex: 1,
-    explanation: 'Normal arterial pH ranges from 7.35 to 7.45.',
-    references: ['Blood Gas Analysis'],
-    difficulty: 'easy',
-    topicId: 'blood-gas-analysis'
-  }
-];
+// Import all question modules with correct export names
+import { aclsQuestions } from '@/lib/questions/acls';
+import { airwayManagementQuestions } from '@/lib/questions/airway-management';
+import { atlsQuestions } from '@/lib/questions/atls';
+import { bloodGasAnalysisQuestions } from '@/lib/questions/blood-gas-analysis';
+import { blsQuestions } from '@/lib/questions/bls';
+import { cardiacEmergenciesQuestions } from '@/lib/questions/cardiac-emergencies';
+import { criticalCareEmergenciesQuestions } from '@/lib/questions/critical-care-emergencies';
+import { ecgEmergenciesQuestions } from '@/lib/questions/ecg-emergencies';
+import { ecgRhythmIdentificationQuestions } from '@/lib/questions/ecg-rhythm-identification';
+import { electrolyteEmergenciesQuestions } from '@/lib/questions/electrolyte-emergencies';
+import { endocrineEmergenciesQuestions } from '@/lib/questions/endocrine-emergencies';
+import { environmentalEmergenciesQuestions } from '@/lib/questions/environmental-emergencies';
+import { geriatricEmergenciesQuestions } from '@/lib/questions/geriatric-emergencies';
+import { hematologicEmergenciesQuestions } from '@/lib/questions/hematologic-emergencies';
+import { infectiousDiseaseEmergenciesQuestions } from '@/lib/questions/infectious-disease-emergencies';
+import { mechanicalVentilationQuestions } from '@/lib/questions/mechanical-ventilation';
+import { neurologicalEmergenciesQuestions } from '@/lib/questions/neurological-emergencies';
+import { obstetricGynelogicEmergenciesQuestions } from '@/lib/questions/obstetric-gynecologic-emergencies';
+import { palsQuestions } from '@/lib/questions/pals';
+import { pediatricEmergenciesQuestions } from '@/lib/questions/pediatric-emergencies';
+import { pharmacologyEmergenciesQuestions } from '@/lib/questions/pharmacology-emergencies';
+import { proceduresQuestions } from '@/lib/questions/procedures';
+import { psychiatricEmergenciesQuestions } from '@/lib/questions/psychiatric-emergencies';
+import { renalEmergenciesQuestions } from '@/lib/questions/renal-emergencies';
+import { respiratoryEmergenciesQuestions } from '@/lib/questions/respiratory-emergencies';
+import { sepsisManagementQuestions } from '@/lib/questions/sepsis-management';
+import { toxicologyQuestions } from '@/lib/questions/toxicology';
+import { traumaManagementQuestions } from '@/lib/questions/trauma-management';
+
+// Combine all questions by topic with correct variable names
+const questionsByTopic: { [key: string]: Question[] } = {
+  'acls': aclsQuestions,
+  'airway-management': airwayManagementQuestions,
+  'atls': atlsQuestions,
+  'blood-gas-analysis': bloodGasAnalysisQuestions,
+  'bls': blsQuestions,
+  'cardiac-emergencies': cardiacEmergenciesQuestions,
+  'critical-care-emergencies': criticalCareEmergenciesQuestions,
+  'ecg-emergencies': ecgEmergenciesQuestions,
+  'ecg-rhythm-identification': ecgRhythmIdentificationQuestions,
+  'electrolyte-emergencies': electrolyteEmergenciesQuestions,
+  'endocrine-emergencies': endocrineEmergenciesQuestions,
+  'environmental-emergencies': environmentalEmergenciesQuestions,
+  'geriatric-emergencies': geriatricEmergenciesQuestions,
+  'hematologic-emergencies': hematologicEmergenciesQuestions,
+  'infectious-disease-emergencies': infectiousDiseaseEmergenciesQuestions,
+  'mechanical-ventilation': mechanicalVentilationQuestions,
+  'neurological-emergencies': neurologicalEmergenciesQuestions,
+  'obstetric-gynecologic-emergencies': obstetricGynelogicEmergenciesQuestions,
+  'pals': palsQuestions,
+  'pediatric-emergencies': pediatricEmergenciesQuestions,
+  'pharmacology-emergencies': pharmacologyEmergenciesQuestions,
+  'procedures': proceduresQuestions,
+  'psychiatric-emergencies': psychiatricEmergenciesQuestions,
+  'renal-emergencies': renalEmergenciesQuestions,
+  'respiratory-emergencies': respiratoryEmergenciesQuestions,
+  'sepsis-management': sepsisManagementQuestions,
+  'toxicology': toxicologyQuestions,
+  'trauma-management': traumaManagementQuestions,
+};
 
 export async function GET(request: NextRequest) {
   try {
-    // Return mock questions for now - this will be replaced with full question bank
-    return NextResponse.json(mockQuestions);
+    const { searchParams } = new URL(request.url);
+    const topicId = searchParams.get('topicId');
+    const limit = parseInt(searchParams.get('limit') || '30');
+    const difficulty = searchParams.get('difficulty');
+
+    let questions: Question[] = [];
+
+    if (topicId && questionsByTopic[topicId]) {
+      questions = questionsByTopic[topicId];
+    } else {
+      // Get all questions from all topics
+      questions = Object.values(questionsByTopic).flat();
+    }
+
+    // Filter by difficulty if specified
+    if (difficulty) {
+      questions = questions.filter(q => q.difficulty === difficulty);
+    }
+
+    // Shuffle questions for randomization
+    const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+
+    // Limit the number of questions
+    const limitedQuestions = shuffledQuestions.slice(0, limit);
+
+    return NextResponse.json(limitedQuestions);
   } catch (error) {
     console.error('Error fetching questions:', error);
     return NextResponse.json(
