@@ -6,12 +6,16 @@ export const chestXrayInterpretationQuestions: Question[] = [
     question: 'Based on the chest X-ray findings described below, what is the most likely diagnosis?',
     clinicalScenario: 'A 67-year-old smoker presents to the ED with acute onset of severe dyspnea and chest pain.',
     patientPresentation: {
-      age: '67 years old',
+      age: 67,
       gender: 'Male',
       chiefComplaint: 'Sudden onset severe shortness of breath and sharp chest pain',
-      vitals: 'BP 145/90, HR 110, RR 28, O2 Sat 89% RA, Temp 98.2°F',
-      physicalExam: 'Distressed, decreased breath sounds left side, hyperresonant to percussion left chest',
-      labsImaging: 'ABG shows hypoxemia, D-dimer elevated'
+      vitalSigns: {
+        heartRate: 110,
+        bloodPressure: '145/90',
+        temperature: 98.2,
+        respiratoryRate: 28,
+        oxygenSaturation: 89
+      }
     },
     imageType: 'xray',
     imageDescription: 'Chest X-ray PA view: Complete absence of lung markings in the left upper and middle lung zones. Sharp pleural line visible along the left chest wall at approximately the midclavicular line. Left costophrenic angle is sharp. Mediastinum appears slightly shifted toward the right. Right lung shows normal vascular markings and aeration.',

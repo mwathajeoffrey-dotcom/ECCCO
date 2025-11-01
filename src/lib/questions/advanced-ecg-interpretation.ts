@@ -92,12 +92,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'This rhythm pattern is most concerning for which complication?',
     clinicalScenario: 'A 28-year-old athlete collapses during basketball practice and is found to have an irregular pulse.',
     patientPresentation: {
-      age: '28 years old',
+      age: 28,
       gender: 'Male',
       chiefComplaint: 'Syncope during athletic activity',
-      vitals: 'BP 90/60, HR 220 (irregular), RR 24, O2 Sat 98% RA',
-      physicalExam: 'Athletic build, alert but anxious, irregular pulse, no heart failure signs',
-      labsImaging: 'Electrolytes normal, echo shows normal LV function'
+      vitalSigns: {
+        heartRate: 220,
+        bloodPressure: '90/60',
+        temperature: 98.6,
+        respiratoryRate: 24,
+        oxygenSaturation: 98
+      }
     },
     imageDescription: 'ECG Shows: Irregular wide-complex tachycardia at rates varying from 180-250 bpm. QRS complexes are wide (>120ms) with varying morphology. Some QRS complexes appear narrow. No clear P waves visible. R-R intervals are irregularly irregular. QRS axis changes beat to beat.',
     options: [
@@ -131,12 +135,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most likely diagnosis based on this ECG pattern?',
     clinicalScenario: 'A 65-year-old diabetic male presents with 30 minutes of substernal chest pressure.',
     patientPresentation: {
-      age: '65 years old',
+      age: 65,
       gender: 'Male',
       chiefComplaint: 'Substernal chest pressure for 30 minutes',
-      vitals: 'BP 140/85, HR 88, RR 16, O2 Sat 99% RA, Temp 98.4°F',
-      physicalExam: 'Mild diaphoresis, S1S2 regular, no murmurs, lungs clear',
-      labsImaging: 'Initial troponin normal, CXR normal'
+      vitalSigns: {
+        heartRate: 88,
+        bloodPressure: '140/85',
+        temperature: 98.4,
+        respiratoryRate: 16,
+        oxygenSaturation: 99
+      }
     },
     imageDescription: 'ECG Shows: Sinus rhythm at 88 bpm. Leads V1-V4 show prominent R waves with R/S ratio >1 in V1. ST depression 2-3mm in leads V1-V3. Tall, symmetric T waves in V1-V3. Lead V6 shows 1mm ST elevation. No Q waves present.',
     options: [
@@ -170,12 +178,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most appropriate next step in management?',
     clinicalScenario: 'A 55-year-old woman with known CAD presents with palpitations and chest discomfort.',
     patientPresentation: {
-      age: '55 years old',
+      age: 55,
       gender: 'Female',
       chiefComplaint: 'Palpitations and chest discomfort for 1 hour',
-      vitals: 'BP 110/70, HR 180, RR 18, O2 Sat 97% RA, Temp 98.2°F',
-      physicalExam: 'Alert, mild distress, regular tachycardia, no signs of CHF',
-      labsImaging: 'Electrolytes normal, troponin pending'
+      vitalSigns: {
+        heartRate: 180,
+        bloodPressure: '110/70',
+        temperature: 98.2,
+        respiratoryRate: 18,
+        oxygenSaturation: 97
+      }
     },
     imageDescription: 'ECG Shows: Regular wide-complex tachycardia at 180 bpm. QRS width 140ms with RBBB morphology. AV dissociation present with occasional capture beats. Concordance in precordial leads. Northwest axis deviation present.',
     options: [
@@ -209,12 +221,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most likely underlying condition?',
     clinicalScenario: 'A 22-year-old college student is brought to ED after collapsing during a fraternity party.',
     patientPresentation: {
-      age: '22 years old',
+      age: 22,
       gender: 'Male',
       chiefComplaint: 'Syncope at party, possible alcohol use',
-      vitals: 'BP 125/75, HR 58, RR 16, O2 Sat 99% RA, Temp 97.9°F',
-      physicalExam: 'Young male, alert, no acute distress, bradycardic but regular',
-      labsImaging: 'Alcohol level 0.08, electrolytes normal, echo pending'
+      vitalSigns: {
+        heartRate: 58,
+        bloodPressure: '125/75',
+        temperature: 97.9,
+        respiratoryRate: 16,
+        oxygenSaturation: 99
+      }
     },
     imageDescription: 'ECG Shows: Sinus bradycardia at 58 bpm. PR interval 240ms. QRS 90ms. QT interval 520ms (QTc 485ms). Leads V1-V3 show coved ST elevation 2-3mm followed by negative T waves. No delta waves visible.',
     options: [
@@ -248,12 +264,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What medication should be avoided in this patient?',
     clinicalScenario: 'A 35-year-old woman presents to ED with chest pain and anxiety after starting a new antidepressant.',
     patientPresentation: {
-      age: '35 years old',
+      age: 35,
       gender: 'Female',
       chiefComplaint: 'Chest pain and palpitations since starting new medication',
-      vitals: 'BP 95/60, HR 45, RR 20, O2 Sat 98% RA, Temp 98.1°F',
-      physicalExam: 'Anxious, bradycardic, no murmurs, clear lungs',
-      labsImaging: 'Troponin negative, basic metabolic panel normal'
+      vitalSigns: {
+        heartRate: 45,
+        bloodPressure: '95/60',
+        temperature: 98.1,
+        respiratoryRate: 20,
+        oxygenSaturation: 98
+      }
     },
     imageDescription: 'ECG Shows: Sinus bradycardia at 45 bpm. PR interval 200ms. QRS duration 140ms with RBBB pattern. QT interval 600ms (QTc 520ms). Prominent U waves visible in precordial leads. T waves are flattened.',
     options: [
@@ -287,12 +307,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most likely mechanism of this arrhythmia?',
     clinicalScenario: 'A 78-year-old man with COPD presents with irregular palpitations and shortness of breath.',
     patientPresentation: {
-      age: '78 years old',
+      age: 78,
       gender: 'Male',
       chiefComplaint: 'Irregular palpitations and worsening dyspnea',
-      vitals: 'BP 130/80, HR 135 (irregular), RR 24, O2 Sat 91% RA',
-      physicalExam: 'Irregularly irregular pulse, JVD, bilateral wheeze, pedal edema',
-      labsImaging: 'BNP elevated, ABG shows mild hypoxemia, CXR shows hyperinflation'
+      vitalSigns: {
+        heartRate: 135,
+        bloodPressure: '130/80',
+        temperature: 98.6,
+        respiratoryRate: 24,
+        oxygenSaturation: 91
+      }
     },
     imageDescription: 'ECG Shows: Irregularly irregular rhythm with ventricular rate 100-150 bpm. No clear P waves visible. Fibrillatory waves present in V1. QRS complexes vary slightly in morphology. Occasional wide beats with RBBB pattern following long R-R intervals.',
     options: [
@@ -326,12 +350,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What is the most appropriate immediate action?',
     clinicalScenario: 'A 42-year-old marathon runner collapses during a race and is found unconscious by race medics.',
     patientPresentation: {
-      age: '42 years old',
+      age: 42,
       gender: 'Male',
       chiefComplaint: 'Cardiac arrest during marathon race',
-      vitals: 'No pulse, no blood pressure, agonal respirations',
-      physicalExam: 'Unconscious, no pulse, CPR in progress',
-      labsImaging: 'Field ECG shows chaotic rhythm'
+      vitalSigns: {
+        heartRate: 0,
+        bloodPressure: 'No pulse',
+        temperature: 98.6,
+        respiratoryRate: 0,
+        oxygenSaturation: 0
+      }
     },
     imageDescription: 'ECG Shows: Chaotic, irregular waveforms with no identifiable P, QRS, or T waves. Amplitude varies from 2-8mm. Frequency appears around 300-600 per minute. No organized electrical activity visible. Baseline appears to undulate randomly.',
     options: [
@@ -365,12 +393,16 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     question: 'What additional ECG leads would be most helpful?',
     clinicalScenario: 'A 58-year-old diabetic woman presents with atypical chest discomfort and nausea.',
     patientPresentation: {
-      age: '58 years old',
+      age: 58,
       gender: 'Female',
       chiefComplaint: 'Atypical chest discomfort, nausea, and fatigue',
-      vitals: 'BP 155/95, HR 92, RR 18, O2 Sat 98% RA, Temp 98.0°F',
-      physicalExam: 'Mild distress, S1S2 regular, no murmurs, clear lungs',
-      labsImaging: 'Troponin elevated, glucose 185'
+      vitalSigns: {
+        heartRate: 92,
+        bloodPressure: '155/95',
+        temperature: 98.0,
+        respiratoryRate: 18,
+        oxygenSaturation: 98
+      }
     },
     imageDescription: 'ECG Shows: Sinus rhythm at 92 bpm. Lead II shows 2mm ST elevation. Lead III shows 3mm ST elevation. Lead aVF shows 2mm ST elevation. Lead aVR shows 1mm ST depression. Leads V1-V6 appear normal. No Q waves present.',
     options: [
