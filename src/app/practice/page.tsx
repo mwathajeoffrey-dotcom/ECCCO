@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, Users, Target, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 interface Topic {
   id: string;
@@ -130,31 +131,40 @@ export default function PracticePage() {
         {/* Topic Selection */}
         <div className="mb-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Practice by Topic</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topics.map((topic) => (
-              <div
-                key={topic.id}
-                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-              >
-                <div className="flex items-center mb-3">
-                  <BookOpen className="w-5 h-5 text-blue-600 mr-2" />
-                  <h4 className="text-lg font-semibold text-gray-900">{topic.name}</h4>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-500">
-                    <span>30 Questions Available</span>
+          <ErrorBoundary fallback={
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <p className="text-red-800 mb-4">Unable to load practice topics. Please refresh the page or try again later.</p>
+              <Link href="/exam" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                Go to Full Exam
+              </Link>
+            </div>
+          }>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {topics.map((topic) => (
+                <div
+                  key={topic.id}
+                  className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center mb-3">
+                    <BookOpen className="w-5 h-5 text-blue-600 mr-2" />
+                    <h4 className="text-lg font-semibold text-gray-900">{topic.name}</h4>
                   </div>
-                  <Link
-                    href={`/exam?topic=${topic.id}`}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    Practice
-                  </Link>
+                  <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-500">
+                      <span>30 Questions Available</span>
+                    </div>
+                    <Link
+                      href={`/exam?topic=${topic.id}`}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Practice
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ErrorBoundary>
         </div>
 
         {/* Study Tips */}

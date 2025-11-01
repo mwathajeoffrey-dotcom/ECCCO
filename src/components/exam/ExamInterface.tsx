@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download } from 'lucide-react';
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 interface Question {
   id: string;
@@ -231,15 +232,20 @@ export default function ExamInterface() {
     const correct = questions.filter((q, i) => selectedAnswers[i] === q.correctIndex).length;
 
     const handleDownloadPDF = () => {
-      const examResults = {
-        questions,
-        userAnswers: selectedAnswers,
-        score,
-        totalTime: 45 * 60 - timeRemaining, // Total time minus remaining time
-        topicName: topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic',
-        completedAt: new Date()
-      };
-      generateExamPDF(examResults);
+      try {
+        const examResults = {
+          questions,
+          userAnswers: selectedAnswers,
+          score,
+          totalTime: 45 * 60 - timeRemaining, // Total time minus remaining time
+          topicName: topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic',
+          completedAt: new Date()
+        };
+        generateExamPDF(examResults);
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Sorry, there was an error generating the PDF. Please try again or contact support if the issue persists.');
+      }
     };
 
     return (
@@ -517,44 +523,50 @@ export default function ExamInterface() {
               )}
 
               {/* Patient Presentation */}
-              {currentQuestion?.patientPresentation && (
-                <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                  <h3 className="font-semibold text-gray-900 mb-3">Patient Presentation</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm"><span className="font-medium">Age:</span> {typeof currentQuestion.patientPresentation.age === 'number' ? `${currentQuestion.patientPresentation.age} years` : currentQuestion.patientPresentation.age}</p>
-                      <p className="text-sm"><span className="font-medium">Gender:</span> {currentQuestion.patientPresentation.gender}</p>
-                      <p className="text-sm"><span className="font-medium">Chief Complaint:</span> {currentQuestion.patientPresentation.chiefComplaint}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-sm mb-2">Vital Signs</h4>
-                      {currentQuestion.patientPresentation.vitalSigns ? (
-                        <div className="text-xs space-y-1">
-                          <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
-                          <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
-                          <p>Temp: {currentQuestion.patientPresentation.vitalSigns.temperature}°F</p>
-                          <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
-                          <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
-                        </div>
-                      ) : currentQuestion.patientPresentation.vitals ? (
-                        <p className="text-xs">{currentQuestion.patientPresentation.vitals}</p>
-                      ) : null}
-                    </div>
-                  </div>
-                  {currentQuestion.patientPresentation.pastMedicalHistory && (
-                    <div className="mt-3">
-                      <h4 className="font-medium text-sm mb-1">Past Medical History</h4>
-                      <p className="text-xs text-gray-600">{currentQuestion.patientPresentation.pastMedicalHistory.join(', ')}</p>
-                    </div>
-                  )}
-                  {currentQuestion.patientPresentation.currentMedications && (
-                    <div className="mt-2">
-                      <h4 className="font-medium text-sm mb-1">Current Medications</h4>
-                      <p className="text-xs text-gray-600">{currentQuestion.patientPresentation.currentMedications.join(', ')}</p>
-                    </div>
-                  )}
+              <ErrorBoundary fallback={
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                  <p className="text-red-800">Error loading patient details. Continuing with question...</p>
                 </div>
-              )}
+              }>
+                {currentQuestion?.patientPresentation && (
+                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-gray-900 mb-3">Patient Presentation</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm"><span className="font-medium">Age:</span> {typeof currentQuestion.patientPresentation.age === 'number' ? `${currentQuestion.patientPresentation.age} years` : currentQuestion.patientPresentation.age}</p>
+                        <p className="text-sm"><span className="font-medium">Gender:</span> {currentQuestion.patientPresentation.gender}</p>
+                        <p className="text-sm"><span className="font-medium">Chief Complaint:</span> {currentQuestion.patientPresentation.chiefComplaint}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-sm mb-2">Vital Signs</h4>
+                        {currentQuestion.patientPresentation.vitalSigns ? (
+                          <div className="text-xs space-y-1">
+                            <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
+                            <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
+                            <p>Temp: {currentQuestion.patientPresentation.vitalSigns.temperature}°F</p>
+                            <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
+                            <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
+                          </div>
+                        ) : currentQuestion.patientPresentation.vitals ? (
+                          <p className="text-xs">{currentQuestion.patientPresentation.vitals}</p>
+                        ) : null}
+                      </div>
+                    </div>
+                    {currentQuestion.patientPresentation.pastMedicalHistory && (
+                      <div className="mt-3">
+                        <h4 className="font-medium text-sm mb-1">Past Medical History</h4>
+                        <p className="text-xs text-gray-600">{currentQuestion.patientPresentation.pastMedicalHistory.join(', ')}</p>
+                      </div>
+                    )}
+                    {currentQuestion.patientPresentation.currentMedications && (
+                      <div className="mt-2">
+                        <h4 className="font-medium text-sm mb-1">Current Medications</h4>
+                        <p className="text-xs text-gray-600">{currentQuestion.patientPresentation.currentMedications.join(', ')}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </ErrorBoundary>
 
               {/* Image Description (Visual Component) */}
               {currentQuestion?.imageDescription && (
@@ -571,28 +583,34 @@ export default function ExamInterface() {
                 </div>
               )}
 
-              <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-                {currentQuestion && (typeof currentQuestion.options === 'string' 
-                  ? JSON.parse(currentQuestion.options) 
-                  : currentQuestion.options).map((option: string, index: number) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-colors touch-manipulation ${
-                      selectedAnswers[currentQuestionIndex] === index
-                        ? 'border-blue-500 bg-blue-50 text-blue-900'
-                        : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div className="flex items-start">
-                      <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
-                        {String.fromCharCode(65 + index)}.
-                      </span>
-                      <span className="text-sm sm:text-base leading-relaxed">{option}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              <ErrorBoundary fallback={
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                  <p className="text-red-800">Error loading question options. Please try refreshing the page.</p>
+                </div>
+              }>
+                <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                  {currentQuestion && (typeof currentQuestion.options === 'string' 
+                    ? JSON.parse(currentQuestion.options) 
+                    : currentQuestion.options).map((option: string, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-colors touch-manipulation ${
+                        selectedAnswers[currentQuestionIndex] === index
+                          ? 'border-blue-500 bg-blue-50 text-blue-900'
+                          : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+                      }`}
+                    >
+                      <div className="flex items-start">
+                        <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        <span className="text-sm sm:text-base leading-relaxed">{option}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </ErrorBoundary>
 
               {/* Navigation */}
               <div className="flex items-center justify-between flex-wrap gap-2">

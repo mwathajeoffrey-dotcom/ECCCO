@@ -51,12 +51,16 @@ export const chestXrayInterpretationQuestions: Question[] = [
     question: 'What is the most appropriate immediate management?',
     clinicalScenario: 'A 45-year-old construction worker presents after falling from scaffolding with chest and abdominal pain.',
     patientPresentation: {
-      age: '45 years old',
+      age: 45,
       gender: 'Male',
       chiefComplaint: 'Chest and abdominal pain after fall from height',
-      vitals: 'BP 95/65, HR 120, RR 22, O2 Sat 94% RA, Temp 98.0°F',
-      physicalExam: 'Tender left chest wall, decreased breath sounds bilaterally lower lobes, abdominal tenderness',
-      labsImaging: 'FAST exam positive for free fluid, hemoglobin 9.2 g/dL'
+      vitalSigns: {
+        heartRate: 120,
+        bloodPressure: '95/65',
+        temperature: 98.0,
+        respiratoryRate: 22,
+        oxygenSaturation: 94
+      }
     },
     imageType: 'xray',
     imageDescription: 'Chest X-ray AP view (portable): Bilateral lower lobe opacification with meniscus sign - curved upper borders of opacity that are concave upward. Costophrenic angles are blunted bilaterally. Cardiac silhouette appears normal size but lower border is obscured. Trachea is midline. Upper lung zones show normal aeration.',
