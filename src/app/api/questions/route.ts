@@ -23,6 +23,7 @@ import { obstetricGynelogicEmergenciesQuestions } from '@/lib/questions/obstetri
 import { palsQuestions } from '@/lib/questions/pals';
 import { pediatricEmergenciesQuestions } from '@/lib/questions/pediatric-emergencies';
 import { pharmacologyEmergenciesQuestions } from '@/lib/questions/pharmacology-emergencies';
+import { pointOfCareUltrasoundQuestions } from '@/lib/questions/point-of-care-ultrasound';
 import { proceduresQuestions } from '@/lib/questions/procedures';
 import { psychiatricEmergenciesQuestions } from '@/lib/questions/psychiatric-emergencies';
 import { renalEmergenciesQuestions } from '@/lib/questions/renal-emergencies';
@@ -54,6 +55,7 @@ const questionsByTopic: { [key: string]: Question[] } = {
   'pals': palsQuestions,
   'pediatric-emergencies': pediatricEmergenciesQuestions,
   'pharmacology-emergencies': pharmacologyEmergenciesQuestions,
+  'point-of-care-ultrasound': pointOfCareUltrasoundQuestions,
   'procedures': proceduresQuestions,
   'psychiatric-emergencies': psychiatricEmergenciesQuestions,
   'renal-emergencies': renalEmergenciesQuestions,

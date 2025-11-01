@@ -23,6 +23,7 @@ const topics = [
   { id: 'pals', name: 'PALS', description: 'Pediatric Advanced Life Support' },
   { id: 'pediatric-emergencies', name: 'Pediatric Emergencies', description: 'Emergency pediatric care' },
   { id: 'pharmacology-emergencies', name: 'Pharmacology Emergencies', description: 'Emergency medications and toxicology' },
+  { id: 'point-of-care-ultrasound', name: 'Point-of-Care Ultrasound', description: 'POCUS, Echocardiography, and eFAST' },
   { id: 'procedures', name: 'Procedures', description: 'Emergency medical procedures' },
   { id: 'psychiatric-emergencies', name: 'Psychiatric Emergencies', description: 'Mental health emergencies' },
   { id: 'renal-emergencies', name: 'Renal Emergencies', description: 'Kidney and urological emergencies' },
