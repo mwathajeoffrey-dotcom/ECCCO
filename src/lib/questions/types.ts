@@ -7,6 +7,22 @@ export interface Question {
   references: string[];
   difficulty: 'easy' | 'medium' | 'hard';
   topicId: string;
+  // Enhanced features for medical education
+  imageUrl?: string;
+  imageType?: 'diagram' | 'illustration' | 'simulation' | 'educational' | 'ecg' | 'xray' | 'ultrasound';
+  imageCaption?: string;
+  imageDescription?: string; // Detailed description for accessibility and learning
+  clinicalScenario?: string; // Real-world context
+  patientPresentation?: {
+    age?: string;
+    gender?: string;
+    chiefComplaint?: string;
+    vitals?: string;
+    physicalExam?: string;
+    labsImaging?: string;
+  };
+  learningObjectives?: string[];
+  clinicalPearls?: string[];
 }
 
 export interface Topic {

@@ -3,11 +3,13 @@ import { NextResponse } from 'next/server';
 // Static topics data for production (no database needed)
 const topics = [
   { id: 'acls', name: 'ACLS', description: 'Advanced Cardiovascular Life Support' },
+  { id: 'advanced-ecg-interpretation', name: 'Advanced ECG Interpretation', description: 'Complex ECG patterns with visual descriptions and clinical scenarios' },
   { id: 'airway-management', name: 'Airway Management', description: 'Comprehensive airway management techniques' },
   { id: 'atls', name: 'ATLS', description: 'Advanced Trauma Life Support' },
   { id: 'blood-gas-analysis', name: 'Blood Gas Analysis', description: 'Arterial blood gas interpretation' },
   { id: 'bls', name: 'BLS', description: 'Basic Life Support' },
   { id: 'cardiac-emergencies', name: 'Cardiac Emergencies', description: 'Emergency cardiac conditions' },
+  { id: 'chest-xray-interpretation', name: 'Chest X-ray Interpretation', description: 'Systematic chest radiograph analysis with clinical correlation' },
   { id: 'critical-care-emergencies', name: 'Critical Care Emergencies', description: 'ICU emergency management' },
   { id: 'ecg-emergencies', name: 'ECG Emergencies', description: 'Emergency ECG interpretation' },
   { id: 'ecg-rhythm-identification', name: 'ECG Rhythm Identification', description: 'ECG rhythm strip analysis' },

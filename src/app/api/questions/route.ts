@@ -3,11 +3,13 @@ import { Question } from '@/lib/questions/types';
 
 // Import all question modules with correct export names
 import { aclsQuestions } from '@/lib/questions/acls';
+import { advancedEcgInterpretationQuestions } from '@/lib/questions/advanced-ecg-interpretation';
 import { airwayManagementQuestions } from '@/lib/questions/airway-management';
 import { atlsQuestions } from '@/lib/questions/atls';
 import { bloodGasAnalysisQuestions } from '@/lib/questions/blood-gas-analysis';
 import { blsQuestions } from '@/lib/questions/bls';
 import { cardiacEmergenciesQuestions } from '@/lib/questions/cardiac-emergencies';
+import { chestXrayInterpretationQuestions } from '@/lib/questions/chest-xray-interpretation';
 import { criticalCareEmergenciesQuestions } from '@/lib/questions/critical-care-emergencies';
 import { ecgEmergenciesQuestions } from '@/lib/questions/ecg-emergencies';
 import { ecgRhythmIdentificationQuestions } from '@/lib/questions/ecg-rhythm-identification';
@@ -35,11 +37,13 @@ import { traumaManagementQuestions } from '@/lib/questions/trauma-management';
 // Combine all questions by topic with correct variable names
 const questionsByTopic: { [key: string]: Question[] } = {
   'acls': aclsQuestions,
+  'advanced-ecg-interpretation': advancedEcgInterpretationQuestions,
   'airway-management': airwayManagementQuestions,
   'atls': atlsQuestions,
   'blood-gas-analysis': bloodGasAnalysisQuestions,
   'bls': blsQuestions,
   'cardiac-emergencies': cardiacEmergenciesQuestions,
+  'chest-xray-interpretation': chestXrayInterpretationQuestions,
   'critical-care-emergencies': criticalCareEmergenciesQuestions,
   'ecg-emergencies': ecgEmergenciesQuestions,
   'ecg-rhythm-identification': ecgRhythmIdentificationQuestions,
