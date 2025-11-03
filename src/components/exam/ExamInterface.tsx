@@ -5,6 +5,7 @@ import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { analytics } from '@/lib/analytics/service';
 
 interface Question {
   id: string;
@@ -66,6 +67,10 @@ export default function ExamInterface() {
         const response = await fetch('/api/topics');
         const data = await response.json();
         setTopics(data);
+        
+        // Initialize analytics
+        await analytics.initialize();
+        analytics.trackPageView('/exam', 'Exam Topics Selection');
       } catch (error) {
         console.error('Error fetching topics:', error);
       } finally {
@@ -105,6 +110,10 @@ export default function ExamInterface() {
       setIsExamStarted(true);
       setIsExamFinished(false);
       setTimeRemaining(45 * 60);
+      
+      // Track exam start
+      const topic = topics.find(t => t.id === topicId);
+      analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
     } catch (error) {
       console.error('Error fetching questions:', error);
     } finally {
@@ -114,10 +123,20 @@ export default function ExamInterface() {
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (!isExamFinished) {
+      const currentQuestion = questions[currentQuestionIndex];
+      const isCorrect = answerIndex === currentQuestion.correctIndex;
+      
       setSelectedAnswers(prev => ({
         ...prev,
         [currentQuestionIndex]: answerIndex
       }));
+      
+      // Track question answered
+      analytics.trackQuestionAnswered(
+        currentQuestion.id,
+        isCorrect,
+        45 * 60 - timeRemaining // Time spent so far
+      );
     }
   };
 
@@ -141,6 +160,12 @@ export default function ExamInterface() {
 
   const finishExam = () => {
     setIsExamFinished(true);
+    
+    // Calculate and track exam completion
+    const score = calculateScore();
+    const timeSpent = 45 * 60 - timeRemaining;
+    
+    analytics.trackExamComplete(selectedTopic, score, timeSpent);
   };
 
   const calculateScore = () => {
@@ -206,6 +231,7 @@ export default function ExamInterface() {
                 className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
                 onClick={() => {
                   setSelectedTopic(topic.id);
+                  analytics.trackTopicSelection(topic.id, topic.name);
                   fetchQuestions(topic.id);
                 }}
               >
@@ -241,6 +267,10 @@ export default function ExamInterface() {
           topicName: topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic',
           completedAt: new Date()
         };
+        
+        // Track PDF download
+        analytics.trackPDFDownload(selectedTopic, score);
+        
         generateExamPDF(examResults);
       } catch (error) {
         console.error('Error generating PDF:', error);

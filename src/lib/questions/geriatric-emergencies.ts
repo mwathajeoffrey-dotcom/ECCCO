@@ -140,7 +140,7 @@ export const geriatricEmergenciesQuestions: Question[] = [
     explanation: 'Noninvasive positive pressure ventilation (BiPAP/CPAP) is the most appropriate initial treatment for acute heart failure with respiratory distress in elderly patients. It improves outcomes and may avoid the need for intubation.',
     references: [
       'Masip J, et al. Non-invasive ventilation in acute cardiogenic pulmonary edema: systematic review and meta-analysis',
-      'Yancy CW, et al. 2017 ACC/AHA/HFSA Focused Update of the 2013 ACCF/AHA Guideline for the Management of Heart Failure'
+      'Yancy CW, et al. 2024 AHA/ACC Heart Failure Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'geriatric-emergencies'
@@ -518,7 +518,7 @@ export const geriatricEmergenciesQuestions: Question[] = [
     explanation: 'Bilateral pleural effusions with peripheral edema in elderly patients most commonly indicate heart failure. The effusions are typically transudative. BNP or NT-proBNP levels can help confirm the diagnosis.',
     references: [
       'Light RW. Clinical practice. Pleural effusion. N Engl J Med. 2002;346(25):1971-1977',
-      'Yancy CW, et al. 2013 ACCF/AHA guideline for the management of heart failure'
+      'Yancy CW, et al. 2024 AHA/ACC Heart Failure Guidelines'
     ],
     difficulty: 'easy',
     topicId: 'geriatric-emergencies'

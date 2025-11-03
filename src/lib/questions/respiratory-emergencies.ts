@@ -319,7 +319,7 @@ export const respiratoryEmergenciesQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'Frothy pink sputum is characteristic of acute cardiogenic pulmonary edema. The bilateral infiltrates represent alveolar flooding from elevated left ventricular filling pressures. Treatment includes diuretics, afterload reduction, and possibly BiPAP.',
     references: [
-      'Yancy CW, et al. 2013 ACCF/AHA Guideline for the Management of Heart Failure',
+      'Yancy CW, et al. 2024 AHA/ACC Heart Failure Guidelines',
       'Weintraub NL, et al. Acute heart failure syndromes: emergency department presentation, treatment, and disposition'
     ],
     difficulty: 'medium',
@@ -499,7 +499,7 @@ export const respiratoryEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'Elevated BNP (>400 pg/mL) or NT-proBNP (>900 pg/mL) in the setting of dyspnea and bilateral crackles strongly suggests heart failure. BNP is released from ventricular myocytes in response to volume overload and pressure overload.',
     references: [
-      'Yancy CW, et al. 2017 ACC/AHA/HFSA Focused Update of the 2013 ACCF/AHA Guideline for the Management of Heart Failure',
+      'Yancy CW, et al. 2017 ACC/AHA/HFSA Focused Update of the 2024 AHA/ACC Heart Failure Guidelines',
       'Wang CS, et al. Does this dyspneic patient in the emergency department have congestive heart failure?'
     ],
     difficulty: 'easy',

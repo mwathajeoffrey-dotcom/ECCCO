@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -39,17 +39,69 @@ model Question {
 model ExamSession {
   id          String   @id @default(cuid())
   userId      String?  // Optional user ID for tracking
+  sessionId   String   @unique // Browser session identifier
   topicId     String
   questions   String   // JSON string of question IDs array
   answers     String   // JSON string of user answers array
   score       Int?
   totalTime   Int?     // Time taken in seconds
   completed   Boolean  @default(false)
+  
+  // Device and Location Analytics
+  deviceInfo  String?  // JSON string with device details
+  userAgent   String?  // Browser user agent
+  ipAddress   String?  // User IP address
+  location    String?  // JSON string with location data (country, city, etc.)
+  screenResolution String? // Screen resolution
+  timezone    String?  // User timezone
+  referrer    String?  // How they got to the site
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
   @@index([topicId])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  sessionId   String   // Browser session identifier
+  eventType   String   // 'page_view', 'exam_start', 'exam_complete', 'question_answered', etc.
+  eventData   String?  // JSON string with event-specific data
+  
+  // Device and Location Data
+  deviceInfo  String?  // JSON: {type: 'mobile/desktop/tablet', os: 'iOS/Android/Windows', browser: 'Chrome/Safari'}
+  userAgent   String?  // Full user agent string
+  ipAddress   String?  // User IP (hashed for privacy)
+  location    String?  // JSON: {country: 'US', city: 'New York', region: 'NY'}
+  screenSize  String?  // JSON: {width: 1920, height: 1080}
+  timezone    String?  // User timezone
+  referrer    String?  // Referring page/site
+  
+  createdAt   DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model DailyStats {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  uniqueDevices   Int      @default(0)
+  totalSessions   Int      @default(0)
+  examsStarted    Int      @default(0)
+  examsCompleted  Int      @default(0)
+  topCountries    String?  // JSON array of top countries
+  topDeviceTypes  String?  // JSON array of device type breakdown
+  topTopics       String?  // JSON array of most popular topics
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([date])
 }
 
 model UserProgress {

@@ -7,6 +7,13 @@ export interface Question {
   references: string[];
   difficulty: 'easy' | 'medium' | 'hard';
   topicId: string;
+  // Guideline tracking for medical accuracy
+  guidelineVersion?: {
+    name: string; // e.g., "AHA Guidelines for CPR and ECC"
+    year: number; // e.g., 2025
+    organization: string; // e.g., "American Heart Association"
+    lastUpdated?: Date; // When this question was last reviewed
+  };
   // Enhanced features for medical education
   imageUrl?: string;
   imageType?: 'diagram' | 'illustration' | 'simulation' | 'educational' | 'ecg' | 'xray' | 'ultrasound';
