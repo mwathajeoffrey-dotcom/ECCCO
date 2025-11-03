@@ -525,10 +525,10 @@ export default function ExamInterface() {
                     }}
                     className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xs sm:text-sm font-medium relative touch-manipulation transition-all duration-200 ${
                       index === currentQuestionIndex
-                        ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-300'
+                        ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-xl ring-4 ring-blue-300 transform scale-110 z-10'
                         : selectedAnswers[index] !== undefined
-                        ? 'bg-emerald-500 text-white border border-emerald-600 shadow-md hover:bg-emerald-600'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300'
+                        ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border border-emerald-600 shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 transform hover:scale-105'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300 hover:border-gray-400 hover:shadow-md'
                     }`}
                   >
                     {index + 1}
@@ -553,11 +553,11 @@ export default function ExamInterface() {
                   <p className="text-xs font-medium text-gray-700 mb-2">Legend:</p>
                   <div className="space-y-1 text-xs">
                     <div className="flex items-center">
-                      <div className="w-3 h-3 bg-blue-600 rounded mr-2"></div>
+                      <div className="w-3 h-3 bg-gradient-to-br from-blue-600 to-blue-700 rounded shadow-sm mr-2"></div>
                       <span>Current Question</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-3 h-3 bg-emerald-500 rounded mr-2"></div>
+                      <div className="w-3 h-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded shadow-sm mr-2"></div>
                       <span>Answered</span>
                     </div>
                     <div className="flex items-center">
@@ -682,20 +682,27 @@ export default function ExamInterface() {
                             : showAnswer && isSelected && !isCorrect
                             ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
                             : isSelected
-                            ? 'border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300'
-                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                            ? 'border-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 shadow-lg ring-4 ring-blue-300 transform scale-[1.02] font-semibold'
+                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 hover:shadow-md'
                         } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-start">
-                          <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
+                          <span className={`font-medium mr-2 sm:mr-3 text-sm sm:text-base ${
+                            isSelected ? 'text-blue-800 font-bold' : 'text-gray-600'
+                          }`}>
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className="text-sm sm:text-base leading-relaxed flex-1">{option}</span>
+                          <span className={`text-sm sm:text-base leading-relaxed flex-1 ${
+                            isSelected ? 'font-semibold' : ''
+                          }`}>{option}</span>
                           {showAnswer && isCorrect && (
                             <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
                           )}
                           {showAnswer && isSelected && !isCorrect && (
                             <div className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ml-2 flex-shrink-0">✕</div>
+                          )}
+                          {isSelected && !showAnswer && (
+                            <div className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center ml-2 flex-shrink-0">✓</div>
                           )}
                         </div>
                       </button>
