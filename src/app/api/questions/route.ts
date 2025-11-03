@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Question } from '@/lib/questions/types';
-import { getOncologicTier, tierInformation } from '@/lib/questions/oncologic-tier-system';
+import { getOncologicTier } from '@/lib/questions/oncologic-tier-system';
 
 // Import all question modules with correct export names
 import { aclsQuestions } from '@/lib/questions/acls';
@@ -97,25 +97,8 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Return tier questions with metadata
-      return NextResponse.json({
-        questions: tier.questions,
-        tierInfo: {
-          tier: tier.tier,
-          name: tier.name,
-          difficulty: tier.difficulty,
-          description: tier.description,
-          estimatedTime: tier.estimatedTime,
-          passingScore: tier.passingScore,
-          prerequisites: tier.prerequisites || [],
-          totalQuestions: tier.questions.length
-        },
-        systemInfo: {
-          totalTiers: tierInformation.totalTiers,
-          questionsPerTier: tierInformation.questionsPerTier,
-          totalQuestions: tierInformation.totalQuestions
-        }
-      });
+      // Return tier questions directly (frontend expects array)
+      return NextResponse.json(tier.questions);
     }
 
     let questions: Question[] = [];
