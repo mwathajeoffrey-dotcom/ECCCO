@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download } from 'lucide-react';
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { UnitConversionDisplay, UnitConverterButton } from '@/components/ui/UnitConverter';
 import { analytics } from '@/lib/analytics/service';
+import { questionsAPI } from '@/lib/errors/api';
+import { useErrorHandler } from '@/lib/errors/tracking';
 
 interface Question {
   id: string;
@@ -61,28 +63,33 @@ export default function ExamInterface() {
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [showAnswerAfterAttempt, setShowAnswerAfterAttempt] = useState(false);
   const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  
+  const { logError, logAPIError } = useErrorHandler();
 
   // Fetch topics on component mount
   useEffect(() => {
     const fetchTopics = async () => {
       setLoadingTopics(true);
+      setApiError(null);
       try {
-        const response = await fetch('/api/topics');
-        const data = await response.json();
+        const data = await questionsAPI.get<Topic[]>('/api/topics');
         setTopics(data);
         
         // Initialize analytics
         await analytics.initialize();
         analytics.trackPageView('/exam', 'Exam Topics Selection');
       } catch (error) {
-        console.error('Error fetching topics:', error);
+        const message = 'Failed to load exam topics. Please refresh the page.';
+        setApiError(message);
+        logAPIError('/api/topics', error.status || 0, error.code, message);
       } finally {
         setLoadingTopics(false);
       }
     };
 
     fetchTopics();
-  }, []);
+  }, [logAPIError]);
 
   // Timer effect
   useEffect(() => {
@@ -103,10 +110,10 @@ export default function ExamInterface() {
 
   const fetchQuestions = async (topicId: string) => {
     setIsLoading(true);
+    setApiError(null);
     try {
       console.log('Fetching questions for topic:', topicId);
-      const response = await fetch(`/api/questions?topicId=${topicId}&limit=30`);
-      const data = await response.json();
+      const data = await questionsAPI.get<Question[]>(`/api/questions?topicId=${topicId}&limit=30`);
       console.log('API Response:', data);
       console.log('Data type:', typeof data);
       console.log('Is array:', Array.isArray(data));
@@ -126,13 +133,14 @@ export default function ExamInterface() {
         const topic = topics.find(t => t.id === topicId);
         analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
       } else {
-        console.error('No questions received or invalid format:', data);
-        alert('No questions available for this topic. Please try another topic.');
-        setIsExamStarted(false);
+        const message = 'No questions available for this topic. Please try another topic.';
+        setApiError(message);
+        logAPIError(`/api/questions?topicId=${topicId}`, 404, 'NO_QUESTIONS', message);
       }
     } catch (error) {
-      console.error('Error fetching questions:', error);
-      alert('Error loading questions. Please try again.');
+      const message = 'Error loading questions. Please try again.';
+      setApiError(message);
+      logAPIError(`/api/questions?topicId=${topicId}`, error.status || 0, error.code, message);
       setIsExamStarted(false);
     } finally {
       setIsLoading(false);
@@ -220,6 +228,29 @@ export default function ExamInterface() {
     );
   }
 
+  // Error state for topics
+  if (apiError && !isExamStarted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">Loading Error</h2>
+          <p className="text-gray-600 mb-6">{apiError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Loading screen for questions
   if (isLoading) {
     return (
@@ -279,7 +310,7 @@ export default function ExamInterface() {
     const score = calculateScore();
     const correct = questions.filter((q, i) => selectedAnswers[i] === q.correctIndex).length;
 
-    const handleDownloadPDF = () => {
+    const handleDownloadPDF = async () => {
       try {
         const examResults = {
           questions,
@@ -293,10 +324,16 @@ export default function ExamInterface() {
         // Track PDF download
         analytics.trackPDFDownload(selectedTopic, score);
         
-        generateExamPDF(examResults);
+        await generateExamPDF(examResults);
       } catch (error) {
-        console.error('Error generating PDF:', error);
-        alert('Sorry, there was an error generating the PDF. Please try again or contact support if the issue persists.');
+        const message = 'Sorry, there was an error generating the PDF. Please try again or contact support if the issue persists.';
+        setApiError(message);
+        logError(error as Error, { 
+          action: 'pdf_generation',
+          topicId: selectedTopic,
+          score,
+          questionsCount: questions.length
+        });
       }
     };
 
@@ -631,11 +668,14 @@ export default function ExamInterface() {
               )}
 
               {/* Patient Presentation */}
-              <ErrorBoundary fallback={
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                  <p className="text-red-800">Error loading patient details. Continuing with question...</p>
-                </div>
-              }>
+              <EnhancedErrorBoundary 
+                componentName="PatientPresentation"
+                fallback={
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <p className="text-red-800">Error loading patient details. Continuing with question...</p>
+                  </div>
+                }
+              >
                 {currentQuestion?.patientPresentation && (
                   <div className="bg-gray-50 rounded-lg p-4 mb-6">
                     <h3 className="font-semibold text-gray-900 mb-3">Patient Presentation</h3>
@@ -684,7 +724,7 @@ export default function ExamInterface() {
                     )}
                   </div>
                 )}
-              </ErrorBoundary>
+              </EnhancedErrorBoundary>
 
               {/* Image Description (Visual Component) */}
               {currentQuestion?.imageDescription && (
@@ -701,11 +741,14 @@ export default function ExamInterface() {
                 </div>
               )}
 
-              <ErrorBoundary fallback={
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                  <p className="text-red-800">Error loading question options. Please try refreshing the page.</p>
-                </div>
-              }>
+              <EnhancedErrorBoundary 
+                componentName="QuestionOptions"
+                fallback={
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <p className="text-red-800">Error loading question options. Please try refreshing the page.</p>
+                  </div>
+                }
+              >
                 <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
                   {currentQuestion && (typeof currentQuestion.options === 'string' 
                     ? JSON.parse(currentQuestion.options) 
@@ -757,7 +800,7 @@ export default function ExamInterface() {
                     );
                   })}
                 </div>
-              </ErrorBoundary>
+              </EnhancedErrorBoundary>
 
               {/* Answer Explanation (shows when answer is revealed) */}
               {showAnswerAfterAttempt && currentQuestionAnswered && (
