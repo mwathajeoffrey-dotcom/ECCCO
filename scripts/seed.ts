@@ -243,6 +243,12 @@ async function seedDatabase() {
     ];
 
     for (const question of allQuestions) {
+      // Skip questions without topicId
+      if (!question.topicId) {
+        console.warn(`Skipping question ${question.id} - no topicId`);
+        continue;
+      }
+      
       await prisma.question.upsert({
         where: { id: question.id },
         update: {

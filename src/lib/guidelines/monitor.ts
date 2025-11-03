@@ -105,6 +105,9 @@ export class GuidelineMonitor {
    * Check if a specific reference is outdated
    */
   private static checkReferenceAge(reference: string, question: Question): OutdatedReference | null {
+    // Skip questions without topicId
+    if (!question.topicId) return null;
+    
     // Extract years from reference string
     const yearMatches = reference.match(/\b(19|20)\d{2}\b/g);
     if (!yearMatches) return null;

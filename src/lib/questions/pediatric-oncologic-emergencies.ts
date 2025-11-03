@@ -114,7 +114,7 @@ const corePediatricOncologicQuestions: Question[] = [
     correctIndex: 0,
     explanation: 'This child has severe pancytopenia from temozolomide-induced myelosuppression. With severe anemia (Hgb 5.2 g/dL) causing symptoms and severe thrombocytopenia (<30,000), immediate transfusion support is needed. Current pediatric guidelines recommend PRBC transfusion for symptomatic anemia and platelet transfusion for counts <20,000 or with bleeding. The chemotherapy should also be held until recovery.',
     category: 'Pediatric Oncologic Emergencies',
-    references: ['Cohen KJ, Pollack IF, Zhou T, et al. Temozolomide in the treatment of high-grade gliomas in children: a report from the Children\']s Oncology Group. Neuro Oncol. 2024;26(4):678-689.'
+    references: ['Cohen KJ, Pollack IF, Zhou T, et al. Temozolomide in the treatment of high-grade gliomas in children: a report from the Children\'s Oncology Group. Neuro Oncol. 2024;26(4):678-689.']
   },
   {
     id: 'ped-onc-009',

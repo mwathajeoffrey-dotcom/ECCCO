@@ -4,7 +4,7 @@ export interface Question {
   options: string[];
   correctIndex: number;
   explanation: string;
-  category: string;
+  category?: string;
   references: string[];
   difficulty?: 'easy' | 'medium' | 'hard';
   topicId?: string;
