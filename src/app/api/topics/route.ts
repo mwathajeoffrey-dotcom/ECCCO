@@ -22,6 +22,16 @@ const topics = [
   { id: 'mechanical-ventilation', name: 'Mechanical Ventilation', description: 'Ventilator management' },
   { id: 'neurological-emergencies', name: 'Neurological Emergencies', description: 'Emergency neurological conditions' },
   { id: 'obstetric-gynecologic-emergencies', name: 'OB/GYN Emergencies', description: 'Obstetric and gynecologic emergencies' },
+  
+  // NEW: Oncologic Emergency Tiers
+  { id: 'oncologic-tier-1', name: '🏥 Oncologic Tier 1: Foundation', description: 'Basic oncologic emergency recognition (30 questions, 45 min)' },
+  { id: 'oncologic-tier-2', name: '🏥 Oncologic Tier 2: Core Emergency', description: 'Common emergencies with standard protocols (30 questions, 50 min)' },
+  { id: 'oncologic-tier-3', name: '🏥 Oncologic Tier 3: Advanced Management', description: 'Complex scenarios requiring advanced decisions (30 questions, 55 min)' },
+  { id: 'oncologic-tier-4', name: '🏥 Oncologic Tier 4: Critical Care', description: 'ICU-level emergencies and complications (30 questions, 60 min)' },
+  { id: 'oncologic-tier-5', name: '🏥 Oncologic Tier 5: Specialist', description: 'Rare emergencies requiring specialist knowledge (30 questions, 65 min)' },
+  { id: 'oncologic-tier-6', name: '🏥 Oncologic Tier 6: Consultant', description: 'Multi-system emergencies requiring consultant expertise (30 questions, 70 min)' },
+  { id: 'oncologic-tier-7', name: '🏥 Oncologic Tier 7: Master Clinician', description: 'Most challenging scenarios requiring mastery (30 questions, 75 min)' },
+  
   { id: 'pals', name: 'PALS', description: 'Pediatric Advanced Life Support' },
   { id: 'pediatric-emergencies', name: 'Pediatric Emergencies', description: 'Emergency pediatric care' },
   { id: 'pharmacology-emergencies', name: 'Pharmacology Emergencies', description: 'Emergency medications and toxicology' },

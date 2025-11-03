@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Question } from '@/lib/questions/types';
+import { getOncologicTier, tierInformation } from '@/lib/questions/oncologic-tier-system';
 
 // Import all question modules with correct export names
 import { aclsQuestions } from '@/lib/questions/acls';
@@ -75,6 +76,47 @@ export async function GET(request: NextRequest) {
     const topicId = searchParams.get('topicId');
     const limit = parseInt(searchParams.get('limit') || '30');
     const difficulty = searchParams.get('difficulty');
+
+    // Handle oncologic tier requests
+    if (topicId && topicId.startsWith('oncologic-tier-')) {
+      const tierNumber = parseInt(topicId.replace('oncologic-tier-', ''));
+      
+      if (tierNumber < 1 || tierNumber > 7) {
+        return NextResponse.json(
+          { error: 'Invalid tier number. Must be between 1-7' },
+          { status: 400 }
+        );
+      }
+
+      const tier = getOncologicTier(tierNumber);
+      
+      if (!tier) {
+        return NextResponse.json(
+          { error: 'Tier not found' },
+          { status: 404 }
+        );
+      }
+
+      // Return tier questions with metadata
+      return NextResponse.json({
+        questions: tier.questions,
+        tierInfo: {
+          tier: tier.tier,
+          name: tier.name,
+          difficulty: tier.difficulty,
+          description: tier.description,
+          estimatedTime: tier.estimatedTime,
+          passingScore: tier.passingScore,
+          prerequisites: tier.prerequisites || [],
+          totalQuestions: tier.questions.length
+        },
+        systemInfo: {
+          totalTiers: tierInformation.totalTiers,
+          questionsPerTier: tierInformation.questionsPerTier,
+          totalQuestions: tierInformation.totalQuestions
+        }
+      });
+    }
 
     let questions: Question[] = [];
 
