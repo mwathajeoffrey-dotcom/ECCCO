@@ -5,8 +5,14 @@
     }
   },
   "functions": {
-    "pages/api/**/*.js": {
+    "app/**/*.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/"
+    }
+  ]
 }
