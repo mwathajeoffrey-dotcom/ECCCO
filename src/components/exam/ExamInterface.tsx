@@ -5,6 +5,7 @@ import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { UnitConversionDisplay, UnitConverterButton } from '@/components/ui/UnitConverter';
 import { analytics } from '@/lib/analytics/service';
 
 interface Question {
@@ -324,7 +325,10 @@ export default function ExamInterface() {
                   <div key={question.id} className="border rounded-lg p-6">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 flex-1">
-                        Question {index + 1}: {question.question}
+                        Question {index + 1}: <UnitConversionDisplay 
+                          text={question.question}
+                          className="inline"
+                        />
                       </h3>
                       <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                         isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -391,7 +395,12 @@ export default function ExamInterface() {
 
                     <div className="bg-blue-50 p-4 rounded-lg mb-4">
                       <h4 className="font-semibold text-blue-900 mb-2">Explanation:</h4>
-                      <p className="text-blue-800 mb-3">{question.explanation}</p>
+                      <p className="text-blue-800 mb-3">
+                        <UnitConversionDisplay 
+                          text={question.explanation}
+                          className="inline"
+                        />
+                      </p>
                       <div>
                         <h5 className="font-medium text-blue-900 mb-1">References:</h5>
                         <ul className="text-sm text-blue-700 space-y-1">
@@ -473,6 +482,7 @@ export default function ExamInterface() {
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-6">
+              <UnitConverterButton />
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 <span className={`font-mono text-sm sm:text-lg ${
@@ -575,7 +585,10 @@ export default function ExamInterface() {
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
               <div className="flex items-start justify-between mb-4 sm:mb-6">
                 <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900 flex-1 leading-relaxed">
-                  {currentQuestion?.question}
+                  <UnitConversionDisplay 
+                    text={currentQuestion?.question || ''}
+                    className="inline"
+                  />
                 </h2>
                 <button
                   onClick={toggleFlag}
@@ -593,7 +606,12 @@ export default function ExamInterface() {
               {currentQuestion?.clinicalScenario && (
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
                   <h3 className="font-semibold text-blue-900 mb-2">Clinical Scenario</h3>
-                  <p className="text-blue-800 text-sm">{currentQuestion.clinicalScenario}</p>
+                  <p className="text-blue-800 text-sm">
+                    <UnitConversionDisplay 
+                      text={currentQuestion.clinicalScenario}
+                      className="inline"
+                    />
+                  </p>
                 </div>
               )}
 
@@ -618,12 +636,22 @@ export default function ExamInterface() {
                           <div className="text-xs space-y-1">
                             <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
                             <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
-                            <p>Temp: {currentQuestion.patientPresentation.vitalSigns.temperature}°F</p>
+                            <p>
+                              Temp: <UnitConversionDisplay 
+                                text={`${currentQuestion.patientPresentation.vitalSigns.temperature}°F`}
+                                className="inline"
+                              />
+                            </p>
                             <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
                             <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
                           </div>
                         ) : currentQuestion.patientPresentation.vitals ? (
-                          <p className="text-xs">{currentQuestion.patientPresentation.vitals}</p>
+                          <p className="text-xs">
+                            <UnitConversionDisplay 
+                              text={currentQuestion.patientPresentation.vitals}
+                              className="inline"
+                            />
+                          </p>
                         ) : null}
                       </div>
                     </div>
@@ -694,7 +722,12 @@ export default function ExamInterface() {
                           </span>
                           <span className={`text-sm sm:text-base leading-relaxed flex-1 ${
                             isSelected ? 'font-semibold' : ''
-                          }`}>{option}</span>
+                          }`}>
+                            <UnitConversionDisplay 
+                              text={option}
+                              className="inline"
+                            />
+                          </span>
                           {showAnswer && isCorrect && (
                             <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
                           )}
@@ -718,9 +751,12 @@ export default function ExamInterface() {
                     <BookOpen className="w-5 h-5 mr-2" />
                     Explanation
                   </h4>
-                  <p className="text-blue-800 mb-4 leading-relaxed">{currentQuestion.explanation}</p>
-                  
-                  {/* References */}
+                    <p className="text-blue-800 mb-4 leading-relaxed">
+                      <UnitConversionDisplay 
+                        text={currentQuestion.explanation}
+                        className="inline"
+                      />
+                    </p>                  {/* References */}
                   <div className="bg-white rounded-lg p-3 border border-blue-200">
                     <h5 className="font-medium text-blue-900 mb-2 text-sm">References:</h5>
                     <ul className="text-sm text-blue-700 space-y-1">
