@@ -58,6 +58,8 @@ export default function ExamInterface() {
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [loadingTopics, setLoadingTopics] = useState(true);
+  const [showAnswerAfterAttempt, setShowAnswerAfterAttempt] = useState(false);
+  const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
 
   // Fetch topics on component mount
   useEffect(() => {
@@ -131,6 +133,8 @@ export default function ExamInterface() {
         [currentQuestionIndex]: answerIndex
       }));
       
+      setCurrentQuestionAnswered(true);
+      
       // Track question answered
       analytics.trackQuestionAnswered(
         currentQuestion.id,
@@ -143,8 +147,10 @@ export default function ExamInterface() {
   const handleQuestionNavigation = (direction: 'prev' | 'next') => {
     if (direction === 'prev' && currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex - 1] !== undefined);
     } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex + 1] !== undefined);
     }
   };
 
@@ -492,17 +498,37 @@ export default function ExamInterface() {
           <div className="lg:col-span-1 order-2 lg:order-1">
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:sticky lg:top-8">
               <h3 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Question Navigation</h3>
+              
+              {/* Settings Toggle */}
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showAnswerAfterAttempt}
+                    onChange={(e) => setShowAnswerAfterAttempt(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  />
+                  <div className="ml-2">
+                    <span className="text-sm font-medium text-blue-900">Show Correct Answer</span>
+                    <p className="text-xs text-blue-700">Reveal answer after each attempt</p>
+                  </div>
+                </label>
+              </div>
+              
               <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-5 gap-1 sm:gap-2">
                 {questions.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentQuestionIndex(index)}
-                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xs sm:text-sm font-medium relative touch-manipulation ${
+                    onClick={() => {
+                      setCurrentQuestionIndex(index);
+                      setCurrentQuestionAnswered(selectedAnswers[index] !== undefined);
+                    }}
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xs sm:text-sm font-medium relative touch-manipulation transition-all duration-200 ${
                       index === currentQuestionIndex
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-300'
                         : selectedAnswers[index] !== undefined
-                        ? 'bg-green-100 text-green-800 border border-green-300'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-emerald-500 text-white border border-emerald-600 shadow-md hover:bg-emerald-600'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300'
                     }`}
                   >
                     {index + 1}
@@ -520,6 +546,25 @@ export default function ExamInterface() {
                 <div className="flex items-center justify-between">
                   <span>Flagged:</span>
                   <span>{flaggedQuestions.size}</span>
+                </div>
+                
+                {/* Color Legend */}
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <p className="text-xs font-medium text-gray-700 mb-2">Legend:</p>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-blue-600 rounded mr-2"></div>
+                      <span>Current Question</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-emerald-500 rounded mr-2"></div>
+                      <span>Answered</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-gray-100 border border-gray-300 rounded mr-2"></div>
+                      <span>Not Answered</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -621,26 +666,99 @@ export default function ExamInterface() {
                 <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
                   {currentQuestion && (typeof currentQuestion.options === 'string' 
                     ? JSON.parse(currentQuestion.options) 
-                    : currentQuestion.options).map((option: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswerSelect(index)}
-                      className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-colors touch-manipulation ${
-                        selectedAnswers[currentQuestionIndex] === index
-                          ? 'border-blue-500 bg-blue-50 text-blue-900'
-                          : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className="flex items-start">
-                        <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-sm sm:text-base leading-relaxed">{option}</span>
-                      </div>
-                    </button>
-                  ))}
+                    : currentQuestion.options).map((option: string, index: number) => {
+                    const isSelected = selectedAnswers[currentQuestionIndex] === index;
+                    const isCorrect = index === currentQuestion.correctIndex;
+                    const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
+                    
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleAnswerSelect(index)}
+                        disabled={showAnswer && !isExamFinished}
+                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
+                          showAnswer && isCorrect
+                            ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200'
+                            : showAnswer && isSelected && !isCorrect
+                            ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
+                            : isSelected
+                            ? 'border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300'
+                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                        } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-start">
+                          <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
+                            {String.fromCharCode(65 + index)}.
+                          </span>
+                          <span className="text-sm sm:text-base leading-relaxed flex-1">{option}</span>
+                          {showAnswer && isCorrect && (
+                            <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
+                          )}
+                          {showAnswer && isSelected && !isCorrect && (
+                            <div className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ml-2 flex-shrink-0">✕</div>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </ErrorBoundary>
+
+              {/* Answer Explanation (shows when answer is revealed) */}
+              {showAnswerAfterAttempt && currentQuestionAnswered && (
+                <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
+                    <BookOpen className="w-5 h-5 mr-2" />
+                    Explanation
+                  </h4>
+                  <p className="text-blue-800 mb-4 leading-relaxed">{currentQuestion.explanation}</p>
+                  
+                  {/* References */}
+                  <div className="bg-white rounded-lg p-3 border border-blue-200">
+                    <h5 className="font-medium text-blue-900 mb-2 text-sm">References:</h5>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      {(typeof currentQuestion.references === 'string'
+                        ? JSON.parse(currentQuestion.references)
+                        : currentQuestion.references).map((ref: string, refIndex: number) => (
+                        <li key={refIndex} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{ref}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {/* Learning Objectives */}
+                  {currentQuestion.learningObjectives && currentQuestion.learningObjectives.length > 0 && (
+                    <div className="mt-3 bg-green-50 rounded-lg p-3 border border-green-200">
+                      <h5 className="font-medium text-green-900 mb-2 text-sm">Learning Objectives:</h5>
+                      <ul className="text-sm text-green-800 space-y-1">
+                        {currentQuestion.learningObjectives.map((objective: string, objIndex: number) => (
+                          <li key={objIndex} className="flex items-start">
+                            <span className="mr-2">📚</span>
+                            <span>{objective}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {/* Clinical Pearls */}
+                  {currentQuestion.clinicalPearls && currentQuestion.clinicalPearls.length > 0 && (
+                    <div className="mt-3 bg-purple-50 rounded-lg p-3 border border-purple-200">
+                      <h5 className="font-medium text-purple-900 mb-2 text-sm">Clinical Pearls:</h5>
+                      <ul className="text-sm text-purple-800 space-y-1">
+                        {currentQuestion.clinicalPearls.map((pearl: string, pearlIndex: number) => (
+                          <li key={pearlIndex} className="flex items-start">
+                            <span className="mr-2">💎</span>
+                            <span>{pearl}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Navigation */}
               <div className="flex items-center justify-between flex-wrap gap-2">
