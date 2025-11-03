@@ -1,9 +1,8 @@
 {
-  "build": {
-    "env": {
-      "PRISMA_GENERATE_DATAPROXY": "true"
-    }
-  },
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm ci",
   "functions": {
     "app/**/*.js": {
       "maxDuration": 30
