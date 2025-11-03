@@ -115,7 +115,7 @@ export default function GuidelineManagementPage() {
   const handleAuthentication = async () => {
     setAuthError('');
     try {
-      const devCodes = ['dev_guidelines_2024', 'eccco_admin_access', 'medical_platform_dev'];
+      const devCodes = ['Gm@12345'];
       
       if (devCodes.includes(authPassword)) {
         setIsAuthenticated(true);
@@ -238,7 +238,7 @@ export default function GuidelineManagementPage() {
           
           {process.env.NODE_ENV === 'development' && (
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
-              <strong>Dev Mode:</strong> Access codes: dev_guidelines_2024, eccco_admin_access, medical_platform_dev
+              <strong>Dev Mode:</strong> Access code: Gm@12345
             </div>
           )}
         </div>

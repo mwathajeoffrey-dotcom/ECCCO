@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -89,7 +89,7 @@ model AnalyticsEvent {
 
 model DailyStats {
   id              String   @id @default(cuid())
-  date            DateTime @unique
+  date            DateTime @unique @db.Date
   uniqueDevices   Int      @default(0)
   totalSessions   Int      @default(0)
   examsStarted    Int      @default(0)

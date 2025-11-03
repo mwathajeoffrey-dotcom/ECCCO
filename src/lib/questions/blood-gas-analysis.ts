@@ -35,7 +35,22 @@ export const bloodGasAnalysisQuestions: Question[] = [
       'Adrogué HJ, et al. Management of life-threatening acid-base disorders'
     ],
     difficulty: 'medium',
-    topicId: 'blood-gas-analysis'
+    topicId: 'blood-gas-analysis',
+    patientPresentation: {
+      age: 45,
+      gender: 'Female',
+      chiefComplaint: 'Shortness of breath and altered mental status',
+      vitalSigns: {
+        heartRate: 120,
+        bloodPressure: '95/60 mmHg',
+        temperature: 100.4,
+        respiratoryRate: 28,
+        oxygenSaturation: 96
+      },
+      pastMedicalHistory: ['Type 1 Diabetes', 'Hypertension'],
+      currentMedications: ['Insulin glargine', 'Lisinopril 10mg daily'],
+      physicalExam: 'Deep, rapid breathing (Kussmaul respirations), fruity breath odor, mild dehydration'
+    }
   },
   {
     id: 'abg-003',
@@ -57,21 +72,36 @@ export const bloodGasAnalysisQuestions: Question[] = [
   },
   {
     id: 'abg-004',
-    question: 'A patient presents with altered mental status. ABG shows: pH 7.58, PCO2 48 mmHg, HCO3- 44 mEq/L. What is the most likely cause?',
+    question: 'A COPD patient on supplemental oxygen presents with confusion. ABG: pH 7.28, PCO2 68 mmHg, HCO3- 30 mEq/L, PO2 85 mmHg. What is the primary acid-base disorder?',
     options: [
-      'Diuretic use',
-      'Hyperventilation',
-      'Chronic kidney disease',
-      'Diarrhea'
+      'Respiratory acidosis with metabolic compensation',
+      'Mixed respiratory and metabolic acidosis',
+      'Metabolic alkalosis with respiratory compensation',
+      'Acute respiratory acidosis'
     ],
     correctIndex: 0,
-    explanation: 'pH 7.58 (alkalotic) with elevated HCO3- 44 indicates metabolic alkalosis. PCO2 48 shows appropriate respiratory compensation (hypoventilation). Diuretics cause volume depletion and chloride loss, leading to metabolic alkalosis.',
+    explanation: 'Primary disorder is respiratory acidosis (low pH, high PCO2). The elevated HCO3- (30 mEq/L, normal 22-26) indicates metabolic compensation. Expected compensation: HCO3- increases by 3.5 mEq/L for every 10 mmHg rise in PCO2 above 40.',
     references: [
-      'Galla JH. Metabolic alkalosis. J Am Soc Nephrol. 2000;11(2):369-375',
-      'Palmer BF, et al. Metabolic alkalosis. J Am Soc Nephrol. 1997;8(9):1462-1469'
+      'Bateman NT, et al. 35th Pulmonary physiology',
+      'Albert MS, et al. Simple and mixed acid-base disorders'
     ],
     difficulty: 'medium',
-    topicId: 'blood-gas-analysis'
+    topicId: 'blood-gas-analysis',
+    patientPresentation: {
+      age: 68,
+      gender: 'Male',
+      chiefComplaint: 'Confusion and drowsiness',
+      vitalSigns: {
+        heartRate: 95,
+        bloodPressure: '145/85 mmHg',
+        temperature: 98.8,
+        respiratoryRate: 20,
+        oxygenSaturation: 88
+      },
+      pastMedicalHistory: ['COPD', 'Former smoker (40 pack-years)', 'Hypertension'],
+      currentMedications: ['Albuterol inhaler', 'Tiotropium', 'Home oxygen 2L/min'],
+      physicalExam: 'Barrel chest, prolonged expiration, mild asterixis, use of accessory muscles'
+    }
   },
   {
     id: 'abg-005',

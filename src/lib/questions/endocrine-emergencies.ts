@@ -17,7 +17,23 @@ export const endocrineEmergenciesQuestions: Question[] = [
       'Wolfsdorf JI, et al. Diabetic ketoacidosis and hyperglycemic hyperosmolar state: ISPAD Clinical Practice Consensus Guidelines 2018'
     ],
     difficulty: 'easy',
-    topicId: 'endocrine-emergencies'
+    topicId: 'endocrine-emergencies',
+    patientPresentation: {
+      age: 28,
+      gender: 'Male',
+      chiefComplaint: 'Excessive thirst, frequent urination, and 15-pound weight loss over 2 weeks',
+      vitalSigns: {
+        heartRate: 115,
+        bloodPressure: '105/70 mmHg',
+        temperature: 99.2,
+        respiratoryRate: 22,
+        oxygenSaturation: 98
+      },
+      pastMedicalHistory: ['Type 1 diabetes diagnosed 2 years ago'],
+      currentMedications: ['Insulin glargine (recently stopped due to cost)', 'Insulin aspart (sporadic use)'],
+      physicalExam: 'Weight loss evident, mild dehydration, fruity breath odor, Kussmaul respirations',
+      labsImaging: 'Glucose: 450 mg/dL, pH: 7.25, HCO3: 12 mEq/L, Ketones: 3+ positive, Anion gap: 18'
+    }
   },
   {
     id: 'endo-002',
@@ -35,7 +51,23 @@ export const endocrineEmergenciesQuestions: Question[] = [
       'Kitabchi AE, et al. Hyperglycemic crises in adult patients with diabetes'
     ],
     difficulty: 'medium',
-    topicId: 'endocrine-emergencies'
+    topicId: 'endocrine-emergencies',
+    patientPresentation: {
+      age: 70,
+      gender: 'Female',
+      chiefComplaint: 'Progressive confusion and weakness over several days',
+      vitalSigns: {
+        heartRate: 105,
+        bloodPressure: '95/60 mmHg',
+        temperature: 98.8,
+        respiratoryRate: 18,
+        oxygenSaturation: 96
+      },
+      pastMedicalHistory: ['Type 2 diabetes for 15 years', 'Hypertension', 'Recent UTI'],
+      currentMedications: ['Metformin 1000mg BID', 'Glipizide 10mg daily', 'Amlodipine 5mg daily'],
+      physicalExam: 'Weight: 165 lbs (75 kg), severe dehydration, altered mental status, no fruity breath odor',
+      labsImaging: 'Glucose: 800 mg/dL, Serum osmolality: 350 mOsm/kg, Ketones: negative, Creatinine: 2.1 mg/dL, Sodium: 145 mEq/L'
+    }
   },
   {
     id: 'endo-003',

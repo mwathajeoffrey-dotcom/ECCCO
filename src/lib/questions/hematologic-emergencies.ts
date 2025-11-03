@@ -17,7 +17,23 @@ export const hematologicEmergenciesQuestions: Question[] = [
       'Zheng XL, et al. ISTH guidelines for the diagnosis of thrombotic thrombocytopenic purpura'
     ],
     difficulty: 'medium',
-    topicId: 'hematologic-emergencies'
+    topicId: 'hematologic-emergencies',
+    patientPresentation: {
+      age: 42,
+      gender: 'Female',
+      chiefComplaint: 'Severe fatigue, confusion, and easy bruising for 3 days',
+      vitalSigns: {
+        heartRate: 125,
+        bloodPressure: '110/75 mmHg',
+        temperature: 100.8,
+        respiratoryRate: 22,
+        oxygenSaturation: 96
+      },
+      pastMedicalHistory: ['No significant past medical history'],
+      currentMedications: ['Birth control pills'],
+      physicalExam: 'Pale, petechial rash on extremities, mild confusion, no organomegaly',
+      labsImaging: 'Hemoglobin: 4.2 g/dL, Platelets: 15,000/μL, LDH: 2500 U/L, Creatinine: 2.8 mg/dL, Blood smear: numerous schistocytes'
+    }
   },
   {
     id: 'heme-002',

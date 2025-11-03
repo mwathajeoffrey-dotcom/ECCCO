@@ -1,9 +1,14 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Users, Globe, TrendingUp, BookOpen, Award } from 'lucide-react';
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line, PieChart, Pie, Cell 
+} from 'recharts';
+import { Calendar, Users, Globe, Clock, Smartphone, Monitor, 
+         Tablet, MapPin, Activity, Lock, Key, TrendingUp, BookOpen, Award } from 'lucide-react';
 import Link from 'next/link';
+import { isDeveloperEnvironment, isDeveloper } from '@/lib/auth/developer';
 
 interface OverviewStats {
   uniqueDevices: number;
@@ -41,6 +46,52 @@ export default function AnalyticsPage() {
   const [topics, setTopics] = useState<TopicStats | null>(null);
   const [period, setPeriod] = useState('7');
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessCode, setAccessCode] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // Check authentication on component mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Check if in development environment
+        if (isDeveloperEnvironment()) {
+          setIsAuthenticated(true);
+          setCheckingAuth(false);
+          return;
+        }
+
+        // Check if already authenticated
+        const authenticated = await isDeveloper();
+        setIsAuthenticated(authenticated);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        setIsAuthenticated(false);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+    const handleLogin = async () => {
+    setAuthError('');
+    try {
+      const devCodes = ['Gm@12345'];
+      
+      if (devCodes.includes(accessCode)) {
+        setIsAuthenticated(true);
+        // Store authentication in localStorage for persistence
+        localStorage.setItem('eccco_analytics_auth', 'true');
+      } else {
+        setAuthError('Invalid access code');
+      }
+    } catch {
+      setAuthError('Authentication failed');
+    }
+  };
 
   const fetchAnalytics = useCallback(async () => {
     setLoading(true);
@@ -92,6 +143,77 @@ export default function AnalyticsPage() {
         color: COLORS[index % COLORS.length]
       }));
   };
+
+  // Show loading while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-6">
+            <Activity className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
+            <p className="text-gray-600 mt-2">Developer access required for analytics administration</p>
+          </div>
+          
+          {authError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              {authError}
+            </div>
+          )}
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Access Code
+              </label>
+              <input
+                type="password"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter developer access code"
+              />
+            </div>
+            
+            <button
+              onClick={handleLogin}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Access Analytics
+            </button>
+          </div>
+          
+          <div className="mt-6 text-center">
+            <Link href="/guidelines" className="text-blue-600 hover:text-blue-700 text-sm mr-4">
+              ← Guidelines Management
+            </Link>
+            <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm">
+              Home
+            </Link>
+          </div>
+          
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+              <strong>Dev Mode:</strong> Access code: Gm@12345
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

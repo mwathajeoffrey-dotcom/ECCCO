@@ -3,7 +3,7 @@ import { Question } from './types';
 export const pharmacologyEmergenciesQuestions: Question[] = [
   {
     id: 'pharm-001',
-    question: 'A patient in septic shock requires norepinephrine. What is the initial dosing range?',
+    question: 'A 70 kg patient in septic shock requires norepinephrine. What is the initial dosing range?',
     options: [
       '0.01-0.03 mcg/kg/min',
       '0.05-0.1 mcg/kg/min',
@@ -17,7 +17,23 @@ export const pharmacologyEmergenciesQuestions: Question[] = [
       'Russell JA, et al. Vasopressor therapy in critically ill patients with shock'
     ],
     difficulty: 'medium',
-    topicId: 'pharmacology-emergencies'
+    topicId: 'pharmacology-emergencies',
+    patientPresentation: {
+      age: 58,
+      gender: 'Female',
+      chiefComplaint: 'Fever, chills, and hypotension',
+      vitalSigns: {
+        heartRate: 125,
+        bloodPressure: '85/45 mmHg',
+        temperature: 102.4,
+        respiratoryRate: 28,
+        oxygenSaturation: 92
+      },
+      pastMedicalHistory: ['Diabetes', 'Urinary tract infections'],
+      currentMedications: ['Metformin', 'Lisinopril'],
+      physicalExam: 'Weight: 70 kg (154 lbs), warm extremities, altered mental status, decreased urine output',
+      labsImaging: 'Lactate: 4.2 mmol/L, WBC: 18,000/μL, Creatinine: 1.8 mg/dL, Glucose: 220 mg/dL'
+    }
   },
   {
     id: 'pharm-002',
@@ -53,7 +69,23 @@ export const pharmacologyEmergenciesQuestions: Question[] = [
       'Heintz BH, et al. Antimicrobial dosing concepts and recommendations for critically ill adult patients receiving continuous renal replacement therapy'
     ],
     difficulty: 'medium',
-    topicId: 'pharmacology-emergencies'
+    topicId: 'pharmacology-emergencies',
+    patientPresentation: {
+      age: 72,
+      gender: 'Male',
+      chiefComplaint: 'Fever and altered mental status',
+      vitalSigns: {
+        heartRate: 110,
+        bloodPressure: '90/55 mmHg',
+        temperature: 101.8,
+        respiratoryRate: 24,
+        oxygenSaturation: 94
+      },
+      pastMedicalHistory: ['Diabetes mellitus', 'Chronic kidney disease', 'Hypertension'],
+      currentMedications: ['Metformin 500mg BID', 'Lisinopril 20mg daily'],
+      physicalExam: 'Decreased urine output, mild edema, confusion',
+      labsImaging: 'Creatinine: 3.5 mg/dL (baseline 1.2), BUN: 45 mg/dL, Glucose: 180 mg/dL, WBC: 15,000/μL'
+    }
   },
   {
     id: 'pharm-004',
