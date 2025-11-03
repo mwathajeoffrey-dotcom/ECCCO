@@ -71,32 +71,40 @@ const questionsByTopic: { [key: string]: Question[] } = {
 };
 
 export async function GET(request: NextRequest) {
+  console.log('Questions API route hit!');
   try {
     const { searchParams } = new URL(request.url);
     const topicId = searchParams.get('topicId');
     const limit = parseInt(searchParams.get('limit') || '30');
     const difficulty = searchParams.get('difficulty');
+    
+    console.log('Request params:', { topicId, limit, difficulty });
 
     // Handle oncologic tier requests
     if (topicId && topicId.startsWith('oncologic-tier-')) {
+      console.log('Processing oncologic tier request for:', topicId);
       const tierNumber = parseInt(topicId.replace('oncologic-tier-', ''));
       
       if (tierNumber < 1 || tierNumber > 7) {
+        console.log('Invalid tier number:', tierNumber);
         return NextResponse.json(
           { error: 'Invalid tier number. Must be between 1-7' },
           { status: 400 }
         );
       }
 
+      console.log('Getting tier:', tierNumber);
       const tier = getOncologicTier(tierNumber);
       
       if (!tier) {
+        console.log('Tier not found for number:', tierNumber);
         return NextResponse.json(
           { error: 'Tier not found' },
           { status: 404 }
         );
       }
 
+      console.log('Tier found, questions:', tier.questions.length);
       // Return tier questions directly (frontend expects array)
       return NextResponse.json(tier.questions);
     }

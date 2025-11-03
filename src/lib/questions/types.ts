@@ -2,10 +2,10 @@ export interface Question {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
+  correctIndex: number;
   explanation: string;
   category: string;
-  references: string;
+  references: string[];
   difficulty?: 'easy' | 'medium' | 'hard';
   topicId?: string;
   // Guideline tracking for medical accuracy

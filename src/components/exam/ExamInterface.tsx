@@ -104,21 +104,36 @@ export default function ExamInterface() {
   const fetchQuestions = async (topicId: string) => {
     setIsLoading(true);
     try {
+      console.log('Fetching questions for topic:', topicId);
       const response = await fetch(`/api/questions?topicId=${topicId}&limit=30`);
       const data = await response.json();
-      setQuestions(data);
-      setCurrentQuestionIndex(0);
-      setSelectedAnswers({});
-      setFlaggedQuestions(new Set());
-      setIsExamStarted(true);
-      setIsExamFinished(false);
-      setTimeRemaining(45 * 60);
+      console.log('API Response:', data);
+      console.log('Data type:', typeof data);
+      console.log('Is array:', Array.isArray(data));
+      console.log('Data length:', data?.length);
       
-      // Track exam start
-      const topic = topics.find(t => t.id === topicId);
-      analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
+      // Ensure we have questions
+      if (Array.isArray(data) && data.length > 0) {
+        setQuestions(data);
+        setCurrentQuestionIndex(0);
+        setSelectedAnswers({});
+        setFlaggedQuestions(new Set());
+        setIsExamStarted(true);
+        setIsExamFinished(false);
+        setTimeRemaining(45 * 60);
+        
+        // Track exam start
+        const topic = topics.find(t => t.id === topicId);
+        analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
+      } else {
+        console.error('No questions received or invalid format:', data);
+        alert('No questions available for this topic. Please try another topic.');
+        setIsExamStarted(false);
+      }
     } catch (error) {
       console.error('Error fetching questions:', error);
+      alert('Error loading questions. Please try again.');
+      setIsExamStarted(false);
     } finally {
       setIsLoading(false);
     }

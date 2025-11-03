@@ -13,10 +13,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Oral ciprofloxacin and close outpatient follow-up',
       'Blood cultures and observation for 24 hours'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'For pediatric patients with febrile neutropenia (ANC <500), current 2024 pediatric oncology guidelines recommend immediate IV broad-spectrum antibiotic therapy with anti-pseudomonal coverage, such as cefepime. Unlike adults, most pediatric febrile neutropenia cases require inpatient management due to rapid clinical deterioration potential. Oral antibiotics are only considered for very low-risk patients meeting specific criteria.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Lehrnbecher T, Robinson P, Fisher B, et al. Guideline for the management of fever and neutropenia in children with cancer and hematopoietic stem-cell transplantation recipients: 2024 update. J Clin Oncol. 2024;42(11):1329-1350.'
+    references: ['Lehrnbecher T, Robinson P, Fisher B, et al. Guideline for the management of fever and neutropenia in children with cancer and hematopoietic stem-cell transplantation recipients: 2024 update. J Clin Oncol. 2024;42(11):1329-1350.']
   },
   {
     id: 'ped-onc-002',
@@ -27,10 +27,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Normal saline at 3000 mL/m²/day without alkalization',
       'Restrict fluids to 1000 mL/m²/day'
     ],
-    correctAnswer: 2,
+    correctIndex: 2,
     explanation: 'This child has tumor lysis syndrome. Current 2024 pediatric TLS guidelines recommend aggressive hydration with normal saline at 3000 mL/m²/day (approximately 2× maintenance) to promote uric acid and phosphate excretion. Alkalization is no longer routinely recommended as it can worsen calcium phosphate precipitation. Rasburicase should also be considered for rapid uric acid reduction.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Cairo MS, Coiffier B, Reiter A, Younes A. Recommendations for the evaluation of risk and prophylaxis of tumour lysis syndrome (TLS) in adults and children with malignant diseases. Br J Haematol. 2024;185(5):763-781.'
+    references: ['Cairo MS, Coiffier B, Reiter A, Younes A. Recommendations for the evaluation of risk and prophylaxis of tumour lysis syndrome (TLS) in adults and children with malignant diseases. Br J Haematol. 2024;185(5):763-781.']
   },
   {
     id: 'ped-onc-003',
@@ -41,10 +41,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Mediastinal mass syndrome; avoid sedation and intubation',
       'Respiratory failure; emergent intubation'
     ],
-    correctAnswer: 2,
+    correctIndex: 2,
     explanation: 'This child has mediastinal mass syndrome, a life-threatening emergency in pediatric oncology. The combination of respiratory symptoms, SVC syndrome, and large mediastinal mass creates high risk for complete airway obstruction, especially with sedation or supine positioning. Current guidelines emphasize avoiding sedation, maintaining upright position, and urgent oncology consultation for chemotherapy or radiation. Intubation can cause complete airway collapse.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Shamberger RC, Holzman RS, Griscom NT, et al. CT quantitation of tracheal cross-sectional area as a guide to the surgical and anesthetic management of children with anterior mediastinal masses. J Pediatr Surg. 2024;59(3):478-484.'
+    references: ['Shamberger RC, Holzman RS, Griscom NT, et al. CT quantitation of tracheal cross-sectional area as a guide to the surgical and anesthetic management of children with anterior mediastinal masses. J Pediatr Surg. 2024;59(3):478-484.']
   },
   {
     id: 'ped-onc-004',
@@ -55,10 +55,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Carboxypeptidase-G2 (glucarpidase) 50 units/kg IV',
       'Immediate hemodialysis'
     ],
-    correctAnswer: 2,
+    correctIndex: 2,
     explanation: 'This child has severe methotrexate toxicity with delayed clearance, nephrotoxicity, and CNS symptoms. With methotrexate levels >10 μmol/L at 48 hours, current pediatric guidelines recommend glucarpidase (carboxypeptidase-G2), which rapidly cleaves methotrexate to inactive metabolites. This is more effective than high-dose leucovorin alone for severe toxicity. Leucovorin should be held for 2 hours after glucarpidase administration.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Widemann BC, Adamson PC. Understanding and managing methotrexate nephrotoxicity. Oncologist. 2024;29(4):e456-e467.'
+    references: ['Widemann BC, Adamson PC. Understanding and managing methotrexate nephrotoxicity. Oncologist. 2024;29(4):e456-e467.']
   },
   {
     id: 'ped-onc-005',
@@ -69,10 +69,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'CT scan of lumbar spine',
       'Bone scan'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'Children with leukemia can present with leukemic infiltration of the spinal canal causing cord compression. Unlike adults with solid tumor metastases, pediatric patients may have leukemic deposits in epidural space or vertebral bodies. Current guidelines recommend MRI of the entire spine with contrast as the gold standard for evaluating possible spinal involvement in pediatric leukemia, as lesions can be multifocal.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Pui CH, Yang JJ, Hunger SP, et al. Childhood acute lymphoblastic leukemia: progress through collaboration. J Clin Oncol. 2024;42(11):1261-1275.'
+    references: ['Pui CH, Yang JJ, Hunger SP, et al. Childhood acute lymphoblastic leukemia: progress through collaboration. J Clin Oncol. 2024;42(11):1261-1275.']
   },
   {
     id: 'ped-onc-006',
@@ -83,10 +83,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'CNS infection; start broad-spectrum antibiotics',
       'Electrolyte imbalance; check and correct sodium'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'This patient has ifosfamide-induced encephalopathy, a serious neurologic complication occurring in 10-30% of patients. It presents with confusion, hallucinations, ataxia, and altered mental status. Current treatment guidelines recommend immediate discontinuation of ifosfamide and administration of methylene blue 1-2 mg/kg IV, which can reverse the encephalopathy by interfering with chloroacetaldehyde, the toxic metabolite.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Pelgrims J, De Vos F, Van den Brande J, et al. Methylene blue in the treatment and prevention of ifosfamide-induced encephalopathy. J Clin Oncol. 2024;42(8):891-899.'
+    references: ['Pelgrims J, De Vos F, Van den Brande J, et al. Methylene blue in the treatment and prevention of ifosfamide-induced encephalopathy. J Clin Oncol. 2024;42(8):891-899.']
   },
   {
     id: 'ped-onc-007',
@@ -97,10 +97,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Chemotherapy-induced nephrotoxicity',
       'Intracranial hypertension from brain metastases'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'Neuroblastoma can secrete catecholamines (norepinephrine, epinephrine) causing hypertensive crisis. This is more common with certain tumor locations (adrenal, para-spinal) and can be triggered by tumor manipulation or stress. Current pediatric guidelines recommend immediate blood pressure control with short-acting agents like nicardipine or esmolol, and measurement of urine catecholamines. Alpha-blockade may be needed before beta-blockade.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Matthay KK, Maris JM, Schleiermacher G, et al. Neuroblastoma. Nat Rev Dis Primers. 2024;10(1):28.'
+    references: ['Matthay KK, Maris JM, Schleiermacher G, et al. Neuroblastoma. Nat Rev Dis Primers. 2024;10(1):28.']
   },
   {
     id: 'ped-onc-008',
@@ -111,10 +111,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Discontinue temozolomide and supportive care',
       'Bone marrow biopsy to rule out secondary malignancy'
     ],
-    correctAnswer: 0,
+    correctIndex: 0,
     explanation: 'This child has severe pancytopenia from temozolomide-induced myelosuppression. With severe anemia (Hgb 5.2 g/dL) causing symptoms and severe thrombocytopenia (<30,000), immediate transfusion support is needed. Current pediatric guidelines recommend PRBC transfusion for symptomatic anemia and platelet transfusion for counts <20,000 or with bleeding. The chemotherapy should also be held until recovery.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Cohen KJ, Pollack IF, Zhou T, et al. Temozolomide in the treatment of high-grade gliomas in children: a report from the Children\'s Oncology Group. Neuro Oncol. 2024;26(4):678-689.'
+    references: ['Cohen KJ, Pollack IF, Zhou T, et al. Temozolomide in the treatment of high-grade gliomas in children: a report from the Children\']s Oncology Group. Neuro Oncol. 2024;26(4):678-689.'
   },
   {
     id: 'ped-onc-009',
@@ -125,10 +125,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Tumor rupture with peritoneal seeding',
       'Anastomotic leak'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'Post-operative bowel obstruction is a serious complication after Wilms tumor resection, occurring in 5-15% of patients. Unlike simple ileus, obstruction presents with progressive distension, vomiting, and failure to pass stool/gas. Current pediatric surgical oncology guidelines recommend early recognition and intervention, as delayed treatment can lead to bowel ischemia. CT imaging and surgical consultation are indicated.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Dome JS, Graf N, Geller JI, et al. Advances in Wilms tumor treatment and biology: progress through international collaboration. J Clin Oncol. 2024;42(11):1276-1288.'
+    references: ['Dome JS, Graf N, Geller JI, et al. Advances in Wilms tumor treatment and biology: progress through international collaboration. J Clin Oncol. 2024;42(11):1276-1288.']
   },
   {
     id: 'ped-onc-010',
@@ -139,10 +139,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'CYP2D6 polymorphism',
       'UGT1A1 deficiency'
     ],
-    correctAnswer: 0,
+    correctIndex: 0,
     explanation: 'Severe toxicity from 6-mercaptopurine (mucositis, diarrhea, myelosuppression) suggests TPMT (thiopurine S-methyltransferase) deficiency. TPMT metabolizes 6-MP; deficiency leads to accumulation of toxic metabolites. Current pediatric ALL protocols recommend TPMT testing before starting therapy. Patients with deficiency require significant dose reductions (10-15% of standard dose). This child needs immediate supportive care and dose adjustment.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Relling MV, Schwab M, Whirl-Carrillo M, et al. Clinical Pharmacogenetics Implementation Consortium guideline for thiopurine dosing based on TPMT and NUDT15 genotypes: 2024 update. Clin Pharmacol Ther. 2024;115(4):697-705.'
+    references: ['Relling MV, Schwab M, Whirl-Carrillo M, et al. Clinical Pharmacogenetics Implementation Consortium guideline for thiopurine dosing based on TPMT and NUDT15 genotypes: 2024 update. Clin Pharmacol Ther. 2024;115(4):697-705.']
   },
   {
     id: 'ped-onc-011',
@@ -153,10 +153,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Give antihistamines and continue infusion',
       'Complete infusion and schedule cardiology follow-up'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'This patient is experiencing acute doxorubicin cardiotoxicity, a potentially life-threatening complication. Acute cardiotoxicity can occur during or shortly after infusion and may present as arrhythmias, heart failure, or myocarditis. Current guidelines mandate immediate cessation of infusion and urgent cardiology evaluation. The drop in ejection fraction from 65% to 45% represents significant acute cardiotoxicity requiring immediate intervention.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Armenian SH, Hudson MM, Mulder RL, et al. Recommendations for cardiomyopathy surveillance for survivors of childhood cancer: a report from the International Late Effects of Childhood Cancer Guideline Harmonization Group. Lancet Oncol. 2024;25(3):e108-e119.'
+    references: ['Armenian SH, Hudson MM, Mulder RL, et al. Recommendations for cardiomyopathy surveillance for survivors of childhood cancer: a report from the International Late Effects of Childhood Cancer Guideline Harmonization Group. Lancet Oncol. 2024;25(3):e108-e119.']
   },
   {
     id: 'ped-onc-012',
@@ -167,10 +167,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Discontinue carboplatin and consider alternative agents',
       'Reduce carboplatin dose by 50%'
     ],
-    correctAnswer: 2,
+    correctIndex: 2,
     explanation: 'Carboplatin-induced ototoxicity is dose-limiting and often irreversible, particularly problematic in young children whose speech and language development depend on hearing. Current pediatric oncology guidelines recommend considering alternative agents when significant hearing loss occurs, especially in very young children. For retinoblastoma, alternative regimens without platinum agents may be considered to preserve hearing.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Clemens E, van den Heuvel-Eibrink MM, Mulder RL, et al. Recommendations for ototoxicity surveillance for childhood, adolescent, and young adult cancer survivors: a report from the International Late Effects of Childhood Cancer Guideline Harmonization Group. Lancet Oncol. 2024;25(3):e90-e107.'
+    references: ['Clemens E, van den Heuvel-Eibrink MM, Mulder RL, et al. Recommendations for ototoxicity surveillance for childhood, adolescent, and young adult cancer survivors: a report from the International Late Effects of Childhood Cancer Guideline Harmonization Group. Lancet Oncol. 2024;25(3):e90-e107.']
   },
   {
     id: 'ped-onc-013',
@@ -181,10 +181,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Normal saline bolus 20 mL/kg',
       'Demeclocycline 300 mg BID'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'For asymptomatic mild-moderate hyponatremia (Na+ 125-134 mEq/L) due to SIADH in children, current guidelines recommend fluid restriction as first-line therapy. Restriction to 50-75% of maintenance fluid requirements allows gradual correction. Hypertonic saline is reserved for severe symptomatic hyponatremia (<125 mEq/L with seizures/coma). Demeclocycline is rarely used in children due to dental staining risk.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Sterns RH, Silver SM, Hix JK. Cerebral salt wasting versus SIADH: what difference? J Am Soc Nephrol. 2024;35(3):298-312.'
+    references: ['Sterns RH, Silver SM, Hix JK. Cerebral salt wasting versus SIADH: what difference? J Am Soc Nephrol. 2024;35(3):298-312.']
   },
   {
     id: 'ped-onc-014',
@@ -195,10 +195,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Continue infusion with premedication next time',
       'Switch to different anti-CD20 antibody'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'This child is experiencing severe rituximab infusion reaction (cytokine release syndrome), which can be life-threatening. Current guidelines recommend immediate cessation of infusion, aggressive supportive care with IV fluids for hypotension, oxygen for hypoxemia, and epinephrine for severe reactions. Severe first-infusion reactions are more common in pediatric patients with high tumor burden. The reaction typically resolves with supportive care.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Cairo MS, Acharya SS, Daw NC, et al. Rituximab use in pediatric B-cell hematologic malignancies: Safety and efficacy data from 41 clinical trials. Blood. 2024;143(9):789-801.'
+    references: ['Cairo MS, Acharya SS, Daw NC, et al. Rituximab use in pediatric B-cell hematologic malignancies: Safety and efficacy data from 41 clinical trials. Blood. 2024;143(9):789-801.']
   },
   {
     id: 'ped-onc-015',
@@ -209,10 +209,10 @@ const corePediatricOncologicQuestions: Question[] = [
       'Immediate intubation and mechanical ventilation',
       'Bronchoscopy to rule out infection'
     ],
-    correctAnswer: 1,
+    correctIndex: 1,
     explanation: 'This patient likely has bleomycin-induced pulmonary toxicity. A critical aspect of management is avoiding high-concentration oxygen, as bleomycin-damaged lungs are extremely sensitive to oxygen toxicity, which can worsen injury. Current guidelines recommend using the lowest FiO2 necessary to maintain adequate oxygenation (usually <30%). High-dose corticosteroids should also be started immediately.',
     category: 'Pediatric Oncologic Emergencies',
-    references: 'Huang TT, Hudson MM, Stokes DC, et al. Pulmonary outcomes in survivors of childhood cancer: a systematic review. Chest. 2024;165(4):821-839.'
+    references: ['Huang TT, Hudson MM, Stokes DC, et al. Pulmonary outcomes in survivors of childhood cancer: a systematic review. Chest. 2024;165(4):821-839.']
   }
 ];
 
