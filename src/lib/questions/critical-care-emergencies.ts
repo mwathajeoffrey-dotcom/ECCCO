@@ -284,7 +284,7 @@ export const criticalCareEmergenciesQuestions: Question[] = [
     explanation: 'Primary PCI is the preferred reperfusion strategy for STEMI complicated by cardiogenic shock, provided it can be performed rapidly (<90 minutes) by an experienced team. Early revascularization improves survival in cardiogenic shock.',
     references: [
       'Thiele H, et al. Intraaortic balloon support for myocardial infarction with cardiogenic shock',
-      'O\'Gara PT, et al. 2013 ACCF/AHA guideline for the management of ST-elevation myocardial infarction'
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction'
     ],
     difficulty: 'medium',
     topicId: 'critical-care-emergencies'

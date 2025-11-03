@@ -415,7 +415,7 @@ export const advancedEcgInterpretationQuestions: Question[] = [
     explanation: 'This is an inferior STEMI. Right-sided leads (V3R-V5R) should be obtained to evaluate for right ventricular involvement, which occurs in 30-50% of inferior STEMIs and significantly affects management (preload dependent, avoid nitrates).',
     references: [
       'Ibanez B, et al. 2017 ESC STEMI Guidelines',
-      'O\'Gara PT, et al. 2013 ACCF/AHA STEMI Guidelines',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines',
       'Thygesen K, et al. Fourth Universal Definition MI 2018'
     ],
     difficulty: 'medium',

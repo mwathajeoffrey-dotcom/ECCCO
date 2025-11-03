@@ -13,7 +13,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'ST elevation in leads II, III, and aVF indicates an inferior wall myocardial infarction, which is typically caused by occlusion of the right coronary artery (RCA). The RCA supplies the inferior wall of the left ventricle in 85-90% of patients.',
     references: [
-      'American College of Cardiology/American Heart Association Task Force. 2013 ACCF/AHA Guideline for the Management of ST-Elevation Myocardial Infarction',
+      'American College of Cardiology/American Heart Association Task Force. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction',
       'Thygesen K, et al. Fourth Universal Definition of Myocardial Infarction. Circulation. 2018;138(20):e618-e651'
     ],
     difficulty: 'medium',
@@ -31,7 +31,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'Beta-blockers like metoprolol are contraindicated in patients with cardiogenic shock, hypotension (SBP <90 mmHg), or signs of heart failure. They can further reduce cardiac output and worsen hypotension in the acute setting.',
     references: [
-      'O\'Gara PT, et al. 2013 ACCF/AHA Guideline for the Management of ST-Elevation Myocardial Infarction. Circulation. 2013;127(4):e362-e425',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction. Circulation. 2013;127(4):e362-e425',
       'Amsterdam EA, et al. 2014 AHA/ACC Guideline for the Management of Patients with Non-ST-Elevation Acute Coronary Syndromes'
     ],
     difficulty: 'medium',
@@ -103,7 +103,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 3,
     explanation: 'Non-invasive positive pressure ventilation (BiPAP/CPAP) is the most appropriate initial treatment for acute cardiogenic pulmonary edema. It reduces preload and afterload, improves oxygenation, and has been shown to reduce mortality and the need for intubation.',
     references: [
-      'Yancy CW, et al. 2013 ACCF/AHA Guideline for the Management of Heart Failure. Circulation. 2013;128(16):e240-e327',
+      'Yancy CW, et al. 2024 AHA/ACC Heart Failure Guidelines. Circulation. 2013;128(16):e240-e327',
       'Gray A, et al. Noninvasive ventilation in acute cardiogenic pulmonary edema. N Engl J Med. 2008;359(2):142-151'
     ],
     difficulty: 'medium',
@@ -355,7 +355,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'ST elevation in leads V1-V4 indicates an anterior wall myocardial infarction, which is typically caused by occlusion of the left anterior descending (LAD) coronary artery. The LAD supplies the anterior wall of the left ventricle.',
     references: [
-      'O\'Gara PT, et al. 2013 ACCF/AHA Guideline for the Management of ST-Elevation Myocardial Infarction',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction',
       'Thygesen K, et al. Fourth Universal Definition of Myocardial Infarction. Circulation. 2018;138(20):e618-e651'
     ],
     difficulty: 'easy',
@@ -391,7 +391,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'In acute decompensated heart failure with volume overload (weight gain, orthopnea), diuretics should be initiated first to relieve congestion. Loop diuretics like furosemide are first-line for symptom relief. ACE inhibitors and beta-blockers are important for long-term management but may worsen acute symptoms.',
     references: [
-      'Yancy CW, et al. 2017 ACC/AHA/HFSA Focused Update of the 2013 ACCF/AHA Guideline for the Management of Heart Failure',
+      'Yancy CW, et al. 2017 ACC/AHA/HFSA Focused Update of the 2024 AHA/ACC Heart Failure Guidelines',
       'Ponikowski P, et al. 2016 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure'
     ],
     difficulty: 'medium',
@@ -517,7 +517,7 @@ export const cardiacEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'For STEMI patients at non-PCI capable hospitals, transfer for primary PCI is preferred if the anticipated first medical contact-to-device time is <120 minutes. If transfer would result in significant delay (>120 minutes), fibrinolytic therapy should be considered if no contraindications exist.',
     references: [
-      'O\'Gara PT, et al. 2013 ACCF/AHA Guideline for the Management of ST-Elevation Myocardial Infarction',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction',
       'Ibanez B, et al. 2017 ESC Guidelines for the management of acute myocardial infarction in patients presenting with ST-segment elevation'
     ],
     difficulty: 'medium',

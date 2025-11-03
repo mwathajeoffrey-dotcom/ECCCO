@@ -13,7 +13,7 @@ export const ecgEmergenciesQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'ST elevation in leads II, III, and aVF indicates inferior STEMI. The RCA supplies the inferior wall in 80-90% of patients. Reciprocal depression in leads I and aVL supports this diagnosis. Right-sided ECG should be obtained to assess for RV involvement.',
     references: [
-      'O\'Gara PT, et al. 2013 ACCF/AHA guideline for the management of ST-elevation myocardial infarction',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction',
       'Thygesen K, et al. Fourth Universal Definition of Myocardial Infarction (2018)'
     ],
     difficulty: 'medium',
@@ -158,7 +158,7 @@ export const ecgEmergenciesQuestions: Question[] = [
     explanation: 'ST elevation in posterior leads V7-V9 indicates isolated posterior STEMI, which is a STEMI equivalent requiring emergent reperfusion therapy. The standard 12-lead may appear normal or show only subtle reciprocal changes in V1-V3.',
     references: [
       'Matetzky S, et al. Acute myocardial infarction with isolated ST-segment elevation in posterior chest leads V7-9',
-      'O\'Gara PT, et al. 2013 ACCF/AHA guideline for the management of ST-elevation myocardial infarction'
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction'
     ],
     difficulty: 'medium',
     topicId: 'ecg-emergencies'
@@ -265,7 +265,7 @@ export const ecgEmergenciesQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'Lateral STEMI (I, aVL, V5-V6) typically involves the left circumflex artery (LCX). The lateral wall contains papillary muscle attachments, so lateral MI increases risk of acute mitral regurgitation from papillary muscle dysfunction or rupture.',
     references: [
-      'O\'Gara PT, et al. 2013 ACCF/AHA guideline for the management of ST-elevation myocardial infarction',
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction',
       'Elbadawi A, et al. Mechanical complications of acute myocardial infarction in the contemporary era'
     ],
     difficulty: 'medium',
@@ -500,7 +500,7 @@ export const ecgEmergenciesQuestions: Question[] = [
     explanation: 'Right ventricular STEMI (ST elevation in right-sided leads) with hypotension requires preload optimization with IV fluids rather than diuretics. RV depends on preload for output. Avoid nitrates and diuretics which reduce preload. PCI is still priority for reperfusion.',
     references: [
       'Zehender M, et al. Right ventricular infarction as an independent predictor of prognosis after acute inferior myocardial infarction',
-      'O\'Gara PT, et al. 2013 ACCF/AHA guideline for the management of ST-elevation myocardial infarction'
+      'O\'Gara PT, et al. 2023 AHA/ACC STEMI Guidelines for the Management of ST-Elevation Myocardial Infarction'
     ],
     difficulty: 'medium',
     topicId: 'ecg-emergencies'
