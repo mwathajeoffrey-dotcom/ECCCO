@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Topic {
@@ -89,7 +89,7 @@ model AnalyticsEvent {
 
 model DailyStats {
   id              String   @id @default(cuid())
-  date            DateTime @unique @db.Date
+  date            DateTime @unique
   uniqueDevices   Int      @default(0)
   totalSessions   Int      @default(0)
   examsStarted    Int      @default(0)
@@ -118,4 +118,184 @@ model UserProgress {
 
   @@unique([userId, topicId])
   @@index([userId])
+}
+
+// Advanced Learning Analytics Models
+model LearningSession {
+  id                String   @id @default(cuid())
+  userId            String
+  sessionId         String   // Browser session identifier
+  startTime         DateTime
+  endTime           DateTime?
+  topicId           String
+  questionsAttempted Int     @default(0)
+  correctAnswers    Int      @default(0)
+  timeSpent         Int      @default(0) // in seconds
+  difficultyLevel   Int      @default(1)
+  completionRate    Float    @default(0.0)
+  confidenceScores  String?  // JSON array of confidence ratings
+  responsePatterns  String?  // JSON array of detailed response data
+  learningObjectives String? // JSON array of learning goals
+  metadata          String?  // JSON object for additional data
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+  @@index([topicId])
+  @@index([sessionId])
+  @@index([startTime])
+  @@index([difficultyLevel])
+}
+
+model LearningInsight {
+  id               String   @id @default(cuid())
+  userId           String
+  insightType      String   // 'strength', 'weakness', 'improvement', 'recommendation'
+  category         String   // Topic or skill area
+  title            String
+  description      String
+  evidence         String   // JSON array of supporting evidence
+  confidence       Float    // 0-1 confidence score
+  actionItems      String   // JSON array of recommended actions
+  priority         String   // 'low', 'medium', 'high', 'critical'
+  estimatedImpact  Float    // 0-1 estimated learning impact
+  isActive         Boolean  @default(true)
+  acknowledgedAt   DateTime?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([insightType])
+  @@index([priority])
+  @@index([isActive])
+  @@index([createdAt])
+}
+
+model AdaptiveRecommendation {
+  id                  String   @id @default(cuid())
+  userId              String
+  recommendationType  String   // 'question', 'topic', 'study_plan', 'guideline', 'practice_mode'
+  title               String
+  description         String
+  reasoning           String
+  targetTopics        String   // JSON array of topic IDs
+  estimatedDifficulty Int      @default(1)
+  estimatedTime       Int      @default(30) // in minutes
+  expectedOutcome     String
+  confidence          Float    // 0-1 confidence in recommendation
+  algorithm           String   // Algorithm that generated this
+  factors             String   // JSON array of factors considered
+  metadata            String?  // JSON object for additional data
+  
+  isActive            Boolean  @default(true)
+  acceptedAt          DateTime?
+  completedAt         DateTime?
+  feedbackRating      Int?     // 1-5 user rating
+  feedbackComment     String?
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+  @@index([recommendationType])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([confidence])
+}
+
+model StudyPlan {
+  id              String   @id @default(cuid())
+  userId          String
+  title           String
+  description     String
+  totalDuration   Int      // in days
+  dailyGoal       Int      // in minutes
+  topics          String   // JSON array of topic configurations
+  milestones      String   // JSON array of milestone definitions
+  adaptations     String   // JSON array of plan modifications
+  
+  isActive        Boolean  @default(true)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  progressData    String?  // JSON object tracking progress
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
+  @@index([startedAt])
+}
+
+model PerformanceMetric {
+  id              String   @id @default(cuid())
+  userId          String
+  metricType      String   // 'overall', 'topic', 'difficulty', 'velocity', 'cognitive_load'
+  metricKey       String   // Specific metric identifier
+  value           Float    // Metric value
+  metadata        String?  // JSON object with additional metric data
+  calculatedAt    DateTime
+  
+  createdAt       DateTime @default(now())
+
+  @@unique([userId, metricType, metricKey, calculatedAt])
+  @@index([userId])
+  @@index([metricType])
+  @@index([calculatedAt])
+}
+
+model LearningGoal {
+  id              String   @id @default(cuid())
+  userId          String
+  title           String
+  description     String
+  targetTopics    String   // JSON array of topic IDs
+  targetAccuracy  Float?   // Target accuracy percentage
+  targetTime      Int?     // Target completion time
+  deadline        DateTime?
+  
+  status          String   @default("active") // 'active', 'completed', 'paused', 'abandoned'
+  progress        Float    @default(0.0) // 0-1 completion percentage
+  achievements    String?  // JSON array of milestones reached
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([deadline])
+}
+
+model QuestionAnalytics {
+  id              String   @id @default(cuid())
+  questionId      String
+  userId          String?  // Optional for anonymous analytics
+  sessionId       String
+  
+  // Response Data
+  selectedAnswer  Int      // Index of selected answer
+  isCorrect       Boolean
+  responseTime    Int      // Time taken in milliseconds
+  attempts        Int      @default(1)
+  hintsUsed       Int      @default(0)
+  confidenceLevel Int?     // 1-5 self-reported confidence
+  difficultyRating Int?    // 1-5 user perception of difficulty
+  
+  // Context Data
+  questionOrder   Int      // Position in the exam/session
+  previousCorrect Boolean? // Whether previous question was correct
+  cumulativeScore Float?   // Running accuracy at this point
+  timeOfDay       String?  // Morning, afternoon, evening
+  dayOfWeek       String?  // Monday, Tuesday, etc.
+  
+  createdAt       DateTime @default(now())
+
+  @@index([questionId])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([isCorrect])
+  @@index([responseTime])
+  @@index([createdAt])
 }

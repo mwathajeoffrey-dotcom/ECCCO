@@ -7,8 +7,14 @@ import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { UnitConversionDisplay, UnitConverterButton } from '@/components/ui/UnitConverter';
 import { analytics } from '@/lib/analytics/service';
-import { questionsAPI } from '@/lib/errors/api';
+import { questionsAPI } from '@/lib/performance/api';
 import { useErrorHandler } from '@/lib/errors/tracking';
+import { useExamSession } from '@/lib/persistence/examSession';
+import { SessionRecoveryModal, QuickRecoveryBanner, SessionExportModal } from '@/components/exam/SessionRecovery';
+import { useQuestionPreloader } from '@/lib/performance/preloader';
+import { usePerformanceMonitor } from '@/lib/performance/monitor';
+import { PerformanceStats } from '@/components/ui/PerformanceStats';
+import { useLearningSession, useLearningAnalytics, useAdaptiveDifficulty, usePerformanceMonitor as useAnalyticsMonitor } from '@/hooks/useLearningAnalytics';
 
 interface Question {
   id: string;
@@ -65,7 +71,62 @@ export default function ExamInterface() {
   const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   
+  // Session persistence state
+  const [showRecoveryModal, setShowRecoveryModal] = useState(false);
+  const [showRecoveryBanner, setShowRecoveryBanner] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [currentQuestionStartTime, setCurrentQuestionStartTime] = useState<number>(Date.now());
+  
   const { logError, logAPIError } = useErrorHandler();
+  const {
+    initializeSession,
+    updateSession,
+    recordAnswer,
+    updateTimeRemaining: updateSessionTime,
+    resumeSession,
+    completeSession,
+    hasRecoverableSession,
+    getRecoverableSessionInfo,
+    recoverSession,
+    clearSession,
+    exportSession,
+    importSession
+  } = useExamSession();
+  
+  const {
+    preloadExamQuestions,
+    preloadTopicQuestions,
+    prefetchAdjacentQuestions,
+    getMetrics: getPreloaderMetrics
+  } = useQuestionPreloader();
+  
+  const {
+    trackMetric,
+    trackUserInteraction,
+    getPerformanceScore
+  } = usePerformanceMonitor();
+
+  // Learning Analytics Integration
+  const learningSession = useLearningSession({
+    topicId: selectedTopic,
+    userId: 'current-user', // In production, get from auth context
+    difficultyLevel: 3, // Default difficulty, will be adaptive
+    learningObjectives: [],
+    enableRealTimeTracking: true,
+  });
+
+  const adaptiveDifficulty = useAdaptiveDifficulty(3);
+  
+  const analyticsMonitor = useAnalyticsMonitor(
+    'current-user',
+    {
+      topicId: selectedTopic,
+      userId: 'current-user',
+      difficultyLevel: adaptiveDifficulty.currentDifficulty,
+      learningObjectives: [],
+      enableRealTimeTracking: true,
+    }
+  );
 
   // Fetch topics on component mount
   useEffect(() => {
@@ -76,20 +137,38 @@ export default function ExamInterface() {
         const data = await questionsAPI.get<Topic[]>('/api/topics');
         setTopics(data);
         
-        // Initialize analytics
+        // Initialize analytics and performance tracking
         await analytics.initialize();
         analytics.trackPageView('/exam', 'Exam Topics Selection');
-      } catch (error) {
+        
+        // Track page load performance
+        trackMetric('page_load_start', performance.now(), { page: 'exam-topics' });
+        
+        // Preload popular topics in background
+        const popularTopics = data.slice(0, 3); // Assume first 3 are most popular
+        for (const topic of popularTopics) {
+          preloadTopicQuestions(topic.id);
+        }
+        
+        // Check for recoverable session
+        if (hasRecoverableSession()) {
+          const sessionInfo = getRecoverableSessionInfo();
+          if (sessionInfo) {
+            setShowRecoveryBanner(true);
+          }
+        }
+      } catch (error: unknown) {
         const message = 'Failed to load exam topics. Please refresh the page.';
         setApiError(message);
-        logAPIError('/api/topics', error.status || 0, error.code, message);
+        const errorObj = error as { status?: number; code?: string };
+        logAPIError('/api/topics', errorObj?.status || 0, errorObj?.code || 'UNKNOWN', message);
       } finally {
         setLoadingTopics(false);
       }
     };
 
     fetchTopics();
-  }, [logAPIError]);
+  }, [logAPIError, hasRecoverableSession, getRecoverableSessionInfo, preloadTopicQuestions, trackMetric]);
 
   // Timer effect
   useEffect(() => {
@@ -98,26 +177,48 @@ export default function ExamInterface() {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
             setIsExamFinished(true);
+            // Complete session when time runs out
+            completeSession();
             return 0;
           }
-          return prev - 1;
+          const newTime = prev - 1;
+          // Update session time (throttled in session manager)
+          updateSessionTime(newTime);
+          return newTime;
         });
       }, 1000);
 
       return () => clearInterval(timer);
     }
-  }, [isExamStarted, isExamFinished, timeRemaining]);
+  }, [isExamStarted, isExamFinished, timeRemaining, completeSession, updateSessionTime]);
 
   const fetchQuestions = async (topicId: string) => {
     setIsLoading(true);
     setApiError(null);
+    
+    const loadStartTime = performance.now();
+    
     try {
       console.log('Fetching questions for topic:', topicId);
-      const data = await questionsAPI.get<Question[]>(`/api/questions?topicId=${topicId}&limit=30`);
+      
+      // Use enhanced API client with caching
+      const data = await questionsAPI.get<Question[]>(
+        `/api/questions?topicId=${topicId}&limit=30`,
+        { 
+          cache: true,
+          priority: 'high',
+          timeout: 15000
+        }
+      );
+      
       console.log('API Response:', data);
       console.log('Data type:', typeof data);
       console.log('Is array:', Array.isArray(data));
       console.log('Data length:', data?.length);
+      
+      // Track load performance
+      const loadTime = performance.now() - loadStartTime;
+      trackMetric('questions_load_time', loadTime, { topicId, count: data?.length || 0 });
       
       // Ensure we have questions
       if (Array.isArray(data) && data.length > 0) {
@@ -128,19 +229,34 @@ export default function ExamInterface() {
         setIsExamStarted(true);
         setIsExamFinished(false);
         setTimeRemaining(45 * 60);
+        setCurrentQuestionStartTime(Date.now());
+        
+        // Initialize session persistence
+        const topic = topics.find(t => t.id === topicId);
+        initializeSession(topicId, topic?.name || 'Unknown Topic', data);
+        
+        // Start learning analytics session
+        learningSession.startSession();
+        
+        // Start intelligent preloading
+        preloadExamQuestions(topicId, data.length, 0);
         
         // Track exam start
-        const topic = topics.find(t => t.id === topicId);
         analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
+        trackMetric('exam_started', Date.now(), { topicId, questionCount: data.length });
       } else {
         const message = 'No questions available for this topic. Please try another topic.';
         setApiError(message);
         logAPIError(`/api/questions?topicId=${topicId}`, 404, 'NO_QUESTIONS', message);
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      const loadTime = performance.now() - loadStartTime;
+      trackMetric('questions_load_error', loadTime, { topicId, error: 'failed' });
+      
       const message = 'Error loading questions. Please try again.';
       setApiError(message);
-      logAPIError(`/api/questions?topicId=${topicId}`, error.status || 0, error.code, message);
+      const errorObj = error as { status?: number; code?: string };
+      logAPIError(`/api/questions?topicId=${topicId}`, errorObj?.status || 0, errorObj?.code || 'UNKNOWN', message);
       setIsExamStarted(false);
     } finally {
       setIsLoading(false);
@@ -151,6 +267,8 @@ export default function ExamInterface() {
     if (!isExamFinished) {
       const currentQuestion = questions[currentQuestionIndex];
       const isCorrect = answerIndex === currentQuestion.correctIndex;
+      const responseTime = Math.round((Date.now() - currentQuestionStartTime));
+      const timeSpent = Math.round(responseTime / 1000);
       
       setSelectedAnswers(prev => ({
         ...prev,
@@ -158,6 +276,31 @@ export default function ExamInterface() {
       }));
       
       setCurrentQuestionAnswered(true);
+      
+      // Record answer in session
+      recordAnswer(currentQuestionIndex, answerIndex, timeSpent);
+      
+      // Record response in learning analytics
+      learningSession.recordResponse({
+        questionId: currentQuestion.id,
+        selectedAnswer: answerIndex,
+        isCorrect,
+        responseTime,
+        confidenceLevel: 3, // Could be user-inputted
+        hintsUsed: 0,
+        attempts: 1,
+      });
+      
+      // Monitor performance and adjust difficulty
+      analyticsMonitor.monitorPerformance(learningSession.sessionMetrics);
+      adaptiveDifficulty.adjustDifficulty(learningSession.sessionMetrics);
+      
+      // Update session state
+      updateSession({
+        currentQuestionIndex,
+        selectedAnswers: { ...selectedAnswers, [currentQuestionIndex]: answerIndex },
+        currentQuestionAnswered: true
+      });
       
       // Track question answered
       analytics.trackQuestionAnswered(
@@ -169,12 +312,43 @@ export default function ExamInterface() {
   };
 
   const handleQuestionNavigation = (direction: 'prev' | 'next') => {
+    const navigationStart = performance.now();
+    
     if (direction === 'prev' && currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex - 1] !== undefined);
+      const newIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(newIndex);
+      setCurrentQuestionAnswered(selectedAnswers[newIndex] !== undefined);
+      setCurrentQuestionStartTime(Date.now());
+      
+      // Prefetch adjacent questions
+      prefetchAdjacentQuestions(selectedTopic, newIndex, questions.length);
+      
+      // Update session
+      updateSession({
+        currentQuestionIndex: newIndex,
+        currentQuestionAnswered: selectedAnswers[newIndex] !== undefined
+      });
+      
+      // Track navigation performance
+      trackUserInteraction('navigation', 'prev_question', navigationStart, performance.now());
+      
     } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex + 1] !== undefined);
+      const newIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(newIndex);
+      setCurrentQuestionAnswered(selectedAnswers[newIndex] !== undefined);
+      setCurrentQuestionStartTime(Date.now());
+      
+      // Prefetch adjacent questions
+      prefetchAdjacentQuestions(selectedTopic, newIndex, questions.length);
+      
+      // Update session
+      updateSession({
+        currentQuestionIndex: newIndex,
+        currentQuestionAnswered: selectedAnswers[newIndex] !== undefined
+      });
+      
+      // Track navigation performance
+      trackUserInteraction('navigation', 'next_question', navigationStart, performance.now());
     }
   };
 
@@ -186,14 +360,26 @@ export default function ExamInterface() {
       newFlagged.add(currentQuestionIndex);
     }
     setFlaggedQuestions(newFlagged);
+    
+    // Update session
+    updateSession({
+      flaggedQuestions: Array.from(newFlagged)
+    });
   };
 
-  const finishExam = () => {
+  const finishExam = async () => {
     setIsExamFinished(true);
     
     // Calculate and track exam completion
     const score = calculateScore();
     const timeSpent = 45 * 60 - timeRemaining;
+    
+    // End learning analytics session
+    const sessionId = await learningSession.endSession(true);
+    console.log('Learning session completed:', sessionId);
+    
+    // Complete session
+    completeSession(score);
     
     analytics.trackExamComplete(selectedTopic, score, timeSpent);
   };
@@ -206,6 +392,55 @@ export default function ExamInterface() {
       }
     });
     return Math.round((correct / questions.length) * 100);
+  };
+
+  // Session recovery functions
+  const handleRecoverSession = () => {
+    const recovered = recoverSession();
+    if (recovered) {
+      // Restore exam state from session
+      setSelectedTopic(recovered.topicId);
+      setQuestions(recovered.questions);
+      setCurrentQuestionIndex(recovered.currentQuestionIndex);
+      setSelectedAnswers(recovered.selectedAnswers);
+      setFlaggedQuestions(new Set(recovered.flaggedQuestions));
+      setTimeRemaining(recovered.timeRemaining);
+      setIsExamStarted(recovered.isStarted);
+      setIsExamFinished(recovered.isFinished);
+      setShowAnswerAfterAttempt(recovered.showAnswerAfterAttempt);
+      setCurrentQuestionAnswered(recovered.currentQuestionAnswered);
+      setCurrentQuestionStartTime(Date.now());
+      
+      // Close recovery modal/banner
+      setShowRecoveryModal(false);
+      setShowRecoveryBanner(false);
+      
+      // Resume if paused
+      if (recovered.isPaused) {
+        resumeSession();
+      }
+    }
+  };
+
+  const handleDiscardSession = () => {
+    clearSession();
+    setShowRecoveryModal(false);
+    setShowRecoveryBanner(false);
+  };
+
+  const handleExportSession = () => {
+    const exported = exportSession();
+    if (exported) {
+      setShowExportModal(true);
+    }
+  };
+
+  const handleImportSession = (data: string) => {
+    const imported = importSession(data);
+    if (imported) {
+      setShowRecoveryModal(false);
+      handleRecoverSession();
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -277,12 +512,31 @@ export default function ExamInterface() {
             <p className="text-gray-600 text-sm sm:text-base">Choose a topic for your 30-question timed exam</p>
           </div>
 
+          {/* Session Recovery Banner */}
+          {showRecoveryBanner && hasRecoverableSession() && (
+            <QuickRecoveryBanner
+              sessionInfo={{
+                topicName: getRecoverableSessionInfo()?.topicName || '',
+                progress: getRecoverableSessionInfo()?.progress || ''
+              }}
+              onRecover={handleRecoverSession}
+              onDismiss={() => setShowRecoveryBanner(false)}
+              className="mb-6"
+            />
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {topics.map((topic) => (
               <div
                 key={topic.id}
                 className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
                 onClick={() => {
+                  // Check if there's a recoverable session before starting new exam
+                  if (hasRecoverableSession()) {
+                    setShowRecoveryModal(true);
+                    return;
+                  }
+                  
                   setSelectedTopic(topic.id);
                   analytics.trackTopicSelection(topic.id, topic.name);
                   fetchQuestions(topic.id);
@@ -544,6 +798,13 @@ export default function ExamInterface() {
                 </span>
               </div>
               <button
+                onClick={handleExportSession}
+                className="border border-blue-600 text-blue-600 px-2 py-1 sm:px-3 sm:py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-50 transition-colors"
+                title="Export current session"
+              >
+                Export
+              </button>
+              <button
                 onClick={finishExam}
                 className="bg-red-600 text-white px-2 py-1 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-red-700 transition-colors"
               >
@@ -553,6 +814,39 @@ export default function ExamInterface() {
           </div>
         </div>
       </div>
+
+      {/* Learning Analytics Alerts */}
+      {(analyticsMonitor.performanceAlerts.length > 0 || analyticsMonitor.recommendations.length > 0) && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3 flex-1">
+                <h3 className="text-sm font-medium text-yellow-800">Learning Insights</h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  {analyticsMonitor.performanceAlerts.map((alert, index) => (
+                    <p key={index} className="mb-1">⚠️ {alert}</p>
+                  ))}
+                  {analyticsMonitor.recommendations.map((rec, index) => (
+                    <p key={index} className="mb-1">💡 {rec}</p>
+                  ))}
+                </div>
+                <div className="mt-2">
+                  <span className="text-xs text-yellow-600">
+                    Current Difficulty: Level {adaptiveDifficulty.currentDifficulty} | 
+                    Accuracy: {(learningSession.sessionMetrics.accuracy * 100).toFixed(1)}% | 
+                    Questions: {learningSession.sessionMetrics.questionsAttempted}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
@@ -636,7 +930,7 @@ export default function ExamInterface() {
           <div className="lg:col-span-3 order-1 lg:order-2">
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
               <div className="flex items-start justify-between mb-4 sm:mb-6">
-                <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900 flex-1 leading-relaxed">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 flex-1 leading-relaxed">
                   <UnitConversionDisplay 
                     text={currentQuestion?.question || ''}
                     className="inline"
@@ -677,31 +971,31 @@ export default function ExamInterface() {
                 }
               >
                 {currentQuestion?.patientPresentation && (
-                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                    <h3 className="font-semibold text-gray-900 mb-3">Patient Presentation</h3>
+                  <div className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
+                    <h3 className="font-bold text-gray-900 mb-3 text-base">Patient Presentation</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm"><span className="font-medium">Age:</span> {typeof currentQuestion.patientPresentation.age === 'number' ? `${currentQuestion.patientPresentation.age} years` : currentQuestion.patientPresentation.age}</p>
-                        <p className="text-sm"><span className="font-medium">Gender:</span> {currentQuestion.patientPresentation.gender}</p>
-                        <p className="text-sm"><span className="font-medium">Chief Complaint:</span> {currentQuestion.patientPresentation.chiefComplaint}</p>
+                        <p className="text-base font-medium text-gray-900"><span className="font-bold">Age:</span> {typeof currentQuestion.patientPresentation.age === 'number' ? `${currentQuestion.patientPresentation.age} years` : currentQuestion.patientPresentation.age}</p>
+                        <p className="text-base font-medium text-gray-900"><span className="font-bold">Gender:</span> {currentQuestion.patientPresentation.gender}</p>
+                        <p className="text-base font-medium text-gray-900"><span className="font-bold">Chief Complaint:</span> {currentQuestion.patientPresentation.chiefComplaint}</p>
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm mb-2">Vital Signs</h4>
+                        <h4 className="font-bold text-base mb-2 text-gray-900">Vital Signs</h4>
                         {currentQuestion.patientPresentation.vitalSigns ? (
-                          <div className="text-xs space-y-1">
-                            <p>HR: {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
-                            <p>BP: {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
+                          <div className="text-base space-y-1 font-medium text-gray-900">
+                            <p><span className="font-bold">HR:</span> {currentQuestion.patientPresentation.vitalSigns.heartRate} bpm</p>
+                            <p><span className="font-bold">BP:</span> {currentQuestion.patientPresentation.vitalSigns.bloodPressure}</p>
                             <p>
-                              Temp: <UnitConversionDisplay 
+                              <span className="font-bold">Temp:</span> <UnitConversionDisplay 
                                 text={`${currentQuestion.patientPresentation.vitalSigns.temperature}°F`}
                                 className="inline"
                               />
                             </p>
-                            <p>RR: {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
-                            <p>SpO2: {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
+                            <p><span className="font-bold">RR:</span> {currentQuestion.patientPresentation.vitalSigns.respiratoryRate}/min</p>
+                            <p><span className="font-bold">SpO2:</span> {currentQuestion.patientPresentation.vitalSigns.oxygenSaturation}%</p>
                           </div>
                         ) : currentQuestion.patientPresentation.vitals ? (
-                          <p className="text-xs">
+                          <p className="text-base font-medium text-gray-900">
                             <UnitConversionDisplay 
                               text={currentQuestion.patientPresentation.vitals}
                               className="inline"
@@ -749,7 +1043,7 @@ export default function ExamInterface() {
                   </div>
                 }
               >
-                <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                   {currentQuestion && (typeof currentQuestion.options === 'string' 
                     ? JSON.parse(currentQuestion.options) 
                     : currentQuestion.options).map((option: string, index: number) => {
@@ -762,24 +1056,24 @@ export default function ExamInterface() {
                         key={index}
                         onClick={() => handleAnswerSelect(index)}
                         disabled={showAnswer && !isExamFinished}
-                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
+                        className={`w-full text-left p-4 sm:p-5 rounded-lg border-2 transition-all duration-200 touch-manipulation ${
                           showAnswer && isCorrect
                             ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200'
                             : showAnswer && isSelected && !isCorrect
                             ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
                             : isSelected
                             ? 'border-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 shadow-lg ring-4 ring-blue-300 transform scale-[1.02] font-semibold'
-                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 hover:shadow-md'
+                            : 'border-gray-400 bg-white hover:bg-blue-50 hover:border-blue-400 hover:shadow-md text-gray-900'
                         } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-start">
-                          <span className={`font-medium mr-2 sm:mr-3 text-sm sm:text-base ${
-                            isSelected ? 'text-blue-800 font-bold' : 'text-gray-600'
+                          <span className={`font-bold mr-2 sm:mr-3 text-base sm:text-lg ${
+                            isSelected ? 'text-blue-900 font-black' : 'text-gray-900'
                           }`}>
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className={`text-sm sm:text-base leading-relaxed flex-1 ${
-                            isSelected ? 'font-semibold' : ''
+                          <span className={`text-base sm:text-lg leading-relaxed flex-1 text-gray-900 ${
+                            isSelected ? 'font-bold' : 'font-medium'
                           }`}>
                             <UnitConversionDisplay 
                               text={option}
@@ -866,17 +1160,17 @@ export default function ExamInterface() {
                 <button
                   onClick={() => handleQuestionNavigation('prev')}
                   disabled={currentQuestionIndex === 0}
-                  className="flex items-center px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base text-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed hover:text-gray-900 touch-manipulation"
+                  className="flex items-center px-4 py-3 sm:px-5 sm:py-3 text-base sm:text-lg font-semibold text-gray-900 disabled:text-gray-400 disabled:cursor-not-allowed hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors touch-manipulation"
                 >
-                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  <ChevronLeft className="w-5 h-5 mr-2" />
                   Previous
                 </button>
 
                 <div className="flex items-center space-x-2 text-center">
-                  <span className="text-xs sm:text-sm text-gray-500">
+                  <span className="text-sm sm:text-base font-medium text-gray-900">
                     Difficulty: 
                   </span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  <span className={`px-3 py-2 rounded-lg text-sm font-bold ${
                     currentQuestion?.difficulty === 'easy'
                       ? 'bg-green-100 text-green-800'
                       : currentQuestion?.difficulty === 'medium'
@@ -890,15 +1184,42 @@ export default function ExamInterface() {
                 <button
                   onClick={() => handleQuestionNavigation('next')}
                   disabled={currentQuestionIndex === questions.length - 1}
-                  className="flex items-center px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base text-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed hover:text-gray-900 touch-manipulation"
+                  className="flex items-center px-4 py-3 sm:px-5 sm:py-3 text-base sm:text-lg font-semibold text-gray-900 disabled:text-gray-400 disabled:cursor-not-allowed hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors touch-manipulation"
                 >
                   Next
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                  <ChevronRight className="w-5 h-5 ml-2" />
                 </button>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Session Recovery Modal */}
+        {showRecoveryModal && hasRecoverableSession() && (
+          <SessionRecoveryModal
+            sessionInfo={getRecoverableSessionInfo() || {
+              topicName: '',
+              progress: '',
+              timeSpent: '',
+              lastSaved: ''
+            }}
+            onRecover={handleRecoverSession}
+            onDiscard={handleDiscardSession}
+            onExport={handleExportSession}
+            onImport={handleImportSession}
+          />
+        )}
+
+        {/* Session Export Modal */}
+        {showExportModal && (
+          <SessionExportModal
+            sessionData={exportSession() || ''}
+            onClose={() => setShowExportModal(false)}
+          />
+        )}
+        
+        {/* Performance Monitoring */}
+        <PerformanceStats showDetailed={false} />
       </div>
     </div>
   );

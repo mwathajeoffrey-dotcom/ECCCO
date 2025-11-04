@@ -24,6 +24,9 @@ export default function Home() {
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
               </Link>
+              <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
+                Analytics
+              </Link>
               <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
                 Dashboard
               </Link>
@@ -83,15 +86,15 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
+          <Link href="/learning-analytics" className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
               <BarChart3 className="w-6 h-6 text-purple-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Performance Analytics</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Learning Analytics</h3>
             <p className="text-gray-600">
-              Track your progress, identify weak areas, and monitor improvement over time.
+              Advanced AI-powered insights, adaptive recommendations, and personalized study plans for optimal learning.
             </p>
-          </div>
+          </Link>
 
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
@@ -191,10 +194,10 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Features</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Practice Questions</li>
-                <li>Timed Exams</li>
-                <li>Performance Analytics</li>
-                <li>Study Materials</li>
+                <li><Link href="/practice" className="hover:text-white">Practice Questions</Link></li>
+                <li><Link href="/exam" className="hover:text-white">Timed Exams</Link></li>
+                <li><Link href="/learning-analytics" className="hover:text-white">Learning Analytics</Link></li>
+                <li><Link href="/guidelines" className="hover:text-white">Medical Guidelines</Link></li>
               </ul>
             </div>
             <div>

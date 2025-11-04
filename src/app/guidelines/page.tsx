@@ -1,9 +1,428 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Calendar, BookOpen, Download, RefreshCw } from 'lucide-react';
-import { isDeveloper } from '@/lib/auth/developer';
+import React, { useState, useEffect } from 'react';
+import { 
+  ArrowLeft, 
+  Search, 
+  Filter, 
+  Download, 
+  Bookmark, 
+  BookmarkCheck,
+  Eye,
+  Star,
+  FileText,
+  Calendar,
+  Users,
+  Award,
+  Grid,
+  List,
+  ExternalLink,
+  Wifi,
+  WifiOff
+} from 'lucide-react';
 import Link from 'next/link';
+import guidelinesService, { MedicalGuideline, GuidelineCategory } from '@/lib/guidelines/service';
+
+export default function GuidelinesPage() {
+  const [guidelines, setGuidelines] = useState<MedicalGuideline[]>([]);
+  const [categories, setCategories] = useState<GuidelineCategory[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Initialize data
+    setCategories(guidelinesService.getCategories());
+    setGuidelines(guidelinesService.searchGuidelines(''));
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    // Filter guidelines based on search and filters
+    const filtered = guidelinesService.searchGuidelines(searchQuery, {
+      category: selectedCategory || undefined,
+      difficulty: selectedDifficulty || undefined
+    });
+    setGuidelines(filtered);
+  }, [searchQuery, selectedCategory, selectedDifficulty]);
+
+  const handleBookmark = async (guidelineId: string) => {
+    const userId = 'current-user'; // In real app, get from auth
+    const isCurrentlyBookmarked = guidelinesService.isBookmarked(userId, guidelineId);
+    
+    if (isCurrentlyBookmarked) {
+      await guidelinesService.removeBookmark(userId, guidelineId);
+    } else {
+      await guidelinesService.bookmarkGuideline(userId, guidelineId);
+    }
+    
+    // Refresh guidelines to update bookmark status
+    const updated = guidelinesService.searchGuidelines(searchQuery, {
+      category: selectedCategory || undefined,
+      difficulty: selectedDifficulty || undefined
+    });
+    setGuidelines(updated);
+  };
+
+  const handleDownload = async (guideline: MedicalGuideline) => {
+    await guidelinesService.trackAccess(guideline.id);
+    // In a real app, this would trigger PDF download
+    window.open(`/guidelines/viewer/${guideline.id}`, '_blank');
+  };
+
+  const featuredGuidelines = guidelinesService.getFeaturedGuidelines(3);
+  const recentlyUpdated = guidelinesService.getRecentlyUpdated(3);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Link 
+                href="/" 
+                className="mr-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Medical Guidelines Library</h1>
+                <p className="text-gray-600 mt-1">Evidence-based clinical protocols and references</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {viewMode === 'grid' ? <List className="h-5 w-5" /> : <Grid className="h-5 w-5" />}
+              </button>
+              
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Search and Filters */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search guidelines, organizations, topics..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+            
+            {showFilters && (
+              <div className="flex flex-wrap gap-4 lg:w-96">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Categories</option>
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                
+                <select
+                  value={selectedDifficulty}
+                  onChange={(e) => setSelectedDifficulty(e.target.value)}
+                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Levels</option>
+                  <option value="basic">Basic</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Featured Guidelines */}
+        {!searchQuery && !selectedCategory && !selectedDifficulty && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Guidelines</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {featuredGuidelines.map(guideline => (
+                <div key={guideline.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium`}
+                            style={{ backgroundColor: `${guideline.category.color}20`, color: guideline.category.color }}>
+                        <span className="mr-1">{guideline.category.icon}</span>
+                        {guideline.category.name}
+                      </span>
+                      <button
+                        onClick={() => handleBookmark(guideline.id)}
+                        className="p-1 hover:bg-gray-100 rounded"
+                      >
+                        {guideline.bookmarked ? 
+                          <BookmarkCheck className="h-5 w-5 text-blue-600" /> : 
+                          <Bookmark className="h-5 w-5 text-gray-400" />
+                        }
+                      </button>
+                    </div>
+                    
+                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{guideline.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{guideline.description}</p>
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>{guideline.organization}</span>
+                      <span className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-400 mr-1" />
+                        {guideline.rating}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Guidelines Grid/List */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">
+            {searchQuery || selectedCategory || selectedDifficulty ? 'Search Results' : 'All Guidelines'}
+            <span className="text-lg font-normal text-gray-500 ml-2">({guidelines.length})</span>
+          </h2>
+          
+          {guidelines.length > 0 && (
+            <div className="text-sm text-gray-500">
+              Showing {guidelines.length} of {guidelinesService.searchGuidelines('').length} guidelines
+            </div>
+          )}
+        </div>
+
+        {guidelines.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm p-12 text-center">
+            <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No guidelines found</h3>
+            <p className="text-gray-500">Try adjusting your search terms or filters</p>
+          </div>
+        ) : (
+          <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+            {guidelines.map(guideline => (
+              <GuidelineCard 
+                key={guideline.id} 
+                guideline={guideline} 
+                viewMode={viewMode}
+                onBookmark={() => handleBookmark(guideline.id)}
+                onDownload={() => handleDownload(guideline)}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Recently Updated */}
+        {!searchQuery && !selectedCategory && !selectedDifficulty && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Recently Updated</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {recentlyUpdated.map(guideline => (
+                <div key={guideline.id} className="bg-white rounded-xl shadow-sm p-6">
+                  <div className="flex items-center mb-3">
+                    <Calendar className="h-4 w-4 text-green-500 mr-2" />
+                    <span className="text-sm text-green-600 font-medium">
+                      Updated {new Date(guideline.lastUpdated).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{guideline.title}</h3>
+                  <p className="text-gray-600 text-sm">{guideline.organization}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GuidelineCard({ 
+  guideline, 
+  viewMode, 
+  onBookmark, 
+  onDownload 
+}: { 
+  guideline: MedicalGuideline;
+  viewMode: 'grid' | 'list';
+  onBookmark: () => void;
+  onDownload: () => void;
+}) {
+  if (viewMode === 'list') {
+    return (
+      <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center mb-3">
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mr-3`}
+                    style={{ backgroundColor: `${guideline.category.color}20`, color: guideline.category.color }}>
+                <span className="mr-1">{guideline.category.icon}</span>
+                {guideline.category.name}
+              </span>
+              
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                guideline.difficulty === 'basic' ? 'bg-green-100 text-green-800' :
+                guideline.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-red-100 text-red-800'
+              }`}>
+                {guideline.difficulty}
+              </span>
+              
+              <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
+                Level {guideline.evidenceLevel}
+              </span>
+            </div>
+            
+            <h3 className="font-semibold text-gray-900 mb-2">{guideline.title}</h3>
+            <p className="text-gray-600 text-sm mb-3">{guideline.description}</p>
+            
+            <div className="flex items-center text-sm text-gray-500 space-x-6">
+              <span className="flex items-center">
+                <Users className="h-4 w-4 mr-1" />
+                {guideline.organization}
+              </span>
+              <span className="flex items-center">
+                <Calendar className="h-4 w-4 mr-1" />
+                {new Date(guideline.publicationDate).getFullYear()}
+              </span>
+              <span className="flex items-center">
+                <FileText className="h-4 w-4 mr-1" />
+                {guideline.pageCount} pages
+              </span>
+              <span className="flex items-center">
+                <Download className="h-4 w-4 mr-1" />
+                {guideline.downloadCount.toLocaleString()}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2 ml-6">
+            <div className="flex items-center text-sm text-gray-500">
+              <Star className="h-4 w-4 text-yellow-400 mr-1" />
+              {guideline.rating}
+            </div>
+            
+            {guideline.offline && (
+              <WifiOff className="h-4 w-4 text-green-500" title="Available offline" />
+            )}
+            
+            <button
+              onClick={onBookmark}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              {guideline.bookmarked ? 
+                <BookmarkCheck className="h-5 w-5 text-blue-600" /> : 
+                <Bookmark className="h-5 w-5 text-gray-400" />
+              }
+            </button>
+            
+            <button
+              onClick={onDownload}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              View
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium`}
+                style={{ backgroundColor: `${guideline.category.color}20`, color: guideline.category.color }}>
+            <span className="mr-1">{guideline.category.icon}</span>
+            {guideline.category.name}
+          </span>
+          
+          <div className="flex items-center space-x-1">
+            {guideline.offline && (
+              <WifiOff className="h-4 w-4 text-green-500" title="Available offline" />
+            )}
+            <button
+              onClick={onBookmark}
+              className="p-1 hover:bg-gray-100 rounded"
+            >
+              {guideline.bookmarked ? 
+                <BookmarkCheck className="h-5 w-5 text-blue-600" /> : 
+                <Bookmark className="h-5 w-5 text-gray-400" />
+              }
+            </button>
+          </div>
+        </div>
+        
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{guideline.title}</h3>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{guideline.description}</p>
+        
+        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+          <span>{guideline.organization}</span>
+          <span className="flex items-center">
+            <Star className="h-4 w-4 text-yellow-400 mr-1" />
+            {guideline.rating}
+          </span>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className={`px-2 py-1 rounded text-xs font-medium ${
+              guideline.difficulty === 'basic' ? 'bg-green-100 text-green-800' :
+              guideline.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
+              {guideline.difficulty}
+            </span>
+            <span className="text-xs text-gray-500">{guideline.pageCount} pages</span>
+          </div>
+          
+          <button
+            onClick={onDownload}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          >
+            View PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface GuidelineReport {
   totalQuestions: number;

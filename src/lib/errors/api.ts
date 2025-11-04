@@ -18,10 +18,16 @@ export interface RetryConfig {
   onRetry?: (attempt: number, error: APIError) => void;
 }
 
-export interface APIRequestConfig extends RequestInit {
+import { performanceCache, CacheKeys, CacheTTL } from '@/lib/performance/cache';
+import { performanceMonitor } from '@/lib/performance/monitor';
+
+interface RequestConfig {
   timeout?: number;
-  retry?: Partial<RetryConfig>;
-  skipErrorTracking?: boolean;
+  retries?: number;
+  backoffFactor?: number;
+  cache?: boolean;
+  cacheTTL?: number;
+  priority?: 'high' | 'normal' | 'low';
 }
 
 const DEFAULT_RETRY_CONFIG: RetryConfig = {
@@ -134,34 +140,132 @@ class APIClient {
     throw lastError;
   }
 
-  async request<T = any>(
+  async request<T = unknown>(
     endpoint: string,
-    config: APIRequestConfig = {}
+    config: RequestConfig = {}
   ): Promise<T> {
     const {
       timeout = 30000,
-      retry = {},
-      skipErrorTracking = false,
-      ...fetchConfig
+      retries = 3,
+      backoffFactor = 2,
+      cache = false,
+      cacheTTL = CacheTTL.MEDIUM,
+      priority = 'normal',
+      ...requestOptions
     } = config;
 
     const url = `${this.baseURL}${endpoint}`;
-    const method = fetchConfig.method || 'GET';
+    const method = (requestOptions as any)?.method || 'GET';
+    const cacheKey = cache ? CacheKeys.questions(endpoint) : null;
     
-    const retryConfig: RetryConfig = {
-      ...DEFAULT_RETRY_CONFIG,
-      ...retry
-    };
+    // Check cache first for GET requests
+    if (cache && method === 'GET' && cacheKey) {
+      const cached = performanceCache.get<T>(cacheKey);
+      if (cached) {
+        performanceMonitor.trackAPICall(endpoint, method, Date.now(), Date.now(), 200, true);
+        return cached;
+      }
+    }
 
-    const operation = async (): Promise<T> => {
-      const response = await this.withTimeout(
-        fetch(url, {
-          ...fetchConfig,
-          headers: {
-            ...this.defaultHeaders,
-            ...fetchConfig.headers
-          }
-        }),
+    const startTime = performance.now();
+    let lastError: APIError | null = null;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const response = await this.withTimeout(
+          fetch(url, {
+            ...requestOptions,
+            headers: {
+              ...this.defaultHeaders,
+              ...(requestOptions as any)?.headers
+            }
+          }),
+          timeout
+        );
+
+        if (!response.ok) {
+          throw new APIError(
+            `HTTP ${response.status}: ${response.statusText}`,
+            response.status,
+            'HTTP_ERROR',
+            response.statusText
+          );
+        }
+
+        let responseData: unknown;
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType?.includes('application/json')) {
+          responseData = await response.json();
+        } else {
+          responseData = await response.text();
+        }
+
+        const endTime = performance.now();
+        
+        // Track performance
+        performanceMonitor.trackAPICall(endpoint, method, startTime, endTime, response.status, false);
+        
+        // Cache successful GET responses
+        if (cache && method === 'GET' && cacheKey) {
+          performanceCache.set(cacheKey, responseData as T, cacheTTL);
+        }
+
+        return responseData as T;
+
+      } catch (error) {
+        const apiError = error instanceof APIError 
+          ? error 
+          : new APIError(
+              `Network request failed: ${(error as Error).message}`,
+              0,
+              'NETWORK_ERROR',
+              error
+            );
+
+        lastError = apiError;
+
+        // Don't retry on certain errors
+        if (apiError.status >= 400 && apiError.status < 500 && apiError.status !== 429) {
+          break;
+        }
+
+        // Don't retry on the last attempt
+        if (attempt === retries) {
+          break;
+        }
+
+        // Wait before retrying with exponential backoff
+        const delayMs = 1000 * Math.pow(backoffFactor, attempt);
+        await this.delay(delayMs);
+      }
+    }
+
+    const endTime = performance.now();
+    
+    // Track failed API call
+    if (lastError) {
+      performanceMonitor.trackAPICall(
+        endpoint, 
+        method, 
+        startTime, 
+        endTime, 
+        lastError.status || 0, 
+        false
+      );
+      
+      // Log error to tracking system
+      errorTracker.logNetworkError(
+        endpoint,
+        method,
+        lastError.status || 0,
+        JSON.stringify(lastError.response),
+        { attempts: retries + 1 }
+      );
+    }
+
+    throw lastError;
+  }
         timeout,
         endpoint
       );

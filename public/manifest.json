@@ -1,0 +1,143 @@
+{
+  "name": "ECCCO - Emergency & Critical Care Comprehensive Online",
+  "short_name": "ECCCO",
+  "description": "Comprehensive question bank with evidence-based questions covering all emergency and critical care topics. Practice with timed exams, detailed explanations, and performance tracking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["education", "medical", "health"],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Practice Questions",
+      "short_name": "Practice",
+      "description": "Start practicing with questions from your favorite topics",
+      "url": "/practice",
+      "icons": [
+        {
+          "src": "/icons/practice-icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Take Exam",
+      "short_name": "Exam",
+      "description": "Take a timed exam to test your knowledge",
+      "url": "/exam",
+      "icons": [
+        {
+          "src": "/icons/exam-icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your learning progress and performance statistics",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/icons/dashboard-icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-home.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "platform": "mobile",
+      "label": "ECCCO home screen showing exam topics and quick access options"
+    },
+    {
+      "src": "/screenshots/mobile-exam.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "platform": "mobile",
+      "label": "Interactive exam interface with question navigation and progress tracking"
+    },
+    {
+      "src": "/screenshots/desktop-dashboard.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Performance dashboard with detailed analytics and learning insights"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+eccco",
+      "url": "/exam?topic=%s"
+    }
+  ]
+}
