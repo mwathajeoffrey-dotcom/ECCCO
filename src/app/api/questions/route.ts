@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Question } from '@/lib/questions/types';
-import { getOncologicTier } from '@/lib/questions/oncologic-tier-system';
 
 // Import all question modules with correct export names
 import { aclsQuestions } from '@/lib/questions/acls';
 import { advancedEcgInterpretationQuestions } from '@/lib/questions/advanced-ecg-interpretation';
-import { adultOncologicEmergenciesQuestions } from '@/lib/questions/adult-oncologic-emergencies';
 import { airwayManagementQuestions } from '@/lib/questions/airway-management';
 import { atlsQuestions } from '@/lib/questions/atls';
 import { bloodGasAnalysisQuestions } from '@/lib/questions/blood-gas-analysis';
@@ -26,7 +24,6 @@ import { neurologicalEmergenciesQuestions } from '@/lib/questions/neurological-e
 import { obstetricGynelogicEmergenciesQuestions } from '@/lib/questions/obstetric-gynecologic-emergencies';
 import { palsQuestions } from '@/lib/questions/pals';
 import { pediatricEmergenciesQuestions } from '@/lib/questions/pediatric-emergencies';
-import { pediatricOncologicEmergenciesQuestions } from '@/lib/questions/pediatric-oncologic-emergencies';
 import { pharmacologyEmergenciesQuestions } from '@/lib/questions/pharmacology-emergencies';
 import { pointOfCareUltrasoundQuestions } from '@/lib/questions/point-of-care-ultrasound';
 import { proceduresQuestions } from '@/lib/questions/procedures';
@@ -37,11 +34,14 @@ import { sepsisManagementQuestions } from '@/lib/questions/sepsis-management';
 import { toxicologyQuestions } from '@/lib/questions/toxicology';
 import { traumaManagementQuestions } from '@/lib/questions/trauma-management';
 
+// Import new oncology batch questions
+import adultOncologyBatch1Questions from '@/lib/questions/adult-oncology-batch-1';
+import pediatricOncologyBatch1Questions from '@/lib/questions/pediatric-oncology-batch-1';
+
 // Combine all questions by topic with correct variable names
 const questionsByTopic: { [key: string]: Question[] } = {
   'acls': aclsQuestions,
   'advanced-ecg-interpretation': advancedEcgInterpretationQuestions,
-  'adult-oncologic-emergencies': adultOncologicEmergenciesQuestions,
   'airway-management': airwayManagementQuestions,
   'atls': atlsQuestions,
   'blood-gas-analysis': bloodGasAnalysisQuestions,
@@ -62,7 +62,6 @@ const questionsByTopic: { [key: string]: Question[] } = {
   'obstetric-gynecologic-emergencies': obstetricGynelogicEmergenciesQuestions,
   'pals': palsQuestions,
   'pediatric-emergencies': pediatricEmergenciesQuestions,
-  'pediatric-oncologic-emergencies': pediatricOncologicEmergenciesQuestions,
   'pharmacology-emergencies': pharmacologyEmergenciesQuestions,
   'point-of-care-ultrasound': pointOfCareUltrasoundQuestions,
   'procedures': proceduresQuestions,
@@ -72,6 +71,8 @@ const questionsByTopic: { [key: string]: Question[] } = {
   'sepsis-management': sepsisManagementQuestions,
   'toxicology': toxicologyQuestions,
   'trauma-management': traumaManagementQuestions,
+  'adult-oncology-batch-1': adultOncologyBatch1Questions,
+  'pediatric-oncology-batch-1': pediatricOncologyBatch1Questions,
 };
 
 export async function GET(request: NextRequest) {
@@ -83,35 +84,6 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get('difficulty');
     
     console.log('Request params:', { topicId, limit, difficulty });
-
-    // Handle oncologic tier requests
-    if (topicId && topicId.startsWith('oncologic-tier-')) {
-      console.log('Processing oncologic tier request for:', topicId);
-      const tierNumber = parseInt(topicId.replace('oncologic-tier-', ''));
-      
-      if (tierNumber < 1 || tierNumber > 7) {
-        console.log('Invalid tier number:', tierNumber);
-        return NextResponse.json(
-          { error: 'Invalid tier number. Must be between 1-7' },
-          { status: 400 }
-        );
-      }
-
-      console.log('Getting tier:', tierNumber);
-      const tier = getOncologicTier(tierNumber);
-      
-      if (!tier) {
-        console.log('Tier not found for number:', tierNumber);
-        return NextResponse.json(
-          { error: 'Tier not found' },
-          { status: 404 }
-        );
-      }
-
-      console.log('Tier found, questions:', tier.questions.length);
-      // Return tier questions directly (frontend expects array)
-      return NextResponse.json(tier.questions);
-    }
 
     let questions: Question[] = [];
 

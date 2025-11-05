@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import "./globals.css";
-import "../styles/answer-visibility.css";
-import "../styles/nuclear-text-override.css"; // FINAL nuclear override for text visibility
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

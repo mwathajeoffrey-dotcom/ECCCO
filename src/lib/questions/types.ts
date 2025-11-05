@@ -140,18 +140,6 @@ export const emergencyTopics: Topic[] = [
     name: 'Ethical and Legal Issues',
     description: 'End-of-life care, consent, and legal considerations',
     questions: []
-  },
-  {
-    id: 'adult-oncologic-emergencies',
-    name: 'Adult Oncologic Emergencies',
-    description: 'Tumor lysis syndrome, febrile neutropenia, hypercalcemia, SVCS, and other cancer-related emergencies in adults',
-    questions: []
-  },
-  {
-    id: 'pediatric-oncologic-emergencies',
-    name: 'Pediatric Oncologic Emergencies',
-    description: 'Cancer-related emergencies in children including febrile neutropenia, tumor lysis syndrome, and chemotherapy toxicities',
-    questions: []
   }
 ];
 

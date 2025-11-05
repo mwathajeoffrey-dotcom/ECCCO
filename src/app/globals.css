@@ -1,4 +1,9 @@
-@import "tailwindcss";
+@import "../styles/answer-visibility.css";
+@import "../styles/nuclear-text-override.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;

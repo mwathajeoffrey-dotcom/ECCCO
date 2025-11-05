@@ -1,32 +1,27 @@
 // Central export file for all ECCCO questions
-import { adultOncologicEmergenciesQuestions } from './adult-oncologic-emergencies';
-import { pediatricOncologicEmergenciesQuestions } from './pediatric-oncologic-emergencies';
-import { 
-  allOncologicEmergencyQuestions,
-  oncologicTiers,
-  getOncologicTier,
-  getAvailableTiers,
-  getNextTier,
-  getTierProgress,
-  tierInformation 
-} from './oncologic-tier-system';
 import { Question } from './types';
 
-// Import other existing question sets (you'll need to import these as they're created)
-// import { aclsQuestions } from './acls';
-// import { blsQuestions } from './bls';
-// import { cardiacEmergenciesQuestions } from './cardiac-emergencies';
-// ... and so on for other topics
+// Import existing question sets
+import { aclsQuestions } from './acls';
+import { blsQuestions } from './bls';
+import { cardiacEmergenciesQuestions } from './cardiac-emergencies';
+import adultOncologyBatch1Questions from './adult-oncology-batch-1';
+import pediatricOncologyBatch1Questions from './pediatric-oncology-batch-1';
 
 export const allQuestions: Question[] = [
-  ...allOncologicEmergencyQuestions, // 210 questions in tiered system
-  // Add other question arrays here as they're imported
+  ...aclsQuestions,
+  ...blsQuestions,
+  ...cardiacEmergenciesQuestions,
+  ...adultOncologyBatch1Questions,
+  ...pediatricOncologyBatch1Questions,
 ];
 
 export const questionsByCategory = {
-  'Adult Oncologic Emergencies': adultOncologicEmergenciesQuestions,
-  'Pediatric Oncologic Emergencies': pediatricOncologicEmergenciesQuestions,
-  // Add other categories here
+  'ACLS': aclsQuestions,
+  'BLS': blsQuestions,
+  'Cardiac Emergencies': cardiacEmergenciesQuestions,
+  'Adult Oncologic Emergencies': adultOncologyBatch1Questions,
+  'Pediatric Oncologic Emergencies': pediatricOncologyBatch1Questions,
 };
 
 export const getQuestionsByCategory = (category: string): Question[] => {
@@ -42,20 +37,6 @@ export const getRandomQuestions = (count: number, category?: string): Question[]
   const shuffled = sourceQuestions.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, Math.min(count, sourceQuestions.length));
 };
-
-// Tier System Exports
-export {
-  allOncologicEmergencyQuestions,
-  oncologicTiers,
-  getOncologicTier,
-  getAvailableTiers,
-  getNextTier,
-  getTierProgress,
-  tierInformation
-};
-
-// Export the new question sets
-export { adultOncologicEmergenciesQuestions, pediatricOncologicEmergenciesQuestions };
 
 // Export types
 export type { Question } from './types';
