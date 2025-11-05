@@ -378,51 +378,51 @@ export default function ExamInterface() {
                         onClick={() => handleAnswerSelect(index)}
                         className={`w-full p-6 rounded-xl border-3 text-left transition-all duration-200 flex items-center ${
                           isSelected
-                            ? 'border-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 shadow-xl ring-4 ring-blue-300 transform scale-[1.02] font-bold shadow-blue-200'
-                            : 'border-gray-800 bg-white hover:bg-blue-50 hover:border-blue-600 hover:shadow-xl text-gray-900 font-bold shadow-gray-200 answer-option-default'
+                            ? 'border-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 shadow-xl ring-4 ring-blue-300 transform scale-[1.02] shadow-blue-200'
+                            : 'border-gray-800 bg-white hover:bg-blue-50 hover:border-blue-600 hover:shadow-xl text-gray-900 shadow-gray-200 answer-option-default'
                         } cursor-pointer hover:scale-[1.01] active:scale-[0.99]`}
                         style={{
-                          // Force ultra-high contrast styles for cross-device compatibility
-                          color: '#000000',
+                          // Balanced styling for good visibility and readability
+                          color: '#1a1a1a',
                           backgroundColor: isSelected ? '#dbeafe' : '#ffffff',
-                          borderColor: isSelected ? '#1d4ed8' : '#000000',
-                          fontWeight: '900',
-                          minHeight: '90px',
-                          fontSize: '22px',
-                          borderWidth: '5px',
-                          boxShadow: isSelected ? '0 0 0 8px #93c5fd, 0 12px 20px -2px rgb(0 0 0 / 0.3)' : '0 8px 16px -2px rgb(0 0 0 / 0.4)'
+                          borderColor: isSelected ? '#1d4ed8' : '#d1d5db',
+                          fontWeight: '500',
+                          minHeight: '70px',
+                          fontSize: '16px',
+                          borderWidth: '2px',
+                          boxShadow: isSelected ? '0 0 0 3px #93c5fd' : '0 2px 4px -1px rgb(0 0 0 / 0.1)'
                         }}
                       >
                         <div className="flex items-start">
-                          <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-bold mr-3 sm:mr-4 text-sm sm:text-base flex-shrink-0 answer-badge ${
+                          <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full mr-3 sm:mr-4 text-sm sm:text-base flex-shrink-0 answer-badge ${
                             isSelected 
                               ? 'bg-blue-600 text-white ring-2 ring-blue-300' 
                               : 'bg-gray-800 text-white hover:bg-blue-600 hover:text-white'
                           }`}
                           style={{
-                            // Force ultra-high contrast badge visibility across all devices
-                            backgroundColor: isSelected ? '#1d4ed8' : '#000000',
+                            // Balanced badge styling
+                            backgroundColor: isSelected ? '#1d4ed8' : '#374151',
                             color: '#ffffff',
-                            fontWeight: '900',
-                            width: '44px',
-                            height: '44px',
+                            fontWeight: '600',
+                            width: '32px',
+                            height: '32px',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             borderRadius: '50%',
-                            marginRight: '20px',
-                            fontSize: '20px',
-                            border: '4px solid #333333'
+                            marginRight: '16px',
+                            fontSize: '14px',
+                            border: '2px solid #6b7280'
                           }}>
                             {String.fromCharCode(65 + index)}
                           </span>
-                          <span className={`text-xl leading-relaxed flex-1 font-black answer-text`}
+                          <span className={`text-xl leading-relaxed flex-1 answer-text`}
                           style={{
-                            // Force ultra-high contrast text visibility across all devices
-                            color: '#000000',
-                            fontWeight: '900',
-                            fontSize: '22px',
-                            lineHeight: '1.7',
+                            // Balanced visibility - readable but clear
+                            color: '#1a1a1a',
+                            fontWeight: '500',
+                            fontSize: '16px',
+                            lineHeight: '1.5',
                             textShadow: 'none'
                           }}>
                             <UnitConversionDisplay 
