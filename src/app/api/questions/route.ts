@@ -5,6 +5,7 @@ import { getOncologicTier } from '@/lib/questions/oncologic-tier-system';
 // Import all question modules with correct export names
 import { aclsQuestions } from '@/lib/questions/acls';
 import { advancedEcgInterpretationQuestions } from '@/lib/questions/advanced-ecg-interpretation';
+import { adultOncologicEmergenciesQuestions } from '@/lib/questions/adult-oncologic-emergencies';
 import { airwayManagementQuestions } from '@/lib/questions/airway-management';
 import { atlsQuestions } from '@/lib/questions/atls';
 import { bloodGasAnalysisQuestions } from '@/lib/questions/blood-gas-analysis';
@@ -25,6 +26,7 @@ import { neurologicalEmergenciesQuestions } from '@/lib/questions/neurological-e
 import { obstetricGynelogicEmergenciesQuestions } from '@/lib/questions/obstetric-gynecologic-emergencies';
 import { palsQuestions } from '@/lib/questions/pals';
 import { pediatricEmergenciesQuestions } from '@/lib/questions/pediatric-emergencies';
+import { pediatricOncologicEmergenciesQuestions } from '@/lib/questions/pediatric-oncologic-emergencies';
 import { pharmacologyEmergenciesQuestions } from '@/lib/questions/pharmacology-emergencies';
 import { pointOfCareUltrasoundQuestions } from '@/lib/questions/point-of-care-ultrasound';
 import { proceduresQuestions } from '@/lib/questions/procedures';
@@ -39,6 +41,7 @@ import { traumaManagementQuestions } from '@/lib/questions/trauma-management';
 const questionsByTopic: { [key: string]: Question[] } = {
   'acls': aclsQuestions,
   'advanced-ecg-interpretation': advancedEcgInterpretationQuestions,
+  'adult-oncologic-emergencies': adultOncologicEmergenciesQuestions,
   'airway-management': airwayManagementQuestions,
   'atls': atlsQuestions,
   'blood-gas-analysis': bloodGasAnalysisQuestions,
@@ -59,6 +62,7 @@ const questionsByTopic: { [key: string]: Question[] } = {
   'obstetric-gynecologic-emergencies': obstetricGynelogicEmergenciesQuestions,
   'pals': palsQuestions,
   'pediatric-emergencies': pediatricEmergenciesQuestions,
+  'pediatric-oncologic-emergencies': pediatricOncologicEmergenciesQuestions,
   'pharmacology-emergencies': pharmacologyEmergenciesQuestions,
   'point-of-care-ultrasound': pointOfCareUltrasoundQuestions,
   'procedures': proceduresQuestions,

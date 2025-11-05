@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 const topics = [
   { id: 'acls', name: 'ACLS', description: 'Advanced Cardiovascular Life Support' },
   { id: 'advanced-ecg-interpretation', name: 'Advanced ECG Interpretation', description: 'Complex ECG patterns with visual descriptions and clinical scenarios' },
+  { id: 'adult-oncologic-emergencies', name: 'Adult Oncologic Emergencies', description: 'Adult cancer-related emergency conditions' },
   { id: 'airway-management', name: 'Airway Management', description: 'Comprehensive airway management techniques' },
   { id: 'atls', name: 'ATLS', description: 'Advanced Trauma Life Support' },
   { id: 'blood-gas-analysis', name: 'Blood Gas Analysis', description: 'Arterial blood gas interpretation' },
@@ -34,6 +35,7 @@ const topics = [
   
   { id: 'pals', name: 'PALS', description: 'Pediatric Advanced Life Support' },
   { id: 'pediatric-emergencies', name: 'Pediatric Emergencies', description: 'Emergency pediatric care' },
+  { id: 'pediatric-oncologic-emergencies', name: 'Pediatric Oncologic Emergencies', description: 'Pediatric cancer-related emergency conditions' },
   { id: 'pharmacology-emergencies', name: 'Pharmacology Emergencies', description: 'Emergency medications and toxicology' },
   { id: 'point-of-care-ultrasound', name: 'Point-of-Care Ultrasound', description: 'POCUS, Echocardiography, and eFAST' },
   { id: 'procedures', name: 'Procedures', description: 'Emergency medical procedures' },
