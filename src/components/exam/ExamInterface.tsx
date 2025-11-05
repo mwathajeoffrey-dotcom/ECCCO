@@ -26,9 +26,8 @@ interface Question {
 }
 
 interface Topic {
-  id: string;
-  name: string;
-  description?: string;
+  value: string;
+  label: string;
 }
 
 export default function ExamInterface() {
@@ -95,7 +94,7 @@ export default function ExamInterface() {
       if (!response.ok) throw new Error('Failed to fetch questions');
       const data = await response.json();
       
-      const examQuestions = data.questions || [];
+      const examQuestions = Array.isArray(data) ? data : (data.questions || []);
       setQuestions(examQuestions);
       setCurrentQuestionIndex(0);
       setAnswers({});
@@ -237,12 +236,12 @@ export default function ExamInterface() {
               ) : (
                 topics.map((topic) => (
                   <button
-                    key={topic.id}
+                    key={topic.value}
                     onClick={() => {
-                      setSelectedTopic(topic.id);
-                      fetchExamQuestions(topic.id);
+                      setSelectedTopic(topic.value);
+                      fetchExamQuestions(topic.value);
                     }}
-                    disabled={loadingQuestions && selectedTopic === topic.id}
+                    disabled={loadingQuestions && selectedTopic === topic.value}
                     className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 text-left group hover:bg-blue-50"
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -253,12 +252,12 @@ export default function ExamInterface() {
                       </div>
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-900">
-                      {topic.name}
+                      {topic.label}
                     </h3>
                     <p className="text-gray-600 text-sm">
-                      {topic.description || 'Practice questions for emergency medicine scenarios'}
+                      Practice questions for {topic.label.toLowerCase()}
                     </p>
-                    {loadingQuestions && selectedTopic === topic.id && (
+                    {loadingQuestions && selectedTopic === topic.value && (
                       <div className="mt-4 text-blue-600 text-sm">Loading questions...</div>
                     )}
                   </button>

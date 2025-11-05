@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: false, // Disable dark mode to prevent theme-based color conflicts
+  darkMode: 'media', // Use media query for dark mode to prevent theme-based color conflicts
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",

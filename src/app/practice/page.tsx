@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 interface Topic {
-  id: string;
-  name: string;
-  description: string;
+  value: string;
+  label: string;
 }
 
 export default function PracticePage() {
@@ -142,20 +141,20 @@ export default function PracticePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {topics.map((topic) => (
                 <div
-                  key={topic.id}
+                  key={topic.value}
                   className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-center mb-3">
                     <BookOpen className="w-5 h-5 text-blue-600 mr-2" />
-                    <h4 className="text-lg font-semibold text-gray-900">{topic.name}</h4>
+                    <h4 className="text-lg font-semibold text-gray-900">{topic.label}</h4>
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
+                  <p className="text-gray-600 text-sm mb-4">Practice questions for {topic.label.toLowerCase()}</p>
                   <div className="flex items-center justify-between">
                     <div className="text-sm text-gray-500">
                       <span>30 Questions Available</span>
                     </div>
                     <Link
-                      href={`/exam?topic=${topic.id}`}
+                      href={`/exam?topic=${topic.value}`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                     >
                       Practice
