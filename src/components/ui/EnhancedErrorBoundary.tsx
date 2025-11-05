@@ -2,7 +2,6 @@
 
 import React, { Component, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Bug, ChevronDown, ChevronUp } from 'lucide-react';
-import { errorTracker } from '@/lib/errors/tracking';
 
 interface Props {
   children: ReactNode;
@@ -53,17 +52,15 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Track the error
-    errorTracker.logComponentError(
+    // Log the error to console
+    console.error('Component Error:', {
       componentName,
       error,
-      this.props as any,
-      {
-        errorInfo: errorInfo.componentStack,
-        retryCount: this.state.retryCount,
-        errorId: this.state.errorId
-      }
-    );
+      props: this.props,
+      errorInfo: errorInfo.componentStack,
+      retryCount: this.state.retryCount,
+      errorId: this.state.errorId
+    });
 
     // Call custom error handler
     onError?.(error, errorInfo);

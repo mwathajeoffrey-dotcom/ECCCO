@@ -176,7 +176,12 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
         ) : (
           <ConsentDetails
             consents={consents}
-            onConsentsChange={setConsents}
+            onConsentsChange={(newConsents) => setConsents({
+              essential: newConsents.essential ?? true,
+              analytics: newConsents.analytics ?? false,
+              marketing: newConsents.marketing ?? false,
+              cookies: newConsents.cookies ?? false
+            })}
             onAccept={handleAcceptSelected}
             onReject={handleRejectAll}
             onBack={() => setShowDetails(false)}

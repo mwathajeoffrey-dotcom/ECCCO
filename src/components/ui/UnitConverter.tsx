@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calculator, Settings, RefreshCw } from 'lucide-react';
-import { unitConverter, MedicalUnitConverter } from '@/lib/utils/unitConverter';
+import { useState, useEffect, useMemo } from 'react';
+import { Calculator, RefreshCw } from 'lucide-react';
+import { unitConverter } from '@/lib/utils/unitConverter';
 
 interface UnitConversionDisplayProps {
   text: string;
@@ -16,12 +16,10 @@ interface UnitSettingsProps {
 }
 
 export function UnitConversionDisplay({ text, className = '', showConversions = true }: UnitConversionDisplayProps) {
-  const [parsedData, setParsedData] = useState<any>(null);
   const [showAlternative, setShowAlternative] = useState<{ [key: string]: boolean }>({});
 
-  useEffect(() => {
-    const data = unitConverter.parseAndConvertText(text);
-    setParsedData(data);
+  const parsedData = useMemo(() => {
+    return unitConverter.parseAndConvertText(text);
   }, [text]);
 
   if (!parsedData || parsedData.conversions.length === 0) {
@@ -87,8 +85,9 @@ export function UnitSettings({ isOpen, onClose }: UnitSettingsProps) {
   const [preferences, setPreferences] = useState<{ [key: string]: string }>({});
   const unitPairs = unitConverter.getCommonUnitPairs();
 
-  useEffect(() => {
-    // Load current preferences
+  const initialPreferences = useMemo(() => {
+    if (!isOpen) return {};
+    
     const currentPrefs: { [key: string]: string } = {};
     unitPairs.forEach(pair => {
       const pref = unitConverter.getUserPreference(pair.type);
@@ -98,8 +97,12 @@ export function UnitSettings({ isOpen, onClose }: UnitSettingsProps) {
         currentPrefs[pair.type] = pair.units[0]; // Default to first unit
       }
     });
-    setPreferences(currentPrefs);
-  }, [isOpen]);
+    return currentPrefs;
+  }, [isOpen, unitPairs]);
+
+  useEffect(() => {
+    setPreferences(initialPreferences);
+  }, [initialPreferences]);
 
   const handlePreferenceChange = (type: string, unit: string) => {
     setPreferences(prev => ({ ...prev, [type]: unit }));

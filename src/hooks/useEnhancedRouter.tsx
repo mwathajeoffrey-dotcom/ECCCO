@@ -2,7 +2,6 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
-import { errorTracker } from '@/lib/errors/tracking';
 
 interface NavigationState {
   isNavigating: boolean;
@@ -75,8 +74,8 @@ export function useEnhancedRouter() {
       } catch (error) {
         const navigationError = error as Error;
         
-        // Track navigation error
-        errorTracker.logError({
+        // Log navigation error
+        console.error('Navigation failed:', {
           type: 'component',
           message: `Navigation failed: ${pathname} -> ${path}`,
           componentName: 'Router',
@@ -84,9 +83,9 @@ export function useEnhancedRouter() {
           context: {
             fromPath: pathname,
             toPath: path,
-            attempt: attempts,
-            replace,
-            scroll
+            error: navigationError.message,
+            stack: navigationError.stack,
+            timestamp: new Date().toISOString()
           }
         });
 

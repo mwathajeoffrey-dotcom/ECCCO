@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get additional context from headers
-    const headersList = headers();
+    const headersList = await headers();
     const clientIP = headersList.get('x-forwarded-for') || 
                      headersList.get('x-real-ip') || 
                      'unknown';

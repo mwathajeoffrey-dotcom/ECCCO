@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
-import { PWAComponents } from "@/components/ui/PWAComponents";
 import "./globals.css";
+import "../styles/answer-visibility.css";
+import "../styles/nuclear-text-override.css"; // FINAL nuclear override for text visibility
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,26 +77,7 @@ export default function RootLayout({
       >
         <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
           {children}
-          <PWAComponents />
         </ErrorBoundary>
-        
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   );

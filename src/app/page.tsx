@@ -30,6 +30,9 @@ export default function Home() {
               <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
                 Dashboard
               </Link>
+              <Link href="/test-answers" className="text-purple-600 hover:text-purple-700 font-medium bg-purple-50 px-3 py-1 rounded-md">
+                Answer Test ✨
+              </Link>
             </nav>
           </div>
         </div>

@@ -91,9 +91,29 @@ export function clearDeveloperSession(): void {
 }
 
 /**
+ * Validate user from request (simple implementation for now)
+ */
+export async function validateUser(_request?: unknown): Promise<{ id: string } | null> {
+  try {
+    // For now, return a mock user or check developer status
+    const isDev = await isDeveloper();
+    if (isDev) {
+      return { id: 'developer_user' };
+    }
+    
+    // In production, this would validate JWT tokens, session cookies, etc.
+    // For now, return a default user
+    return { id: 'anonymous_user' };
+  } catch (error) {
+    console.warn('User validation failed:', error);
+    return null;
+  }
+}
+
+/**
  * Check if request is authorized for analytics access
  */
-export async function isAuthorizedForAnalytics(request?: any): Promise<boolean> {
+export async function isAuthorizedForAnalytics(request?: { headers?: { get: (name: string) => string | null } }): Promise<boolean> {
   try {
     // In development, allow access
     if (isDeveloperEnvironment()) {

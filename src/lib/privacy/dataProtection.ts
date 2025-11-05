@@ -118,7 +118,8 @@ class DataProtectionService {
       const encrypted = CryptoJS.AES.encrypt(jsonString, this.encryptionKey).toString();
       return encrypted;
     } catch (error) {
-      this.logAuditEvent('encryption_failed', 'data', { error: error.message }, 'high');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown encryption error';
+      this.logAuditEvent('encryption_failed', 'data', { error: errorMessage }, 'high');
       throw new Error('Data encryption failed');
     }
   }
@@ -129,7 +130,8 @@ class DataProtectionService {
       const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
       return JSON.parse(jsonString);
     } catch (error) {
-      this.logAuditEvent('decryption_failed', 'data', { error: error.message }, 'high');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown decryption error';
+      this.logAuditEvent('decryption_failed', 'data', { error: errorMessage }, 'high');
       throw new Error('Data decryption failed');
     }
   }

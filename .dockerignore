@@ -1,0 +1,24 @@
+# Docker ignore file
+node_modules
+npm-debug.log
+.next
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+.env*
+!.env.example
+coverage
+.coverage
+.nyc_output
+.DS_Store
+*.log
+dist
+.vercel
+.vscode
+.idea
+docs
+*.md
+!package.json
+!package-lock.json

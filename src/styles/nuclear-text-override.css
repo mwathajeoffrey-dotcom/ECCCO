@@ -1,0 +1,93 @@
+/* FINAL NUCLEAR OPTION - MAXIMUM PRIORITY CSS OVERRIDES */
+/* This file ensures answer text is ALWAYS black and visible */
+
+/* Override absolutely EVERYTHING that could make text gray or faint */
+* {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Target every possible text element in answer options */
+button *,
+[role="button"] *,
+.answer-option-default *,
+button[class*="w-full"] *,
+button[class*="rounded"] *,
+button[class*="border"] *,
+span[class*="text-"],
+span[class*="leading-"],
+span[class*="flex-"],
+div[class*="text-"] {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 20px !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Specifically target Tailwind gray text classes */
+.text-gray-100,
+.text-gray-200,
+.text-gray-300,
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700,
+.text-gray-800,
+.text-gray-900,
+.text-slate-100,
+.text-slate-200,
+.text-slate-300,
+.text-slate-400,
+.text-slate-500,
+.text-slate-600,
+.text-slate-700,
+.text-slate-800,
+.text-slate-900 {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+/* Target every possible button and answer container */
+button,
+[role="button"],
+button[class*="answer"],
+button[class*="option"],
+div[class*="answer"] button,
+div[class*="option"] button {
+  background: linear-gradient(145deg, #f0f9ff, #e0f2fe) !important;
+  border: 4px solid #1e293b !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  min-height: 80px !important;
+  padding: 20px !important;
+  font-size: 18px !important;
+}
+
+/* Desktop specific overrides */
+@media (min-width: 768px) {
+  button *,
+  [role="button"] *,
+  span[class*="text-"],
+  div[class*="text-"] {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    font-size: 22px !important;
+  }
+  
+  button,
+  [role="button"] {
+    min-height: 90px !important;
+    font-size: 20px !important;
+    padding: 24px !important;
+  }
+}
+
+/* Chrome specific fixes */
+@supports (-webkit-appearance: none) {
+  button *,
+  span,
+  div {
+    color: #000000 !important;
+    font-weight: 900 !important;
+  }
+}
