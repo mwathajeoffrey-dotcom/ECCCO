@@ -184,9 +184,9 @@ export default function ExamInterface() {
     if (!showResults || score === null) return;
     
     try {
-      const topic = topics.find(t => t.id === selectedTopic);
+      const topic = topics.find(t => t.value === selectedTopic);
       await generateExamPDF({
-        topicName: topic?.name || 'Exam',
+        topicName: topic?.label || 'Exam',
         score,
         totalTime: (45 * 60) - timeRemaining,
         userAnswers: answers,
@@ -205,7 +205,7 @@ export default function ExamInterface() {
   };
 
   const currentQuestion = questions[currentQuestionIndex];
-  const selectedTopic_ = topics.find(t => t.id === selectedTopic);
+  const selectedTopic_ = topics.find(t => t.value === selectedTopic);
 
   // Topic Selection Screen
   if (!isExamStarted && !showResults) {
@@ -283,7 +283,7 @@ export default function ExamInterface() {
                   <ChevronLeft className="w-5 h-5" />
                 </Link>
                 <h1 className="text-xl font-semibold text-gray-900">
-                  {selectedTopic_?.name || 'Exam'}
+                  {selectedTopic_?.label || 'Exam'}
                 </h1>
               </div>
               
@@ -477,7 +477,7 @@ export default function ExamInterface() {
                 <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Exam Complete!</h1>
                 <p className="text-xl text-gray-600">
-                  Topic: {selectedTopic_?.name || 'Unknown'}
+                  Topic: {selectedTopic_?.label || 'Unknown'}
                 </p>
               </div>
 

@@ -1,0 +1,64 @@
+<!-- ECCCO Medical App Icon - SVG Master Template -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background gradient circle -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E3A8A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="crossGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F1F5F9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Main circular background -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGradient)" filter="url(#shadow)"/>
+  
+  <!-- Inner ring for depth -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  
+  <!-- Medical cross (emergency symbol) -->
+  <g transform="translate(256,256)">
+    <!-- Horizontal bar -->
+    <rect x="-60" y="-15" width="120" height="30" rx="15" fill="url(#crossGradient)" filter="url(#shadow)"/>
+    <!-- Vertical bar -->
+    <rect x="-15" y="-60" width="30" height="120" rx="15" fill="url(#crossGradient)" filter="url(#shadow)"/>
+  </g>
+  
+  <!-- ECG heartbeat line -->
+  <g transform="translate(256,320)" opacity="0.9">
+    <path d="M-80,0 L-60,0 L-50,-20 L-40,40 L-30,-30 L-20,0 L0,0 L10,-15 L20,30 L30,-25 L40,0 L80,0" 
+          stroke="url(#heartGradient)" 
+          stroke-width="4" 
+          fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Emergency stethoscope icon (subtle) -->
+  <g transform="translate(200,180)" opacity="0.6">
+    <circle cx="0" cy="0" r="8" fill="none" stroke="white" stroke-width="2"/>
+    <path d="M0,8 Q-5,15 -10,25 Q-15,35 -10,45 Q-5,55 5,55 Q15,55 20,45 Q25,35 20,25 Q15,15 10,8" 
+          stroke="white" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Small medical caduceus symbol (top right) -->
+  <g transform="translate(350,150)" opacity="0.7">
+    <line x1="0" y1="-15" x2="0" y2="15" stroke="white" stroke-width="2"/>
+    <path d="M-8,-8 Q0,-12 8,-8 Q0,-4 -8,-8" fill="none" stroke="white" stroke-width="1.5"/>
+    <path d="M-8,8 Q0,4 8,8 Q0,12 -8,8" fill="none" stroke="white" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Highlight reflection -->
+  <ellipse cx="200" cy="180" rx="40" ry="60" fill="rgba(255,255,255,0.2)" transform="rotate(-30 200 180)"/>
+</svg>

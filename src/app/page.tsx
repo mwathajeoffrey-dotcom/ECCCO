@@ -30,9 +30,6 @@ export default function Home() {
               <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
                 Dashboard
               </Link>
-              <Link href="/test-answers" className="text-purple-600 hover:text-purple-700 font-medium bg-purple-50 px-3 py-1 rounded-md">
-                Answer Test ✨
-              </Link>
             </nav>
           </div>
         </div>
@@ -169,12 +166,12 @@ export default function Home() {
           <h3 className="text-3xl font-bold text-white mb-4">
             Ready to Excel in Emergency & Critical Care?
           </h3>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-100 mb-8">
             Join thousands of healthcare professionals who have improved their knowledge and skills with our comprehensive platform.
           </p>
           <Link
             href="/practice"
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
           >
             Get Started Today
           </Link>
