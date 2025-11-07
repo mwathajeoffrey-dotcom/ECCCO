@@ -531,6 +531,11 @@ class GuidelinesService {
    */
   private async loadUserData(): Promise<void> {
     try {
+      // Only access localStorage on client-side
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       const bookmarksData = localStorage.getItem('guidelines_bookmarks');
       if (bookmarksData) {
         this.bookmarks = JSON.parse(bookmarksData);
@@ -552,17 +557,23 @@ class GuidelinesService {
   }
 
   private async saveBookmarks(): Promise<void> {
-    localStorage.setItem('guidelines_bookmarks', JSON.stringify(this.bookmarks));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('guidelines_bookmarks', JSON.stringify(this.bookmarks));
+    }
   }
 
   private async saveNotes(): Promise<void> {
-    localStorage.setItem('guidelines_notes', JSON.stringify(this.notes));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('guidelines_notes', JSON.stringify(this.notes));
+    }
   }
 
   private async saveAccessData(): Promise<void> {
-    localStorage.setItem('guidelines_access', JSON.stringify(
-      this.guidelines.map(g => ({ id: g.id, lastAccessed: g.lastAccessed, downloadCount: g.downloadCount }))
-    ));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('guidelines_access', JSON.stringify(
+        this.guidelines.map(g => ({ id: g.id, lastAccessed: g.lastAccessed, downloadCount: g.downloadCount }))
+      ));
+    }
   }
 
   /**

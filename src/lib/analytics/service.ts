@@ -16,12 +16,23 @@ class ECCCOAnalyticsService implements AnalyticsService {
   private userId: string | null = null;
   
   constructor() {
-    // Generate or retrieve session ID from localStorage
+    // Generate session ID - defer localStorage until client-side
+    this.sessionId = this.generateSessionId();
+  }
+
+  private generateSessionId(): string {
+    // Only access localStorage on client-side
     if (typeof window !== 'undefined') {
-      this.sessionId = localStorage.getItem('eccco_session_id') || uuidv4();
-      localStorage.setItem('eccco_session_id', this.sessionId);
+      const existing = localStorage.getItem('eccco_session_id');
+      if (existing) {
+        return existing;
+      }
+      const newSessionId = uuidv4();
+      localStorage.setItem('eccco_session_id', newSessionId);
+      return newSessionId;
     } else {
-      this.sessionId = uuidv4();
+      // Server-side: generate temporary ID
+      return `server-${uuidv4()}`;
     }
   }
 
@@ -103,6 +114,15 @@ class ECCCOAnalyticsService implements AnalyticsService {
 
   // Getter for session ID (useful for dashboard API calls)
   getSessionId(): string {
+    // Ensure we have a client-side session ID if available
+    if (typeof window !== 'undefined') {
+      const existing = localStorage.getItem('eccco_session_id');
+      if (existing && existing !== this.sessionId) {
+        this.sessionId = existing;
+      } else if (!existing) {
+        localStorage.setItem('eccco_session_id', this.sessionId);
+      }
+    }
     return this.sessionId;
   }
 }
