@@ -6,20 +6,33 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
-  // For development with SQLite, uncomment below:
-  // provider = "sqlite"
-  // url      = "file:./dev.db"
+  // For production with PostgreSQL, use:
+  // provider = "postgresql"
+  // url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String?       @unique
+  name          String?
+  sessionId     String        @unique // Browser session identifier for anonymous users
+  examSessions  ExamSession[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([sessionId])
 }
 
 model Topic {
-  id          String     @id @default(cuid())
-  name        String     @unique
-  description String?
-  questions   Question[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id           String        @id @default(cuid())
+  name         String        @unique
+  description  String?
+  questions    Question[]
+  examSessions ExamSession[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Question {
@@ -40,18 +53,22 @@ model Question {
 }
 
 model ExamSession {
-  id          String   @id @default(cuid())
-  userId      String?  // Optional user ID for tracking
-  sessionId   String   @unique // Browser session identifier
-  topicId     String
-  questions   String   // JSON string of question IDs array
-  answers     String   // JSON string of user answers array
-  score       Int?
-  totalTime   Int?     // Time taken in seconds
-  completed   Boolean  @default(false)
+  id               String   @id @default(cuid())
+  userId           String?  // Optional user ID for registered users
+  user             User?    @relation(fields: [userId], references: [id])
+  sessionId        String   // Browser session identifier for anonymous tracking
+  topicId          String
+  topic            Topic    @relation(fields: [topicId], references: [id])
+  questions        String   // JSON string of question IDs array
+  answers          String   // JSON string of user answers array
+  score            Int?     // Score as percentage
+  totalQuestions   Int      @default(0) // Total number of questions in session
+  correctAnswers   Int      @default(0) // Number of correct answers
+  totalTime        Int?     // Time taken in seconds
+  completed        Boolean  @default(false)
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@index([userId])
   @@index([topicId])

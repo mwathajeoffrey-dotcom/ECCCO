@@ -1,0 +1,44 @@
+{
+  "total_strips": 6,
+  "strips": [
+    {
+      "id": "MIT-BIH_100_strip_1",
+      "rhythm_type": "Normal Sinus Rhythm",
+      "record": "100",
+      "duration": 10
+    },
+    {
+      "id": "MIT-BIH_100_strip_2",
+      "rhythm_type": "Normal Sinus Rhythm",
+      "record": "100",
+      "duration": 10
+    },
+    {
+      "id": "MIT-BIH_201_strip_1",
+      "rhythm_type": "Atrial Fibrillation",
+      "record": "201",
+      "duration": 10
+    },
+    {
+      "id": "MIT-BIH_201_strip_2",
+      "rhythm_type": "Atrial Fibrillation",
+      "record": "201",
+      "duration": 10
+    },
+    {
+      "id": "MIT-BIH_207_strip_1",
+      "rhythm_type": "Ventricular Arrhythmia",
+      "record": "207",
+      "duration": 10
+    },
+    {
+      "id": "MIT-BIH_207_strip_2",
+      "rhythm_type": "Ventricular Arrhythmia",
+      "record": "207",
+      "duration": 10
+    }
+  ],
+  "attribution": "MIT-BIH Arrhythmia Database",
+  "license": "Open Data Commons Attribution License v1.0",
+  "source": "https://physionet.org/content/mitdb/1.0.0/"
+}

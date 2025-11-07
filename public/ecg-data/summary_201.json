@@ -1,0 +1,10 @@
+{
+  "record_name": "201",
+  "total_duration": 0.005555555555555556,
+  "frequency": 360,
+  "strips_extracted": 0,
+  "strips": [],
+  "attribution": "MIT-BIH Arrhythmia Database",
+  "license": "Open Data Commons Attribution License v1.0",
+  "source": "https://physionet.org/content/mitdb/1.0.0/"
+}
