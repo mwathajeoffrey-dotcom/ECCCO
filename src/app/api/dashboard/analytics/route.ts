@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { getEmptyAnalyticsData } from '@/lib/analytics/demo-data';
 
 const prisma = new PrismaClient();
 
@@ -165,24 +166,11 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Dashboard analytics error:', error);
     
-    // Return fallback demo data if database is not available
+    // Return clean empty data structure when database is not available
+    console.log('Returning empty analytics data due to database unavailability');
     return NextResponse.json({
       success: true,
-      data: {
-        overallStats: {
-          totalQuestions: 0,
-          totalCorrect: 0,
-          averageScore: 0,
-          studyTimeHours: 0,
-          sessionCount: 0,
-          learningStreak: 0,
-          strongestTopic: { name: 'N/A', score: 0 },
-          weakestTopic: { name: 'N/A', score: 0 }
-        },
-        topicPerformance: [],
-        recentActivity: [],
-        lastUpdated: new Date().toISOString()
-      }
+      data: getEmptyAnalyticsData()
     });
   }
 }
@@ -261,9 +249,12 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Session recording error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to record session data' },
-      { status: 500 }
-    );
+    
+    // Return success even if database save fails, to avoid disrupting exam flow
+    console.log('Session data could not be saved, but returning success to continue exam flow');
+    return NextResponse.json({
+      success: true,
+      message: 'Session data received but not persisted due to database unavailability'
+    });
   }
 }
