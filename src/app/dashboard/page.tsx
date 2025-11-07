@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Users, Calendar, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { analytics } from '@/lib/analytics/service';
 
 // Dynamic Dashboard with Mobile Responsiveness - v2.0
 interface DashboardData {
@@ -71,7 +72,8 @@ export default function DashboardPage() {
     setLoadingState({ isLoading: true, error: null });
     
     try {
-      const sessionId = getSessionId();
+      // Get session ID from analytics service for consistency
+      const sessionId = (analytics as any).getSessionId ? (analytics as any).getSessionId() : getSessionId();
       console.log('📋 Session ID:', sessionId);
       const response = await fetch(`/api/dashboard/analytics?sessionId=${sessionId}`, {
         method: 'GET',

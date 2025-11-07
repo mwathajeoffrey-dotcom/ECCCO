@@ -164,14 +164,20 @@ export default function ExamInterface() {
     setFlaggedQuestions(newFlagged);
   };
 
-  const finishExam = () => {
+  const finishExam = async () => {
     setIsExamFinished(true);
     
     // Calculate and track exam completion
     const score = calculateScore();
     const timeSpent = 45 * 60 - timeRemaining;
     
-    analytics.trackExamComplete(selectedTopic, score, timeSpent);
+    // Save exam session data to database via analytics
+    try {
+      await analytics.trackExamComplete(selectedTopic, score, timeSpent, questions, selectedAnswers);
+      console.log('✅ Exam session data saved successfully');
+    } catch (error) {
+      console.error('❌ Failed to save exam session data:', error);
+    }
   };
 
   const calculateScore = () => {
