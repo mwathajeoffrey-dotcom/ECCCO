@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -30,6 +30,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:prod": "prisma migrate deploy",
     "db:seed": "tsx scripts/seed.ts",
+    "db:seed:prod": "tsx scripts/seed-production.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "test": "jest",
@@ -37,7 +38,8 @@
     "test:coverage": "jest --coverage",
     "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next out",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma db push && tsx scripts/seed-production.ts && next build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
