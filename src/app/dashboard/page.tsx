@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Users, Calendar, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
+// Dynamic Dashboard with Mobile Responsiveness - v2.0
 interface DashboardData {
   overallStats: {
     totalQuestions: number;
