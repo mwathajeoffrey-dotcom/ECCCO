@@ -178,39 +178,41 @@ export default function DashboardPage() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-3">
               <Link href="/" className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
-                  <p className="text-sm text-gray-600">Performance Dashboard</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ECCCO</h1>
+                  <p className="text-xs sm:text-sm text-gray-600">Performance Dashboard</p>
                 </div>
               </Link>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
               <button
                 onClick={fetchDashboardData}
                 disabled={loadingState.isLoading}
-                className="flex items-center space-x-2 px-3 py-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                className="flex items-center justify-center sm:justify-start space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors bg-gray-50 sm:bg-transparent rounded-lg sm:rounded-none border sm:border-0"
               >
                 {loadingState.isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Clock className="w-4 h-4" />
                 )}
-                <span>Last updated: {formatDate(dashboardData.lastUpdated)}</span>
+                <span className="text-xs sm:text-sm">
+                  Last updated: {formatDate(dashboardData.lastUpdated)}
+                </span>
               </button>
-              <nav className="hidden md:flex space-x-8">
-                <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium">
+              <nav className="flex justify-center space-x-6 sm:space-x-8">
+                <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
                   Practice
                 </Link>
-                <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
+                <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
                   Exams
                 </Link>
-                <Link href="/dashboard" className="text-blue-600 font-medium">
+                <Link href="/dashboard" className="text-blue-600 font-medium text-sm sm:text-base">
                   Dashboard
                 </Link>
               </nav>
@@ -221,9 +223,9 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Dashboard Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Learning Progress</h2>
-          <p className="text-gray-600">
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Your Learning Progress</h2>
+          <p className="text-sm sm:text-base text-gray-600 px-4">
             {overallStats.sessionCount > 0 
               ? "Track your performance and identify areas for improvement" 
               : "Start practicing to see your progress here"
@@ -232,54 +234,54 @@ export default function DashboardPage() {
         </div>
 
         {/* Overall Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border-l-4 border-blue-500">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-blue-600" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Target className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Questions Attempted</p>
-                <p className="text-2xl font-bold text-gray-900">{overallStats.totalQuestions.toLocaleString()}</p>
+              <div className="ml-3 sm:ml-4 flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Questions Attempted</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{overallStats.totalQuestions.toLocaleString()}</p>
                 <p className="text-xs text-blue-600">{overallStats.sessionCount} sessions completed</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border-l-4 border-green-500">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Award className="w-6 h-6 text-green-600" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Award className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Average Score</p>
-                <p className="text-2xl font-bold text-gray-900">{overallStats.averageScore}%</p>
+              <div className="ml-3 sm:ml-4 flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Average Score</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{overallStats.averageScore}%</p>
                 <p className="text-xs text-green-600">{overallStats.totalCorrect} correct answers</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border-l-4 border-purple-500">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Learning Streak</p>
-                <p className="text-2xl font-bold text-gray-900">{overallStats.learningStreak}</p>
+              <div className="ml-3 sm:ml-4 flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Learning Streak</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{overallStats.learningStreak}</p>
                 <p className="text-xs text-purple-600">consecutive days</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-orange-500">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border-l-4 border-orange-500">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-orange-600" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Study Time</p>
-                <p className="text-2xl font-bold text-gray-900">{overallStats.studyTimeHours}h</p>
+              <div className="ml-3 sm:ml-4 flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Study Time</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{overallStats.studyTimeHours}h</p>
                 <p className="text-xs text-orange-600">total time invested</p>
               </div>
             </div>
@@ -288,19 +290,19 @@ export default function DashboardPage() {
 
         {/* Performance by Topic or Getting Started */}
         {dashboardData.topicPerformance.length > 0 ? (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Performance by Topic</h3>
-              <span className="text-sm text-gray-500">
+          <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900">Performance by Topic</h3>
+              <span className="text-xs sm:text-sm text-gray-500">
                 Based on {overallStats.sessionCount} completed sessions
               </span>
             </div>
             <div className="space-y-4">
               {dashboardData.topicPerformance.map((data, index) => (
                 <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">{data.topicName}</h4>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 space-y-2 sm:space-y-0">
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{data.topicName}</h4>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium self-start sm:self-auto ${
                       data.averageScore >= 80 
                         ? 'bg-green-100 text-green-800'
                         : data.averageScore >= 60
@@ -310,11 +312,11 @@ export default function DashboardPage() {
                       {data.averageScore}%
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm text-gray-600 mb-2 space-y-2 sm:space-y-0">
                     <span>{data.correct} correct out of {data.attempted} attempted • {data.sessionCount} sessions</span>
                     <Link
                       href={`/practice?topic=${data.topicId}`}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-blue-600 hover:text-blue-700 font-medium self-start sm:self-auto"
                     >
                       Practice More
                     </Link>
@@ -336,22 +338,22 @@ export default function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-8 mb-8 text-center">
-            <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Start Your Learning Journey</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 sm:mb-8 text-center">
+            <Users className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Start Your Learning Journey</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-6">
               Begin practicing to track your progress across different medical topics.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4 justify-center">
               <Link
                 href="/practice"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center"
               >
                 Start Practice Session
               </Link>
               <Link
                 href="/exam"
-                className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors text-center"
               >
                 Take Full Exam
               </Link>
@@ -360,24 +362,24 @@ export default function DashboardPage() {
         )}
 
         {/* Recent Activity and Recommendations */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
           {/* Recent Activity */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <Calendar className="w-5 h-5 mr-2" />
+          <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Recent Activity
             </h3>
             {dashboardData.recentActivity.length > 0 ? (
               <div className="space-y-3">
                 {dashboardData.recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 text-sm">{activity.topicName}</h4>
+                  <div key={activity.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg space-y-2 sm:space-y-0">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900 text-sm truncate">{activity.topicName}</h4>
                       <p className="text-xs text-gray-600">
                         {formatDate(activity.createdAt)} • {formatTime(activity.totalTime)}
                       </p>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center justify-start sm:justify-end">
                       {activity.completed ? (
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
                           (activity.score || 0) >= 80
@@ -398,38 +400,38 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600">No recent activity yet</p>
-                <p className="text-sm text-gray-500">Start practicing to see your history here</p>
+              <div className="text-center py-6 sm:py-8">
+                <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 text-sm sm:text-base">No recent activity yet</p>
+                <p className="text-xs sm:text-sm text-gray-500">Start practicing to see your history here</p>
               </div>
             )}
           </div>
 
           {/* Recommendations */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Personalized Recommendations</h3>
+          <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Personalized Recommendations</h3>
             <div className="space-y-4">
               {overallStats.sessionCount === 0 ? (
                 <>
                   <div className="flex items-start">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-1">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                       <Target className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="ml-3">
-                      <h4 className="font-semibold text-gray-900">Take Your First Practice Session</h4>
-                      <p className="text-gray-600 text-sm">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Take Your First Practice Session</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Start with basic topics like BLS or ACLS to get familiar with the platform.
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mt-1">
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                       <Award className="w-4 h-4 text-green-600" />
                     </div>
                     <div className="ml-3">
-                      <h4 className="font-semibold text-gray-900">Set Learning Goals</h4>
-                      <p className="text-gray-600 text-sm">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Set Learning Goals</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Aim for consistency - even 15 minutes daily can make a significant difference.
                       </p>
                     </div>
@@ -438,12 +440,12 @@ export default function DashboardPage() {
               ) : (
                 <>
                   <div className="flex items-start">
-                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mt-1">
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                       <Target className="w-4 h-4 text-red-600" />
                     </div>
                     <div className="ml-3">
-                      <h4 className="font-semibold text-gray-900">Focus on Weak Areas</h4>
-                      <p className="text-gray-600 text-sm">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Focus on Weak Areas</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Your weakest topic is <strong>{overallStats.weakestTopic.name}</strong> ({overallStats.weakestTopic.score}%). 
                         Consider spending more time on practice questions in this area.
                       </p>
@@ -451,24 +453,24 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex items-start">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-1">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                       <Clock className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="ml-3">
-                      <h4 className="font-semibold text-gray-900">Take Timed Exams</h4>
-                      <p className="text-gray-600 text-sm">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Take Timed Exams</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Practice with our timed exams to simulate real test conditions and improve your pacing.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mt-1">
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                       <Award className="w-4 h-4 text-green-600" />
                     </div>
                     <div className="ml-3">
-                      <h4 className="font-semibold text-gray-900">Maintain Your Streak</h4>
-                      <p className="text-gray-600 text-sm">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Maintain Your Streak</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         Great job on your {overallStats.learningStreak}-day learning streak! Keep it up with daily practice.
                       </p>
                     </div>
@@ -478,11 +480,11 @@ export default function DashboardPage() {
             </div>
 
             <div className="mt-6 p-4 bg-green-50 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-3">Quick Actions</h4>
+              <h4 className="font-semibold text-green-900 mb-3 text-sm sm:text-base">Quick Actions</h4>
               <div className="space-y-2">
                 <Link
                   href="/exam"
-                  className="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                  className="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-medium hover:bg-green-700 transition-colors text-sm sm:text-base"
                 >
                   Take Practice Exam
                 </Link>
@@ -491,7 +493,7 @@ export default function DashboardPage() {
                     ? `/practice?topic=${overallStats.weakestTopic.name.toLowerCase().replace(/\s+/g, '-')}` 
                     : '/practice'
                   }
-                  className="block w-full border border-green-600 text-green-600 text-center py-3 rounded-lg font-medium hover:bg-green-50 transition-colors"
+                  className="block w-full border border-green-600 text-green-600 text-center py-3 rounded-lg font-medium hover:bg-green-50 transition-colors text-sm sm:text-base"
                 >
                   {overallStats.weakestTopic.name !== 'N/A' ? 'Practice Weak Topics' : 'Start Practicing'}
                 </Link>

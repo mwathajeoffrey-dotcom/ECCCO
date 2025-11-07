@@ -59,16 +59,16 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center">
-          <TrendingUp className="w-5 h-5 mr-2" />
+    <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 space-y-3 sm:space-y-0">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
+          <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
           Performance Analytics
         </h3>
-        <div className="flex space-x-2">
+        <div className="flex space-x-1 sm:space-x-2 overflow-x-auto">
           <button
             onClick={() => setActiveChart('bar')}
-            className={`px-3 py-1 text-sm rounded-lg font-medium transition-colors ${
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-colors whitespace-nowrap ${
               activeChart === 'bar'
                 ? 'bg-blue-100 text-blue-700'
                 : 'text-gray-600 hover:text-blue-600'
@@ -78,7 +78,7 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
           </button>
           <button
             onClick={() => setActiveChart('line')}
-            className={`px-3 py-1 text-sm rounded-lg font-medium transition-colors ${
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-colors whitespace-nowrap ${
               activeChart === 'line'
                 ? 'bg-blue-100 text-blue-700'
                 : 'text-gray-600 hover:text-blue-600'
@@ -88,7 +88,7 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
           </button>
           <button
             onClick={() => setActiveChart('pie')}
-            className={`px-3 py-1 text-sm rounded-lg font-medium transition-colors ${
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-colors whitespace-nowrap ${
               activeChart === 'pie'
                 ? 'bg-blue-100 text-blue-700'
                 : 'text-gray-600 hover:text-blue-600'
@@ -99,13 +99,20 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
         </div>
       </div>
 
-      <div className="h-64">
+      <div className="h-48 sm:h-64">
         {activeChart === 'bar' && (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData}>
+            <BarChart data={barData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" fontSize={12} />
-              <YAxis />
+              <XAxis 
+                dataKey="name" 
+                fontSize={10} 
+                interval={0}
+                angle={-45}
+                textAnchor="end"
+                height={60}
+              />
+              <YAxis fontSize={10} />
               <Tooltip 
                 formatter={(value, name) => [
                   `${value}${name === 'score' ? '%' : ''}`,
@@ -119,10 +126,10 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
 
         {activeChart === 'line' && (
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lineData}>
+            <LineChart data={lineData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="session" />
-              <YAxis domain={[0, 100]} />
+              <XAxis dataKey="session" fontSize={10} />
+              <YAxis domain={[0, 100]} fontSize={10} />
               <Tooltip 
                 formatter={(value) => [`${value}%`, 'Score']}
                 labelFormatter={(label) => `Session ${label}`}
@@ -132,7 +139,7 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
                 dataKey="score" 
                 stroke="#10B981" 
                 strokeWidth={2}
-                dot={{ fill: '#10B981' }}
+                dot={{ fill: '#10B981', r: 3 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -146,10 +153,11 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percentage }) => `${name}: ${percentage}%`}
-                outerRadius={80}
+                label={({ name, percentage }) => window.innerWidth > 640 ? `${name}: ${percentage}%` : `${percentage}%`}
+                outerRadius={window.innerWidth > 640 ? 80 : 60}
                 fill="#8884d8"
                 dataKey="value"
+                fontSize={10}
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -214,19 +222,19 @@ export function StatsSummary({ overallStats }: {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+          <div key={index} className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm text-gray-600 font-medium truncate">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
+                <p className="text-xs text-gray-500 mt-1 truncate">{stat.change}</p>
               </div>
-              <div className={`p-2 rounded-lg ${colorClasses[stat.color as keyof typeof colorClasses]}`}>
-                <Icon className="w-5 h-5" />
+              <div className={`p-2 rounded-lg ${colorClasses[stat.color as keyof typeof colorClasses]} flex-shrink-0`}>
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
           </div>
