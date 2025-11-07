@@ -7,6 +7,8 @@ import { blsQuestions } from './bls';
 import { cardiacEmergenciesQuestions } from './cardiac-emergencies';
 import adultOncologyBatch1Questions from './adult-oncology-batch-1';
 import pediatricOncologyBatch1Questions from './pediatric-oncology-batch-1';
+import { pediatricCardiacArrestQuestions } from './pediatric-cardiac-arrest-questions';
+import { enhancedPalsQuestions } from './enhanced-pals-questions';
 
 export const allQuestions: Question[] = [
   ...aclsQuestions,
@@ -14,6 +16,8 @@ export const allQuestions: Question[] = [
   ...cardiacEmergenciesQuestions,
   ...adultOncologyBatch1Questions,
   ...pediatricOncologyBatch1Questions,
+  ...pediatricCardiacArrestQuestions,
+  ...enhancedPalsQuestions,
 ];
 
 export const questionsByCategory = {
@@ -22,6 +26,8 @@ export const questionsByCategory = {
   'Cardiac Emergencies': cardiacEmergenciesQuestions,
   'Adult Oncologic Emergencies': adultOncologyBatch1Questions,
   'Pediatric Oncologic Emergencies': pediatricOncologyBatch1Questions,
+  'PALS': [...pediatricCardiacArrestQuestions, ...enhancedPalsQuestions],
+  'Pediatric Emergencies': [...pediatricCardiacArrestQuestions, ...enhancedPalsQuestions],
 };
 
 export const getQuestionsByCategory = (category: string): Question[] => {

@@ -14,7 +14,7 @@ import { aclscardiacarrestQuestions } from './acls-cardiac-arrest-questions';
 import { sepsishour1bundleQuestions } from './sepsis-hour-1-bundle-questions';
 import { atlsprimarysurveyQuestions } from './atls-primary-survey-questions';
 import { strokeacutemanagementQuestions } from './stroke-acute-management-questions';
-import { pediatriccardiacarrestQuestions } from './pediatric-cardiac-arrest-questions';
+import { pediatricCardiacArrestQuestions } from './pediatric-cardiac-arrest-questions';
 import { anaphylaxismanagementQuestions } from './anaphylaxis-management-questions';
 import { toxicologyoverdoseQuestions } from './toxicology-overdose-questions';
 import { massivetransfusionQuestions } from './massive-transfusion-questions';
@@ -25,7 +25,7 @@ export const algorithmQuestions: Question[] = [
   ...sepsishour1bundleQuestions,
   ...atlsprimarysurveyQuestions,
   ...strokeacutemanagementQuestions,
-  ...pediatriccardiacarrestQuestions,
+  ...pediatricCardiacArrestQuestions,
   ...anaphylaxismanagementQuestions,
   ...toxicologyoverdoseQuestions,
   ...massivetransfusionQuestions,
@@ -64,7 +64,7 @@ export const GENERATION_METADATA = {
     'Sepsis Hour-1 Bundle': sepsishour1bundleQuestions.length,
     'ATLS Primary Survey': atlsprimarysurveyQuestions.length,
     'Stroke Management': strokeacutemanagementQuestions.length,
-    'Pediatric ACLS': pediatriccardiacarrestQuestions.length,
+    'Pediatric ACLS': pediatricCardiacArrestQuestions.length,
     'Anaphylaxis': anaphylaxismanagementQuestions.length,
     'Toxicology': toxicologyoverdoseQuestions.length,
     'Massive Transfusion': massivetransfusionQuestions.length,

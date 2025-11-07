@@ -11,30 +11,28 @@
 
 import { Question } from './types';
 
-export const pediatriccardiacarrestQuestions: Question[] = [
+export const pediatricCardiacArrestQuestions: Question[] = [
   {
-    id: 'pediatric-cardiac-arrest-timing-001',
-    question: `According to Pediatric Advanced Life Support (PALS) guidelines, what is the target timeframe for: pulse check: ≤10 seconds?`,
+    id: 'peds-arrest-001',
+    question: 'You are performing CPR on a 4-year-old who collapsed at daycare. A second rescuer arrives to help. What compression-to-ventilation ratio should you now use?',
     options: [
-      'Pulse check: ≤10 seconds',
-      '≤5 seconds',
-      '≤15 seconds',
-      '≤30 seconds'
+      '30:2 (same as single rescuer)',
+      '15:2 (switch to two-rescuer ratio)', 
+      '5:1 (continuous compressions)',
+      '100:2 (minimize interruptions)'
     ],
-    correctIndex: 0,
-    explanation: `The Pediatric Advanced Life Support (PALS) specifies Pulse check: ≤10 seconds as a critical benchmark for optimal patient outcomes. This timing is based on evidence showing improved survival/recovery when interventions are delivered within this window.`,
-    difficulty: 'easy',
-    category: 'pediatric',
-    references: [
-      'AHA Guidelines for CPR and ECC 2025 - Pediatric',
-      'Topjian AA, et al. Part 4: Pediatric Basic and Advanced Life Support. Circulation. 2025'
-    ],
-    topicId: 'pediatric-emergencies',
-    guidelineVersion: {
-      name: 'Pediatric Advanced Life Support (PALS)',
-      year: 2025,
-      organization: 'American Heart Association'
-    }
+    correctIndex: 1,
+    explanation: 'When a second trained rescuer arrives during pediatric CPR, switch from 30:2 (single rescuer) to 15:2 (two-rescuer). This higher ventilation rate addresses the respiratory etiology of most pediatric cardiac arrests. One rescuer provides compressions while the other manages airway and ventilation.',
+    references: ['AHA PALS Guidelines 2020', 'Berg MD, et al. Part 13: Pediatric Basic Life Support. Circulation. 2020'],
+    difficulty: 'medium',
+    category: 'pediatric-emergencies',
+    topicId: 'pals',
+    clinicalScenario: 'A 4-year-old child has collapsed at daycare and you are providing single-rescuer CPR when help arrives.',
+    learningObjectives: [
+      'Understand when to change compression-to-ventilation ratios',
+      'Apply team-based pediatric CPR principles',
+      'Recognize respiratory nature of pediatric arrests'
+    ]
   },
 
   {
@@ -163,7 +161,7 @@ export const pediatriccardiacarrestQuestions: Question[] = [
   }
 ];
 
-export default pediatriccardiacarrestQuestions;
+export default pediatricCardiacArrestQuestions;
 
 // Algorithm metadata for reference
 export const ALGORITHM_INFO = {
