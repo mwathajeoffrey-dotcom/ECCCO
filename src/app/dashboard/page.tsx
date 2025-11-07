@@ -66,8 +66,8 @@ export default function DashboardPage() {
     return 'anonymous';
   };
 
-  const fetchDashboardData = async () => {
-    console.log('🔍 Starting dashboard data fetch...');
+  const fetchDashboardData = async (retryCount = 0) => {
+    console.log('🔍 Starting dashboard data fetch... Attempt:', retryCount + 1);
     setLoadingState({ isLoading: true, error: null });
     
     try {
@@ -76,41 +76,47 @@ export default function DashboardPage() {
       const response = await fetch(`/api/dashboard/analytics?sessionId=${sessionId}`, {
         method: 'GET',
         headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       });
       
       console.log('📡 API Response status:', response.status);
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch dashboard data: ${response.status}`);
+        throw new Error(`Failed to fetch dashboard data: ${response.status} ${response.statusText}`);
       }
       
       const result = await response.json();
       console.log('📊 API Result:', result);
       
-      if (result.success) {
+      if (result.success && result.data) {
         console.log('✅ Setting dashboard data:', result.data);
         setDashboardData(result.data);
+        setLoadingState({ isLoading: false, error: null });
       } else {
-        throw new Error(result.error || 'Unknown error occurred');
+        throw new Error(result.error || 'No data returned from API');
       }
     } catch (error) {
       console.error('❌ Dashboard fetch error:', error);
+      
+      // Retry once if first attempt fails
+      if (retryCount === 0) {
+        console.log('🔄 Retrying in 1 second...');
+        setTimeout(() => fetchDashboardData(1), 1000);
+        return;
+      }
+      
       setLoadingState({ 
         isLoading: false, 
         error: error instanceof Error ? error.message : 'Failed to load dashboard data' 
       });
       
-      console.log('🔄 Falling back to demo data');
-      // Fallback to demo data if API fails
+      console.log('🔄 Falling back to demo data after retry failed');
+      // Fallback to demo data if API fails after retry
       setDashboardData(getDemoData());
-      return;
     }
-    
-    setLoadingState({ isLoading: false, error: null });
-    console.log('✅ Dashboard data fetch completed');
   };
 
   // Demo data fallback for new users or API errors
@@ -131,19 +137,12 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    console.log('🚀 Dashboard component mounted, fetching data...');
-    fetchDashboardData();
+    fetchDashboardData(0);
     
     // Set up periodic refresh every 5 minutes
-    const interval = setInterval(() => {
-      console.log('🔄 Periodic refresh triggered');
-      fetchDashboardData();
-    }, 5 * 60 * 1000);
+    const interval = setInterval(() => fetchDashboardData(0), 5 * 60 * 1000);
     
-    return () => {
-      console.log('🧹 Dashboard component unmounting, clearing interval');
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const formatTime = (seconds: number | null): string => {
@@ -183,7 +182,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Dashboard</h2>
           <p className="text-gray-600 mb-4">{loadingState.error}</p>
           <button
-            onClick={fetchDashboardData}
+            onClick={() => fetchDashboardData(0)}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Try Again
@@ -208,13 +207,13 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ECCCO</h1>
-                  <p className="text-xs sm:text-sm text-gray-600">Performance Dashboard</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Dashboard v2.0 - Mobile Ready</p>
                 </div>
               </Link>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
               <button
-                onClick={fetchDashboardData}
+                onClick={() => fetchDashboardData(0)}
                 disabled={loadingState.isLoading}
                 className="flex items-center justify-center sm:justify-start space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors bg-gray-50 sm:bg-transparent rounded-lg sm:rounded-none border sm:border-0"
               >
