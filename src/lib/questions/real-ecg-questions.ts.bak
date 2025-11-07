@@ -11,9 +11,8 @@ import { Question } from './types';
 export const realECGQuestions: Question[] = [
   {
     "id": "real-ecg-1",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Normal Sinus Rhythm",
@@ -21,7 +20,7 @@ export const realECGQuestions: Question[] = [
       "Ventricular Arrhythmia",
       "Artifact"
     ],
-    "correctAnswer": 0,
+    "correctIndex": 0,
     "explanation": "This ECG demonstrates normal sinus rhythm. Regular rhythm, normal P waves, normal QRS. Normal SA node conduction.",
     "ecgData": {
       "id": "MIT-BIH_100_strip_1",
@@ -3656,9 +3655,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-2",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "What is the approximate heart rate shown in this normal ECG?",
     "options": [
       "45-55 bpm",
@@ -3666,7 +3664,7 @@ export const realECGQuestions: Question[] = [
       "85-95 bpm",
       "105-115 bpm"
     ],
-    "correctAnswer": 1,
+    "correctIndex": 1,
     "explanation": "This normal sinus rhythm shows a heart rate in the normal range of 60-100 bpm. Rate can be calculated by measuring R-R intervals.",
     "ecgData": {
       "id": "MIT-BIH_100_strip_1",
@@ -7300,9 +7298,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-3",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing normal sinus rhythm. What is the most appropriate initial management?",
     "options": [
       "Beta-blocker therapy",
@@ -7310,7 +7307,7 @@ export const realECGQuestions: Question[] = [
       "Cardioversion",
       "Anticoagulation"
     ],
-    "correctAnswer": 1,
+    "correctIndex": 1,
     "explanation": "For normal sinus rhythm, the appropriate management is: No intervention needed. Normal SA node conduction",
     "ecgData": {
       "id": "MIT-BIH_100_strip_1",
@@ -10945,9 +10942,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-4",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Ventricular Arrhythmia",
@@ -10955,7 +10951,7 @@ export const realECGQuestions: Question[] = [
       "Atrial Fibrillation",
       "Artifact"
     ],
-    "correctAnswer": 1,
+    "correctIndex": 1,
     "explanation": "This ECG demonstrates normal sinus rhythm. Regular rhythm, normal P waves, normal QRS. Normal SA node conduction.",
     "ecgData": {
       "id": "MIT-BIH_100_strip_2",
@@ -14590,9 +14586,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-5",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "What is the approximate heart rate shown in this normal ECG?",
     "options": [
       "45-55 bpm",
@@ -14600,7 +14595,7 @@ export const realECGQuestions: Question[] = [
       "85-95 bpm",
       "105-115 bpm"
     ],
-    "correctAnswer": 1,
+    "correctIndex": 1,
     "explanation": "This normal sinus rhythm shows a heart rate in the normal range of 60-100 bpm. Rate can be calculated by measuring R-R intervals.",
     "ecgData": {
       "id": "MIT-BIH_100_strip_2",
@@ -18234,9 +18229,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-6",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing normal sinus rhythm. What is the most appropriate initial management?",
     "options": [
       "Cardioversion",
@@ -18244,7 +18238,7 @@ export const realECGQuestions: Question[] = [
       "No intervention needed",
       "Beta-blocker therapy"
     ],
-    "correctAnswer": 2,
+    "correctIndex": 2,
     "explanation": "For normal sinus rhythm, the appropriate management is: No intervention needed. Normal SA node conduction",
     "ecgData": {
       "id": "MIT-BIH_100_strip_2",
@@ -21879,9 +21873,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-7",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Atrial Fibrillation",
@@ -21889,7 +21882,7 @@ export const realECGQuestions: Question[] = [
       "Artifact",
       "Ventricular Arrhythmia"
     ],
-    "correctAnswer": 0,
+    "correctIndex": 0,
     "explanation": "This ECG demonstrates atrial fibrillation. Irregularly irregular, no clear P waves, fibrillatory waves. Chaotic atrial electrical activity.",
     "ecgData": {
       "id": "MIT-BIH_201_strip_1",
@@ -25524,9 +25517,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-8",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing atrial fibrillation. What is the most appropriate initial management?",
     "options": [
       "Pacemaker insertion",
@@ -25534,7 +25526,7 @@ export const realECGQuestions: Question[] = [
       "Immediate defibrillation",
       "Rate control, anticoagulation, rhythm control"
     ],
-    "correctAnswer": 3,
+    "correctIndex": 3,
     "explanation": "For atrial fibrillation, the appropriate management is: Rate control, anticoagulation, rhythm control. Chaotic atrial electrical activity",
     "ecgData": {
       "id": "MIT-BIH_201_strip_1",
@@ -29169,9 +29161,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-9",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Atrial Fibrillation",
@@ -29179,7 +29170,7 @@ export const realECGQuestions: Question[] = [
       "Ventricular Arrhythmia",
       "Artifact"
     ],
-    "correctAnswer": 0,
+    "correctIndex": 0,
     "explanation": "This ECG demonstrates atrial fibrillation. Irregularly irregular, no clear P waves, fibrillatory waves. Chaotic atrial electrical activity.",
     "ecgData": {
       "id": "MIT-BIH_201_strip_2",
@@ -32814,9 +32805,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-10",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "medium",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing atrial fibrillation. What is the most appropriate initial management?",
     "options": [
       "Immediate defibrillation",
@@ -32824,7 +32814,7 @@ export const realECGQuestions: Question[] = [
       "Rate control, anticoagulation, rhythm control",
       "No treatment needed"
     ],
-    "correctAnswer": 2,
+    "correctIndex": 2,
     "explanation": "For atrial fibrillation, the appropriate management is: Rate control, anticoagulation, rhythm control. Chaotic atrial electrical activity",
     "ecgData": {
       "id": "MIT-BIH_201_strip_2",
@@ -36459,9 +36449,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-11",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Ventricular Arrhythmia",
@@ -36469,7 +36458,7 @@ export const realECGQuestions: Question[] = [
       "Atrial Fibrillation",
       "Artifact"
     ],
-    "correctAnswer": 0,
+    "correctIndex": 0,
     "explanation": "This ECG demonstrates ventricular arrhythmia. Wide QRS complexes, regular rhythm, no P waves. Ventricular focus generating rapid impulses.",
     "ecgData": {
       "id": "MIT-BIH_207_strip_1",
@@ -40104,9 +40093,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-12",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "hard",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing ventricular arrhythmia. What is the most appropriate initial management?",
     "options": [
       "Immediate cardioversion/defibrillation if unstable",
@@ -40114,7 +40102,7 @@ export const realECGQuestions: Question[] = [
       "No intervention",
       "Elective cardioversion"
     ],
-    "correctAnswer": 0,
+    "correctIndex": 0,
     "explanation": "For ventricular arrhythmia, the appropriate management is: Immediate cardioversion/defibrillation if unstable. Ventricular focus generating rapid impulses",
     "ecgData": {
       "id": "MIT-BIH_207_strip_1",
@@ -43749,9 +43737,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-13",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "easy",
-    "type": "multiple-choice",
     "question": "What is the primary rhythm shown in this ECG strip?",
     "options": [
       "Atrial Fibrillation",
@@ -43759,7 +43746,7 @@ export const realECGQuestions: Question[] = [
       "Normal Sinus Rhythm",
       "Ventricular Arrhythmia"
     ],
-    "correctAnswer": 3,
+    "correctIndex": 3,
     "explanation": "This ECG demonstrates ventricular arrhythmia. Wide QRS complexes, regular rhythm, no P waves. Ventricular focus generating rapid impulses.",
     "ecgData": {
       "id": "MIT-BIH_207_strip_2",
@@ -47394,9 +47381,8 @@ export const realECGQuestions: Question[] = [
   },
   {
     "id": "real-ecg-14",
-    "topic": "Cardiology",
+    "category": "Cardiology",
     "difficulty": "hard",
-    "type": "multiple-choice",
     "question": "A patient presents with this ECG showing ventricular arrhythmia. What is the most appropriate initial management?",
     "options": [
       "No intervention",
@@ -47404,7 +47390,7 @@ export const realECGQuestions: Question[] = [
       "Elective cardioversion",
       "Rate control medications"
     ],
-    "correctAnswer": 1,
+    "correctIndex": 1,
     "explanation": "For ventricular arrhythmia, the appropriate management is: Immediate cardioversion/defibrillation if unstable. Ventricular focus generating rapid impulses",
     "ecgData": {
       "id": "MIT-BIH_207_strip_2",
