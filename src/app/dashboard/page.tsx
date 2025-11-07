@@ -67,36 +67,50 @@ export default function DashboardPage() {
   };
 
   const fetchDashboardData = async () => {
+    console.log('🔍 Starting dashboard data fetch...');
     setLoadingState({ isLoading: true, error: null });
     
     try {
       const sessionId = getSessionId();
-      const response = await fetch(`/api/dashboard/analytics?sessionId=${sessionId}`);
+      console.log('📋 Session ID:', sessionId);
+      const response = await fetch(`/api/dashboard/analytics?sessionId=${sessionId}`, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      
+      console.log('📡 API Response status:', response.status);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch dashboard data');
+        throw new Error(`Failed to fetch dashboard data: ${response.status}`);
       }
       
       const result = await response.json();
+      console.log('📊 API Result:', result);
       
       if (result.success) {
+        console.log('✅ Setting dashboard data:', result.data);
         setDashboardData(result.data);
       } else {
         throw new Error(result.error || 'Unknown error occurred');
       }
     } catch (error) {
-      console.error('Dashboard fetch error:', error);
+      console.error('❌ Dashboard fetch error:', error);
       setLoadingState({ 
         isLoading: false, 
         error: error instanceof Error ? error.message : 'Failed to load dashboard data' 
       });
       
+      console.log('🔄 Falling back to demo data');
       // Fallback to demo data if API fails
       setDashboardData(getDemoData());
       return;
     }
     
     setLoadingState({ isLoading: false, error: null });
+    console.log('✅ Dashboard data fetch completed');
   };
 
   // Demo data fallback for new users or API errors
@@ -117,12 +131,19 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
+    console.log('🚀 Dashboard component mounted, fetching data...');
     fetchDashboardData();
     
     // Set up periodic refresh every 5 minutes
-    const interval = setInterval(fetchDashboardData, 5 * 60 * 1000);
+    const interval = setInterval(() => {
+      console.log('🔄 Periodic refresh triggered');
+      fetchDashboardData();
+    }, 5 * 60 * 1000);
     
-    return () => clearInterval(interval);
+    return () => {
+      console.log('🧹 Dashboard component unmounting, clearing interval');
+      clearInterval(interval);
+    };
   }, []);
 
   const formatTime = (seconds: number | null): string => {
