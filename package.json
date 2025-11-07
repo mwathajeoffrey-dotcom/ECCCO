@@ -39,7 +39,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next out",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma db push && tsx scripts/seed-production.ts && next build"
+    "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
