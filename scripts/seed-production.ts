@@ -5,45 +5,75 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding ECCCO production database...');
 
-  // Create all medical topics
-  const topics = [
-    { name: 'Basic Life Support (BLS)', description: 'Essential life-saving techniques for cardiac arrest and respiratory emergencies' },
-    { name: 'Advanced Cardiovascular Life Support (ACLS)', description: 'Advanced algorithms for cardiac arrest and cardiovascular emergencies' },
-    { name: 'Advanced Trauma Life Support (ATLS)', description: 'Systematic approach to trauma patient assessment and management' },
-    { name: 'Airway Management', description: 'Techniques for securing and maintaining patient airways in emergency situations' },
-    { name: 'Blood Gas Analysis', description: 'Interpretation of arterial blood gases and acid-base disorders' },
-    { name: 'Chest X-ray Interpretation', description: 'Systematic approach to reading and interpreting chest radiographs' },
-    { name: 'Cardiac Emergencies', description: 'Management of acute cardiac conditions and arrhythmias' },
-    { name: 'ECG Emergencies', description: 'Recognition and management of life-threatening ECG findings' },
-    { name: 'ECG Rhythm Identification', description: 'Systematic approach to identifying cardiac rhythms and arrhythmias' },
-    { name: 'Advanced ECG Interpretation', description: 'Complex ECG analysis including ST elevation, conduction blocks, and intervals' },
-    { name: 'Critical Care Emergencies', description: 'Management of critically ill patients requiring intensive care' },
-    { name: 'Electrolyte Emergencies', description: 'Recognition and treatment of dangerous electrolyte imbalances' },
-    { name: 'Endocrine Emergencies', description: 'Management of diabetic ketoacidosis, thyroid storm, and adrenal crisis' },
-    { name: 'Environmental Emergencies', description: 'Treatment of heat stroke, hypothermia, and environmental exposures' },
-    { name: 'Geriatric Emergencies', description: 'Special considerations for emergency care in elderly patients' },
-    { name: 'Hematologic Emergencies', description: 'Management of bleeding disorders and hematologic crises' },
-    { name: 'Infectious Disease Emergencies', description: 'Recognition and treatment of serious infections and sepsis' },
-    { name: 'Mechanical Ventilation', description: 'Principles and management of mechanical ventilation in critical care' },
-    { name: 'Neurological Emergencies', description: 'Management of stroke, seizures, and altered mental status' },
-    { name: 'OB/GYN Emergencies', description: 'Emergency care for pregnancy-related and gynecologic conditions' },
-    { name: 'Pediatric Advanced Life Support (PALS)', description: 'Advanced life support algorithms for pediatric patients' },
-    { name: 'Pediatric Emergencies', description: 'Emergency care considerations specific to children and infants' },
-    { name: 'Pharmacology Emergencies', description: 'Emergency medications, dosing, and drug interactions' },
-    { name: 'Point-of-Care Ultrasound', description: 'Bedside ultrasound techniques for emergency diagnosis' },
-    { name: 'Procedures', description: 'Emergency procedures including intubation, chest tubes, and central lines' },
-    { name: 'Psychiatric Emergencies', description: 'Management of agitation, psychosis, and suicidal patients' },
-    { name: 'Renal Emergencies', description: 'Acute kidney injury, dialysis complications, and urologic emergencies' },
-    { name: 'Respiratory Emergencies', description: 'Management of asthma, COPD exacerbations, and respiratory failure' },
-    { name: 'Sepsis Management', description: 'Early recognition and management of sepsis and septic shock' },
-    { name: 'Toxicology', description: 'Management of poisoning, overdoses, and toxic exposures' },
-    { name: 'Trauma Management', description: 'Comprehensive approach to multi-system trauma patients' }
+  // Get or create modules
+  const adultModule = await prisma.module.upsert({
+    where: { name: 'Adult Emergency Medicine' },
+    update: {},
+    create: {
+      name: 'Adult Emergency Medicine',
+      description: 'Adult emergency care, ACLS, trauma, and critical care topics',
+      ageGroup: 'adult'
+    }
+  });
+
+  const pediatricModule = await prisma.module.upsert({
+    where: { name: 'Pediatric Emergency Medicine' },
+    update: {},
+    create: {
+      name: 'Pediatric Emergency Medicine',
+      description: 'Pediatric emergency care, PALS, and critical care topics',
+      ageGroup: 'pediatric'
+    }
+  });
+
+  // Create adult medical topics
+  const adultTopics = [
+    { name: 'Basic Life Support (BLS)', description: 'Essential life-saving techniques for cardiac arrest', moduleId: adultModule.id, category: 'basic_life_support' },
+    { name: 'Advanced Cardiovascular Life Support (ACLS)', description: 'Advanced algorithms for cardiac arrest', moduleId: adultModule.id, category: 'cardiac' },
+    { name: 'Advanced Trauma Life Support (ATLS)', description: 'Systematic approach to trauma patient assessment', moduleId: adultModule.id, category: 'trauma' },
+    { name: 'Airway Management', description: 'Techniques for securing and maintaining airways', moduleId: adultModule.id, category: 'ventilation' },
+    { name: 'Blood Gas Analysis', description: 'Interpretation of arterial blood gases', moduleId: adultModule.id, category: 'ventilation' },
+    { name: 'Cardiac Emergencies', description: 'Management of acute cardiac conditions', moduleId: adultModule.id, category: 'cardiac' },
+    { name: 'ECG Emergencies', description: 'Recognition and management of life-threatening ECG findings', moduleId: adultModule.id, category: 'cardiac' },
+    { name: 'Critical Care Emergencies', description: 'Management of critically ill patients', moduleId: adultModule.id, category: 'general' },
+    { name: 'Electrolyte Emergencies', description: 'Recognition and treatment of electrolyte imbalances', moduleId: adultModule.id, category: 'electrolytes' },
+    { name: 'Mechanical Ventilation', description: 'Principles and management of mechanical ventilation', moduleId: adultModule.id, category: 'ventilation' },
+    { name: 'Sepsis Management', description: 'Early recognition and management of sepsis', moduleId: adultModule.id, category: 'sepsis' },
+    { name: 'Trauma Management', description: 'Comprehensive approach to multi-system trauma', moduleId: adultModule.id, category: 'trauma' }
   ];
 
-  console.log('📚 Creating topics...');
-  for (const topic of topics) {
+  // Create pediatric medical topics  
+  const pediatricTopics = [
+    { name: 'Pediatric Advanced Life Support (PALS)', description: 'Advanced life support algorithms for pediatric patients', moduleId: pediatricModule.id, category: 'pediatric_advanced_life_support' },
+    { name: 'Pediatric Emergencies', description: 'Emergency care considerations specific to children', moduleId: pediatricModule.id, category: 'general' },
+    { name: 'Pediatric Airway Management', description: 'Pediatric-specific airway management techniques', moduleId: pediatricModule.id, category: 'ventilation' },
+    { name: 'Pediatric Sepsis', description: 'Recognition and management of pediatric sepsis', moduleId: pediatricModule.id, category: 'sepsis' },
+    { name: 'Pediatric Trauma', description: 'Trauma management in children', moduleId: pediatricModule.id, category: 'trauma' }
+  ];
+
+  console.log('📚 Creating adult topics...');
+  for (const topic of adultTopics) {
     await prisma.topic.upsert({
-      where: { name: topic.name },
+      where: { 
+        moduleId_name: {
+          moduleId: topic.moduleId,
+          name: topic.name
+        }
+      },
+      update: {},
+      create: topic
+    });
+  }
+
+  console.log('� Creating pediatric topics...');
+  for (const topic of pediatricTopics) {
+    await prisma.topic.upsert({
+      where: { 
+        moduleId_name: {
+          moduleId: topic.moduleId,
+          name: topic.name
+        }
+      },
       update: {},
       create: topic
     });
