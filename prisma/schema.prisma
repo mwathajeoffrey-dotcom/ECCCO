@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  // Production will override this with PostgreSQL via environment variable
+  // Supports both PostgreSQL (production) and SQLite (local development)
 }
 
 model User {
