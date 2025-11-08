@@ -7,46 +7,203 @@ async function main() {
 
   // Create all medical topics
   const topics = [
-    { id: 'bls', name: 'Basic Life Support (BLS)', description: 'Essential life-saving techniques for cardiac arrest and respiratory emergencies' },
-    { id: 'acls', name: 'Advanced Cardiovascular Life Support (ACLS)', description: 'Advanced algorithms for cardiac arrest and cardiovascular emergencies' },
-    { id: 'atls', name: 'Advanced Trauma Life Support (ATLS)', description: 'Systematic approach to trauma patient assessment and management' },
-    { id: 'airway-management', name: 'Airway Management', description: 'Techniques for securing and maintaining patient airways in emergency situations' },
-    { id: 'blood-gas-analysis', name: 'Blood Gas Analysis', description: 'Interpretation of arterial blood gases and acid-base disorders' },
-    { id: 'chest-xray-interpretation', name: 'Chest X-ray Interpretation', description: 'Systematic approach to reading and interpreting chest radiographs' },
-    { id: 'cardiac-emergencies', name: 'Cardiac Emergencies', description: 'Management of acute cardiac conditions and arrhythmias' },
-    { id: 'ecg-emergencies', name: 'ECG Emergencies', description: 'Recognition and management of life-threatening ECG findings' },
-    { id: 'ecg-rhythm-identification', name: 'ECG Rhythm Identification', description: 'Systematic approach to identifying cardiac rhythms and arrhythmias' },
-    { id: 'advanced-ecg-interpretation', name: 'Advanced ECG Interpretation', description: 'Complex ECG analysis including ST elevation, conduction blocks, and intervals' },
-    { id: 'critical-care-emergencies', name: 'Critical Care Emergencies', description: 'Management of critically ill patients requiring intensive care' },
-    { id: 'electrolyte-emergencies', name: 'Electrolyte Emergencies', description: 'Recognition and treatment of dangerous electrolyte imbalances' },
-    { id: 'endocrine-emergencies', name: 'Endocrine Emergencies', description: 'Management of diabetic ketoacidosis, thyroid storm, and adrenal crisis' },
-    { id: 'environmental-emergencies', name: 'Environmental Emergencies', description: 'Treatment of heat stroke, hypothermia, and environmental exposures' },
-    { id: 'geriatric-emergencies', name: 'Geriatric Emergencies', description: 'Special considerations for emergency care in elderly patients' },
-    { id: 'hematologic-emergencies', name: 'Hematologic Emergencies', description: 'Management of bleeding disorders and hematologic crises' },
-    { id: 'infectious-disease-emergencies', name: 'Infectious Disease Emergencies', description: 'Recognition and treatment of serious infections and sepsis' },
-    { id: 'mechanical-ventilation', name: 'Mechanical Ventilation', description: 'Principles and management of mechanical ventilation in critical care' },
-    { id: 'neurological-emergencies', name: 'Neurological Emergencies', description: 'Management of stroke, seizures, and altered mental status' },
-    { id: 'obstetric-gynecologic-emergencies', name: 'OB/GYN Emergencies', description: 'Emergency care for pregnancy-related and gynecologic conditions' },
-    { id: 'pals', name: 'Pediatric Advanced Life Support (PALS)', description: 'Advanced life support algorithms for pediatric patients' },
-    { id: 'pediatric-emergencies', name: 'Pediatric Emergencies', description: 'Emergency care considerations specific to children and infants' },
-    { id: 'pharmacology-emergencies', name: 'Pharmacology Emergencies', description: 'Emergency medications, dosing, and drug interactions' },
-    { id: 'point-of-care-ultrasound', name: 'Point-of-Care Ultrasound', description: 'Bedside ultrasound techniques for emergency diagnosis' },
-    { id: 'procedures', name: 'Procedures', description: 'Emergency procedures including intubation, chest tubes, and central lines' },
-    { id: 'psychiatric-emergencies', name: 'Psychiatric Emergencies', description: 'Management of agitation, psychosis, and suicidal patients' },
-    { id: 'renal-emergencies', name: 'Renal Emergencies', description: 'Acute kidney injury, dialysis complications, and urologic emergencies' },
-    { id: 'respiratory-emergencies', name: 'Respiratory Emergencies', description: 'Management of asthma, COPD exacerbations, and respiratory failure' },
-    { id: 'sepsis-management', name: 'Sepsis Management', description: 'Early recognition and management of sepsis and septic shock' },
-    { id: 'toxicology', name: 'Toxicology', description: 'Management of poisoning, overdoses, and toxic exposures' },
-    { id: 'trauma-management', name: 'Trauma Management', description: 'Comprehensive approach to multi-system trauma patients' }
+    { name: 'Basic Life Support (BLS)', description: 'Essential life-saving techniques for cardiac arrest and respiratory emergencies' },
+    { name: 'Advanced Cardiovascular Life Support (ACLS)', description: 'Advanced algorithms for cardiac arrest and cardiovascular emergencies' },
+    { name: 'Advanced Trauma Life Support (ATLS)', description: 'Systematic approach to trauma patient assessment and management' },
+    { name: 'Airway Management', description: 'Techniques for securing and maintaining patient airways in emergency situations' },
+    { name: 'Blood Gas Analysis', description: 'Interpretation of arterial blood gases and acid-base disorders' },
+    { name: 'Chest X-ray Interpretation', description: 'Systematic approach to reading and interpreting chest radiographs' },
+    { name: 'Cardiac Emergencies', description: 'Management of acute cardiac conditions and arrhythmias' },
+    { name: 'ECG Emergencies', description: 'Recognition and management of life-threatening ECG findings' },
+    { name: 'ECG Rhythm Identification', description: 'Systematic approach to identifying cardiac rhythms and arrhythmias' },
+    { name: 'Advanced ECG Interpretation', description: 'Complex ECG analysis including ST elevation, conduction blocks, and intervals' },
+    { name: 'Critical Care Emergencies', description: 'Management of critically ill patients requiring intensive care' },
+    { name: 'Electrolyte Emergencies', description: 'Recognition and treatment of dangerous electrolyte imbalances' },
+    { name: 'Endocrine Emergencies', description: 'Management of diabetic ketoacidosis, thyroid storm, and adrenal crisis' },
+    { name: 'Environmental Emergencies', description: 'Treatment of heat stroke, hypothermia, and environmental exposures' },
+    { name: 'Geriatric Emergencies', description: 'Special considerations for emergency care in elderly patients' },
+    { name: 'Hematologic Emergencies', description: 'Management of bleeding disorders and hematologic crises' },
+    { name: 'Infectious Disease Emergencies', description: 'Recognition and treatment of serious infections and sepsis' },
+    { name: 'Mechanical Ventilation', description: 'Principles and management of mechanical ventilation in critical care' },
+    { name: 'Neurological Emergencies', description: 'Management of stroke, seizures, and altered mental status' },
+    { name: 'OB/GYN Emergencies', description: 'Emergency care for pregnancy-related and gynecologic conditions' },
+    { name: 'Pediatric Advanced Life Support (PALS)', description: 'Advanced life support algorithms for pediatric patients' },
+    { name: 'Pediatric Emergencies', description: 'Emergency care considerations specific to children and infants' },
+    { name: 'Pharmacology Emergencies', description: 'Emergency medications, dosing, and drug interactions' },
+    { name: 'Point-of-Care Ultrasound', description: 'Bedside ultrasound techniques for emergency diagnosis' },
+    { name: 'Procedures', description: 'Emergency procedures including intubation, chest tubes, and central lines' },
+    { name: 'Psychiatric Emergencies', description: 'Management of agitation, psychosis, and suicidal patients' },
+    { name: 'Renal Emergencies', description: 'Acute kidney injury, dialysis complications, and urologic emergencies' },
+    { name: 'Respiratory Emergencies', description: 'Management of asthma, COPD exacerbations, and respiratory failure' },
+    { name: 'Sepsis Management', description: 'Early recognition and management of sepsis and septic shock' },
+    { name: 'Toxicology', description: 'Management of poisoning, overdoses, and toxic exposures' },
+    { name: 'Trauma Management', description: 'Comprehensive approach to multi-system trauma patients' }
   ];
 
   console.log('📚 Creating topics...');
   for (const topic of topics) {
     await prisma.topic.upsert({
-      where: { id: topic.id },
+      where: { name: topic.name },
       update: {},
       create: topic
     });
+  }
+
+  // Create essential PALS questions for production
+  console.log('❓ Creating essential PALS questions...');
+  const palsTopicId = (await prisma.topic.findUnique({
+    where: { name: 'Pediatric Advanced Life Support (PALS)' }
+  }))?.id;
+
+  if (palsTopicId) {
+    const palsQuestions = [
+      {
+        question: "What is the recommended initial dose of epinephrine for pediatric cardiac arrest?",
+        options: JSON.stringify([
+          "0.01 mg/kg (0.1 mL/kg of 1:10,000)",
+          "0.1 mg/kg (0.1 mL/kg of 1:1,000)", 
+          "0.01 mg/kg (0.01 mL/kg of 1:1,000)",
+          "1 mg regardless of weight"
+        ]),
+        correctIndex: 0,
+        explanation: "The recommended initial dose of epinephrine for pediatric cardiac arrest is 0.01 mg/kg (0.1 mL/kg of 1:10,000 solution) administered IV/IO. This dose may be repeated every 3-5 minutes during resuscitation.",
+        references: JSON.stringify([
+          "AHA PALS Provider Manual 2020",
+          "Part 11: Pediatric Basic and Advanced Life Support: 2020 American Heart Association Guidelines"
+        ]),
+        difficulty: "medium",
+        topicId: palsTopicId
+      },
+      
+      {
+        question: "In pediatric CPR, what is the correct compression-to-ventilation ratio for 2-rescuer CPR?",
+        options: JSON.stringify([
+          "30:2",
+          "15:2",
+          "5:1",
+          "3:1"
+        ]),
+        correctIndex: 1,
+        explanation: "For 2-rescuer pediatric CPR, the compression-to-ventilation ratio is 15:2. This allows for more frequent ventilations while maintaining adequate compressions. Single-rescuer CPR uses 30:2 ratio.",
+        references: JSON.stringify([
+          "AHA PALS Provider Manual 2020",
+          "Pediatric CPR Guidelines 2020"
+        ]),
+        difficulty: "easy",
+        topicId: palsTopicId
+      },
+      
+      {
+        question: "A 4-year-old child presents with supraventricular tachycardia (SVT) with a heart rate of 220 bpm and poor perfusion. What is the initial energy dose for synchronized cardioversion?",
+        options: JSON.stringify([
+          "0.5-1 J/kg",
+          "2 J/kg",
+          "4 J/kg",
+          "6 J/kg"
+        ]),
+        correctIndex: 0,
+        explanation: "The initial energy dose for synchronized cardioversion in pediatric SVT is 0.5-1 J/kg. If unsuccessful, increase to 2 J/kg for subsequent attempts. This graduated approach minimizes potential cardiac injury.",
+        references: JSON.stringify([
+          "AHA PALS Provider Manual 2020",
+          "Pediatric Arrhythmia Management Guidelines"
+        ]),
+        difficulty: "hard",
+        topicId: palsTopicId
+      },
+      
+      {
+        question: "What is the minimum systolic blood pressure for a 6-year-old child?",
+        options: JSON.stringify([
+          "70 + (2 × age in years) = 82 mmHg",
+          "90 mmHg regardless of age",
+          "60 + (2 × age in years) = 72 mmHg",
+          "80 mmHg for all school-age children"
+        ]),
+        correctIndex: 0,
+        explanation: "The minimum systolic blood pressure for children 1-10 years is calculated as 70 + (2 × age in years). For a 6-year-old: 70 + (2 × 6) = 82 mmHg. This formula helps identify hypotension in pediatric patients.",
+        references: JSON.stringify([
+          "AHA PALS Provider Manual 2020",
+          "Pediatric Vital Signs Reference"
+        ]),
+        difficulty: "medium",
+        topicId: palsTopicId
+      },
+      
+      {
+        question: "Which of the following best describes the appropriate treatment for pediatric bradycardia with poor perfusion?",
+        options: JSON.stringify([
+          "Immediate transcutaneous pacing",
+          "Epinephrine 0.01 mg/kg IV/IO",
+          "Support ventilation and oxygenation first, then epinephrine if needed",
+          "Atropine 0.02 mg/kg IV/IO"
+        ]),
+        correctIndex: 2,
+        explanation: "For pediatric bradycardia with poor perfusion, first support ventilation and oxygenation as hypoxemia is often the cause. If bradycardia persists despite adequate oxygenation and ventilation, then consider epinephrine 0.01 mg/kg IV/IO.",
+        references: JSON.stringify([
+          "AHA PALS Provider Manual 2020",
+          "Pediatric Bradycardia Algorithm"
+        ]),
+        difficulty: "hard",
+        topicId: palsTopicId
+      }
+    ];
+
+    for (const questionData of palsQuestions) {
+      await prisma.question.create({
+        data: questionData
+      });
+    }
+  }
+
+  // Create essential BLS questions for production
+  console.log('❓ Creating essential BLS questions...');
+  const blsTopicId = (await prisma.topic.findUnique({
+    where: { name: 'Basic Life Support (BLS)' }
+  }))?.id;
+  
+  if (blsTopicId) {
+    const blsQuestions = [
+      {
+        question: "What is the correct compression depth for adult CPR?",
+        options: JSON.stringify([
+          "At least 2 inches (5 cm) but no more than 2.4 inches (6 cm)",
+          "Exactly 2 inches (5 cm)",
+          "1.5-2 inches (4-5 cm)", 
+          "2-3 inches (5-7.5 cm)"
+        ]),
+        correctIndex: 0,
+        explanation: "Adult CPR compressions should be at least 2 inches (5 cm) deep but should not exceed 2.4 inches (6 cm) to avoid injury while ensuring adequate circulation.",
+        references: JSON.stringify([
+          "AHA BLS Provider Manual 2020",
+          "Part 5: Adult Basic Life Support and Cardiopulmonary Resuscitation Quality"
+        ]),
+        difficulty: "easy",
+        topicId: blsTopicId
+      },
+      
+      {
+        question: "At what rate should chest compressions be performed during CPR?",
+        options: JSON.stringify([
+          "100-120 compressions per minute",
+          "At least 120 compressions per minute",
+          "80-100 compressions per minute",
+          "60-80 compressions per minute"
+        ]),
+        correctIndex: 0,
+        explanation: "Chest compressions should be performed at a rate of 100-120 compressions per minute. This rate ensures adequate perfusion while allowing for complete chest recoil between compressions.",
+        references: JSON.stringify([
+          "AHA BLS Provider Manual 2020"
+        ]),
+        difficulty: "easy",
+        topicId: blsTopicId
+      }
+    ];
+
+    for (const questionData of blsQuestions) {
+      await prisma.question.create({
+        data: questionData
+      });
+    }
   }
 
   // Only create demo user and data in development
@@ -68,7 +225,8 @@ async function main() {
       {
         sessionId: 'demo-session-123',
         userId: demoUser.id,
-        topicId: 'bls',
+        topicId: blsTopicId || '',
+        topicName: 'Basic Life Support (BLS)',
         questions: JSON.stringify(['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10']),
         answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1]),
         score: 85,
@@ -76,12 +234,14 @@ async function main() {
         correctAnswers: 8,
         totalTime: 600,
         completed: true,
+        completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
         createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
       },
       {
         sessionId: 'demo-session-124',
         userId: demoUser.id,
-        topicId: 'acls',
+        topicId: palsTopicId || '',
+        topicName: 'Pediatric Advanced Life Support (PALS)',
         questions: JSON.stringify(Array.from({length: 15}, (_, i) => `q${i+1}`)),
         answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1, 2, 0, 1, 0, 2]),
         score: 72,
@@ -89,20 +249,8 @@ async function main() {
         correctAnswers: 11,
         totalTime: 900,
         completed: true,
+        completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
         createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
-      },
-      {
-        sessionId: 'demo-session-125',
-        userId: demoUser.id,
-        topicId: 'atls',
-        questions: JSON.stringify(Array.from({length: 20}, (_, i) => `q${i+1}`)),
-        answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1, 2, 0, 1, 0, 2, 1, 0, 2, 1, 0]),
-        score: 90,
-        totalQuestions: 20,
-        correctAnswers: 18,
-        totalTime: 1200,
-        completed: true,
-        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000)
       }
     ];
 
@@ -111,12 +259,29 @@ async function main() {
         data: session
       });
     }
+  } else {
+    // Create analytics tracking structure for production
+    console.log('📊 Creating production analytics structure...');
+    await prisma.user.upsert({
+      where: { sessionId: 'production-analytics' },
+      update: {},
+      create: {
+        sessionId: 'production-analytics',
+        name: 'Analytics Tracker'
+      }
+    });
   }
 
+  const questionCount = await prisma.question.count();
+  const topicCount = await prisma.topic.count();
+
   console.log('✅ ECCCO database seeded successfully!');
-  console.log(`📊 Created ${topics.length} medical topics`);
+  console.log(`📊 Created ${topicCount} medical topics and ${questionCount} questions`);
+  
   if (process.env.NODE_ENV !== 'production') {
     console.log('🎯 Demo data available for testing');
+  } else {
+    console.log('🚀 Production database ready with essential content');
   }
 }
 

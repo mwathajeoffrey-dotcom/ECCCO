@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Test Page</title>
+</head>
+<body>
+    <h1>Analytics V2 Test Page</h1>
+    <div id="output"></div>
+    
+    <button onclick="testAnalytics()">Test Analytics System</button>
+    <button onclick="checkDashboard()">Check Dashboard Data</button>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message) {
+            output.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        async function testAnalytics() {
+            output.innerHTML = '';
+            log('🧪 Testing Analytics V2 System...');
+            
+            try {
+                // Test record endpoint
+                const testSession = {
+                    id: "test-web-" + Date.now(),
+                    sessionId: "web-test-session",
+                    topicId: "pals",
+                    topicName: "Pediatric Advanced Life Support",
+                    questions: [
+                        {id: "q1", topicId: "pals", difficulty: "medium", correctIndex: 0},
+                        {id: "q2", topicId: "pals", difficulty: "hard", correctIndex: 1},
+                        {id: "q3", topicId: "pals", difficulty: "easy", correctIndex: 2}
+                    ],
+                    answers: {0: 0, 1: 1, 2: 1}, // 2/3 correct = 67%
+                    score: 67,
+                    totalQuestions: 3,
+                    correctAnswers: 2,
+                    timeSpent: 240,
+                    completedAt: new Date().toISOString()
+                };
+                
+                log('📤 Sending exam data to /api/analytics/record...');
+                const recordResponse = await fetch('/api/analytics/record', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(testSession)
+                });
+                
+                const recordResult = await recordResponse.json();
+                log('✅ Record result: ' + JSON.stringify(recordResult, null, 2));
+                
+                // Test dashboard endpoint
+                log('📥 Fetching data from /api/analytics/dashboard...');
+                const dashboardResponse = await fetch('/api/analytics/dashboard?sessionId=web-test-session');
+                const dashboardResult = await dashboardResponse.json();
+                
+                log('✅ Dashboard result:');
+                log('   Sessions: ' + dashboardResult.data.totalSessions);
+                log('   Questions: ' + dashboardResult.data.totalQuestions);  
+                log('   Average Score: ' + dashboardResult.data.averageScore + '%');
+                log('   Strongest Topic: ' + dashboardResult.data.strongestTopic.name);
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+        
+        async function checkDashboard() {
+            output.innerHTML = '';
+            log('📊 Checking current dashboard data...');
+            
+            try {
+                const response = await fetch('/api/analytics/dashboard?sessionId=web-test-session');
+                const result = await response.json();
+                
+                if (result.success) {
+                    log('✅ Dashboard Data:');
+                    log('   Total Sessions: ' + result.data.totalSessions);
+                    log('   Total Questions: ' + result.data.totalQuestions);
+                    log('   Average Score: ' + result.data.averageScore + '%');
+                    log('   Topics:');
+                    result.data.topicPerformance.forEach(topic => {
+                        log('     - ' + topic.topicName + ': ' + topic.averageScore + '%');
+                    });
+                    log('   Recent Sessions:');
+                    result.data.recentSessions.slice(0, 3).forEach(session => {
+                        log('     - ' + session.topicName + ': ' + session.score + '%');
+                    });
+                } else {
+                    log('❌ Failed to get dashboard data: ' + result.error);
+                }
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -5,7 +5,7 @@ import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
-import { analytics } from '@/lib/analytics/service';
+import { analyticsV2 } from '@/lib/analytics/analytics-v2';
 
 interface Question {
   id: string;
@@ -70,9 +70,9 @@ export default function ExamInterface() {
         const data = await response.json();
         setTopics(data);
         
-        // Initialize analytics
-        await analytics.initialize();
-        analytics.trackPageView('/exam', 'Exam Topics Selection');
+        // Initialize analytics V2
+        await analyticsV2.initialize();
+        console.log('✅ Analytics V2 initialized in exam interface');
       } catch (error) {
         console.error('Error fetching topics:', error);
       } finally {
@@ -113,9 +113,9 @@ export default function ExamInterface() {
       setIsExamFinished(false);
       setTimeRemaining(45 * 60);
       
-      // Track exam start
+      // Track exam start (optional - not critical for analytics)
       const topic = topics.find(t => t.id === topicId);
-      analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
+      console.log(`📋 Exam started: ${topic?.name || 'Unknown Topic'}`);
     } catch (error) {
       console.error('Error fetching questions:', error);
     } finally {
@@ -135,12 +135,8 @@ export default function ExamInterface() {
       
       setCurrentQuestionAnswered(true);
       
-      // Track question answered
-      analytics.trackQuestionAnswered(
-        currentQuestion.id,
-        isCorrect,
-        45 * 60 - timeRemaining // Time spent so far
-      );
+      // Track question answered (handled by exam completion analytics)
+      console.log(`💭 Question answered: ${currentQuestion.id}, correct: ${isCorrect}`);
     }
   };
 
@@ -173,8 +169,9 @@ export default function ExamInterface() {
     
     // Save exam session data to database via analytics
     try {
-      await analytics.trackExamComplete(selectedTopic, score, timeSpent, questions, selectedAnswers);
-      console.log('✅ Exam session data saved successfully');
+      const topicName = topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic';
+      await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent);
+      console.log('✅ Exam session data saved successfully with new analytics system');
     } catch (error) {
       console.error('❌ Failed to save exam session data:', error);
     }
@@ -243,7 +240,7 @@ export default function ExamInterface() {
                 className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
                 onClick={() => {
                   setSelectedTopic(topic.id);
-                  analytics.trackTopicSelection(topic.id, topic.name);
+                  console.log(`📚 Topic selected: ${topic.name}`);
                   fetchQuestions(topic.id);
                 }}
               >
@@ -281,7 +278,7 @@ export default function ExamInterface() {
         };
         
         // Track PDF download
-        analytics.trackPDFDownload(selectedTopic, score);
+        // analytics.trackPDFDownload(selectedTopic, score);
         
         generateExamPDF(examResults);
       } catch (error) {

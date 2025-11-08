@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Users, Calendar, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { analytics } from '@/lib/analytics/service';
+import { analyticsV2 } from '@/lib/analytics/analytics-v2';
 
 // Dynamic Dashboard with Mobile Responsiveness - v2.0
 interface DashboardData {
@@ -72,10 +72,10 @@ export default function DashboardPage() {
     setLoadingState({ isLoading: true, error: null });
     
     try {
-      // Get session ID from analytics service for consistency
-      const sessionId = (analytics as any).getSessionId ? (analytics as any).getSessionId() : getSessionId();
+            // Get session ID from analytics service for consistency
+      const sessionId = analyticsV2.getSessionId();
       console.log('📋 Session ID:', sessionId);
-      const response = await fetch(`/api/dashboard/analytics?sessionId=${sessionId}`, {
+      const response = await fetch(`/api/analytics/dashboard?sessionId=${sessionId}`, {
         method: 'GET',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -139,7 +139,15 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    fetchDashboardData(0);
+    // Initialize analytics first
+    analyticsV2.initialize().then(() => {
+      console.log('✅ Analytics V2 initialized');
+      fetchDashboardData(0);
+    }).catch(error => {
+      console.error('❌ Analytics V2 initialization error:', error);
+      // Still try to fetch dashboard data even if analytics fails
+      fetchDashboardData(0);
+    });
     
     // Set up periodic refresh every 5 minutes
     const interval = setInterval(() => fetchDashboardData(0), 5 * 60 * 1000);
@@ -237,6 +245,9 @@ export default function DashboardPage() {
                 </Link>
                 <Link href="/dashboard" className="text-blue-600 font-medium text-sm sm:text-base">
                   Dashboard
+                </Link>
+                <Link href="/dashboard/analytics" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
+                  Analytics
                 </Link>
               </nav>
             </div>

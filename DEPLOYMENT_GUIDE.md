@@ -1,13 +1,59 @@
-# ECCCO Production Deployment Guide
+# Production Deployment Guide for ECCCO Platform
 
-## 🚀 Deploying to Vercel
+## Overview
 
-### Prerequisites
-- Vercel account connected to GitHub
-- Repository pushed to GitHub
+This guide provides comprehensive instructions for deploying the ECCCO medical education platform to production with PostgreSQL database support and enhanced security features.
 
-### Environment Variables
-Set these in Vercel Dashboard → Project → Settings → Environment Variables:
+## Prerequisites
+
+### System Requirements
+- Node.js 18.17.0 or higher
+- npm 9.0.0 or higher
+- PostgreSQL 14.0 or higher
+- SSL certificates for HTTPS
+
+### Required Environment Variables
+
+Create a `.env.production` file with the following variables:
+
+```bash
+# Database Configuration (PostgreSQL for Production)
+DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require"
+
+# Environment Configuration
+NODE_ENV="production"
+VERCEL_ENV="production"
+
+# Authentication
+NEXTAUTH_SECRET="your-production-nextauth-secret-here"
+NEXTAUTH_URL="https://your-production-domain.com"
+
+# Security & Performance
+API_RATE_LIMIT_MAX_REQUESTS=100
+API_RATE_LIMIT_WINDOW_MS=900000
+SECURITY_HEADERS_ENABLED=true
+
+# Feature Flags
+ENABLE_REGISTRATION=false
+ENABLE_GUEST_MODE=true
+ENABLE_ANALYTICS=true
+ENABLE_PWA=true
+```
+
+### PostgreSQL Setup
+
+1. **Create Production Database**
+```sql
+CREATE DATABASE eccco_production;
+CREATE USER eccco_user WITH ENCRYPTED PASSWORD 'secure_password';
+GRANT ALL PRIVILEGES ON DATABASE eccco_production TO eccco_user;
+```
+
+2. **Configure Connection Pooling** (recommended for production)
+```bash
+# Example with connection pooling
+DATABASE_URL="postgresql://eccco_user:secure_password@localhost:5432/eccco_production?connection_limit=10&pool_timeout=20"
+```
 
 ```bash
 # Required

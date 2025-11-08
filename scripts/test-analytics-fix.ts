@@ -3,7 +3,7 @@
  * This simulates an exam completion to test database persistence
  */
 
-import { analytics } from '../src/lib/analytics/service';
+import { analytics } from '../src/lib/analytics/analytics-v2';
 
 // Mock exam data for testing
 const mockQuestions = [
