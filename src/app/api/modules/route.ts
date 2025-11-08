@@ -5,7 +5,8 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('📡 Fetching modules with topics...');
+    console.log('📡 Fetching modules with topics from PostgreSQL...');
+    console.log('🔗 DATABASE_URL configured:', !!process.env.DATABASE_URL);
     
     // Fetch all modules with their topics and question counts
     const modules = await prisma.module.findMany({
