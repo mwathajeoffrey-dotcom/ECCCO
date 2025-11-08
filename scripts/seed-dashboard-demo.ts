@@ -5,18 +5,30 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding dashboard demo data...');
 
-  // Create demo topics
-  const topics = [
-    { id: 'bls', name: 'Basic Life Support (BLS)', description: 'Essential life-saving techniques' },
-    { id: 'acls', name: 'Advanced Cardiovascular Life Support (ACLS)', description: 'Advanced cardiac algorithms' },
-    { id: 'atls', name: 'Advanced Trauma Life Support (ATLS)', description: 'Trauma patient management' },
-    { id: 'pals', name: 'Pediatric Advanced Life Support (PALS)', description: 'Pediatric emergency care' },
-    { id: 'sepsis', name: 'Sepsis Management', description: 'Recognition and treatment of sepsis' }
+  // Get existing modules (should already exist from migration)
+  const adultModule = await prisma.module.findFirst({
+    where: { ageGroup: 'adult' }
+  });
+
+  if (!adultModule) {
+    throw new Error('Adult module not found. Please run the migration first.');
+  }
+
+  // Create demo topics using existing module structure
+  const demoTopics = [
+    { name: 'Demo Basic Life Support', description: 'Demo BLS questions', moduleId: adultModule.id, category: 'basic_life_support' },
+    { name: 'Demo ACLS Training', description: 'Demo ACLS questions', moduleId: adultModule.id, category: 'cardiac' },
+    { name: 'Demo Sepsis Management', description: 'Demo sepsis questions', moduleId: adultModule.id, category: 'sepsis' }
   ];
 
-  for (const topic of topics) {
+  for (const topic of demoTopics) {
     await prisma.topic.upsert({
-      where: { id: topic.id },
+      where: { 
+        moduleId_name: {
+          moduleId: topic.moduleId,
+          name: topic.name
+        }
+      },
       update: {},
       create: topic
     });
@@ -33,13 +45,31 @@ async function main() {
     }
   });
 
-  // Create demo exam sessions with realistic data
+  // Get created topics for demo sessions
+  const createdTopics = await prisma.topic.findMany({
+    where: {
+      name: {
+        in: ['Demo Basic Life Support', 'Demo ACLS Training', 'Demo Sepsis Management']
+      }
+    }
+  });
+
+  // Get pediatric topics for additional demo sessions
+  const pediatricTopics = await prisma.topic.findMany({
+    where: {
+      module: {
+        ageGroup: 'pediatric'
+      }
+    },
+    take: 1
+  });
+
   const sessionData = [
     {
       sessionId: 'demo-session-123',
       userId: demoUser.id,
-      topicId: 'bls',
-      topicName: 'Basic Life Support',
+      topicId: createdTopics[0]?.id || 'fallback-topic-1',
+      topicName: 'Demo Basic Life Support',
       questions: JSON.stringify(['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10']),
       answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1]),
       score: 85,
@@ -53,8 +83,8 @@ async function main() {
     {
       sessionId: 'demo-session-124',
       userId: demoUser.id,
-      topicId: 'acls',
-      topicName: 'Advanced Cardiovascular Life Support',
+      topicId: createdTopics[1]?.id || 'fallback-topic-2',
+      topicName: 'Demo ACLS Training',
       questions: JSON.stringify(Array.from({length: 15}, (_, i) => `q${i+1}`)),
       answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1, 2, 0, 1, 0, 2]),
       score: 72,
@@ -68,8 +98,8 @@ async function main() {
     {
       sessionId: 'demo-session-125',
       userId: demoUser.id,
-      topicId: 'atls',
-      topicName: 'Advanced Trauma Life Support',
+      topicId: createdTopics[2]?.id || 'fallback-topic-3',
+      topicName: 'Demo Sepsis Management',
       questions: JSON.stringify(Array.from({length: 20}, (_, i) => `q${i+1}`)),
       answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1, 2, 0, 1, 0, 2, 1, 0, 2, 1, 0]),
       score: 90,
@@ -83,8 +113,8 @@ async function main() {
     {
       sessionId: 'demo-session-126',
       userId: demoUser.id,
-      topicId: 'pals',
-      topicName: 'Pediatric Advanced Life Support',
+      topicId: pediatricTopics[0]?.id || createdTopics[0]?.id || 'fallback-topic-4',
+      topicName: pediatricTopics[0]?.name || 'Demo Pediatric Topic',
       questions: JSON.stringify(['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12']),
       answers: JSON.stringify([0, 1, 2, 0, 1, 0, 2, 1, 0, 1, 2, 0]),
       score: 58,
