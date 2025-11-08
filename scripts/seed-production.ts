@@ -81,8 +81,11 @@ async function main() {
 
   // Create essential PALS questions for production
   console.log('❓ Creating essential PALS questions...');
-  const palsTopicId = (await prisma.topic.findUnique({
-    where: { name: 'Pediatric Advanced Life Support (PALS)' }
+  const palsTopicId = (await prisma.topic.findFirst({
+    where: { 
+      name: 'Pediatric Advanced Life Support (PALS)',
+      moduleId: pediatricModule.id
+    }
   }))?.id;
 
   if (palsTopicId) {
@@ -187,8 +190,11 @@ async function main() {
 
   // Create essential BLS questions for production
   console.log('❓ Creating essential BLS questions...');
-  const blsTopicId = (await prisma.topic.findUnique({
-    where: { name: 'Basic Life Support (BLS)' }
+  const blsTopicId = (await prisma.topic.findFirst({
+    where: { 
+      name: 'Basic Life Support (BLS)',
+      moduleId: adultModule.id
+    }
   }))?.id;
   
   if (blsTopicId) {
