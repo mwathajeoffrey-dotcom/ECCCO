@@ -529,7 +529,7 @@ class EnhancedAnalyticsService {
   }
 
   private getTopicSpecificRecommendation(topicName: string, errorRate: number): string {
-    const recommendations = {
+    const recommendations: Record<string, string> = {
       'Pediatric Advanced Life Support': 'Review PALS algorithms and practice dosage calculations',
       'Basic Life Support': 'Practice CPR techniques and rescue breathing protocols',
       'Advanced Cardiac Life Support': 'Focus on rhythm recognition and medication protocols'
