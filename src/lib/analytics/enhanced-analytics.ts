@@ -552,7 +552,7 @@ class EnhancedAnalyticsService {
   }
 
   private determineNextMilestone(currentLevel: string, accuracy: number): string {
-    const milestones = {
+    const milestones: Record<string, string> = {
       'Beginner': 'Reach 70% overall accuracy',
       'Intermediate': 'Achieve 80% accuracy consistently',
       'Advanced': 'Master complex scenarios (90%+)',
@@ -563,7 +563,7 @@ class EnhancedAnalyticsService {
   }
 
   private calculateRecommendedStudyTime(level: string, sessionsCompleted: number): number {
-    const baseTime = {
+    const baseTime: Record<string, number> = {
       'Beginner': 120,      // 2 hours per week
       'Intermediate': 90,   // 1.5 hours per week
       'Advanced': 60,       // 1 hour per week
@@ -616,7 +616,13 @@ class EnhancedAnalyticsService {
     difficulty: string;
     count: number;
   }> {
-    const recommendations = {
+    type RecommendationValue = Array<{
+      questionType: string;
+      difficulty: string;
+      count: number;
+    }>;
+
+    const recommendations: Record<string, RecommendationValue> = {
       'Beginner': [
         { questionType: 'Basic concepts', difficulty: 'easy', count: 15 },
         { questionType: 'Simple scenarios', difficulty: 'medium', count: 10 },
@@ -643,7 +649,8 @@ class EnhancedAnalyticsService {
 
   private calculateAverageDifficulty(questions: any[]): string {
     const difficulties = questions.map(q => q.difficulty || 'medium');
-    const scores = difficulties.map(d => ({ easy: 1, medium: 2, hard: 3 }[d] || 2));
+    const scoreMap: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+    const scores = difficulties.map(d => scoreMap[d] || 2);
     const average = scores.reduce((a, b) => a + b, 0) / scores.length;
     
     if (average <= 1.3) return 'easy';
