@@ -237,6 +237,9 @@ export default function DashboardPage() {
                 </span>
               </button>
               <nav className="flex justify-center space-x-6 sm:space-x-8">
+                <Link href="/modules" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
+                  Modules
+                </Link>
                 <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
                   Practice
                 </Link>

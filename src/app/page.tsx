@@ -18,6 +18,9 @@ export default function Home() {
               </div>
             </div>
             <nav className="hidden md:flex space-x-8">
+              <Link href="/modules" className="text-gray-700 hover:text-blue-600 font-medium">
+                Modules
+              </Link>
               <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium">
                 Practice
               </Link>
@@ -48,14 +51,20 @@ export default function Home() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/practice"
+              href="/modules"
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
-              Start Practicing
+              Choose Your Module
+            </Link>
+            <Link
+              href="/practice"
+              className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+            >
+              Quick Practice
             </Link>
             <Link
               href="/exam"
-              className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
             >
               Take Full Exam
             </Link>

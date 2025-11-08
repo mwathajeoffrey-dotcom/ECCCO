@@ -23,14 +23,40 @@ model User {
   @@index([sessionId])
 }
 
+model Module {
+  id          String    @id @default(cuid())
+  name        String    @unique // "Pediatric Emergency Medicine", "Adult Emergency Medicine"
+  description String?
+  ageGroup    String    // "pediatric", "adult"
+  isActive    Boolean   @default(true)
+  topics      Topic[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([ageGroup])
+}
+
 model Topic {
   id           String        @id @default(cuid())
-  name         String        @unique
+  name         String        
   description  String?
+  
+  // Module relationship
+  moduleId     String
+  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  
+  // Topic categorization
+  category     String        @default("general") // "ventilation", "electrolytes", "sepsis", "fluid_resuscitation", etc.
+  subcategory  String?       // Optional subcategorization for more granular organization
+  
   questions    Question[]
   examSessions ExamSession[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+
+  @@unique([moduleId, name]) // Topic names should be unique within a module
+  @@index([moduleId])
+  @@index([category])
 }
 
 model Question {
