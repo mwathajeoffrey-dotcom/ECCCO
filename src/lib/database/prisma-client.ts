@@ -1,13 +1,28 @@
-import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
-// Create a singleton Prisma client with Accelerate support
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-// Environment-aware Prisma client initialization
+// Dynamic client creation that works in both development and production
 function createPrismaClient() {
+  let PrismaClient: any;
+
+  // In production builds, the client is generated to a different location
+  try {
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      // Try to use production client path
+      PrismaClient = require('@prisma/client-production').PrismaClient;
+    } else {
+      // Use standard development client
+      PrismaClient = require('@prisma/client').PrismaClient;
+    }
+  } catch (error) {
+    // Fallback to standard client if production client not found
+    try {
+      PrismaClient = require('@prisma/client').PrismaClient;
+    } catch (fallbackError) {
+      console.error('Failed to load Prisma client:', fallbackError);
+      throw new Error('Could not load Prisma client');
+    }
+  }
+
   const baseClient = new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
@@ -24,6 +39,11 @@ function createPrismaClient() {
     return baseClient;
   }
 }
+
+// Create a singleton Prisma client with Accelerate support
+const globalForPrisma = globalThis as unknown as {
+  prisma: any | undefined;
+};
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
