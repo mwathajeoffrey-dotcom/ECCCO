@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Production database seeded successfully',
-      modules: finalModules.map(m => ({ 
+      modules: finalModules.map((m: any) => ({ 
         name: m.name, 
         ageGroup: m.ageGroup, 
         topics: m._count.topics 
