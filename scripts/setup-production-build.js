@@ -43,10 +43,26 @@ try {
     }
   }
 
-  // Generate Prisma client
+  // Clear any existing Prisma client
+  const prismaClientPath = path.join(__dirname, '../node_modules/.prisma/client');
+  if (fs.existsSync(prismaClientPath)) {
+    console.log('🧹 Clearing existing Prisma client...');
+    fs.rmSync(prismaClientPath, { recursive: true, force: true });
+  }
+
+  // Generate Prisma client with new schema
   console.log('🔄 Generating Prisma client...');
   execSync('npx prisma generate', { stdio: 'inherit' });
   console.log('✅ Prisma client generated successfully');
+
+  // Verify the generated client
+  const generatedSchemaPath = path.join(__dirname, '../node_modules/.prisma/client/schema.prisma');
+  if (fs.existsSync(generatedSchemaPath)) {
+    const generatedSchema = fs.readFileSync(generatedSchemaPath, 'utf8');
+    const providerMatch = generatedSchema.match(/provider = "([^"]+)"/);
+    const provider = providerMatch ? providerMatch[1] : 'unknown';
+    console.log('📋 Generated client uses provider:', provider);
+  }
 
 } catch (error) {
   console.error('❌ Build setup failed:', error.message);

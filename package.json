@@ -42,7 +42,8 @@
     "test:coverage": "jest --coverage",
     "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next out",
-    "postinstall": "prisma generate",
+    "postinstall": "npm run setup-schema && prisma generate",
+    "setup-schema": "node scripts/setup-schema.js",
     "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
