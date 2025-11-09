@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma';
+import { prisma } from '@/lib/database/prisma-client';
 
 /**
  * GET /api/analytics/sync?sessionId=xxx
