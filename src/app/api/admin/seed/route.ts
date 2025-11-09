@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPrismaClient } from '@/lib/database/prisma-client';
-
-const prisma = createPrismaClient();
+import { prisma } from '@/lib/database/prisma-client';
 
 // This is a one-time endpoint to seed the production database
 // Should be removed or secured after initial deployment
