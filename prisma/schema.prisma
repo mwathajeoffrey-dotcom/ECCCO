@@ -1,6 +1,3 @@
-// ECCCO Platform Prisma Schema - Development (SQLite)
-// This schema is used for local development with SQLite
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,49 +8,44 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  email         String?       @unique
-  name          String?
-  sessionId     String        @unique // Browser session identifier for anonymous users
-  examSessions  ExamSession[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  email        String?       @unique
+  name         String?
+  sessionId    String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  examSessions ExamSession[]
 
   @@index([sessionId])
 }
 
 model Module {
-  id          String    @id @default(cuid())
-  name        String    @unique // "Pediatric Emergency Medicine", "Adult Emergency Medicine"
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
-  ageGroup    String    // "pediatric", "adult"
-  isActive    Boolean   @default(true)
+  ageGroup    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   topics      Topic[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
   @@index([ageGroup])
 }
 
 model Topic {
   id           String        @id @default(cuid())
-  name         String        
+  name         String
   description  String?
-  
-  // Module relationship
   moduleId     String
-  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  
-  // Topic categorization
-  category     String        @default("general") // "ventilation", "electrolytes", "sepsis", "fluid_resuscitation", etc.
-  subcategory  String?       // Optional subcategorization for more granular organization
-  
-  questions    Question[]
-  examSessions ExamSession[]
+  category     String        @default("general")
+  subcategory  String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  examSessions ExamSession[]
+  questions    Question[]
+  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
-  @@unique([moduleId, name]) // Topic names should be unique within a module
+  @@unique([moduleId, name])
   @@index([moduleId])
   @@index([category])
 }
@@ -61,43 +53,42 @@ model Topic {
 model Question {
   id           String   @id @default(cuid())
   question     String
-  options      String   // JSON string of options array
-  correctIndex Int      // Index of correct answer (0-based)
+  options      String
+  correctIndex Int
   explanation  String
-  references   String   // JSON string of references array
-  difficulty   String   @default("medium") // easy, medium, hard
+  references   String
+  difficulty   String   @default("medium")
   topicId      String
-  topic        Topic    @relation(fields: [topicId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  topic        Topic    @relation(fields: [topicId], references: [id])
 
   @@index([topicId])
   @@index([difficulty])
 }
 
 model ExamSession {
-  id               String   @id @default(cuid())
-  userId           String?  // Optional user ID for registered users
-  user             User?    @relation(fields: [userId], references: [id])
-  sessionId        String   // Browser session identifier for anonymous tracking
-  topicId          String
-  topic            Topic    @relation(fields: [topicId], references: [id])
-  topicName        String   // Topic name for analytics (denormalized for performance)
-  questions        String   // JSON string of question IDs array
-  questionsData    String?  // JSON string of complete question data for analytics
-  answers          String   // JSON string of user answers array
-  answersData      String?  // JSON string of detailed answer data for analytics
-  score            Int?     // Score as percentage
-  totalQuestions   Int      @default(0) // Total number of questions in session
-  correctAnswers   Int      @default(0) // Number of correct answers
-  totalTime        Int?     // Time taken in seconds
-  timeSpent        Int?     // Time spent in seconds (analytics field)
-  completed        Boolean  @default(false)
-  completedAt      DateTime? // When the session was completed
-  metadata         String?  // JSON string for additional metadata (user agent, difficulty, etc.)
-  
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id             String    @id @default(cuid())
+  userId         String?
+  sessionId      String
+  topicId        String
+  topicName      String
+  questions      String
+  questionsData  String?
+  answers        String
+  answersData    String?
+  score          Int?
+  totalQuestions Int       @default(0)
+  correctAnswers Int       @default(0)
+  totalTime      Int?
+  timeSpent      Int?
+  completed      Boolean   @default(false)
+  completedAt    DateTime?
+  metadata       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  topic          Topic     @relation(fields: [topicId], references: [id])
+  user           User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([topicId])
