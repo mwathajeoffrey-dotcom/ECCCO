@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Initialize Prisma with explicit configuration for production
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
+});
 
 export async function GET(request: NextRequest) {
   try {
