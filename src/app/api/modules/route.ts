@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+// Temporarily disable Prisma until DATABASE_URL issue is resolved
+// import { PrismaClient } from '@prisma/client';
 
 // Initialize Prisma with explicit configuration for production
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL
-    }
-  }
-});
+// const prisma = new PrismaClient({
+//   datasources: {
+//     db: {
+//       url: process.env.DATABASE_URL
+//     }
+//   }
+// });
 
 export async function GET(request: NextRequest) {
   try {
@@ -73,61 +74,6 @@ export async function GET(request: NextRequest) {
       message: `Successfully fetched ${mockModules.length} modules (temporary mock data)`
     });
 
-    // TODO: Replace with actual Prisma query once DATABASE_URL issue is resolved
-    // const modules = await prisma.module.findMany({
-    const modules = await prisma.module.findMany({
-      where: {
-        isActive: true
-      },
-      include: {
-        topics: {
-          include: {
-            _count: {
-              select: {
-                questions: true
-              }
-            }
-          },
-          orderBy: [
-            { category: 'asc' },
-            { name: 'asc' }
-          ]
-        },
-        _count: {
-          select: {
-            topics: true
-          }
-        }
-      },
-      orderBy: {
-        ageGroup: 'asc'
-      }
-    });
-
-    console.log(`✅ Found ${modules.length} modules with topics`);
-
-    // Log module structure for debugging
-    modules.forEach(module => {
-      console.log(`📋 ${module.name} (${module.ageGroup}): ${module._count.topics} topics`);
-      
-      const topicsByCategory = module.topics.reduce((acc, topic) => {
-        if (!acc[topic.category]) acc[topic.category] = 0;
-        acc[topic.category]++;
-        return acc;
-      }, {} as Record<string, number>);
-      
-      console.log('   Categories:', Object.entries(topicsByCategory)
-        .map(([cat, count]) => `${cat} (${count})`)
-        .join(', ')
-      );
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: modules,
-      message: `Successfully fetched ${modules.length} modules`
-    });
-
   } catch (error) {
     console.error('❌ Error fetching modules:', error);
     
@@ -138,6 +84,6 @@ export async function GET(request: NextRequest) {
     }, { status: 500 });
     
   } finally {
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   }
 }
