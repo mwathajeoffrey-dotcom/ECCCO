@@ -54,13 +54,11 @@ export async function GET(request: NextRequest) {
     let dbResponseTime = 0;
     
     try {
-      // Simple database health check
-      const { PrismaClient } = await import('@prisma/client');
-      const prisma = new PrismaClient();
+      // Simple database health check using our centralized client
+      const { prisma } = await import('@/lib/database/prisma-client');
       
       await prisma.$queryRaw`SELECT 1`;
       dbResponseTime = Date.now() - dbStartTime;
-      await prisma.$disconnect();
     } catch (error) {
       dbStatus = 'error';
       dbResponseTime = Date.now() - dbStartTime;
