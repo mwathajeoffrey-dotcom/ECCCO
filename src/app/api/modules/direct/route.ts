@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Pool } from 'pg';
 
 // Direct PostgreSQL connection test without Prisma
 export async function GET(request: NextRequest) {
   try {
     console.log('🔧 Testing direct PostgreSQL connection...');
     console.log('Database URL exists:', !!process.env.DATABASE_URL);
-    
-    // Try using node-postgres directly
-    const { Pool } = require('pg');
     
     // Parse the DATABASE_URL
     const databaseUrl = process.env.DATABASE_URL;
@@ -63,7 +61,8 @@ export async function GET(request: NextRequest) {
       details: error instanceof Error ? error.message : 'Unknown error',
       debug: {
         hasUrl: !!process.env.DATABASE_URL,
-        urlPrefix: process.env.DATABASE_URL?.substring(0, 20) + '...'
+        urlPrefix: process.env.DATABASE_URL?.substring(0, 20) + '...',
+        errorName: error?.constructor?.name
       }
     }, { status: 500 });
   }
