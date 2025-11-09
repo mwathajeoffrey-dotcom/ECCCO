@@ -679,21 +679,22 @@ export default function ExamInterface() {
                         key={index}
                         onClick={() => handleAnswerSelect(index)}
                         disabled={showAnswer && !isExamFinished}
-                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
+                        style={{ backgroundColor: isSelected && !showAnswer ? '#dbeafe' : showAnswer && isCorrect ? '#ecfdf5' : showAnswer && isSelected && !isCorrect ? '#fef2f2' : '#ffffff' }}
+                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation relative z-10 shadow-sm ${
                           showAnswer && isCorrect
-                            ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200'
+                            ? 'border-emerald-500 text-emerald-900 ring-2 ring-emerald-200'
                             : showAnswer && isSelected && !isCorrect
-                            ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
+                            ? 'border-red-500 text-red-900 ring-2 ring-red-200'
                             : isSelected
-                            ? 'border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300'
-                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                            ? 'border-blue-500 text-blue-900 shadow-md ring-2 ring-blue-300'
+                            : 'border-gray-300 hover:border-gray-400 hover:shadow-md'
                         } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        <div className="flex items-start">
-                          <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
+                        <div className="flex items-start relative z-20 bg-inherit">
+                          <span className="font-medium mr-2 sm:mr-3 text-gray-700 text-sm sm:text-base bg-inherit">
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className="text-sm sm:text-base leading-relaxed flex-1">{option}</span>
+                          <span className="text-sm sm:text-base leading-relaxed flex-1 bg-inherit font-medium">{option}</span>
                           {showAnswer && isCorrect && (
                             <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
                           )}
