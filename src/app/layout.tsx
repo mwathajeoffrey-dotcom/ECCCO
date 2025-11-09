@@ -4,6 +4,8 @@ import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import "./globals.css";
 
+// Force rebuild to update main production URL - v2.0.1
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
