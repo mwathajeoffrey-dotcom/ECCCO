@@ -25,6 +25,7 @@ function createPrismaClient() {
 
   const baseClient = new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    datasourceUrl: process.env.ACCELERATE_URL || process.env.DATABASE_URL,
   });
 
   // Check if we should use Accelerate (production with Accelerate URL)
