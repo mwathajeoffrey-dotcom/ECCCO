@@ -5,8 +5,8 @@ export async function GET(request: NextRequest) {
   try {
     console.log('📡 Fetching modules with topics...');
     console.log('🔗 DATABASE_URL configured:', !!process.env.DATABASE_URL);
+    console.log('🔗 ACCELERATE_URL configured:', !!process.env.ACCELERATE_URL);
     console.log('🔗 Environment:', process.env.NODE_ENV);
-    console.log('🔗 VERCEL:', process.env.VERCEL);
     
     // Test database connection first
     try {
@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Query modules with topics and question counts
+    // Note: Accelerate will automatically cache this query for better performance
     const modules = await prisma.module.findMany({
       where: {
         isActive: true
@@ -44,6 +45,11 @@ export async function GET(request: NextRequest) {
       },
       orderBy: {
         ageGroup: 'asc'
+      },
+      // Accelerate caching: Cache for 30 minutes since modules rarely change
+      cacheStrategy: {
+        swr: 1800, // 30 minutes
+        ttl: 3600,  // 1 hour
       }
     });
 
@@ -56,7 +62,9 @@ export async function GET(request: NextRequest) {
       debug: {
         environment: process.env.NODE_ENV,
         hasDatabase: !!process.env.DATABASE_URL,
-        modulesCount: modules.length
+        hasAccelerate: !!process.env.ACCELERATE_URL,
+        modulesCount: modules.length,
+        cached: true // Accelerate handles this automatically
       }
     });
 
@@ -70,12 +78,11 @@ export async function GET(request: NextRequest) {
       debug: {
         environment: process.env.NODE_ENV,
         hasDatabase: !!process.env.DATABASE_URL,
+        hasAccelerate: !!process.env.ACCELERATE_URL,
         errorType: error?.constructor?.name
       }
     }, { status: 500 });
     
-  } finally {
-    // Note: Don't disconnect in serverless - let connection pooling handle it
-    // await prisma.$disconnect();
   }
+  // Note: No need to disconnect with Accelerate - it handles connection pooling
 }

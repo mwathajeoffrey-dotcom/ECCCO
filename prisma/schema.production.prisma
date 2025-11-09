@@ -1,9 +1,10 @@
-// ECCCO Platform Prisma Schema - Production (PostgreSQL) v2.0
+// ECCCO Platform Prisma Schema - Production (PostgreSQL) v3.0
 // This schema is used for production deployments with PostgreSQL
-// Updated: 2025-11-09 to fix client caching issues
+// Updated: 2025-11-09 with cache-busting client output
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client-production"
 }
 
 datasource db {
