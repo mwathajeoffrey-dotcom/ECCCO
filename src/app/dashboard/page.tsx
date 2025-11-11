@@ -25,14 +25,30 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+    
+    // Set a timeout to show dashboard even if API is slow
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        setDashboardData({
+          hasData: false,
+          totalExams: 0,
+          averageScore: 0,
+          studyTime: 0,
+          error: 'Loading timeout - please refresh or take your first exam'
+        });
+        setIsLoading(false);
+      }
+    }, 10000); // 10 second timeout
+    
+    return () => clearTimeout(timeout);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
       
-      // Try to fetch analytics data with better error handling
-      const response = await fetch('/api/analytics/dashboard', {
+      // Use the existing user stats API instead of the complex analytics API
+      const response = await fetch('/api/user/stats', {
         method: 'GET',
         headers: {
           'Cache-Control': 'no-cache'
@@ -40,34 +56,32 @@ export default function DashboardPage() {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        const stats = await response.json();
         
-        if (result.success && result.data) {
-          setDashboardData({
-            hasData: result.data.totalSessions > 0,
-            totalExams: result.data.totalSessions || 0,
-            averageScore: Math.round(result.data.averageScore || 0),
-            studyTime: Math.round((result.data.totalTimeSpent || 0) / 60), // Convert to minutes
-            lastActivity: result.data.lastUpdated
-          });
-        } else {
-          // API returned success: false
-          setDashboardData({
-            hasData: false,
-            totalExams: 0,
-            averageScore: 0,
-            studyTime: 0,
-            error: 'No exam data available yet'
-          });
-        }
-      } else {
-        // API request failed
+        setDashboardData({
+          hasData: stats.totalAttempts > 0,
+          totalExams: stats.totalAttempts || 0,
+          averageScore: Math.round(stats.averageScore || 0),
+          studyTime: Math.round((stats.totalTimeSpent || 0) / 60), // Convert to minutes
+          lastActivity: stats.recentActivity?.[0]?.createdAt
+        });
+      } else if (response.status === 401) {
+        // User not authenticated - show welcome screen
         setDashboardData({
           hasData: false,
           totalExams: 0,
           averageScore: 0,
           studyTime: 0,
-          error: `API Error: ${response.status}`
+          error: 'Please sign in to view your progress'
+        });
+      } else {
+        // Other API error
+        setDashboardData({
+          hasData: false,
+          totalExams: 0,
+          averageScore: 0,
+          studyTime: 0,
+          error: 'Unable to load progress data'
         });
       }
     } catch (error) {
@@ -78,7 +92,7 @@ export default function DashboardPage() {
         totalExams: 0,
         averageScore: 0,
         studyTime: 0,
-        error: 'Unable to load dashboard data'
+        error: 'Connection error - check your internet'
       });
     } finally {
       setIsLoading(false);
@@ -142,10 +156,20 @@ export default function DashboardPage() {
           </p>
           {dashboardData.error && (
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 text-sm">
-                <AlertCircle className="w-4 h-4 inline mr-2" />
-                {dashboardData.error}
-              </p>
+              <div className="flex flex-col items-center">
+                <p className="text-yellow-800 text-sm mb-2">
+                  <AlertCircle className="w-4 h-4 inline mr-2" />
+                  {dashboardData.error}
+                </p>
+                {dashboardData.error.includes('sign in') && (
+                  <Link 
+                    href="/api/auth/signin" 
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                  >
+                    Sign In →
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>
