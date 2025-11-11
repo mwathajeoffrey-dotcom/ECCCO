@@ -1,14 +1,12 @@
-// ECCCO Platform Prisma Schema - Production (PostgreSQL) v3.0
-// This schema is used for production deployments with PostgreSQL
-// Updated: 2025-11-09 with cache-busting client output
+// ECCCO Platform Prisma Schema - Development (SQLite)
+// This schema is used for local development with SQLite
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/@prisma/client-production"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 

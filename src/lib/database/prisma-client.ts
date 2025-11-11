@@ -1,28 +1,8 @@
+import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
-// Dynamic client creation that works in both development and production
+// Create Prisma client with conditional Accelerate support
 function createPrismaClient() {
-  let PrismaClient: any;
-
-  // In production builds, the client is generated to a different location
-  try {
-    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-      // Try to use production client path
-      PrismaClient = require('@prisma/client-production').PrismaClient;
-    } else {
-      // Use standard development client
-      PrismaClient = require('@prisma/client').PrismaClient;
-    }
-  } catch (error) {
-    // Fallback to standard client if production client not found
-    try {
-      PrismaClient = require('@prisma/client').PrismaClient;
-    } catch (fallbackError) {
-      console.error('Failed to load Prisma client:', fallbackError);
-      throw new Error('Could not load Prisma client');
-    }
-  }
-
   const baseClient = new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     datasourceUrl: process.env.ACCELERATE_URL || process.env.DATABASE_URL,

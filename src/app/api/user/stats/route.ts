@@ -1,20 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth/next-auth';
-import { prisma } from '@/lib/db/prisma';
+import { prisma } from '@/lib/database/prisma-client';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const userId = session.user.id;
+    // Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
+
+    if (!user) {
+      return NextResponse.json({
+        totalAttempts: 0,
+        completedExams: 0,
+        averageScore: 0,
+        totalTimeSpent: 0,
+        recentActivity: [],
+        topicStats: [],
+        weeklyActivity: []
+      });
+    }
+
+    const userId = user.id;
 
     // Get user exam sessions
     const examSessions = await prisma.examSession.findMany({
@@ -35,23 +52,23 @@ export async function GET(request: NextRequest) {
 
     // Calculate overall statistics
     const totalExams = examSessions.length;
-    const completedExams = examSessions.filter(session => session.completed);
-    const totalQuestions = examSessions.reduce((sum, session) => 
+    const completedExams = examSessions.filter((session: any) => session.completed);
+    const totalQuestions = examSessions.reduce((sum: number, session: any) => 
       sum + session.examQuestions.length, 0
     );
-    const totalCorrect = examSessions.reduce((sum, session) => 
-      sum + session.examQuestions.filter(q => q.isCorrect).length, 0
+    const totalCorrect = examSessions.reduce((sum: number, session: any) => 
+      sum + session.examQuestions.filter((q: any) => q.isCorrect).length, 0
     );
     const averageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-    const totalTimeSpent = examSessions.reduce((sum, session) => 
+    const totalTimeSpent = examSessions.reduce((sum: number, session: any) => 
       sum + (session.totalTimeSpent || 0), 0
     );
-    const bestScore = Math.max(...completedExams.map(session => session.finalScore || 0), 0);
+    const bestScore = Math.max(...completedExams.map((session: any) => session.finalScore || 0), 0);
 
     // Calculate current streak
     const sortedSessions = examSessions
-      .filter(session => session.completed)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .filter((session: any) => session.completed)
+      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     let currentStreak = 0;
     if (sortedSessions.length > 0) {
@@ -72,7 +89,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get recent activity (last 10 sessions)
-    const recentActivity = examSessions.slice(0, 10).map(session => ({
+    const recentActivity = examSessions.slice(0, 10).map((session: any) => ({
       date: session.createdAt.toLocaleDateString(),
       topicName: session.examQuestions[0]?.question.topic?.name || 'Mixed Topics',
       score: session.finalScore || 0,
@@ -82,8 +99,8 @@ export async function GET(request: NextRequest) {
     // Calculate performance by topic
     const topicPerformance = new Map();
     
-    examSessions.forEach(session => {
-      session.examQuestions.forEach(examQuestion => {
+    examSessions.forEach((session: any) => {
+      session.examQuestions.forEach((examQuestion: any) => {
         const topicName = examQuestion.question.topic?.name || 'Unknown';
         
         if (!topicPerformance.has(topicName)) {
@@ -108,9 +125,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Update attempt counts
-    examSessions.forEach(session => {
+    examSessions.forEach((session: any) => {
       const topicsInSession = new Set();
-      session.examQuestions.forEach(examQuestion => {
+      session.examQuestions.forEach((examQuestion: any) => {
         const topicName = examQuestion.question.topic?.name || 'Unknown';
         topicsInSession.add(topicName);
       });

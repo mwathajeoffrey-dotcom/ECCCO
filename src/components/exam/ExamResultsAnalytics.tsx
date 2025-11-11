@@ -131,7 +131,7 @@ export function ExamResultsAnalytics({
             </h3>
             
             <div className="space-y-4">
-              {Object.entries(difficultyStats).map(([difficulty, stats]) => {
+              {Object.entries(difficultyStats).map(([difficulty, stats]: [string, any]) => {
                 const percentage = Math.round((stats.correct / stats.total) * 100);
                 return (
                   <div key={difficulty} className="space-y-2">
@@ -214,8 +214,8 @@ export function ExamResultsAnalytics({
             <div className="space-y-3">
               <h4 className="font-medium text-gray-900">Areas for Improvement</h4>
               {Object.entries(difficultyStats)
-                .filter(([_, stats]) => (stats.correct / stats.total) < 0.7)
-                .map(([difficulty, stats]) => (
+                .filter(([_, stats]: [string, any]) => (stats.correct / stats.total) < 0.7)
+                .map(([difficulty, stats]: [string, any]) => (
                   <div key={difficulty} className="p-3 bg-red-50 border border-red-200 rounded-lg">
                     <div className="font-medium text-red-800 capitalize">{difficulty} Questions</div>
                     <div className="text-sm text-red-700">
@@ -225,7 +225,7 @@ export function ExamResultsAnalytics({
                 ))
               }
               
-              {Object.entries(difficultyStats).every(([_, stats]) => (stats.correct / stats.total) >= 0.7) && (
+              {Object.entries(difficultyStats).every(([_, stats]: [string, any]) => (stats.correct / stats.total) >= 0.7) && (
                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                   <div className="font-medium text-green-800">Great Performance!</div>
                   <div className="text-sm text-green-700">
