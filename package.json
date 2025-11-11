@@ -44,6 +44,7 @@
     "clean": "rm -rf .next out",
     "postinstall": "npm run setup-schema && prisma generate",
     "setup-schema": "node scripts/setup-schema.js",
+    "setup-accelerate-db": "npx tsx scripts/setup-accelerate-complete.ts",
     "vercel-build": "bash scripts/setup-vercel-production.sh && next build"
   },
   "dependencies": {
