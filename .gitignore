@@ -44,3 +44,4 @@ next-env.d.ts
 prisma/dev.db*
 prisma/production.db*
 *.db
+.env*.local
