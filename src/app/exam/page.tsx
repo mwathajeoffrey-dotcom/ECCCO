@@ -1,5 +1,5 @@
-import ExamInterface from '@/components/exam/ExamInterface';
+import EnhancedExamInterface from '@/components/exam/EnhancedExamInterface';
 
 export default function ExamPage() {
-  return <ExamInterface />;
+  return <EnhancedExamInterface />;
 }
