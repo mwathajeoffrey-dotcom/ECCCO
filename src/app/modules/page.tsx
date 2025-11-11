@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, Baby, User, ChevronRight, Clock, Target, BarChart, Stethoscope, Heart, Brain, Activity, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
 
 interface Module {
   id: string;
@@ -217,11 +216,33 @@ export default function ModuleSelectionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
-        title="ECCCO" 
-        subtitle="Choose Your Learning Module" 
-        currentPage="modules"
-      />
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
+                <p className="text-sm text-gray-600">
+                  Choose Your Learning Module
+                  {loading && <span className="ml-2 text-blue-500">↻</span>}
+                </p>
+              </div>
+            </Link>
+            <nav className="flex space-x-8">
+              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
+                Dashboard
+              </Link>
+              <Link href="/modules" className="text-blue-600 font-medium">
+                Modules
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}

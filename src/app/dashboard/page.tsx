@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Users, Calendar, AlertCircle, Loader2, Play } from 'lucide-react';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
 
 // Simplified Dashboard with Better Error Handling
 interface SimpleDashboardData {
@@ -114,11 +113,36 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
-        title="ECCCO" 
-        subtitle="Learning Dashboard" 
-        currentPage="dashboard"
-      />
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-3">
+              <Link href="/" className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ECCCO</h1>
+                  <p className="text-xs sm:text-sm text-gray-600">Learning Dashboard</p>
+                </div>
+              </Link>
+            </div>
+            
+            <nav className="flex justify-center space-x-6 sm:space-x-8">
+              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
+                Take Exam
+              </Link>
+              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
+                Home
+              </Link>
+              <Link href="/dashboard" className="text-blue-600 font-medium text-sm sm:text-base">
+                Dashboard
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Dashboard Header */}
