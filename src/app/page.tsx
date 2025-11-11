@@ -1,42 +1,15 @@
 import Link from 'next/link';
 import { BookOpen, Clock, Trophy, BarChart3, FileText, Users } from 'lucide-react';
+import Header from '@/components/layout/Header';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
-                <p className="text-sm text-gray-600">Emergency & Critical Care Comprehensive Online</p>
-              </div>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/modules" className="text-gray-700 hover:text-blue-600 font-medium">
-                Modules
-              </Link>
-              <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium">
-                Practice
-              </Link>
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
-                Exams
-              </Link>
-              <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
-                Analytics
-              </Link>
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-                Dashboard
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header 
+        title="ECCCO" 
+        subtitle="Emergency & Critical Care Comprehensive Online" 
+        currentPage="home"
+      />
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
