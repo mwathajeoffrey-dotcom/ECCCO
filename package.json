@@ -48,6 +48,7 @@
     "vercel-build": "bash scripts/setup-vercel-production.sh && next build"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.18.0",
