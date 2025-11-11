@@ -44,7 +44,7 @@
     "clean": "rm -rf .next out",
     "postinstall": "npm run setup-schema && prisma generate",
     "setup-schema": "node scripts/setup-schema.js",
-    "vercel-build": "prisma generate && next build"
+    "vercel-build": "npm run db:setup:prod && next build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
