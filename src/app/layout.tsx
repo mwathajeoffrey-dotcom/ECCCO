@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
 
 // Force rebuild to update main production URL - v2.0.1
@@ -94,9 +95,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-          {children}
-        </ErrorBoundary>
+        <AuthProvider>
+          <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+            {children}
+          </ErrorBoundary>
+        </AuthProvider>
         <PWAInstallPrompt />
       </body>
     </html>

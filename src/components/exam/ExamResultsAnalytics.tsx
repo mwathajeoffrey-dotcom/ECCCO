@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle, Download, BarChart3, Clock, Target, TrendingUp, Trophy, AlertTriangle } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 interface ExamResultsAnalyticsProps {
@@ -25,6 +26,8 @@ export function ExamResultsAnalytics({
   userAnswers,
   onDownloadPDF
 }: ExamResultsAnalyticsProps) {
+  const { data: session } = useSession();
+  
   const incorrect = total - correct;
   const averageTimePerQuestion = Math.round(timeSpent / total);
   const timeEfficiency = Math.round((timeSpent / totalTime) * 100);
@@ -266,12 +269,13 @@ export function ExamResultsAnalytics({
         </div>
 
         {/* Action Buttons */}
-        <div className="text-center space-x-4">
+                {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={onDownloadPDF}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center space-x-2 shadow-md"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center shadow-md"
           >
-            <Download className="w-5 h-5" />
+            <Download className="w-5 h-5 mr-2" />
             <span>Download Detailed Report</span>
           </button>
           
@@ -281,6 +285,16 @@ export function ExamResultsAnalytics({
           >
             Take Another Exam
           </Link>
+
+          {session?.user && (
+            <Link
+              href="/dashboard"
+              className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center shadow-md"
+            >
+              <BarChart3 className="w-5 h-5 mr-2" />
+              View Dashboard
+            </Link>
+          )}
           
           <Link
             href="/"

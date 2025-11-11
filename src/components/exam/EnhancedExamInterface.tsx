@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
@@ -54,6 +55,9 @@ interface Topic {
 }
 
 export default function EnhancedExamInterface() {
+  // User session
+  const { data: session } = useSession();
+  
   // Core state
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -245,7 +249,46 @@ export default function EnhancedExamInterface() {
     
     try {
       const topicName = topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic';
+      
+      // Save to analytics (for anonymous and authenticated users)
       await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent);
+      
+      // Save to database if user is authenticated
+      if (session?.user?.id) {
+        try {
+          const response = await fetch('/api/exam/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              topicId: selectedTopic,
+              topicName,
+              questions: questions.map(q => ({ 
+                id: q.id, 
+                question: q.question, 
+                options: q.options,
+                correctIndex: q.correctIndex,
+                explanation: q.explanation
+              })),
+              userAnswers: selectedAnswers,
+              finalScore: score,
+              totalTimeSpent: Math.round(timeSpent),
+              isStudyMode,
+              completed: true
+            }),
+          });
+          
+          if (response.ok) {
+            console.log('✅ Exam results saved to database');
+          } else {
+            console.warn('⚠️ Failed to save exam results to database');
+          }
+        } catch (error) {
+          console.error('❌ Error saving exam results to database:', error);
+        }
+      }
+      
       console.log('✅ Exam session data saved successfully');
     } catch (error) {
       console.error('❌ Failed to save exam session data:', error);
@@ -339,12 +382,51 @@ export default function EnhancedExamInterface() {
   if (!isExamStarted) {
     return (
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+        {/* User Header */}
+        {session?.user && (
+          <div className="bg-white shadow-sm border-b mb-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+              <div className="flex items-center justify-between">
+                <Link href="/dashboard" className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors">
+                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="font-medium">ECCCO</span>
+                    <span className="text-sm text-gray-500 block">Back to Dashboard</span>
+                  </div>
+                </Link>
+                
+                <div className="flex items-center space-x-3">
+                  {session.user.image && (
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || 'User'}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  )}
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-gray-900">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Authenticated
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8">
-            <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Back to Home
-            </Link>
+            {!session?.user && (
+              <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Back to Home
+              </Link>
+            )}
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
               Select {isStudyMode ? 'Study' : 'Exam'} Topic
             </h1>
@@ -354,6 +436,11 @@ export default function EnhancedExamInterface() {
                 : 'Choose a topic for your 30-question timed exam'
               }
             </p>
+            {session?.user && (
+              <p className="text-blue-600 text-sm mt-2">
+                Your progress will be saved to your dashboard
+              </p>
+            )}
           </div>
 
           {/* Study Mode Toggle */}
