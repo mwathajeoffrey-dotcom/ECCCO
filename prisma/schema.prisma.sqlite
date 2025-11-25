@@ -1,0 +1,219 @@
+// ECCCO Platform Prisma Schema - Development (SQLite)
+// This schema is used for local development with SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String?               @unique
+  emailVerified        DateTime?
+  name                 String?
+  password             String?               // Hashed password for credentials auth
+  image                String?
+  role                 String                @default("student") // student, instructor, admin
+  sessionId            String                @unique // Browser session identifier for anonymous users
+  examSessions         ExamSession[]
+  accounts             Account[]             // OAuth accounts
+  sessions             Session[]             // NextAuth sessions
+  hostedQuizzes        LiveQuizSession[]     @relation("HostedQuizzes")
+  participatedQuizzes  LiveQuizParticipant[] @relation("QuizParticipant")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  @@index([sessionId])
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Module {
+  id          String    @id @default(cuid())
+  name        String    @unique // "Pediatric Emergency Medicine", "Adult Emergency Medicine"
+  description String?
+  ageGroup    String    // "pediatric", "adult"
+  isActive    Boolean   @default(true)
+  topics      Topic[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([ageGroup])
+}
+
+model Topic {
+  id            String            @id @default(cuid())
+  name          String        
+  description   String?
+  
+  // Module relationship
+  moduleId      String
+  module        Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  
+  // Topic categorization
+  category      String            @default("general") // "ventilation", "electrolytes", "sepsis", "fluid_resuscitation", etc.
+  subcategory   String?           // Optional subcategorization for more granular organization
+  
+  questions     Question[]
+  examSessions  ExamSession[]
+  liveQuizzes   LiveQuizSession[] @relation("LiveQuizTopic")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([moduleId, name]) // Topic names should be unique within a module
+  @@index([moduleId])
+  @@index([category])
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  question     String
+  options      String   // JSON string of options array
+  correctIndex Int      // Index of correct answer (0-based)
+  explanation  String
+  references   String   // JSON string of references array
+  difficulty   String   @default("medium") // easy, medium, hard
+  topicId      String
+  topic        Topic    @relation(fields: [topicId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([topicId])
+  @@index([difficulty])
+}
+
+model ExamSession {
+  id               String   @id @default(cuid())
+  userId           String?  // Optional user ID for registered users
+  user             User?    @relation(fields: [userId], references: [id])
+  sessionId        String   // Browser session identifier for anonymous tracking
+  topicId          String
+  topic            Topic    @relation(fields: [topicId], references: [id])
+  topicName        String   // Topic name for analytics (denormalized for performance)
+  questions        String   // JSON string of question IDs array
+  questionsData    String?  // JSON string of complete question data for analytics
+  answers          String   // JSON string of user answers array
+  answersData      String?  // JSON string of detailed answer data for analytics
+  score            Int?     // Score as percentage
+  totalQuestions   Int      @default(0) // Total number of questions in session
+  correctAnswers   Int      @default(0) // Number of correct answers
+  totalTime        Int?     // Time taken in seconds
+  timeSpent        Int?     // Time spent in seconds (analytics field)
+  completed        Boolean  @default(false)
+  completedAt      DateTime? // When the session was completed
+  metadata         String?  // JSON string for additional metadata (user agent, difficulty, etc.)
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([topicId])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([completedAt])
+}
+
+model LiveQuizSession {
+  id                  String                @id @default(cuid())
+  title               String
+  description         String?
+  accessCode          String                @unique
+  hostId              String
+  host                User                  @relation("HostedQuizzes", fields: [hostId], references: [id], onDelete: Cascade)
+  topicId             String
+  topic               Topic                 @relation("LiveQuizTopic", fields: [topicId], references: [id])
+  questionIds         String                // JSON array of question IDs
+  currentQuestionIndex Int                  @default(0)
+  status              String                @default("WAITING") // WAITING, IN_PROGRESS, COMPLETED, CANCELLED
+  settings            String?               // JSON string for quiz settings (time limits, scoring, etc.)
+  startedAt           DateTime?
+  endedAt             DateTime?
+  participants        LiveQuizParticipant[]
+  answers             LiveQuizAnswer[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  @@index([hostId])
+  @@index([topicId])
+  @@index([accessCode])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model LiveQuizParticipant {
+  id          String           @id @default(cuid())
+  sessionId   String
+  session     LiveQuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId      String?          // Optional for registered users
+  user        User?            @relation("QuizParticipant", fields: [userId], references: [id], onDelete: Cascade)
+  nickname    String
+  score       Int              @default(0)
+  answers     LiveQuizAnswer[]
+  joinedAt    DateTime         @default(now())
+  leftAt      DateTime?
+  isActive    Boolean          @default(true)
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([joinedAt])
+}
+
+model LiveQuizAnswer {
+  id              String              @id @default(cuid())
+  sessionId       String
+  session         LiveQuizSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participantId   String
+  participant     LiveQuizParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  questionId      String
+  questionIndex   Int                 // Which question in the sequence
+  selectedAnswer  Int                 // Index of selected answer
+  isCorrect       Boolean
+  timeToAnswer    Int?                // Time taken in milliseconds
+  answeredAt      DateTime            @default(now())
+
+  @@unique([sessionId, participantId, questionIndex])
+  @@index([sessionId])
+  @@index([participantId])
+  @@index([questionId])
+}

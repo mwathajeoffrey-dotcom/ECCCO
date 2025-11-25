@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,11 +29,13 @@ interface LiveQuizSession {
 }
 
 export default function LiveQuizPage() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [sessions, setSessions] = useState<LiveQuizSession[]>([]);
   const [joinCode, setJoinCode] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // NOTE: Authentication removed for simplified development and testing
+  // Will be added back after core functionality is complete
 
   const fetchSessions = useCallback(async () => {
     try {
@@ -51,39 +52,9 @@ export default function LiveQuizPage() {
   }, []);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin?callbackUrl=/live-quiz');
-      return;
-    }
-
-    if (status === 'authenticated' && session?.user) {
-      fetchSessions();
-    }
-  }, [status, session, router, fetchSessions]);
-
-  // Show loading while auth is being determined
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading authentication...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show message if not authenticated (before redirect)
-  if (status === 'unauthenticated') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Redirecting to sign in...</p>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
+    // Fetch sessions on mount - no auth required
+    fetchSessions();
+  }, [fetchSessions]);
 
   const handleJoinQuiz = async () => {
     if (!joinCode.trim()) return;
@@ -98,7 +69,7 @@ export default function LiveQuizPage() {
     router.push(`/live-quiz/host/${sessionId}`);
   };
 
-  if ((status !== 'authenticated' && status !== 'unauthenticated') || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -180,9 +151,8 @@ export default function LiveQuizPage() {
         </div>
 
         {/* Your Sessions */}
-        {session?.user && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Quiz Sessions</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Quiz Sessions</h2>
             
             {sessions.length === 0 ? (
               <Card className="bg-white shadow-lg">
@@ -261,8 +231,7 @@ export default function LiveQuizPage() {
                 ))}
               </div>
             )}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

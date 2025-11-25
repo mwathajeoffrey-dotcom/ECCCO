@@ -4,23 +4,55 @@
  * Seed Production Database with All Questions
  * 
  * This script copies all data from local database to production
- * Run with: npx tsx scripts/seed-production-full.ts
+ * Run with: DATABASE_URL='<prod-url>' npx tsx scripts/seed-production-full.ts
  */
 
 import { PrismaClient } from '@prisma/client';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 async function seedProduction() {
   console.log('🌱 Starting production database seed...\n');
   
-  // Local database (source)
-  const localPrisma = new PrismaClient({
-    datasourceUrl: "file:./prisma/dev.db"
-  });
+  if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL environment variable is required');
+    console.log('Usage: DATABASE_URL=\'<your-prod-url>\' npx tsx scripts/seed-production-full.ts');
+    process.exit(1);
+  }
   
-  // Production database (destination)
-  const prodPrisma = new PrismaClient({
-    datasourceUrl: process.env.ACCELERATE_URL || process.env.DATABASE_URL
-  });
+  const prodDbUrl = process.env.DATABASE_URL;
+  
+  // Step 1: Read from local database
+  console.log('📊 Checking local database...');
+  
+  // Temporarily use local database
+  process.env.DATABASE_URL = "file:./prisma/dev.db";
+  const { PrismaClient: LocalPrismaClient } = await import('@prisma/client');
+  const localPrisma = new LocalPrismaClient();
+  
+  const localModules = await localPrisma.module.findMany();
+  const localTopics = await localPrisma.topic.findMany();
+  const localQuestions = await localPrisma.question.findMany();
+  
+  console.log(`✅ Found locally:`);
+  console.log(`   - ${localModules.length} modules`);
+  console.log(`   - ${localTopics.length} topics`);
+  console.log(`   - ${localQuestions.length} questions\n`);
+  
+  await localPrisma.$disconnect();
+  
+  if (localQuestions.length === 0) {
+    console.log('❌ No data in local database!');
+    console.log('💡 Run: npx tsx scripts/seed.ts first\n');
+    process.exit(1);
+  }
+  
+  // Step 2: Connect to production
+  console.log('📊 Connecting to production database...');
+  process.env.DATABASE_URL = prodDbUrl;
+  const prodPrisma = new PrismaClient();
   
   try {
     // Step 1: Check local data
@@ -132,13 +164,8 @@ async function seedProduction() {
             references: question.references,
             difficulty: question.difficulty,
             topicId: question.topicId,
-            imageDescription: question.imageDescription,
-            clinicalScenario: question.clinicalScenario,
-            patientPresentation: question.patientPresentation,
-            learningObjectives: question.learningObjectives,
-            clinicalPearls: question.clinicalPearls,
-            evidenceLevel: question.evidenceLevel,
-            tags: question.tags
+            createdAt: question.createdAt,
+            updatedAt: question.updatedAt
           }
         });
         copied++;

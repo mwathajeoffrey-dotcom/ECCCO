@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -50,7 +49,6 @@ interface Question {
 }
 
 export default function CreateLiveQuizPage() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   
   // Form state
@@ -69,24 +67,13 @@ export default function CreateLiveQuizPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  // NOTE: Removed verbose dev logs for production-like behavior.
-  // Keep minimal client-side logging for create flow only.
+  // NOTE: Authentication removed for simplified development and testing
+  // Will be added back after core functionality is complete
 
   useEffect(() => {
-    // Don't redirect immediately, allow time for session to load
-    if (status === 'unauthenticated') {
-      // Add a delay to prevent premature redirects
-      const timer = setTimeout(() => {
-        router.push('/quick-signin');
-      }, 2000);
-      
-      return () => clearTimeout(timer);
-    }
-
-    if (status === 'authenticated') {
-      fetchTopics();
-    }
-  }, [status, router]);
+    // Fetch topics on mount - no auth required
+    fetchTopics();
+  }, []);
 
   useEffect(() => {
     if (selectedTopicId) {
@@ -204,7 +191,7 @@ export default function CreateLiveQuizPage() {
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">

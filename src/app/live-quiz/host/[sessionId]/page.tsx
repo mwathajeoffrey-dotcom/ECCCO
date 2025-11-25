@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -50,7 +49,6 @@ interface QuizSession {
 }
 
 export default function HostQuizPage({ params }: { params: Promise<{ sessionId: string }> }) {
-  const { data: session, status } = useSession();
   const router = useRouter();
   
   // State
@@ -66,6 +64,9 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
+  // NOTE: Authentication removed for simplified development and testing
+  // Will be added back after core functionality is complete
+
   useEffect(() => {
     async function getParams() {
       const resolvedParams = await params;
@@ -75,13 +76,9 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
   }, [params]);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
-      return;
-    }
-
-    if (status === 'authenticated' && sessionId) {
+    if (sessionId) {
       fetchQuizSession();
+      // TODO: Re-enable WebSocket when needed
       // setupWebSocket();
     }
 
@@ -93,7 +90,7 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
         wsRef.current.close();
       }
     };
-  }, [status, sessionId, router]);
+  }, [sessionId]);
 
   useEffect(() => {
     if (isTimerActive && timeRemaining > 0) {
