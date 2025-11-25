@@ -89,7 +89,7 @@ export async function GET() {
         },
       });
       
-      const sessionIds = allUsers.map(u => u.sessionId);
+      const sessionIds = allUsers.map((u: any) => u.sessionId);
       const uniqueSessionIds = new Set(sessionIds);
       
       diagnostics.tests.sessionIdCheck = {
