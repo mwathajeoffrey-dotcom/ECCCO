@@ -1,0 +1,38 @@
+[
+  {
+    "id": "preeclampsia_1",
+    "topic": "Preeclampsia",
+    "question": "A 24-year-old G1 develops BP 160/110 mmHg with 3+ proteinuria at 34 weeks. What is the recommended management?",
+    "options": ["Immediate delivery", "Expectant management", "Increase oral labetalol only", "Bed rest alone"],
+    "answer": 0,
+    "explanation": "Severe features require delivery after stabilization.",
+    "reference": "ACOG Hypertensive Disorders"
+  },
+  {
+    "id": "preeclampsia_2",
+    "topic": "Preeclampsia",
+    "question": "Which drug is used for seizure prophylaxis in severe preeclampsia?",
+    "options": ["Magnesium sulfate", "Diazepam", "Phenytoin", "Midazolam"],
+    "answer": 0,
+    "explanation": "Magnesium sulfate is the gold standard.",
+    "reference": "ACOG Preeclampsia Guidelines"
+  },
+  {
+    "id": "preeclampsia_3",
+    "topic": "Preeclampsia",
+    "question": "Which is NOT a severe feature of preeclampsia?",
+    "options": ["BP 140/90 mmHg", "Platelets <100,000", "Persistent RUQ pain", "Serum creatinine >1.1 mg/dL"],
+    "answer": 0,
+    "explanation": "Severe BP is ≥160/110, not 140/90.",
+    "reference": "ACOG Hypertensive Disorders"
+  },
+  {
+    "id": "preeclampsia_4",
+    "topic": "Preeclampsia",
+    "question": "Magnesium toxicity is first detected by:",
+    "options": ["Loss of deep tendon reflexes", "Hypotension", "Bradycardia", "Respiratory arrest"],
+    "answer": 0,
+    "explanation": "DTR loss is the earliest sign.",
+    "reference": "ACOG Obstetric Hypertension"
+  }
+]

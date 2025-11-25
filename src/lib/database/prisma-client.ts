@@ -3,20 +3,24 @@ import { withAccelerate } from '@prisma/extension-accelerate';
 
 // Create Prisma client with conditional Accelerate support
 function createPrismaClient() {
+  // Force local database for development
+  const isDev = process.env.NODE_ENV === 'development';
+  const datasourceUrl = isDev ? process.env.DATABASE_URL : (process.env.ACCELERATE_URL || process.env.DATABASE_URL);
+  
   const baseClient = new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    datasourceUrl: process.env.ACCELERATE_URL || process.env.DATABASE_URL,
+    log: isDev ? ['error', 'warn'] : ['error'],
+    datasourceUrl,
   });
 
-  // Check if we should use Accelerate (production with Accelerate URL)
-  const useAccelerate = process.env.ACCELERATE_URL || 
-    (process.env.NODE_ENV === 'production' && process.env.DATABASE_URL?.includes('accelerate'));
+  // Only use Accelerate in production with Accelerate URL
+  const useAccelerate = !isDev && process.env.ACCELERATE_URL && 
+    process.env.NODE_ENV === 'production';
 
   if (useAccelerate) {
     console.log('🚀 Using Prisma Accelerate for enhanced performance');
     return baseClient.$extends(withAccelerate());
   } else {
-    console.log('🔧 Using standard Prisma client');
+    console.log('🔧 Using local Prisma client');
     return baseClient;
   }
 }

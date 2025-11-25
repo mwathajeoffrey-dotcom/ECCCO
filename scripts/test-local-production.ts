@@ -61,7 +61,7 @@ async function testLocalProductionConnection() {
       console.log('✅ Created sample topic');
     } else {
       console.log('📋 Existing modules:');
-      modules.forEach(module => {
+      modules.forEach((module: any) => {
         console.log(`  - ${module.name} (${module.ageGroup})`);
       });
     }
@@ -71,10 +71,11 @@ async function testLocalProductionConnection() {
     
     return { success: true, modules: modules.length };
     
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('❌ Test failed:', error);
-    console.error('Error details:', error.message);
-    return { success: false, error: error.message };
+    console.error('Error details:', errorMessage);
+    return { success: false, error: errorMessage };
   }
 }
 

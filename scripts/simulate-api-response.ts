@@ -24,15 +24,15 @@ async function simulateAPIResponse() {
     console.log('🎯 API Response Simulation:');
     console.log(JSON.stringify({
       success: true,
-      modules: modules.map(m => ({
+      modules: modules.map((m: any) => ({
         id: m.id,
         name: m.name,
         description: m.description,
         ageGroup: m.ageGroup,
         isActive: m.isActive,
         topicCount: m.topics.length,
-        questionCount: m.topics.reduce((sum, t) => sum + t.questions.length, 0),
-        topics: m.topics.map(t => ({
+        questionCount: m.topics.reduce((sum: number, t: any) => sum + t.questions.length, 0),
+        topics: m.topics.map((t: any) => ({
           id: t.id,
           name: t.name,
           category: t.category,

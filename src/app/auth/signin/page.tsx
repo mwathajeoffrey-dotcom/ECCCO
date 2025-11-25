@@ -16,6 +16,11 @@ interface Provider {
 export default function SignInPage() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [testEmail, setTestEmail] = useState('');
+  const [testName, setTestName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -31,6 +36,62 @@ export default function SignInPage() {
       await signIn(providerId, { callbackUrl: '/dashboard' });
     } catch (error) {
       console.error('Sign in error:', error);
+      setIsLoading(false);
+    }
+  };
+
+  const handlePasswordSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const result = await signIn('credentials', {
+        email: email.toLowerCase(),
+        password,
+        redirect: false,
+      });
+
+      if (result?.ok && !result?.error) {
+        window.location.href = '/dashboard';
+      } else {
+        setError('Invalid email or password');
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError('An error occurred during sign in');
+      setIsLoading(false);
+    }
+  };
+
+  const handleTestSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!testEmail) return;
+    
+    setIsLoading(true);
+    try {
+      console.log('Attempting sign in with:', { email: testEmail, name: testName });
+      
+      const result = await signIn('credentials', {
+        email: testEmail,
+        name: testName || testEmail.split('@')[0],
+        redirect: false // Handle redirect manually
+      });
+      
+      console.log('Sign in result:', result);
+      
+      if (result?.ok && !result?.error) {
+        console.log('Sign in successful, redirecting...');
+        // Force a page refresh to ensure session is properly loaded
+        window.location.href = '/live-quiz';
+      } else {
+        console.error('Sign in failed:', result?.error);
+        alert('Sign in failed. Please try again.');
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Test sign in error:', error);
+      alert('An error occurred during sign in.');
       setIsLoading(false);
     }
   };
@@ -51,13 +112,111 @@ export default function SignInPage() {
             Welcome to ECCCO
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to track your progress and access personalized features
+            Sign in to access live quiz features and track your progress
           </p>
         </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {/* Email/Password Sign In */}
+          <form onSubmit={handlePasswordSignIn} className="space-y-4 mb-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <Link href="/auth/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex justify-center items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+
+          {/* Development Test Sign In */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h3 className="text-sm font-medium text-yellow-800 mb-3">
+                🧪 Development Test Account
+              </h3>
+              <form onSubmit={handleTestSignIn} className="space-y-3">
+                <input
+                  type="email"
+                  placeholder="Enter any email for testing"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Your name (optional)"
+                  value={testName}
+                  onChange={(e) => setTestName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !testEmail}
+                  className="w-full flex justify-center items-center px-4 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isLoading ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  ) : null}
+                  Create Test Account
+                </button>
+              </form>
+            </div>
+          )}
+
           {/* Benefits of signing in */}
           <div className="mb-8">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -70,15 +229,15 @@ export default function SignInPage() {
               </div>
               <div className="flex items-center">
                 <Trophy className="w-5 h-5 text-yellow-600 mr-3" />
-                <span className="text-sm text-gray-700">View detailed performance analytics</span>
+                <span className="text-sm text-gray-700">Create and host live quizzes</span>
               </div>
               <div className="flex items-center">
                 <Users className="w-5 h-5 text-blue-600 mr-3" />
-                <span className="text-sm text-gray-700">Compare with peers (coming soon)</span>
+                <span className="text-sm text-gray-700">Join live quiz sessions with access codes</span>
               </div>
               <div className="flex items-center">
                 <BookOpen className="w-5 h-5 text-purple-600 mr-3" />
-                <span className="text-sm text-gray-700">Personalized study recommendations</span>
+                <span className="text-sm text-gray-700">View detailed performance analytics</span>
               </div>
             </div>
           </div>
@@ -90,13 +249,15 @@ export default function SignInPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Sign in with</span>
+                <span className="px-2 bg-white text-gray-500">Or sign in with</span>
               </div>
             </div>
 
             <div className="space-y-4">
               {providers &&
-                Object.values(providers).map((provider) => (
+                Object.values(providers)
+                  .filter(provider => provider.id !== 'credentials') // Hide credentials provider from main list
+                  .map((provider) => (
                   <div key={provider.name}>
                     <button
                       onClick={() => handleSignIn(provider.id)}
@@ -131,16 +292,6 @@ export default function SignInPage() {
                 ))}
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="mt-4 text-center">
-              <Link
-                href="/auth/forgot-password"
-                className="text-sm text-blue-600 hover:text-blue-500 transition-colors"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -164,6 +315,12 @@ export default function SignInPage() {
 
           {/* Privacy note */}
           <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">
+              Don't have an account?{' '}
+              <Link href="/auth/register" className="font-medium text-blue-600 hover:text-blue-500">
+                Create one now
+              </Link>
+            </p>
             <p className="text-xs text-gray-500">
               By signing in, you agree to our{' '}
               <Link href="/privacy" className="text-blue-600 hover:text-blue-500">

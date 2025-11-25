@@ -1,4 +1,9 @@
-import { prisma } from '../src/lib/database/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Use local database for seeding
+const prisma = new PrismaClient({
+  datasourceUrl: "file:./prisma/dev.db"
+});
 import { airwayManagementQuestions } from '../src/lib/questions/airway-management';
 import { mechanicalVentilationQuestions } from '../src/lib/questions/mechanical-ventilation';
 import { sepsisManagementQuestions } from '../src/lib/questions/sepsis-management';
@@ -33,168 +38,239 @@ async function seedDatabase() {
   try {
     console.log('Starting database seeding...');
 
+    // Create modules first
+    const modules = [
+      {
+        id: 'emergency-medicine',
+        name: 'Emergency Medicine',
+        description: 'Comprehensive emergency medicine education',
+        ageGroup: 'adult'
+      },
+      {
+        id: 'critical-care',
+        name: 'Critical Care',
+        description: 'Intensive care and critical care medicine',
+        ageGroup: 'adult'
+      },
+      {
+        id: 'pediatric-medicine',
+        name: 'Pediatric Medicine',
+        description: 'Emergency and critical care for children',
+        ageGroup: 'pediatric'
+      },
+      {
+        id: 'resuscitation',
+        name: 'Resuscitation',
+        description: 'Life support and resuscitation protocols',
+        ageGroup: 'all'
+      }
+    ];
+
+    // Create modules
+    for (const module of modules) {
+      await prisma.module.upsert({
+        where: { id: module.id },
+        update: module,
+        create: module
+      });
+    }
+
+    console.log('Modules created successfully');
+
     // Create topics
     const topics = [
       {
         id: 'airway-management',
         name: 'Airway Management',
-        description: 'Comprehensive airway management in emergency and critical care settings'
+        description: 'Comprehensive airway management in emergency and critical care settings',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'mechanical-ventilation',
         name: 'Mechanical Ventilation',
-        description: 'Principles and management of mechanical ventilation'
+        description: 'Principles and management of mechanical ventilation',
+        moduleId: 'critical-care'
       },
       {
         id: 'sepsis-management',
         name: 'Sepsis Management',
-        description: 'Early recognition and evidence-based treatment of sepsis'
+        description: 'Early recognition and evidence-based treatment of sepsis',
+        moduleId: 'critical-care'
       },
       {
         id: 'shock-resuscitation',
         name: 'Shock and Resuscitation',
-        description: 'Recognition and management of different types of shock'
+        description: 'Recognition and management of different types of shock',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'cardiac-emergencies',
         name: 'Cardiac Emergencies',
-        description: 'Acute cardiac conditions and interventions'
+        description: 'Acute cardiac conditions and interventions',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'neurological-emergencies',
         name: 'Neurological Emergencies',
-        description: 'Acute neurological conditions and management'
+        description: 'Acute neurological conditions and management',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'toxicology',
         name: 'Toxicology',
-        description: 'Poisoning and overdose management'
+        description: 'Poisoning and overdose management',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'trauma-management',
         name: 'Trauma Management',
-        description: 'Primary and secondary trauma assessment and management'
+        description: 'Primary and secondary trauma assessment and management',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'respiratory-emergencies',
         name: 'Respiratory Emergencies',
-        description: 'Acute respiratory conditions and interventions'
+        description: 'Acute respiratory conditions and interventions',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'renal-emergencies',
         name: 'Renal Emergencies',
-        description: 'Acute kidney injury and renal replacement therapy'
+        description: 'Acute kidney injury and renal replacement therapy',
+        moduleId: 'critical-care'
       },
       {
         id: 'endocrine-emergencies',
         name: 'Endocrine Emergencies',
-        description: 'Diabetic emergencies and endocrine crises'
+        description: 'Diabetic emergencies and endocrine crises',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'infectious-disease-emergencies',
         name: 'Infectious Disease Emergencies',
-        description: 'Severe infections, sepsis, and antimicrobial therapy'
+        description: 'Severe infections, sepsis, and antimicrobial therapy',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'pharmacology-emergencies',
         name: 'Pharmacology Emergencies',
-        description: 'Critical care pharmacology, drug interactions, and toxicity'
+        description: 'Critical care pharmacology, drug interactions, and toxicity',
+        moduleId: 'critical-care'
       },
       {
         id: 'environmental-emergencies',
         name: 'Environmental Emergencies',
-        description: 'Heat illness, hypothermia, drowning, and environmental toxins'
+        description: 'Heat illness, hypothermia, drowning, and environmental toxins',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'obstetric-gynecologic-emergencies',
         name: 'Obstetric & Gynecologic Emergencies',
-        description: 'Pregnancy complications and gynecologic emergencies'
+        description: 'Pregnancy complications and gynecologic emergencies',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'pharmacology',
         name: 'Critical Care Pharmacology',
-        description: 'Drug dosing, interactions, and monitoring in critical illness'
+        description: 'Drug dosing, interactions, and monitoring in critical illness',
+        moduleId: 'critical-care'
       },
       {
         id: 'procedures',
         name: 'Procedures',
-        description: 'Common emergency and critical care procedures'
+        description: 'Common emergency and critical care procedures',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'geriatric-emergencies',
         name: 'Geriatric Emergencies',
-        description: 'Emergency conditions specific to elderly patients'
+        description: 'Emergency conditions specific to elderly patients',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'critical-care-emergencies',
         name: 'Critical Care Emergencies',
-        description: 'Advanced critical care concepts and emergency interventions'
+        description: 'Advanced critical care concepts and emergency interventions',
+        moduleId: 'critical-care'
       },
       {
         id: 'psychiatric-emergencies',
         name: 'Psychiatric Emergencies',
-        description: 'Mental health crises and psychiatric medication emergencies'
+        description: 'Mental health crises and psychiatric medication emergencies',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'hematologic-emergencies',
         name: 'Hematologic Emergencies',
-        description: 'Blood disorders, coagulation emergencies, and transfusion medicine'
+        description: 'Blood disorders, coagulation emergencies, and transfusion medicine',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'infection-control',
         name: 'Infection Control',
-        description: 'Hospital-acquired infections and antimicrobial stewardship'
+        description: 'Hospital-acquired infections and antimicrobial stewardship',
+        moduleId: 'critical-care'
       },
       {
         id: 'pediatric-emergencies',
         name: 'Pediatric Emergencies',
-        description: 'Emergency conditions specific to infants, children, and adolescents'
+        description: 'Emergency conditions specific to infants, children, and adolescents',
+        moduleId: 'pediatric-medicine'
       },
       {
         id: 'ethical-legal',
         name: 'Ethical and Legal Issues',
-        description: 'End-of-life care, consent, and legal considerations'
+        description: 'End-of-life care, consent, and legal considerations',
+        moduleId: 'critical-care'
       },
       // New specialized topics
       {
         id: 'ecg-emergencies',
         name: 'ECG Emergencies',
-        description: 'Complex ECG interpretation, arrhythmias, and electrolyte effects'
+        description: 'Complex ECG interpretation, arrhythmias, and electrolyte effects',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'electrolyte-emergencies',
         name: 'Electrolyte Emergencies',
-        description: 'Sodium, potassium, calcium, magnesium, and phosphorus disorders'
+        description: 'Sodium, potassium, calcium, magnesium, and phosphorus disorders',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'blood-gas-analysis',
         name: 'Blood Gas Analysis',
-        description: 'Acid-base disorders, hypoxia assessment, and blood gas interpretation'
+        description: 'Acid-base disorders, hypoxia assessment, and blood gas interpretation',
+        moduleId: 'critical-care'
       },
       {
         id: 'acls',
         name: 'ACLS (Advanced Cardiac Life Support)',
-        description: 'AHA ACLS guidelines for cardiac arrest and emergency cardiovascular care'
+        description: 'AHA ACLS guidelines for cardiac arrest and emergency cardiovascular care',
+        moduleId: 'resuscitation'
       },
       {
         id: 'bls',
         name: 'BLS (Basic Life Support)',
-        description: 'AHA BLS guidelines for CPR, AED use, and basic resuscitation'
+        description: 'AHA BLS guidelines for CPR, AED use, and basic resuscitation',
+        moduleId: 'resuscitation'
       },
       {
         id: 'atls',
         name: 'ATLS (Advanced Trauma Life Support)',
-        description: 'Trauma assessment, management protocols, and damage control'
+        description: 'Trauma assessment, management protocols, and damage control',
+        moduleId: 'emergency-medicine'
       },
       {
         id: 'pals',
         name: 'PALS (Pediatric Advanced Life Support)',
-        description: 'AHA PALS guidelines for pediatric emergencies and resuscitation'
+        description: 'AHA PALS guidelines for pediatric emergencies and resuscitation',
+        moduleId: 'pediatric-medicine'
       },
       {
         id: 'ecg-rhythm-identification',
         name: 'ECG Rhythm Identification',
-        description: 'Comprehensive rhythm analysis and arrhythmia identification'
+        description: 'Comprehensive rhythm analysis and arrhythmia identification',
+        moduleId: 'emergency-medicine'
       }
     ];
 

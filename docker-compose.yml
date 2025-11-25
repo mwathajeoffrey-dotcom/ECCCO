@@ -1,0 +1,99 @@
+# Docker Compose configuration for ECCCO platform
+version: '3.8'
+
+services:
+  # Main application
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: eccco-app
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_TELEMETRY_DISABLED=1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - eccco-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: eccco-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-eccco}
+      - POSTGRES_USER=${POSTGRES_USER:-eccco}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-eccco_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eccco} -d ${POSTGRES_DB:-eccco}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eccco-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: eccco-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - eccco-network
+
+  # Nginx reverse proxy (optional for production)
+  nginx:
+    image: nginx:alpine
+    container_name: eccco-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/ssl/certs:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - eccco-network
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  eccco-network:
+    driver: bridge

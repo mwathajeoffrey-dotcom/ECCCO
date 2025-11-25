@@ -29,25 +29,26 @@ async function testNewAccelerateConnection() {
       const module = await prisma.module.create({
         data: {
           id: 'adult-cardiology',
-          title: 'Adult Cardiology',
+          name: 'Adult Cardiology',
           description: 'Adult Cardiovascular Medicine',
-          category: 'ADULT',
+          ageGroup: 'ADULT',
           isActive: true
         }
       });
       
-      console.log('✅ Created sample module:', module.title);
+      console.log('✅ Created sample module:', module.name);
     } else {
       console.log('📋 Existing modules:');
-      modules.forEach(m => console.log(`  - ${m.title} (${m.category})`));
+      modules.forEach((m: any) => console.log(`  - ${m.name} (${m.ageGroup})`));
     }
 
     await prisma.$disconnect();
     console.log('🎉 Database setup completed successfully!');
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('❌ Error:', error);
-    console.error('Error details:', error.message);
+    console.error('Error details:', errorMessage);
   }
 }
 

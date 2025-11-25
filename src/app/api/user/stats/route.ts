@@ -37,15 +37,7 @@ export async function GET() {
     const examSessions = await prisma.examSession.findMany({
       where: { userId },
       include: {
-        examQuestions: {
-          include: {
-            question: {
-              include: {
-                topic: true
-              }
-            }
-          }
-        }
+        topic: true
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -54,16 +46,16 @@ export async function GET() {
     const totalExams = examSessions.length;
     const completedExams = examSessions.filter((session: any) => session.completed);
     const totalQuestions = examSessions.reduce((sum: number, session: any) => 
-      sum + session.examQuestions.length, 0
+      sum + (session.totalQuestions || 0), 0
     );
     const totalCorrect = examSessions.reduce((sum: number, session: any) => 
-      sum + session.examQuestions.filter((q: any) => q.isCorrect).length, 0
+      sum + (session.correctAnswers || 0), 0
     );
     const averageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     const totalTimeSpent = examSessions.reduce((sum: number, session: any) => 
-      sum + (session.totalTimeSpent || 0), 0
+      sum + (session.timeSpent || session.totalTime || 0), 0
     );
-    const bestScore = Math.max(...completedExams.map((session: any) => session.finalScore || 0), 0);
+    const bestScore = Math.max(...completedExams.map((session: any) => session.score || 0), 0);
 
     // Calculate current streak
     const sortedSessions = examSessions
@@ -91,52 +83,35 @@ export async function GET() {
     // Get recent activity (last 10 sessions)
     const recentActivity = examSessions.slice(0, 10).map((session: any) => ({
       date: session.createdAt.toLocaleDateString(),
-      topicName: session.examQuestions[0]?.question.topic?.name || 'Mixed Topics',
-      score: session.finalScore || 0,
-      timeSpent: session.totalTimeSpent || 0
+      topicName: session.topic?.name || session.topicName || 'Mixed Topics',
+      score: session.score || 0,
+      timeSpent: session.timeSpent || session.totalTime || 0
     }));
 
     // Calculate performance by topic
     const topicPerformance = new Map();
     
     examSessions.forEach((session: any) => {
-      session.examQuestions.forEach((examQuestion: any) => {
-        const topicName = examQuestion.question.topic?.name || 'Unknown';
-        
-        if (!topicPerformance.has(topicName)) {
-          topicPerformance.set(topicName, {
-            topicName,
-            attemptCount: 0,
-            totalQuestions: 0,
-            correctAnswers: 0,
-            lastAttempted: session.createdAt
-          });
-        }
-        
-        const topic = topicPerformance.get(topicName);
-        topic.totalQuestions++;
-        if (examQuestion.isCorrect) {
-          topic.correctAnswers++;
-        }
-        if (session.createdAt > topic.lastAttempted) {
-          topic.lastAttempted = session.createdAt;
-        }
-      });
-    });
-
-    // Update attempt counts
-    examSessions.forEach((session: any) => {
-      const topicsInSession = new Set();
-      session.examQuestions.forEach((examQuestion: any) => {
-        const topicName = examQuestion.question.topic?.name || 'Unknown';
-        topicsInSession.add(topicName);
-      });
+      const topicName = session.topic?.name || session.topicName || 'Unknown';
       
-      topicsInSession.forEach(topicName => {
-        if (topicPerformance.has(topicName)) {
-          topicPerformance.get(topicName).attemptCount++;
-        }
-      });
+      if (!topicPerformance.has(topicName)) {
+        topicPerformance.set(topicName, {
+          topicName,
+          attemptCount: 0,
+          totalQuestions: 0,
+          correctAnswers: 0,
+          lastAttempted: session.createdAt
+        });
+      }
+      
+      const topic = topicPerformance.get(topicName);
+      topic.attemptCount++;
+      topic.totalQuestions += (session.totalQuestions || 0);
+      topic.correctAnswers += (session.correctAnswers || 0);
+      
+      if (session.createdAt > topic.lastAttempted) {
+        topic.lastAttempted = session.createdAt;
+      }
     });
 
     const performanceByTopic = Array.from(topicPerformance.values()).map(topic => ({

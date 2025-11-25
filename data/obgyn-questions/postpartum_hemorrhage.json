@@ -1,0 +1,38 @@
+[
+  {
+    "id": "pph_1",
+    "topic": "Postpartum Hemorrhage",
+    "question": "Most common cause of postpartum hemorrhage is:",
+    "options": ["Uterine atony", "Retained placenta", "Uterine rupture", "Genital tract laceration"],
+    "answer": 0,
+    "explanation": "Atony accounts for ~70% of PPH.",
+    "reference": "Dutta; ACOG PPH Guidelines"
+  },
+  {
+    "id": "pph_2",
+    "topic": "Postpartum Hemorrhage",
+    "question": "First-line management of uterine atony is:",
+    "options": ["Uterine massage", "Hysterectomy", "Balloon tamponade", "Blood transfusion"],
+    "answer": 0,
+    "explanation": "Massage stimulates contraction and reduces bleeding.",
+    "reference": "ACOG PPH Bulletin"
+  },
+  {
+    "id": "pph_3",
+    "topic": "Postpartum Hemorrhage",
+    "question": "Which medication is contraindicated in a hypertensive mother?",
+    "options": ["Methylergonovine", "Oxytocin", "Carboprost", "Misoprostol"],
+    "answer": 0,
+    "explanation": "Ergometrine raises BP and is avoided in hypertension.",
+    "reference": "Dutta; ACOG"
+  },
+  {
+    "id": "pph_4",
+    "topic": "Postpartum Hemorrhage",
+    "question": "Uterine balloon tamponade is used when:",
+    "options": ["Medical management fails", "Bleeding is mild", "C-section is planned", "There is septic shock"],
+    "answer": 0,
+    "explanation": "It is a second-line measure after drugs fail.",
+    "reference": "ACOG PPH Algorithms"
+  }
+]

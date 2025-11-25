@@ -1,0 +1,41 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+      name: "Ramp up to 20 users"
+    - duration: 120
+      arrivalRate: 50
+      name: "Sustained 50 users"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+scenarios:
+  - name: "Live Quiz REST API Load Test"
+    flow:
+      - get:
+          url: "/api/live-quiz/sessions"
+      - post:
+          url: "/api/live-quiz/session/test-session/start"
+      - get:
+          url: "/api/live-quiz/session/test-session"
+      - post:
+          url: "/api/live-quiz/session/test-session/next"
+      - post:
+          url: "/api/live-quiz/session/test-session/end"
+      - get:
+          url: "/api/live-quiz/monitoring?action=overview&timeRange=3600000"
+  - name: "Live Quiz WebSocket Load Test"
+    engine: "ws"
+    flow:
+      - send:
+          text: "{\"action\":\"join\",\"sessionId\":\"test-session\"}"
+      - think: 1
+      - send:
+          text: "{\"action\":\"answer\",\"sessionId\":\"test-session\",\"questionId\":\"q1\",\"answer\":1}"
+      - think: 1
+      - send:
+          text: "{\"action\":\"leave\",\"sessionId\":\"test-session\"}"
+      - close:
+          reason: "done"
+      - think: 1

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ectopic_1",
+    "topic": "Ectopic Pregnancy",
+    "question": "A woman with amenorrhea, abdominal pain, and positive pregnancy test has an empty uterus on TVUS. What is the next step?",
+    "options": ["Measure β-hCG and repeat scan", "Immediate surgery", "Blood transfusion", "Methotrexate immediately"],
+    "answer": 0,
+    "explanation": "Serial β-hCG confirms viability or ectopic location.",
+    "reference": "ACOG Early Pregnancy Loss"
+  },
+  {
+    "id": "ectopic_2",
+    "topic": "Ectopic Pregnancy",
+    "question": "Methotrexate is contraindicated in:",
+    "options": ["Hemodynamic instability", "Pregnancy <6 weeks", "Low β-hCG", "Small ectopic mass"],
+    "answer": 0,
+    "explanation": "Unstable patients require surgery.",
+    "reference": "Dutta; ACOG Ectopic Pregnancy"
+  },
+  {
+    "id": "ectopic_3",
+    "topic": "Ectopic Pregnancy",
+    "question": "Classic triad of ectopic pregnancy includes:",
+    "options": ["Amenorrhea, abdominal pain, vaginal bleeding", "Fever, bleeding, contractions", "Pain, hypertension, edema", "Vomiting, dizziness, syncope"],
+    "answer": 0,
+    "explanation": "This triad is well established for ectopic pregnancy.",
+    "reference": "Dutta Obstetrics"
+  }
+]

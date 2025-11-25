@@ -1,0 +1,435 @@
+[[
+
+  {  {
+
+    "id": "placenta_previa_1",    "id": "placenta_previa_1",
+
+    "topic": "Placenta Previa",    "topic": "Placenta Previa",
+
+    "question": "A 30-year-old at 32 weeks presents with painless bright red vaginal bleeding. Fetal heart is normal. What is the most likely diagnosis?",    "question": "Sample question 1 on Placenta Previa?",
+
+    "options": ["Placenta previa", "Placental abruption", "Preterm labor", "Cervical polyp"],    "options": [
+
+    "answer": 0,      "Option A",
+
+    "explanation": "Classic presentation is painless bleeding.",      "Option B",
+
+    "reference": "Dutta; ACOG Antepartum Hemorrhage"      "Option C",
+
+  },      "Option D"
+
+  {    ],
+
+    "id": "placenta_previa_2",    "answer": 0,
+
+    "topic": "Placenta Previa",    "explanation": "Sample explanation based on Dutta and ACOG.",
+
+    "question": "The investigation of choice in suspected placenta previa is:",    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+
+    "options": ["Transvaginal ultrasound", "Transabdominal ultrasound", "MRI", "Speculum exam"],  },
+
+    "answer": 0,  {
+
+    "explanation": "TVUS provides highest accuracy and is safe.",    "id": "placenta_previa_2",
+
+    "reference": "ACOG Guidelines"    "topic": "Placenta Previa",
+
+  },    "question": "Sample question 2 on Placenta Previa?",
+
+  {    "options": [
+
+    "id": "placenta_previa_3",      "Option A",
+
+    "topic": "Placenta Previa",      "Option B",
+
+    "question": "Digital vaginal examination is contraindicated in placenta previa because:",      "Option C",
+
+    "options": ["It can provoke severe hemorrhage", "It is unnecessary", "It causes infection", "It worsens contractions"],      "Option D"
+
+    "answer": 0,    ],
+
+    "explanation": "Internal exam can disrupt placental attachment.",    "answer": 0,
+
+    "reference": "Dutta"    "explanation": "Sample explanation based on Dutta and ACOG.",
+
+  }    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+
+]  },
+
+  {
+    "id": "placenta_previa_3",
+    "topic": "Placenta Previa",
+    "question": "Sample question 3 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_4",
+    "topic": "Placenta Previa",
+    "question": "Sample question 4 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_5",
+    "topic": "Placenta Previa",
+    "question": "Sample question 5 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_6",
+    "topic": "Placenta Previa",
+    "question": "Sample question 6 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_7",
+    "topic": "Placenta Previa",
+    "question": "Sample question 7 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_8",
+    "topic": "Placenta Previa",
+    "question": "Sample question 8 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  [
+    {
+      "id": "placenta_previa_1",
+      "topic": "Placenta Previa",
+      "question": "A 30-year-old at 32 weeks presents with painless bright red vaginal bleeding. Fetal heart is normal. What is the most likely diagnosis?",
+      "options": ["Placenta previa", "Placental abruption", "Preterm labor", "Cervical polyp"],
+      "answer": 0,
+      "explanation": "Classic presentation is painless bleeding.",
+      "reference": "Dutta; ACOG Antepartum Hemorrhage"
+    },
+    {
+      "id": "placenta_previa_2",
+      "topic": "Placenta Previa",
+      "question": "The investigation of choice in suspected placenta previa is:",
+      "options": ["Transvaginal ultrasound", "Transabdominal ultrasound", "MRI", "Speculum exam"],
+      "answer": 0,
+      "explanation": "TVUS provides highest accuracy and is safe.",
+      "reference": "ACOG Guidelines"
+    },
+    {
+      "id": "placenta_previa_3",
+      "topic": "Placenta Previa",
+      "question": "Digital vaginal examination is contraindicated in placenta previa because:",
+      "options": ["It can provoke severe hemorrhage", "It is unnecessary", "It causes infection", "It worsens contractions"],
+      "answer": 0,
+      "explanation": "Internal exam can disrupt placental attachment.",
+      "reference": "Dutta"
+    }
+  ]
+    "topic": "Placenta Previa",
+    "question": "Sample question 12 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_13",
+    "topic": "Placenta Previa",
+    "question": "Sample question 13 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_14",
+    "topic": "Placenta Previa",
+    "question": "Sample question 14 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_15",
+    "topic": "Placenta Previa",
+    "question": "Sample question 15 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_16",
+    "topic": "Placenta Previa",
+    "question": "Sample question 16 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_17",
+    "topic": "Placenta Previa",
+    "question": "Sample question 17 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_18",
+    "topic": "Placenta Previa",
+    "question": "Sample question 18 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_19",
+    "topic": "Placenta Previa",
+    "question": "Sample question 19 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_20",
+    "topic": "Placenta Previa",
+    "question": "Sample question 20 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_21",
+    "topic": "Placenta Previa",
+    "question": "Sample question 21 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_22",
+    "topic": "Placenta Previa",
+    "question": "Sample question 22 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_23",
+    "topic": "Placenta Previa",
+    "question": "Sample question 23 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_24",
+    "topic": "Placenta Previa",
+    "question": "Sample question 24 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_25",
+    "topic": "Placenta Previa",
+    "question": "Sample question 25 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_26",
+    "topic": "Placenta Previa",
+    "question": "Sample question 26 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_27",
+    "topic": "Placenta Previa",
+    "question": "Sample question 27 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_28",
+    "topic": "Placenta Previa",
+    "question": "Sample question 28 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_29",
+    "topic": "Placenta Previa",
+    "question": "Sample question 29 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  },
+  {
+    "id": "placenta_previa_30",
+    "topic": "Placenta Previa",
+    "question": "Sample question 30 on Placenta Previa?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Sample explanation based on Dutta and ACOG.",
+    "reference": "Dutta's Textbook of Obstetrics; ACOG Guidelines"
+  }
+]

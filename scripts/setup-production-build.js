@@ -13,35 +13,18 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('VERCEL:', process.env.VERCEL);
 console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
 
-// Schema file paths
-const productionSchema = path.join(__dirname, '../prisma/schema.production.prisma');
-const developmentSchema = path.join(__dirname, '../prisma/schema.development.prisma');
-const targetSchema = path.join(__dirname, '../prisma/schema.prisma');
+// Schema file path
+const schemaPath = path.join(__dirname, '../prisma/schema.prisma');
 
 try {
-  if (isProduction) {
-    console.log('📦 Setting up production build with PostgreSQL...');
-    
-    // Copy production schema
-    if (fs.existsSync(productionSchema)) {
-      fs.copyFileSync(productionSchema, targetSchema);
-      console.log('✅ Copied production schema (PostgreSQL)');
-    } else {
-      console.error('❌ Production schema not found!');
-      process.exit(1);
-    }
-  } else {
-    console.log('🔧 Setting up development build with SQLite...');
-    
-    // Copy development schema
-    if (fs.existsSync(developmentSchema)) {
-      fs.copyFileSync(developmentSchema, targetSchema);
-      console.log('✅ Copied development schema (SQLite)');
-    } else {
-      console.error('❌ Development schema not found!');
-      process.exit(1);
-    }
+  // Verify schema exists
+  if (!fs.existsSync(schemaPath)) {
+    console.error('❌ Prisma schema not found at:', schemaPath);
+    process.exit(1);
   }
+
+  console.log('✅ Using unified Prisma schema');
+  console.log('📋 Schema supports both SQLite (dev) and PostgreSQL (prod)');
 
   // Clear any existing Prisma client
   const prismaClientPath = path.join(__dirname, '../node_modules/.prisma/client');

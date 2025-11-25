@@ -16,15 +16,15 @@ async function checkCurrentData() {
     });
     
     console.log('📊 Current Database State:');
-    modules.forEach(module => {
+    modules.forEach((module: any) => {
       console.log(`📚 ${module.name} (${module.ageGroup})`);
-      module.topics.forEach(topic => {
+      module.topics.forEach((topic: any) => {
         console.log(`  📝 ${topic.name}: ${topic.questions.length} questions`);
       });
     });
     
-    const totalQuestions = modules.reduce((total, module) => 
-      total + module.topics.reduce((topicTotal, topic) => topicTotal + topic.questions.length, 0), 0
+    const totalQuestions = modules.reduce((total: number, module: any) => 
+      total + module.topics.reduce((topicTotal: number, topic: any) => topicTotal + topic.questions.length, 0), 0
     );
     
     console.log(`\n🔢 Total Questions: ${totalQuestions}`);

@@ -41,7 +41,8 @@ export async function POST(request: Request) {
         email: email.toLowerCase(),
         password: hashedPassword,
         sessionId,
-        name: email.split('@')[0], // Use part before @ as default name
+        name: body.name || email.split('@')[0], // Use provided name or part before @ as default
+        role: 'student', // Default role
       },
       select: {
         id: true,

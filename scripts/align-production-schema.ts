@@ -62,7 +62,7 @@ async function alignProductionSchema() {
         AND table_name IN ('Module', 'Topic', 'Question', 'User', 'ExamSession')
       `
       
-      console.log('📋 Found tables:', result.length > 0 ? result.map(r => r.table_name) : 'None')
+      console.log('📋 Found tables:', result.length > 0 ? result.map((r: any) => r.table_name) : 'None')
       
       if (result.length === 0) {
         console.log('🚀 Creating database schema...')
@@ -91,8 +91,9 @@ async function alignProductionSchema() {
       
       console.log('🎉 Production schema alignment completed successfully!')
       
-    } catch (error) {
-      console.error('❌ Schema verification failed:', error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('❌ Schema verification failed:', errorMessage)
       
       // If verification fails, try to recreate schema
       console.log('🔄 Attempting to recreate schema...')
@@ -109,8 +110,9 @@ async function alignProductionSchema() {
         const moduleCount = await prisma.module.count()
         console.log(`📊 Modules after recreation: ${moduleCount}`)
         
-      } catch (recreateError) {
-        console.error('❌ Schema recreation failed:', recreateError.message)
+      } catch (recreateError: unknown) {
+        const recreateErrorMessage = recreateError instanceof Error ? recreateError.message : String(recreateError);
+        console.error('❌ Schema recreation failed:', recreateErrorMessage)
         throw recreateError
       }
     } finally {

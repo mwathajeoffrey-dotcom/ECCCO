@@ -72,6 +72,14 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
               >
                 Exams
               </Link>
+              <Link 
+                href="/live-quiz" 
+                className={`font-medium text-sm ${
+                  currentPage === 'live-quiz' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Live Quiz
+              </Link>
               {session && (
                 <Link 
                   href="/dashboard" 
@@ -207,6 +215,14 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
               }`}
             >
               Exams
+            </Link>
+            <Link 
+              href="/live-quiz" 
+              className={`text-sm font-medium ${
+                currentPage === 'live-quiz' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              Live Quiz
             </Link>
             {session && (
               <Link 

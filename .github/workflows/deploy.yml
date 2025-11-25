@@ -1,0 +1,293 @@
+name: ECCCO Production Deployment
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual triggering
+
+env:
+  NODE_VERSION: '18'
+  PNPM_VERSION: '8'
+
+jobs:
+  # Quality checks and testing
+  test:
+    name: Test & Quality Checks
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres_test
+          POSTGRES_USER: postgres_test
+          POSTGRES_DB: eccco_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup test database
+        env:
+          DATABASE_URL: postgresql://postgres_test:postgres_test@localhost:5432/eccco_test
+        run: |
+          npx prisma generate
+          npx prisma db push
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql://postgres_test:postgres_test@localhost:5432/eccco_test
+          NEXTAUTH_SECRET: test-secret-for-ci
+          NEXTAUTH_URL: http://localhost:3000
+        run: npm run test
+
+      - name: Build application
+        env:
+          DATABASE_URL: postgresql://postgres_test:postgres_test@localhost:5432/eccco_test
+          NEXTAUTH_SECRET: test-secret-for-ci
+          NEXTAUTH_URL: http://localhost:3000
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            .next/
+            public/
+            prisma/
+          retention-days: 1
+
+  # Security audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm audit --audit-level moderate
+
+      - name: Check for known vulnerabilities
+        run: npx audit-ci --moderate
+
+  # Docker build and push
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY }}
+          username: ${{ secrets.CONTAINER_USERNAME }}
+          password: ${{ secrets.CONTAINER_PASSWORD }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.CONTAINER_REGISTRY }}/eccco-app
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.STAGING_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.STAGING_NEXTAUTH_URL }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$STAGING_SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $STAGING_HOST >> ~/.ssh/known_hosts
+          
+          # Deploy to staging
+          ssh $STAGING_USER@$STAGING_HOST << 'EOF'
+            cd /var/www/eccco
+            git pull origin main
+            docker-compose -f docker-compose.staging.yml down
+            docker-compose -f docker-compose.staging.yml pull
+            docker-compose -f docker-compose.staging.yml up -d
+            docker-compose -f docker-compose.staging.yml exec -T app npx prisma migrate deploy
+          EOF
+
+      - name: Run staging health check
+        run: |
+          # Wait for deployment
+          sleep 30
+          
+          # Health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.STAGING_URL }}/api/health)
+          if [ $response -eq 200 ]; then
+            echo "✅ Staging deployment successful"
+          else
+            echo "❌ Staging health check failed"
+            exit 1
+          fi
+
+  # Deploy to production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        env:
+          PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+          PRODUCTION_USER: ${{ secrets.PRODUCTION_USER }}
+          PRODUCTION_SSH_KEY: ${{ secrets.PRODUCTION_SSH_KEY }}
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.PRODUCTION_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.PRODUCTION_NEXTAUTH_URL }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$PRODUCTION_SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $PRODUCTION_HOST >> ~/.ssh/known_hosts
+          
+          # Deploy to production with zero-downtime strategy
+          ssh $PRODUCTION_USER@$PRODUCTION_HOST << 'EOF'
+            cd /var/www/eccco
+            
+            # Backup current deployment
+            docker tag eccco-app:latest eccco-app:backup-$(date +%s)
+            
+            # Update code
+            git pull origin main
+            
+            # Build new image
+            docker-compose build
+            
+            # Run database migrations
+            docker-compose run --rm app npx prisma migrate deploy
+            
+            # Deploy with rolling update
+            docker-compose up -d --no-deps app
+            
+            # Health check
+            sleep 30
+            if ! curl -f http://localhost:3000/api/health; then
+              echo "Health check failed, rolling back..."
+              docker-compose down
+              docker tag eccco-app:backup eccco-app:latest
+              docker-compose up -d
+              exit 1
+            fi
+            
+            echo "✅ Production deployment successful"
+          EOF
+
+      - name: Run production health check
+        run: |
+          # Wait for deployment
+          sleep 30
+          
+          # Health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.PRODUCTION_URL }}/api/health)
+          if [ $response -eq 200 ]; then
+            echo "✅ Production deployment successful"
+          else
+            echo "❌ Production health check failed"
+            exit 1
+          fi
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 ECCCO Platform successfully deployed to production!"
+          
+          # Optional: Send notifications (Slack, Discord, etc.)
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"🎉 ECCCO Platform deployed successfully to production!"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ ECCCO Platform deployment failed!"
+          
+          # Optional: Send failure notifications
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"❌ ECCCO Platform deployment failed! Check the logs."}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}

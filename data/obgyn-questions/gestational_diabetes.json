@@ -1,0 +1,29 @@
+[
+  {
+    "id": "diabetes_1",
+    "topic": "Gestational Diabetes",
+    "question": "Which test is used for diagnosing gestational diabetes?",
+    "options": ["OGTT", "Random glucose", "HbA1c", "Fasting insulin"],
+    "answer": 0,
+    "explanation": "OGTT is the diagnostic standard.",
+    "reference": "ACOG Diabetes in Pregnancy"
+  },
+  {
+    "id": "diabetes_2",
+    "topic": "Gestational Diabetes",
+    "question": "Which fetal complication is most associated with poorly controlled gestational diabetes?",
+    "options": ["Macrosomia", "IUGR", "Oligohydramnios", "Low birth weight"],
+    "answer": 0,
+    "explanation": "Excess glucose leads to fetal overgrowth.",
+    "reference": "Dutta"
+  },
+  {
+    "id": "diabetes_3",
+    "topic": "Gestational Diabetes",
+    "question": "Best initial treatment for GDM is:",
+    "options": ["Medical nutrition therapy", "Insulin immediately", "Metformin first", "C-section planning"],
+    "answer": 0,
+    "explanation": "Diet and lifestyle are first-line.",
+    "reference": "ACOG GDM Bulletin"
+  }
+]

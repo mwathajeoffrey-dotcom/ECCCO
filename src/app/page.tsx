@@ -27,6 +27,9 @@ export default function Home() {
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
               </Link>
+              <Link href="/live-quiz" className="text-gray-700 hover:text-blue-600 font-medium">
+                Live Quiz
+              </Link>
               <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
                 Analytics
               </Link>
@@ -55,6 +58,12 @@ export default function Home() {
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
               Choose Your Module
+            </Link>
+            <Link
+              href="/live-quiz"
+              className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-teal-600 transition-colors"
+            >
+              Live Quiz
             </Link>
             <Link
               href="/practice"
@@ -102,6 +111,16 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Learning Analytics</h3>
             <p className="text-gray-600">
               Advanced AI-powered insights, adaptive recommendations, and personalized study plans for optimal learning.
+            </p>
+          </Link>
+
+          <Link href="/live-quiz" className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+              <Users className="w-6 h-6 text-teal-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Live Quiz</h3>
+            <p className="text-gray-600">
+              Interactive real-time quizzes with scoring, leaderboards, and immediate feedback for engaging group learning.
             </p>
           </Link>
 

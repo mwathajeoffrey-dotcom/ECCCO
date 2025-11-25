@@ -1,0 +1,20 @@
+[
+  {
+    "id": "infection_1",
+    "topic": "Infections",
+    "question": "Chorioamnionitis is most commonly associated with:",
+    "options": ["Prolonged rupture of membranes", "Polyhydramnios", "Macrosomia", "Late decelerations"],
+    "answer": 0,
+    "explanation": "PROM >18 hours increases infection risk.",
+    "reference": "ACOG Infection Guidelines"
+  },
+  {
+    "id": "infection_2",
+    "topic": "Infections",
+    "question": "First-line treatment for chorioamnionitis is:",
+    "options": ["Ampicillin + gentamicin", "Ceftriaxone", "Azithromycin", "Clindamycin alone"],
+    "answer": 0,
+    "explanation": "Standard broad-spectrum regimen.",
+    "reference": "ACOG Guidelines"
+  }
+]

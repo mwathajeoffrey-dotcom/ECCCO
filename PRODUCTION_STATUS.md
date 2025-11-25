@@ -1,3 +1,39 @@
+# ECCCO Live Quiz Platform Production Deployment & Monitoring Guide
+
+## Deployment Steps
+1. Ensure all environment variables are set (see `.env.example`).
+2. Run `npm install` to install dependencies.
+3. Run database migrations: `npm run db:push` or `npm run db:migrate`.
+4. Seed the database if needed: `npm run db:seed`.
+5. Build the app: `npm run build`.
+6. Start the server: `npm start`.
+7. For Vercel, use `vercel-build` script for production setup.
+
+## API Documentation
+- All live quiz endpoints are under `/api/live-quiz/`
+- Key endpoints:
+	- `GET /api/live-quiz/sessions`: List all quiz sessions
+	- `POST /api/live-quiz/session/[sessionId]/start`: Start a session
+	- `POST /api/live-quiz/session/[sessionId]/end`: End a session
+	- `POST /api/live-quiz/session/[sessionId]/next`: Move to next question
+	- `GET /api/live-quiz/monitoring`: Analytics and monitoring
+	- `ws://[host]/api/live-quiz/websocket`: Real-time quiz events
+
+## Monitoring & Health
+- Use `/api/live-quiz/monitoring` for dashboard metrics
+- Use Prisma Studio (`npm run db:studio`) for DB inspection
+- Check logs for errors and performance issues
+
+## CI/CD
+- Automated tests and load tests run on every push/PR via GitHub Actions (`.github/workflows/ci.yml`)
+
+## Troubleshooting
+- If build fails, check TypeScript and Prisma errors
+- For WebSocket issues, verify server logs and client connection
+- For database issues, check migration status and schema
+
+## Contact & Support
+- For urgent issues, contact ECCCO Team via repository or support channels
 # ECCCO - Production Status Report
 
 ## 🎯 Project Overview

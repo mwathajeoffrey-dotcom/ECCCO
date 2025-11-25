@@ -239,7 +239,7 @@ async function generateQuestionBank() {
 
     console.log('📝 Adding cardiovascular questions...');
     // Find or create cardiovascular topic
-    let cardiovascularTopic = adultModule.topics.find(t => t.name.includes('Cardiovascular'));
+    let cardiovascularTopic = adultModule.topics.find((t: any) => t.name.includes('Cardiovascular'));
     
     if (!cardiovascularTopic) {
       cardiovascularTopic = await prisma.topic.create({
@@ -269,7 +269,7 @@ async function generateQuestionBank() {
 
     console.log('🚑 Adding pediatric resuscitation questions...');
     // Find or create pediatric resuscitation topic
-    let resuscitationTopic = pediatricModule.topics.find(t => t.name.includes('Resuscitation'));
+    let resuscitationTopic = pediatricModule.topics.find((t: any) => t.name.includes('Resuscitation'));
     
     if (!resuscitationTopic) {
       resuscitationTopic = await prisma.topic.create({

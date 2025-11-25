@@ -76,16 +76,18 @@ async function setupDatabaseWithNewUrl() {
       
       console.log('\n🎉 Database setup completed successfully!');
       
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       console.log('❌ Tables not found, might need schema push...');
-      console.error('Error details:', error.message);
+      console.error('Error details:', errorMessage);
     }
 
     await prisma.$disconnect();
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('❌ Setup failed:', error);
-    console.error('Error details:', error.message);
+    console.error('Error details:', errorMessage);
   }
 }
 

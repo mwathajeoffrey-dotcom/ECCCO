@@ -1,0 +1,29 @@
+[
+  {
+    "id": "labor_1",
+    "topic": "Labor",
+    "question": "The latent phase of labor ends when:",
+    "options": ["Cervix reaches 6 cm", "Cervix reaches 4 cm", "Head engages", "Membranes rupture"],
+    "answer": 0,
+    "explanation": "ACOG redefined active labor as starting at 6 cm.",
+    "reference": "ACOG Labor Management Guidelines"
+  },
+  {
+    "id": "labor_2",
+    "topic": "Labor",
+    "question": "A protracted first stage of labor is defined as:",
+    "options": ["Slow cervical dilation", "Early membrane rupture", "Slow fetal descent", "Prolonged latent phase only"],
+    "answer": 0,
+    "explanation": "Slow dilation in active phase = protraction disorder.",
+    "reference": "ACOG Labor Management"
+  },
+  {
+    "id": "labor_3",
+    "topic": "Labor",
+    "question": "Which pelvic type is most favorable for vaginal delivery?",
+    "options": ["Gynecoid", "Android", "Anthropoid", "Platypelloid"],
+    "answer": 0,
+    "explanation": "Gynecoid pelvis has ideal dimensions for birth.",
+    "reference": "Dutta Obstetrics"
+  }
+]
