@@ -32,8 +32,14 @@ export async function POST(request: Request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
     
-    // Generate a unique sessionId for the user
-    const sessionId = `user-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    // Generate a unique sessionId for the user with better randomness
+    const sessionId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${Math.random().toString(36).substring(2, 15)}`;
+    
+    console.log('=== SIGNUP ATTEMPT ===');
+    console.log('Email:', email.toLowerCase());
+    console.log('Name:', body.name || email.split('@')[0]);
+    console.log('SessionId:', sessionId);
+    console.log('===================');
     
     // Create user
     const user = await prisma.user.create({
