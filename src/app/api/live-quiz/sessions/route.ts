@@ -5,15 +5,16 @@ import { prisma } from '@/lib/database/prisma-client';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Temporarily removed auth check for development
+    // const session = await getServerSession(authOptions);
+    // if (!session?.user?.id) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
 
+    // Return all sessions for now (not filtered by hostId)
     const sessions = await prisma.liveQuizSession.findMany({
       where: {
-        hostId: session.user.id,
+        // hostId: session.user.id,
       },
       include: {
         topic: {
