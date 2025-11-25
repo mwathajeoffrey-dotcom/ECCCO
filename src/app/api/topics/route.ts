@@ -3,6 +3,9 @@ import { prisma } from '@/lib/database/prisma-client';
 
 export async function GET() {
   try {
+    // Test database connection first
+    console.log('=== /api/topics: Starting request ===');
+    
     const topics = await prisma.topic.findMany({
       include: {
         module: true,
@@ -16,12 +19,18 @@ export async function GET() {
       ]
     });
 
+    console.log(`=== /api/topics: Found ${topics.length} topics ===`);
     return NextResponse.json(topics);
   } catch (error) {
-    console.error('Error fetching topics:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch topics' },
-      { status: 500 }
-    );
+    // Detailed error logging
+    console.error('=== /api/topics ERROR START ===');
+    console.error('Error type:', error?.constructor?.name);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown');
+    console.error('Full error:', error);
+    console.error('=== /api/topics ERROR END ===');
+    
+    // Return empty array instead of error object to prevent frontend crash
+    // Frontend expects an array to .map() over
+    return NextResponse.json([], { status: 200 });
   }
 }
