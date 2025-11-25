@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/setup-production-build.js && next build",
+    "build": "prisma generate && next build",
     "build:dev": "prisma generate && next build",
     "build:prod": "npm run db:setup:prod && next build",
     "start": "next start",
