@@ -103,13 +103,23 @@ export default function ExamInterface() {
   // Helper function to categorize topics
   const categorizeTopics = () => {
     const obgynTopics = topics.filter(t => 
+      // Original emergency topics
       t.id.includes('placenta') ||
       t.id.includes('preeclampsia') ||
       t.id.includes('preterm') ||
       t.id.includes('vasa') ||
       t.id.includes('gyn-pain') ||
       t.id === 'obstetric-emergencies' ||
-      t.id === 'general-obgyn-emergencies'
+      t.id === 'general-obgyn-emergencies' ||
+      // New medical comorbidity topics (2024-2025)
+      t.id.includes('cardiac-disease-pregnancy') ||
+      t.id.includes('diabetes-pregnancy') ||
+      t.id.includes('hypertensive-disorders-pregnancy') ||
+      t.id.includes('thromboembolism-pregnancy') ||
+      t.id.includes('infectious-disease-pregnancy') ||
+      t.id.includes('renal-disease-pregnancy') ||
+      t.id.includes('thyroid-disorders-pregnancy') ||
+      t.id.includes('hematologic-disorders-pregnancy')
     );
 
     const otherTopics = topics.filter(t => !obgynTopics.includes(t));
