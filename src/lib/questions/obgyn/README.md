@@ -1,7 +1,7 @@
 # OB/GYN Question Bank
 
-**Total Questions:** 210  
-**Topics:** 7 specialized areas  
+**Total Questions:** 240  
+**Topics:** 8 specialized areas  
 **Last Updated:** November 26, 2025
 
 ---
@@ -21,6 +21,7 @@ This folder contains all obstetric and gynecologic emergency medicine questions,
 | `obstetric-emergencies.ts` | Acute Obstetric Emergencies | 30 | Obstetric |
 | `vasa-previa-rupture.ts` | Vasa Previa & Uterine Rupture | 30 | Obstetric |
 | `gyn-pain-bleeding.ts` | Gynecologic Pain & Bleeding | 30 | Gynecologic |
+| `general-obgyn-emergencies.ts` | General OB/GYN Emergencies | 30 | Mixed |
 
 ---
 
@@ -68,7 +69,7 @@ This folder contains all obstetric and gynecologic emergency medicine questions,
   - Uterine rupture risk factors
   - TOLAC/VBAC considerations
 
-### Gynecologic Topics (30 questions)
+### Gynecologic Topics (60 questions)
 
 - **Gynecologic Pain & Bleeding** (`gyn-pain-bleeding.ts`)
   - Postmenopausal bleeding
@@ -78,6 +79,17 @@ This folder contains all obstetric and gynecologic emergency medicine questions,
   - Endometriosis
   - Uterine fibroids
 
+- **General OB/GYN Emergencies** (`general-obgyn-emergencies.ts`)
+  - Ectopic pregnancy
+  - Ovarian torsion (non-pregnant)
+  - Hyperemesis gravidarum
+  - Gestational trophoblastic disease
+  - Trauma in pregnancy
+  - Postpartum complications (mastitis, PE)
+  - Vulvovaginal conditions
+  - Fibroid degeneration
+  - Intrahepatic cholestasis
+
 ---
 
 ## 🔧 Usage
@@ -85,7 +97,7 @@ This folder contains all obstetric and gynecologic emergency medicine questions,
 ### Import All OB/GYN Questions
 ```typescript
 import { obgynQuestions } from '@/lib/questions/obgyn';
-// Returns: Array of 210 questions
+// Returns: Array of 240 questions
 ```
 
 ### Import Specific Topic
@@ -107,7 +119,10 @@ console.log(obgynQuestionCount);
 //   obstetricEmergencies: 30,
 //   gynPainBleeding: 30,
 //   vasaPreviaRupture: 30,
-//   total: 210
+//   generalObgynEmergencies: 30,
+//   obstetricTotal: 180,
+//   gynecologicTotal: 60,
+//   total: 240
 // }
 ```
 
@@ -192,6 +207,7 @@ For easy identification:
 | `obe-` | Obstetric Emergencies |
 | `gpb-` | Gynecologic Pain/Bleeding |
 | `vr-` | Vasa Previa/Rupture |
+| `goe-` | General OB/GYN Emergencies |
 
 ---
 
