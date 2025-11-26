@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
+import NewFeatureBanner from '@/components/NewFeatureBanner';
 
 interface Topic {
   id: string;
@@ -62,6 +63,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* New Feature Banner */}
+      <NewFeatureBanner />
+      
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
