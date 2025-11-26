@@ -20,9 +20,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
-    "build:dev": "prisma generate && next build",
-    "build:prod": "npm run db:setup:prod && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -32,20 +30,14 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:prod": "prisma migrate deploy",
     "db:seed": "tsx scripts/seed.ts",
-    "db:seed:prod": "tsx scripts/seed-production.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
-    "db:setup:prod": "cp prisma/schema.production.prisma prisma/schema.prisma && prisma generate",
-    "db:setup:dev": "cp prisma/schema.development.prisma prisma/schema.prisma && prisma generate",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next out",
-    "postinstall": "prisma generate",
-    "setup-schema": "node scripts/setup-schema.js",
-    "setup-accelerate-db": "npx tsx scripts/setup-accelerate-complete.ts",
-    "vercel-build": "bash scripts/setup-vercel-production.sh && next build"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -99,7 +91,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
-    "tsx": "^4.20.6",
+    "tsx": "^3.14.0",
     "typescript": "^5"
   },
   "engines": {

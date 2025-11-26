@@ -2,7 +2,7 @@
 // app/api/health/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/database/prisma-client'
+import { prisma } from '@/lib/database/prisma'
 
 interface HealthCheckResponse {
   status: 'healthy' | 'unhealthy'

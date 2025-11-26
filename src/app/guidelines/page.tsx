@@ -26,6 +26,9 @@ import Link from 'next/link';
 import guidelinesService, { MedicalGuideline, GuidelineCategory } from '@/lib/guidelines/service';
 import { isDeveloper } from '@/lib/auth/developer';
 
+// Force dynamic rendering - don't try to statically generate
+export const dynamic = 'force-dynamic';
+
 export default function GuidelinesPage() {
   const [guidelines, setGuidelines] = useState<MedicalGuideline[]>([]);
   const [categories, setCategories] = useState<GuidelineCategory[]>([]);

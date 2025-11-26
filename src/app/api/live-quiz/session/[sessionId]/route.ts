@@ -9,16 +9,16 @@ export async function GET(
 ) {
   try {
     const { sessionId } = await params;
-    // Temporarily removed auth check for development
-    // const session = await getServerSession(authOptions);
-    // if (!session?.user?.id) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const quizSession = await prisma.liveQuizSession.findUnique({
       where: {
         id: sessionId,
-        // hostId: session.user.id, // Removed host check
+        hostId: session.user.id, // Ensure only host can access
       },
       include: {
         participants: {

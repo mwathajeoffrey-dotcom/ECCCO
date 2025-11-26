@@ -114,16 +114,16 @@ export default function PracticePage() {
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-red-600" />
+            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="w-6 h-6 text-orange-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">PALS Resources</h3>
-            <p className="text-gray-600 text-sm mb-4">Interactive tools, calculators & simulators</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Study Mode</h3>
+            <p className="text-gray-600 text-sm mb-4">Questions with immediate explanations</p>
             <Link
-              href="/practice/pals"
-              className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+              href="/exam"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors"
             >
-              Explore Tools
+              Study Now
             </Link>
           </div>
         </div>

@@ -1,63 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { allQuestions, questionsByCategory, getAllQuestions } from '@/lib/questions';
+import { Question } from '@/lib/questions/types';
 
 export async function GET(request: NextRequest) {
+  console.log('✅ Questions API route hit!');
   try {
     const { searchParams } = new URL(request.url);
     const topicId = searchParams.get('topicId');
+    const category = searchParams.get('category');
     const limit = parseInt(searchParams.get('limit') || '30');
     const difficulty = searchParams.get('difficulty');
     
-    console.log('Request params:', { topicId, limit, difficulty });
+    console.log('📊 Request params:', { topicId, category, limit, difficulty });
 
-    // Build where clause
-    const where: any = {};
-    
-    if (topicId) {
-      where.topicId = topicId;
+    let questions: Question[] = [];
+
+    // Get questions by category if specified
+    if (category && questionsByCategory[category as keyof typeof questionsByCategory]) {
+      questions = questionsByCategory[category as keyof typeof questionsByCategory];
+      console.log(`📚 Found ${questions.length} questions for category: ${category}`);
+    } 
+    // Get questions by topicId (legacy support)
+    else if (topicId) {
+      questions = allQuestions.filter(q => q.topicId === topicId);
+      console.log(`📚 Found ${questions.length} questions for topicId: ${topicId}`);
     }
-    
+    // Get all questions
+    else {
+      questions = getAllQuestions();
+      console.log(`📚 Returning all questions: ${questions.length} total`);
+    }
+
+    // Filter by difficulty if specified
     if (difficulty) {
-      where.difficulty = difficulty;
+      questions = questions.filter(q => q.difficulty === difficulty);
+      console.log(`🎯 Filtered to ${questions.length} questions with difficulty: ${difficulty}`);
     }
 
-    // Build include clause - include topic info if browsing all questions
-    const include = !topicId ? {
-      topic: {
-        include: {
-          module: true
-        }
-      }
-    } : undefined;
+    // Shuffle questions for randomization
+    const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
 
-    // Fetch questions from database
-    const questions = await prisma.question.findMany({
-      where,
-      include,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc'
-      }
+    // Limit the number of questions
+    const limitedQuestions = shuffledQuestions.slice(0, Math.min(limit, shuffledQuestions.length));
+
+    console.log(`✅ Returning ${limitedQuestions.length} questions`);
+
+    return NextResponse.json({
+      success: true,
+      count: limitedQuestions.length,
+      total: questions.length,
+      questions: limitedQuestions,
     });
-
-    // Transform the data to match expected format
-    const transformedQuestions = questions.map((q: any) => ({
-      id: q.id,
-      question: q.question,
-      options: q.options, // Already stored as JSON string
-      correctIndex: q.correctIndex,
-      explanation: q.explanation,
-      references: q.references, // Already stored as JSON string
-      difficulty: q.difficulty,
-      topicId: q.topicId,
-      ...(q.topic && { topic: q.topic }) // Include topic info if available
-    }));
-
-    return NextResponse.json(transformedQuestions);
   } catch (error) {
-    console.error('Error fetching questions:', error);
+    console.error('❌ Error fetching questions:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch questions' },
+      { 
+        success: false,
+        error: 'Failed to fetch questions',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

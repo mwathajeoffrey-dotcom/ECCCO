@@ -5,7 +5,7 @@ import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
-import { analyticsV2 } from '@/lib/analytics/analytics-v2';
+import { analytics } from '@/lib/analytics/service';
 
 interface Question {
   id: string;
@@ -70,9 +70,9 @@ export default function ExamInterface() {
         const data = await response.json();
         setTopics(data);
         
-        // Initialize analytics V2
-        await analyticsV2.initialize();
-        console.log('✅ Analytics V2 initialized in exam interface');
+        // Initialize analytics
+        await analytics.initialize();
+        analytics.trackPageView('/exam', 'Exam Topics Selection');
       } catch (error) {
         console.error('Error fetching topics:', error);
       } finally {
@@ -113,9 +113,9 @@ export default function ExamInterface() {
       setIsExamFinished(false);
       setTimeRemaining(45 * 60);
       
-      // Track exam start (optional - not critical for analytics)
+      // Track exam start
       const topic = topics.find(t => t.id === topicId);
-      console.log(`📋 Exam started: ${topic?.name || 'Unknown Topic'}`);
+      analytics.trackExamStart(topicId, topic?.name || 'Unknown Topic');
     } catch (error) {
       console.error('Error fetching questions:', error);
     } finally {
@@ -135,8 +135,12 @@ export default function ExamInterface() {
       
       setCurrentQuestionAnswered(true);
       
-      // Track question answered (handled by exam completion analytics)
-      console.log(`💭 Question answered: ${currentQuestion.id}, correct: ${isCorrect}`);
+      // Track question answered
+      analytics.trackQuestionAnswered(
+        currentQuestion.id,
+        isCorrect,
+        45 * 60 - timeRemaining // Time spent so far
+      );
     }
   };
 
@@ -160,21 +164,14 @@ export default function ExamInterface() {
     setFlaggedQuestions(newFlagged);
   };
 
-  const finishExam = async () => {
+  const finishExam = () => {
     setIsExamFinished(true);
     
     // Calculate and track exam completion
     const score = calculateScore();
     const timeSpent = 45 * 60 - timeRemaining;
     
-    // Save exam session data to database via analytics
-    try {
-      const topicName = topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic';
-      await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent);
-      console.log('✅ Exam session data saved successfully with new analytics system');
-    } catch (error) {
-      console.error('❌ Failed to save exam session data:', error);
-    }
+    analytics.trackExamComplete(selectedTopic, score, timeSpent);
   };
 
   const calculateScore = () => {
@@ -240,7 +237,7 @@ export default function ExamInterface() {
                 className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
                 onClick={() => {
                   setSelectedTopic(topic.id);
-                  console.log(`📚 Topic selected: ${topic.name}`);
+                  analytics.trackTopicSelection(topic.id, topic.name);
                   fetchQuestions(topic.id);
                 }}
               >
@@ -278,7 +275,7 @@ export default function ExamInterface() {
         };
         
         // Track PDF download
-        // analytics.trackPDFDownload(selectedTopic, score);
+        analytics.trackPDFDownload(selectedTopic, score);
         
         generateExamPDF(examResults);
       } catch (error) {
@@ -679,22 +676,21 @@ export default function ExamInterface() {
                         key={index}
                         onClick={() => handleAnswerSelect(index)}
                         disabled={showAnswer && !isExamFinished}
-                        style={{ backgroundColor: isSelected && !showAnswer ? '#dbeafe' : showAnswer && isCorrect ? '#ecfdf5' : showAnswer && isSelected && !isCorrect ? '#fef2f2' : '#ffffff' }}
-                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation relative z-10 shadow-sm ${
+                        className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
                           showAnswer && isCorrect
-                            ? 'border-emerald-500 text-emerald-900 ring-2 ring-emerald-200'
+                            ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200'
                             : showAnswer && isSelected && !isCorrect
-                            ? 'border-red-500 text-red-900 ring-2 ring-red-200'
+                            ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
                             : isSelected
-                            ? 'border-blue-500 text-blue-900 shadow-md ring-2 ring-blue-300'
-                            : 'border-gray-300 hover:border-gray-400 hover:shadow-md'
+                            ? 'border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300'
+                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
                         } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        <div className="flex items-start relative z-20 bg-inherit">
-                          <span className="font-medium mr-2 sm:mr-3 text-gray-700 text-sm sm:text-base bg-inherit">
+                        <div className="flex items-start">
+                          <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className="text-sm sm:text-base leading-relaxed flex-1 bg-inherit font-medium">{option}</span>
+                          <span className="text-sm sm:text-base leading-relaxed flex-1">{option}</span>
                           {showAnswer && isCorrect && (
                             <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
                           )}

@@ -530,12 +530,12 @@ class GuidelinesService {
    * Data Persistence
    */
   private async loadUserData(): Promise<void> {
+    // Skip if not in browser environment
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     try {
-      // Only access localStorage on client-side
-      if (typeof window === 'undefined') {
-        return;
-      }
-
       const bookmarksData = localStorage.getItem('guidelines_bookmarks');
       if (bookmarksData) {
         this.bookmarks = JSON.parse(bookmarksData);

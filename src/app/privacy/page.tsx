@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
               Your privacy is fundamental to our mission of providing excellent medical education.
             </p>
             <p className="text-blue-200 text-sm mt-2">
-              Last updated: November 11, 2025 | Effective Date: November 11, 2025
+              Last updated: November 4, 2025 | Effective Date: November 4, 2025
             </p>
           </div>
 
@@ -308,7 +308,7 @@ export default function PrivacyPolicyPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Privacy Questions</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                      Email: privacy@eccco.app
+                      Email: privacy@eccco.edu
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">
                       Response time: Within 30 days (GDPR) / 45 days (CCPA)
@@ -317,7 +317,7 @@ export default function PrivacyPolicyPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Data Protection Officer</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                      Email: dpo@eccco.app
+                      Email: dpo@eccco.edu
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">
                       For GDPR-related inquiries and data subject requests
@@ -330,7 +330,7 @@ export default function PrivacyPolicyPage() {
             {/* Footer */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-6 text-center">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                This privacy policy is effective as of November 11, 2025. We may update this policy periodically, 
+                This privacy policy is effective as of November 4, 2025. We may update this policy periodically, 
                 and we will notify you of any material changes.
               </p>
             </div>

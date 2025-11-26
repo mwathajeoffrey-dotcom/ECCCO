@@ -3,8 +3,25 @@
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function TestAuthPage() {
-  const { data: session, status } = useSession();
+  const sessionResult = useSession();
+  
+  // During SSR/build time, useSession returns undefined without SessionProvider
+  if (!sessionResult) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const { data: session, status } = sessionResult;
 
   if (status === 'loading') {
     return (

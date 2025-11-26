@@ -17,13 +17,24 @@ import {
 } from 'lucide-react';
 
 export default function SimpleLiveQuizPage() {
-  const { data: session, status } = useSession();
+  const session = useSession();
   const [mounted, setMounted] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Don't render anything until mounted to avoid hydration issues
+  if (!mounted || !session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  const { data: sessionData, status } = session;
 
   // Handle join quiz
   const handleJoinQuiz = () => {
@@ -35,15 +46,6 @@ export default function SimpleLiveQuizPage() {
     // Navigate to join page
     window.location.href = `/live-quiz/join/${joinCode.toUpperCase()}`;
   };
-
-  // Don't render anything until mounted to avoid hydration issues
-  if (!mounted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   // Show authentication status
   const renderAuthStatus = () => {
@@ -58,14 +60,14 @@ export default function SimpleLiveQuizPage() {
       );
     }
 
-    if (status === 'authenticated' && session?.user) {
+    if (status === 'authenticated' && sessionData?.user) {
       return (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <User className="w-5 h-5 text-green-600 mr-2" />
               <div>
-                <span className="text-green-800 font-medium">Welcome, {session.user.name || session.user.email}!</span>
+                <span className="text-green-800 font-medium">Welcome, {sessionData.user.name || sessionData.user.email}!</span>
                 <p className="text-sm text-green-600">You're signed in and ready to use live quiz features</p>
               </div>
             </div>
@@ -245,10 +247,10 @@ export default function SimpleLiveQuizPage() {
             <pre className="text-sm text-gray-700 overflow-x-auto">
               {JSON.stringify({ 
                 status, 
-                user: session?.user ? {
-                  id: session.user.id,
-                  email: session.user.email,
-                  name: session.user.name
+                user: sessionData?.user ? {
+                  id: sessionData.user.id,
+                  email: sessionData.user.email,
+                  name: sessionData.user.name
                 } : null,
                 mounted 
               }, null, 2)}
@@ -259,3 +261,6 @@ export default function SimpleLiveQuizPage() {
     </div>
   );
 }
+
+// Force dynamic rendering - don't try to statically generate
+export const dynamic = 'force-dynamic';

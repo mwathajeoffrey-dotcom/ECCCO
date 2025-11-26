@@ -37,14 +37,11 @@ async function generateUniqueAccessCode(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    // Temporarily removed auth check for development
-    // const session = await getServerSession(authOptions);
-    // if (!session?.user?.id) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    const session = await getServerSession(authOptions);
     
-    // Use a default hostId for now
-    const defaultHostId = 'anonymous-host';
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const body = await request.json();
     const {
@@ -118,7 +115,7 @@ export async function POST(request: NextRequest) {
         title,
         description,
         accessCode,
-        hostId: defaultHostId,
+        hostId: session.user.id,
         topicId: finalTopicId,
         questionIds: JSON.stringify(questionIds),
         settings: JSON.stringify(settings),

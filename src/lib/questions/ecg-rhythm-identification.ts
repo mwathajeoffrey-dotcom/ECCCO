@@ -308,15 +308,33 @@ export const ecgRhythmIdentificationQuestions: Question[] = [
     topicId: 'ecg-rhythm-identification'
   },
   {
-    id: 'ecg-rhythm-019',
-    question: 'Rhythm Strip Analysis: Lead II displays a wide-complex tachycardia with continuously changing QRS morphology. R-R intervals vary from 5-7 small boxes (0.20-0.28 seconds), rate 214-300 bpm. The distinctive feature is that QRS complexes appear to "twist" around the baseline - initially pointing upward, gradually rotating, then pointing downward in a sinusoidal pattern. The QT interval on baseline rhythm was measured at 580 msec. Patient recently started haloperidol. What is this rhythm?',
+    id: 'ecg-rhythm-018',
+    question: 'Rhythm Strip Analysis: Lead II shows underlying sinus rhythm at 75 bpm. Occasionally, early beats appear at 14 small boxes (0.56 seconds) after the previous QRS. These early beats are preceded by P waves that are distinctly different - more pointed and slightly inverted compared to the normal upright sinus P waves. The QRS following these abnormal P waves is narrow at 2.5 small boxes (0.10 seconds) but shows slight morphological changes. The pause after these beats measures 22 small boxes (0.88 seconds). What are these early beats?',
     options: [
+      'Premature atrial contractions (PACs)',
+      'Premature ventricular contractions (PVCs)',
+      'Junctional premature beats',
+      'Escape beats'
+    ],
+    correctIndex: 0,
+    explanation: 'Premature atrial contractions (PACs): Early beats with different P wave morphology (pointed, inverted), narrow QRS with slight aberrancy due to rate-related conduction delay, incomplete compensatory pause (0.56 + 0.88 = 1.44 sec < 2 × normal cycle). Originate from ectopic atrial focus.',
+    references: [
+      'Surawicz B, et al. AHA/ACCF/HRS recommendations for the standardization and interpretation of the electrocardiogram',
+      'Page RL, et al. 2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia'
+    ],
+    difficulty: 'medium',
+    topicId: 'ecg-rhythm-identification'
+  },
+  {
+    id: 'ecg-rhythm-019',
+    question: 'Rhythm Strip Analysis: Monitor displays polymorphic ventricular tachycardia with R-R intervals varying from 6-9 small boxes (0.24-0.36 seconds). The most striking feature is the QRS complexes that appear to "twist" or spiral around the baseline in a characteristic sinusoidal pattern. The QRS axis rotates 180 degrees every 5-10 beats, creating a corkscrew appearance. QRS width varies from 3-5 small boxes (0.12-0.20 seconds). Previous 12-lead showed QTc = 580 msec. Patient was on haloperidol and quinidine. What specific arrhythmia is this?',
+    options: [
+      'Monomorphic ventricular tachycardia',
       'Polymorphic ventricular tachycardia',
       'Torsades de pointes',
-      'Ventricular fibrillation',
-      'Atrial fibrillation with aberrancy'
+      'Ventricular flutter'
     ],
-    correctIndex: 1,
+    correctIndex: 2,
     explanation: 'Torsades de pointes: Polymorphic VT with pathognomonic "twisting" QRS morphology around baseline, associated with prolonged QT (580 msec). The "spiral" or "corkscrew" appearance with axis rotation is classic. Often caused by QT-prolonging medications. Treat with magnesium and discontinue offending drugs.',
     references: [
       'Al-Khatib SM, et al. 2017 AHA/ACC/HRS Guideline for Management of Patients With Ventricular Arrhythmias',

@@ -83,32 +83,12 @@ ECCCO/
 
 ## 🔧 Available Scripts
 
-
-## 🧪 Testing
-
-- **Test Runner:** [Vitest](https://vitest.dev/) (unit/integration)
-- **Test Files:** Located in `src/__tests__` and `test/api` directories, named `*.test.ts`.
-
-### Run All Tests
-```bash
-npx vitest --run
-```
-
-### Mock Setup
-- Server-only APIs (e.g., NextAuth `getServerSession`, Prisma) are mocked using `vi.mock` in test files.
-- Tests avoid hitting the real database or Next.js request context.
-- If you see errors about `headers` called outside request scope, ensure mocks are set up for server APIs.
-
-### Example Test File
-```typescript
-import { describe, it, expect } from 'vitest';
-
-describe('Sanity', () => {
-   it('should run a basic test', () => {
-      expect(1 + 1).toBe(2);
-   });
-});
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run type-check` - TypeScript checking
+- `npm run db:*` - Database operations
 
 ## 🚀 Deployment
 

@@ -1,29 +1,56 @@
 [
   {
-    "id": "labor_1",
-    "topic": "Labor",
-    "question": "The latent phase of labor ends when:",
-    "options": ["Cervix reaches 6 cm", "Cervix reaches 4 cm", "Head engages", "Membranes rupture"],
-    "answer": 0,
-    "explanation": "ACOG redefined active labor as starting at 6 cm.",
-    "reference": "ACOG Labor Management Guidelines"
+    "id": "lab_001",
+    "question": "A woman at 39 weeks in active labor has regular contractions every 3 minutes. She is 6 cm dilated. What stage of labor is she in?",
+    "options": [
+      "A) Latent first stage",
+      "B) Active first stage",
+      "C) Second stage",
+      "D) Transition phase"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Active first stage of labor begins at 6 cm dilation and continues until complete dilation (10 cm). Latent phase is from onset of labor to 6 cm. Second stage begins at complete dilation and ends with delivery of baby. Third stage is from baby delivery to placenta delivery.",
+    "topic": "Labor Management",
+    "learningObjectives": [
+      "Understand stages of labor",
+      "Recognize cervical dilation landmarks",
+      "Know normal labor progression"
+    ]
   },
   {
-    "id": "labor_2",
-    "topic": "Labor",
-    "question": "A protracted first stage of labor is defined as:",
-    "options": ["Slow cervical dilation", "Early membrane rupture", "Slow fetal descent", "Prolonged latent phase only"],
-    "answer": 0,
-    "explanation": "Slow dilation in active phase = protraction disorder.",
-    "reference": "ACOG Labor Management"
+    "id": "lab_002",
+    "question": "A nulliparous woman at term has had no cervical change in 4 hours despite adequate contractions (>200 Montevideo units). What is this called?",
+    "options": [
+      "A) Arrest of dilation",
+      "B) Protracted labor",
+      "C) Precipitous labor",
+      "D) Normal labor"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Arrest of dilation is defined as: no cervical change for ≥4 hours with adequate contractions (>200 MVU) OR ≥6 hours with inadequate contractions. This may warrant augmentation with oxytocin or cesarean delivery if augmentation fails.",
+    "topic": "Labor Management",
+    "learningObjectives": [
+      "Define arrest of labor",
+      "Understand Montevideo units",
+      "Know management of labor dystocia"
+    ]
   },
   {
-    "id": "labor_3",
-    "topic": "Labor",
-    "question": "Which pelvic type is most favorable for vaginal delivery?",
-    "options": ["Gynecoid", "Android", "Anthropoid", "Platypelloid"],
-    "answer": 0,
-    "explanation": "Gynecoid pelvis has ideal dimensions for birth.",
-    "reference": "Dutta Obstetrics"
+    "id": "lab_003",
+    "question": "Which fetal heart rate pattern requires immediate intervention?",
+    "options": [
+      "A) Early decelerations with contractions",
+      "B) Moderate variability with accelerations",
+      "C) Recurrent late decelerations",
+      "D) Variable decelerations resolving quickly"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Recurrent late decelerations indicate uteroplacental insufficiency and fetal hypoxemia. Immediate interventions include: maternal repositioning, oxygen administration, IV fluid bolus, discontinuing oxytocin, and considering urgent delivery if pattern persists. Early decelerations are benign (head compression).",
+    "topic": "Labor Management",
+    "learningObjectives": [
+      "Interpret fetal heart rate patterns",
+      "Recognize concerning patterns",
+      "Know immediate management of non-reassuring tracings"
+    ]
   }
 ]

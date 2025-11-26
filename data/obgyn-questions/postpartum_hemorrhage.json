@@ -1,38 +1,56 @@
 [
   {
-    "id": "pph_1",
+    "id": "pph_001",
+    "question": "A woman has 800 mL blood loss 30 minutes after vaginal delivery. Uterine atony is suspected. What is the first-line medication?",
+    "options": [
+      "A) Oxytocin IV bolus",
+      "B) Methylergonovine IM",
+      "C) Carboprost IM",
+      "D) Misoprostol rectal"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Oxytocin is the first-line uterotonic for postpartum hemorrhage due to uterine atony. It can be given as IV infusion (preferred) or IM. Typical dosing: 10-40 units in 1L crystalloid at 125-200 mL/hr. Other agents (methylergonovine, carboprost, misoprostol) are second-line when oxytocin fails or is contraindicated.",
     "topic": "Postpartum Hemorrhage",
-    "question": "Most common cause of postpartum hemorrhage is:",
-    "options": ["Uterine atony", "Retained placenta", "Uterine rupture", "Genital tract laceration"],
-    "answer": 0,
-    "explanation": "Atony accounts for ~70% of PPH.",
-    "reference": "Dutta; ACOG PPH Guidelines"
+    "learningObjectives": [
+      "Know first-line management of uterine atony",
+      "Understand the uterotonic medication hierarchy",
+      "Recognize when to escalate therapy"
+    ]
   },
   {
-    "id": "pph_2",
+    "id": "pph_002",
+    "question": "Which medication for postpartum hemorrhage is contraindicated in patients with asthma?",
+    "options": [
+      "A) Oxytocin",
+      "B) Methylergonovine",
+      "C) Carboprost (Hemabate)",
+      "D) Misoprostol"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Carboprost (15-methyl PGF2α) is contraindicated in patients with asthma as it can cause bronchospasm. Other contraindications include active cardiac, pulmonary, renal, or hepatic disease. It's a prostaglandin that causes strong uterine contractions but has significant side effects.",
     "topic": "Postpartum Hemorrhage",
-    "question": "First-line management of uterine atony is:",
-    "options": ["Uterine massage", "Hysterectomy", "Balloon tamponade", "Blood transfusion"],
-    "answer": 0,
-    "explanation": "Massage stimulates contraction and reduces bleeding.",
-    "reference": "ACOG PPH Bulletin"
+    "learningObjectives": [
+      "Know contraindications to uterotonic medications",
+      "Understand medication selection based on patient factors",
+      "Recognize side effects of prostaglandins"
+    ]
   },
   {
-    "id": "pph_3",
+    "id": "pph_003",
+    "question": "A patient with postpartum hemorrhage has failed medical management. What is the next appropriate intervention?",
+    "options": [
+      "A) Immediate hysterectomy",
+      "B) Uterine artery embolization",
+      "C) Intrauterine balloon tamponade",
+      "D) Observe for 30 more minutes"
+    ],
+    "correctAnswer": "C",
+    "explanation": "After failed medical management, intrauterine balloon tamponade (Bakri balloon) is often the next step before surgical intervention. It provides mechanical compression and can control hemorrhage in ~85% of cases. If this fails, uterine artery embolization (if stable) or surgical options (B-Lynch suture, ligation, hysterectomy) are considered.",
     "topic": "Postpartum Hemorrhage",
-    "question": "Which medication is contraindicated in a hypertensive mother?",
-    "options": ["Methylergonovine", "Oxytocin", "Carboprost", "Misoprostol"],
-    "answer": 0,
-    "explanation": "Ergometrine raises BP and is avoided in hypertension.",
-    "reference": "Dutta; ACOG"
-  },
-  {
-    "id": "pph_4",
-    "topic": "Postpartum Hemorrhage",
-    "question": "Uterine balloon tamponade is used when:",
-    "options": ["Medical management fails", "Bleeding is mild", "C-section is planned", "There is septic shock"],
-    "answer": 0,
-    "explanation": "It is a second-line measure after drugs fail.",
-    "reference": "ACOG PPH Algorithms"
+    "learningObjectives": [
+      "Understand escalation of PPH management",
+      "Know role of balloon tamponade",
+      "Recognize when surgical intervention is needed"
+    ]
   }
 ]

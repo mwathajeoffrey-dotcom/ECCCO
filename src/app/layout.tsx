@@ -2,10 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
-import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
-
-// Force rebuild to update main production URL - v2.0.1
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -68,9 +65,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  viewportFit: "cover",
+  maximumScale: 1,
+  userScalable: false,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#1a202c" },
@@ -95,11 +91,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-            {children}
-          </ErrorBoundary>
-        </AuthProvider>
+        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+          {children}
+        </ErrorBoundary>
         <PWAInstallPrompt />
       </body>
     </html>

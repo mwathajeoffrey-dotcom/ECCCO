@@ -1,38 +1,56 @@
 [
   {
-    "id": "preeclampsia_1",
+    "id": "pe_001",
+    "question": "A 30-year-old primigravida at 34 weeks presents with BP 160/110 mmHg, 3+ proteinuria, and headache. Which finding indicates severe features of preeclampsia?",
+    "options": [
+      "A) Systolic BP ≥140 mmHg",
+      "B) Proteinuria 3+ on dipstick",
+      "C) Thrombocytopenia (<100,000/μL)",
+      "D) Mild peripheral edema"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Severe features of preeclampsia include: BP ≥160/110 mmHg, thrombocytopenia <100,000/μL, elevated liver enzymes (2x normal), serum creatinine >1.1 mg/dL, pulmonary edema, new-onset headache unresponsive to medication, or visual disturbances. The presence of any severe feature requires immediate management.",
     "topic": "Preeclampsia",
-    "question": "A 24-year-old G1 develops BP 160/110 mmHg with 3+ proteinuria at 34 weeks. What is the recommended management?",
-    "options": ["Immediate delivery", "Expectant management", "Increase oral labetalol only", "Bed rest alone"],
-    "answer": 0,
-    "explanation": "Severe features require delivery after stabilization.",
-    "reference": "ACOG Hypertensive Disorders"
+    "learningObjectives": [
+      "Identify severe features of preeclampsia",
+      "Understand criteria for immediate intervention",
+      "Recognize complications requiring delivery"
+    ]
   },
   {
-    "id": "preeclampsia_2",
+    "id": "pe_002",
+    "question": "A woman at 36 weeks with preeclampsia with severe features is being prepared for delivery. What is the most appropriate seizure prophylaxis?",
+    "options": [
+      "A) Phenytoin IV",
+      "B) Magnesium sulfate IV",
+      "C) Diazepam IV",
+      "D) Lorazepam IV"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Magnesium sulfate is the drug of choice for seizure prophylaxis in preeclampsia with severe features and treatment of eclamptic seizures. Standard regimen: 4-6g IV loading dose over 15-20 minutes, followed by 2g/hr continuous infusion. Monitor for toxicity (reflexes, respirations, urine output).",
     "topic": "Preeclampsia",
-    "question": "Which drug is used for seizure prophylaxis in severe preeclampsia?",
-    "options": ["Magnesium sulfate", "Diazepam", "Phenytoin", "Midazolam"],
-    "answer": 0,
-    "explanation": "Magnesium sulfate is the gold standard.",
-    "reference": "ACOG Preeclampsia Guidelines"
+    "learningObjectives": [
+      "Know first-line seizure prophylaxis for preeclampsia",
+      "Understand magnesium sulfate dosing",
+      "Recognize signs of magnesium toxicity"
+    ]
   },
   {
-    "id": "preeclampsia_3",
+    "id": "pe_003",
+    "question": "What is the antidote for magnesium sulfate toxicity?",
+    "options": [
+      "A) Calcium gluconate",
+      "B) Sodium bicarbonate",
+      "C) Protamine sulfate",
+      "D) Naloxone"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Calcium gluconate (1g IV or 10 mL of 10% solution over 3 minutes) is the antidote for magnesium toxicity. Signs of toxicity include: loss of patellar reflexes (8-12 mg/dL), respiratory depression (12-15 mg/dL), and cardiac arrest (>15 mg/dL). Therapeutic range is 4-7 mg/dL.",
     "topic": "Preeclampsia",
-    "question": "Which is NOT a severe feature of preeclampsia?",
-    "options": ["BP 140/90 mmHg", "Platelets <100,000", "Persistent RUQ pain", "Serum creatinine >1.1 mg/dL"],
-    "answer": 0,
-    "explanation": "Severe BP is ≥160/110, not 140/90.",
-    "reference": "ACOG Hypertensive Disorders"
-  },
-  {
-    "id": "preeclampsia_4",
-    "topic": "Preeclampsia",
-    "question": "Magnesium toxicity is first detected by:",
-    "options": ["Loss of deep tendon reflexes", "Hypotension", "Bradycardia", "Respiratory arrest"],
-    "answer": 0,
-    "explanation": "DTR loss is the earliest sign.",
-    "reference": "ACOG Obstetric Hypertension"
+    "learningObjectives": [
+      "Recognize magnesium sulfate toxicity",
+      "Know the antidote and administration",
+      "Understand therapeutic vs toxic levels"
+    ]
   }
 ]

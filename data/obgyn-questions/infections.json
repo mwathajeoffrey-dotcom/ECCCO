@@ -1,20 +1,56 @@
 [
   {
-    "id": "infection_1",
-    "topic": "Infections",
-    "question": "Chorioamnionitis is most commonly associated with:",
-    "options": ["Prolonged rupture of membranes", "Polyhydramnios", "Macrosomia", "Late decelerations"],
-    "answer": 0,
-    "explanation": "PROM >18 hours increases infection risk.",
-    "reference": "ACOG Infection Guidelines"
+    "id": "inf_001",
+    "question": "A pregnant woman at 28 weeks has a positive Group B Streptococcus culture. When should intrapartum antibiotic prophylaxis be administered?",
+    "options": [
+      "A) Immediately upon diagnosis",
+      "B) At 36 weeks gestation",
+      "C) When labor begins or membranes rupture",
+      "D) Only if fever develops"
+    ],
+    "correctAnswer": "C",
+    "explanation": "GBS-positive women should receive intrapartum antibiotic prophylaxis (typically penicillin G 5 million units IV loading, then 2.5-3 million units IV q4h) when labor begins or membranes rupture, regardless of gestational age. This reduces the risk of early-onset neonatal GBS disease by ~80%.",
+    "topic": "Obstetric Infections",
+    "learningObjectives": [
+      "Know GBS prophylaxis timing",
+      "Understand prevention of neonatal GBS disease",
+      "Recognize appropriate antibiotic choices"
+    ]
   },
   {
-    "id": "infection_2",
-    "topic": "Infections",
-    "question": "First-line treatment for chorioamnionitis is:",
-    "options": ["Ampicillin + gentamicin", "Ceftriaxone", "Azithromycin", "Clindamycin alone"],
-    "answer": 0,
-    "explanation": "Standard broad-spectrum regimen.",
-    "reference": "ACOG Guidelines"
+    "id": "inf_002",
+    "question": "A woman in labor at term develops fever of 39°C, maternal tachycardia, and fetal tachycardia. What is the most likely diagnosis?",
+    "options": [
+      "A) Chorioamnionitis",
+      "B) Pyelonephritis",
+      "C) Appendicitis",
+      "D) Viral syndrome"
+    ],
+    "correctAnswer": "A",
+    "explanation": "Chorioamnionitis is diagnosed clinically with: maternal fever (>38°C or 100.4°F) plus one or more of: maternal tachycardia, fetal tachycardia, uterine tenderness, foul-smelling amniotic fluid, or maternal leukocytosis. Treatment includes broad-spectrum IV antibiotics (ampicillin + gentamicin) and delivery.",
+    "topic": "Obstetric Infections",
+    "learningObjectives": [
+      "Recognize clinical chorioamnionitis",
+      "Understand diagnostic criteria",
+      "Know management and antibiotic selection"
+    ]
+  },
+  {
+    "id": "inf_003",
+    "question": "What is the appropriate management for a pregnant woman with primary herpes simplex virus outbreak at 36 weeks?",
+    "options": [
+      "A) No treatment, plan vaginal delivery",
+      "B) Acyclovir therapy, plan cesarean if lesions at delivery",
+      "C) Immediate cesarean delivery",
+      "D) Valacyclovir only, no delivery planning changes"
+    ],
+    "correctAnswer": "B",
+    "explanation": "Primary HSV outbreak in pregnancy is treated with acyclovir (400mg PO TID) or valacyclovir. Suppressive therapy should continue until delivery. Cesarean delivery is recommended if active genital lesions or prodromal symptoms are present at time of delivery to reduce risk of neonatal transmission.",
+    "topic": "Obstetric Infections",
+    "learningObjectives": [
+      "Manage HSV in pregnancy",
+      "Know indications for cesarean delivery with HSV",
+      "Understand antiviral therapy in pregnancy"
+    ]
   }
 ]

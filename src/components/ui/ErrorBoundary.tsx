@@ -3,7 +3,6 @@
 import React, { Component, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import Link from 'next/link';
-import { logger } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -33,24 +32,17 @@ export class ErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Enhanced logging with our centralized logger
-    logger.error('React Error Boundary caught an error', error, {
-      componentStack: errorInfo.componentStack,
-      errorBoundary: true,
-      timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-    });
+    // Log error to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+
+    // In production, you might want to log to an error reporting service
+    // Example: logErrorToService(error, errorInfo);
   }
 
   handleReset = () => {
     this.setState({ hasError: false, error: undefined, errorInfo: undefined });
-    
-    // Log reset action
-    logger.info('Error boundary reset by user', {
-      previousError: this.state.error?.message,
-      timestamp: new Date().toISOString(),
-    });
   };
 
   render() {
@@ -87,7 +79,7 @@ export class ErrorBoundary extends Component<Props, State> {
                     <summary className="text-sm text-gray-600 cursor-pointer">
                       Stack Trace (Development)
                     </summary>
-                    <pre className="text-xs text-gray-600 mt-2 overflow-auto max-h-32">
+                    <pre className="text-xs text-gray-600 mt-2 overflow-auto">
                       {this.state.errorInfo.componentStack}
                     </pre>
                   </details>
@@ -141,16 +133,15 @@ export function withErrorBoundary<T extends object>(
   return WrappedComponent;
 }
 
-// Hook for error reporting with enhanced logging
+// Hook for error reporting
 export function useErrorHandler() {
   return (error: Error, errorInfo?: string) => {
-    // Enhanced error logging
-    logger.error('Manual error report', error, {
-      manual: true,
-      additionalInfo: errorInfo,
-      timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-    });
+    // Log error
+    console.error('Manual error report:', error);
+    
+    // In production, send to error reporting service
+    if (process.env.NODE_ENV === 'production') {
+      // Example: sendErrorToService(error, errorInfo);
+    }
   };
 }

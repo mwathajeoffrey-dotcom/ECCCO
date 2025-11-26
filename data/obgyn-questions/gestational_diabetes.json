@@ -1,29 +1,56 @@
 [
   {
-    "id": "diabetes_1",
+    "id": "gd_001",
+    "question": "A 28-year-old woman at 24 weeks gestation has a 1-hour glucose challenge test result of 165 mg/dL. What is the most appropriate next step?",
+    "options": [
+      "A) Diagnose gestational diabetes and start insulin",
+      "B) Perform a 3-hour glucose tolerance test",
+      "C) Repeat the 1-hour test in 4 weeks",
+      "D) Start dietary modifications only"
+    ],
+    "correctAnswer": "B",
+    "explanation": "A 1-hour glucose challenge test ≥140 mg/dL (some use ≥130 mg/dL) is considered abnormal and requires confirmation with a 3-hour 100g oral glucose tolerance test. The diagnosis of GDM requires 2 or more abnormal values on the 3-hour test.",
     "topic": "Gestational Diabetes",
-    "question": "Which test is used for diagnosing gestational diabetes?",
-    "options": ["OGTT", "Random glucose", "HbA1c", "Fasting insulin"],
-    "answer": 0,
-    "explanation": "OGTT is the diagnostic standard.",
-    "reference": "ACOG Diabetes in Pregnancy"
+    "learningObjectives": [
+      "Understand screening criteria for gestational diabetes",
+      "Know the two-step diagnostic approach for GDM",
+      "Recognize threshold values for glucose testing"
+    ]
   },
   {
-    "id": "diabetes_2",
+    "id": "gd_002",
+    "question": "A pregnant woman with gestational diabetes at 32 weeks has fasting glucose consistently 105-110 mg/dL despite dietary modifications. What is the best management?",
+    "options": [
+      "A) Continue dietary management only",
+      "B) Start metformin",
+      "C) Start insulin therapy",
+      "D) Add exercise regimen only"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Fasting glucose >95 mg/dL despite dietary modifications is an indication for insulin therapy in GDM. Insulin is the first-line pharmacologic treatment. Metformin and glyburide are alternatives but insulin remains preferred, especially for fasting hyperglycemia.",
     "topic": "Gestational Diabetes",
-    "question": "Which fetal complication is most associated with poorly controlled gestational diabetes?",
-    "options": ["Macrosomia", "IUGR", "Oligohydramnios", "Low birth weight"],
-    "answer": 0,
-    "explanation": "Excess glucose leads to fetal overgrowth.",
-    "reference": "Dutta"
+    "learningObjectives": [
+      "Know glucose targets in gestational diabetes",
+      "Understand indications for insulin therapy",
+      "Recognize limitations of oral hypoglycemics in pregnancy"
+    ]
   },
   {
-    "id": "diabetes_3",
+    "id": "gd_003",
+    "question": "What are the target glucose levels for a woman with gestational diabetes?",
+    "options": [
+      "A) Fasting <95 mg/dL, 1-hr postprandial <140 mg/dL, 2-hr postprandial <120 mg/dL",
+      "B) Fasting <105 mg/dL, 1-hr postprandial <160 mg/dL, 2-hr postprandial <140 mg/dL",
+      "C) Fasting <100 mg/dL, 1-hr postprandial <150 mg/dL, 2-hr postprandial <130 mg/dL",
+      "D) Fasting <90 mg/dL, 1-hr postprandial <130 mg/dL, 2-hr postprandial <110 mg/dL"
+    ],
+    "correctAnswer": "A",
+    "explanation": "ACOG and ADA recommend glucose targets for GDM: fasting <95 mg/dL, 1-hour postprandial <140 mg/dL, or 2-hour postprandial <120 mg/dL. Meeting these targets reduces the risk of macrosomia and neonatal complications.",
     "topic": "Gestational Diabetes",
-    "question": "Best initial treatment for GDM is:",
-    "options": ["Medical nutrition therapy", "Insulin immediately", "Metformin first", "C-section planning"],
-    "answer": 0,
-    "explanation": "Diet and lifestyle are first-line.",
-    "reference": "ACOG GDM Bulletin"
+    "learningObjectives": [
+      "Know glycemic targets in gestational diabetes",
+      "Understand the rationale for tight glucose control",
+      "Recognize when targets are not being met"
+    ]
   }
 ]
