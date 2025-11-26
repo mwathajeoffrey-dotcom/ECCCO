@@ -17,7 +17,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Lin MG. Umbilical cord prolapse. Obstet Gynecol Surv. 2006;61(4):269-277'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Hoffman MK, et al. A comparison of obstetric maneuvers for the acute management of shoulder dystocia. Obstet Gynecol. 2011;117(6):1272-1278'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Tita AT, Andrews WW. Diagnosis and management of clinical chorioamnionitis. Clin Perinatol. 2010;37(2):339-354'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Oyelese Y, Ananth CV. Placental abruption. Obstet Gynecol. 2006;108(4):1005-1016'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Mercer BM. Preterm premature rupture of the membranes. Obstet Gynecol. 2003;101(1):178-193'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Sultan AH, et al. Third- and fourth-degree perineal tears. Green-top Guideline No. 29. RCOG. 2015'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Clark SL, et al. Amniotic fluid embolism: analysis of the national registry. Am J Obstet Gynecol. 1995;172(4 Pt 1):1158-1167'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const obEmergenciesQuestions: Question[] = [
       'WHO recommendations for the prevention and treatment of postpartum haemorrhage. WHO. 2012'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const obEmergenciesQuestions: Question[] = [
       'WHO recommendations for prevention and treatment of postpartum haemorrhage. WHO. 2012'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Georgiou C. Balloon tamponade in the management of postpartum haemorrhage. BJOG. 2009;116(6):748-757'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Guise JM, et al. Vaginal birth after cesarean: new insights. Evid Rep Technol Assess. 2010;(191):1-397'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Holmgren C, et al. Uterine rupture associated with VBAC. Obstet Gynecol Surv. 2012;67(8):503-516'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Leung AS, et al. Uterine rupture after previous cesarean delivery: maternal and fetal consequences. Am J Obstet Gynecol. 1993;169(4):945-950'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Silver RM, et al. Abnormal placentation: placenta previa, vasa previa, and placenta accreta. Obstet Gynecol. 2015;126(3):654-668'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const obEmergenciesQuestions: Question[] = [
       'ACOG Practice Bulletin No. 204: Fetal Growth Restriction. Obstet Gynecol. 2019;133(2):e97-e109'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Witteveen T, et al. Puerperal uterine inversion in the Netherlands: a nationwide cohort study. Acta Obstet Gynecol Scand. 2013;92(3):334-337'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Pacheco LD, et al. An update on the use of massive transfusion protocols in obstetrics. Am J Obstet Gynecol. 2016;214(3):340-344'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const obEmergenciesQuestions: Question[] = [
       'American Academy of Pediatrics. Neonatal Resuscitation Program (NRP) 8th Edition. 2020'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const obEmergenciesQuestions: Question[] = [
       'ACOG Practice Bulletin No. 183: Postpartum Hemorrhage. Obstet Gynecol. 2017;130(4):e168-e186'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Silver RM, et al. Maternal morbidity associated with multiple repeat cesarean deliveries. Obstet Gynecol. 2006;107(6):1226-1232'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Macones GA, et al. The 2008 National Institute of Child Health and Human Development workshop report on electronic fetal monitoring. Obstet Gynecol. 2008;112(3):661-666'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Creanga AA, et al. Pregnancy-related mortality in the United States, 2011-2013. Obstet Gynecol. 2017;130(2):366-373'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Leung AN, et al. An assessment of the utility of chest radiographs and helical CT in pregnant patients with suspected pulmonary embolism. J Comput Assist Tomogr. 2006;30(2):226-231'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Le Bas A, et al. Shock index in obstetrics: a review. Aust N Z J Obstet Gynaecol. 2015;55(3):209-213'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Jain V, et al. Guidelines for the management of a pregnant trauma patient. J Obstet Gynaecol Can. 2015;37(6):553-571'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Moise KJ. Fetal anemia due to non-Rhesus-D red-cell alloimmunization. Semin Fetal Neonatal Med. 2008;13(4):207-214'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Bailey PE. The disappearing art of instrumental delivery: time to reverse the trend. Int J Gynaecol Obstet. 2005;91(1):89-96'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const obEmergenciesQuestions: Question[] = [
       'ACOG Committee Opinion No. 700: Methods for Estimating the Due Date. Obstet Gynecol. 2017;129(5):e150-e154'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Gherman RB, et al. Analysis of McRoberts\' maneuver by x-ray pelvimetry. Obstet Gynecol. 2000;95(1):43-47'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const obEmergenciesQuestions: Question[] = [
       'Mercer BM, et al. Outcome of twin gestation complicated by preterm premature rupture of membranes. Am J Perinatol. 2000;17(3):145-150'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'obstetric-emergencies',
     category: 'obstetric'
   }
 ];

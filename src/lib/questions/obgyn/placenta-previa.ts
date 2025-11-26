@@ -17,7 +17,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Oyelese Y, Smulian JC. Placenta previa, placenta accreta, and vasa previa. Obstet Gynecol. 2006;107(4):927-941'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Silver RM. Abnormal Placentation: Placenta Previa, Vasa Previa, and Placenta Accreta. Obstet Gynecol. 2015;126(3):654-668'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Royal College of Obstetricians and Gynaecologists. Placenta praevia, placenta praevia accreta and vasa praevia: diagnosis and management. Green-top Guideline No. 27. 2011'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Silver RM, Branch DW. Placenta Accreta Spectrum. N Engl J Med. 2018;378(16):1529-1536'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 41: Obstetrical Hemorrhage'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Reddy UM, et al. The effect of labor on intrauterine fetal death in the United States. Am J Obstet Gynecol. 2012;206(1):33.e1-8'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Smith RS, et al. Transvaginal ultrasonography for all placentas that appear to be low-lying or over the internal cervical os. Ultrasound Obstet Gynecol. 1997;9(1):22-24'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Jauniaux E, et al. FIGO consensus guidelines on placenta accreta spectrum disorders: Prenatal diagnosis and screening. Int J Gynaecol Obstet. 2018;140(3):274-280'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Vergani P, et al. Placenta previa: distance to internal os and mode of delivery. Am J Obstet Gynecol. 2009;201(3):266.e1-5'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Roberts D, et al. Antenatal corticosteroids for accelerating fetal lung maturation for women at risk of preterm birth. Cochrane Database Syst Rev. 2017;3:CD004454'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 41: Obstetrical Hemorrhage'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Becker RH, et al. The relevance of placental location at 20-23 gestational weeks for prediction of placenta previa at delivery. Ultrasound Obstet Gynecol. 2001;17(6):496-501'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Royal College of Obstetricians and Gynaecologists. Placenta praevia, placenta praevia accreta and vasa praevia. Green-top Guideline No. 27. 2011'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Ananth CV, et al. Relationship between pregnancy-induced hypertension and placenta previa. J Matern Fetal Med. 1997;6(5):267-271'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Doyle LW, et al. Magnesium sulphate for women at risk of preterm birth for neuroprotection of the fetus. Cochrane Database Syst Rev. 2009;(1):CD004661'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Reddy UM, et al. Practice Bulletin No. 204. Obstet Gynecol. 2019;133(2):e168-e186'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Jauniaux E, et al. FIGO consensus guidelines on placenta accreta spectrum disorders. Int J Gynaecol Obstet. 2018;140(3):265-273'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Carson JL, et al. Transfusion thresholds and other strategies for guiding allogeneic red blood cell transfusion. Cochrane Database Syst Rev. 2016;10:CD002042'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const placentaPreviaQuestions: Question[] = [
       'ACOG Practice Bulletin No. 204. Obstet Gynecol. 2020;135(1):e18-e35'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Royal College of Obstetricians and Gynaecologists. Antepartum Haemorrhage. Green-top Guideline No. 63. 2011'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Palanisamy A, et al. Anesthetic considerations for placenta accreta. Best Pract Res Clin Anaesthesiol. 2017;31(1):107-122'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Moise KJ Jr. Management of rhesus alloimmunization in pregnancy. Obstet Gynecol. 2008;112(1):164-176'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Getahun D, et al. Previous cesarean delivery and risks of placenta previa and placental abruption. Obstet Gynecol. 2006;107(4):771-778'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Jauniaux E, et al. Surgical Management of PAS Disorders. Int J Gynaecol Obstet. 2018;140(3):281-290'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 41: Obstetrical Hemorrhage'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Towers CV, et al. Incidence of placenta previa and risk factors and pregnancy outcomes. Am J Perinatol. 2000;17(4):181-185'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Familiari A, et al. Diagnostic accuracy of magnetic resonance imaging in detecting the severity of abnormal invasive placenta. Acta Obstet Gynecol Scand. 2018;97(9):1083-1093'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Oyelese Y, Smulian JC. Placenta previa, placenta accreta, and vasa previa. Obstet Gynecol. 2006;107(4):927-941'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Doumouchtsis SK, et al. Management of postpartum hemorrhage by uterine balloon tamponade. Acta Obstet Gynecol Scand. 2008;87(8):849-855'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const placentaPreviaQuestions: Question[] = [
       'Creanga AA, et al. Maternal mortality and morbidity in the United States. Obstet Gynecol. 2015;125(1):5-12'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placenta-previa',
     category: 'obstetric'
   }
 ];

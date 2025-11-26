@@ -17,7 +17,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'ACOG Practice Bulletin No. 149: Endometrial Cancer. Obstet Gynecol. 2015;125(4):1006-1026'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -36,7 +36,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Smith-Bindman R, et al. Endovaginal ultrasound to exclude endometrial cancer. JAMA. 1998;280(17):1510-1517'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -55,7 +55,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Amant F, et al. Endometrial cancer. Lancet. 2005;366(9484):491-505'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -74,7 +74,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Lu KH, et al. Gynecologic cancer as a "sentinel cancer" for women with hereditary nonpolyposis colorectal cancer syndrome. Obstet Gynecol. 2005;105(3):569-574'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -93,7 +93,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Huchon C, et al. Adnexal torsion: a literature review. Eur J Obstet Gynecol Reprod Biol. 2010;150(1):8-12'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -112,7 +112,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Raziel A, et al. Current management of ruptured corpus luteum. Eur J Obstet Gynecol Reprod Biol. 1993;50(1):77-81'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -131,7 +131,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'ACOG Practice Bulletin No. 194: Pelvic Inflammatory Disease. Obstet Gynecol. 2018;131(6):e157-e174'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -150,7 +150,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'ACOG Practice Bulletin No. 194: Pelvic Inflammatory Disease. Obstet Gynecol. 2018;131(6):e157-e174'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -169,7 +169,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Trimble CL, et al. Concurrent endometrial carcinoma in women with a biopsy diagnosis of atypical endometrial hyperplasia. Cancer. 2006;106(4):812-819'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -188,7 +188,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Smith RA, et al. Cancer screening in the United States, 2019. CA Cancer J Clin. 2019;69(3):184-210'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -207,7 +207,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Gerber B, et al. Endometrial safety during tamoxifen treatment. Gynecol Endocrinol. 2006;22(2):93-97'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -226,7 +226,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Giudice LC. Clinical practice. Endometriosis. N Engl J Med. 2010;362(25):2389-2398'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -245,7 +245,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Revised American Society for Reproductive Medicine classification of endometriosis: 1996. Fertil Steril. 1997;67(5):817-821'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -264,7 +264,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Stewart EA. Uterine fibroids. Lancet. 2001;357(9252):293-298'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -283,7 +283,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Creasman W. Revised FIGO staging for carcinoma of the endometrium. Int J Gynaecol Obstet. 2009;105(2):109'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -302,7 +302,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Walker JL, et al. Laparoscopy compared with laparotomy for comprehensive surgical staging of uterine cancer. Gynecol Oncol. 2009;112(3):405-410'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -321,7 +321,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Jacobs I, et al. A risk of malignancy index incorporating CA 125, ultrasound and menopausal status. Br J Obstet Gynaecol. 1990;97(10):922-929'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -340,7 +340,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Vercellini P, et al. Surgery for endometriosis-associated infertility. Hum Reprod Update. 2009;15(4):441-461'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -359,7 +359,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Barbieri RL. Hormone treatment of endometriosis: the estrogen threshold hypothesis. Am J Obstet Gynecol. 1992;166(2):740-745'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -378,7 +378,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Gustofson RL, et al. Endometriosis and the appendix: a case series and comprehensive review of the literature. Fertil Steril. 2006;86(2):298-303'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -397,7 +397,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Landers DV, Sweet RL. Tubo-ovarian abscess: contemporary approach to management. Rev Infect Dis. 1983;5(5):876-884'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -416,7 +416,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Westrom L, et al. Pelvic inflammatory disease and fertility. Sex Transm Dis. 1992;19(4):185-192'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -435,7 +435,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Lethaby A, et al. Pre-operative GnRH analogue therapy before hysterectomy or myomectomy for uterine fibroids. Cochrane Database Syst Rev. 2001;(2):CD000547'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -454,7 +454,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Munro MG, et al. FIGO classification system for causes of abnormal uterine bleeding. Int J Gynaecol Obstet. 2011;113(1):3-13'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -473,7 +473,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Kirtschig G, et al. Lichen sclerosus-presentation, diagnosis and management. Dtsch Arztebl Int. 2016;113(19):337-343'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -492,7 +492,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Jones RW, et al. Trends in squamous cell carcinoma of the vulva. Gynecol Oncol. 1997;74(2):229-235'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -511,7 +511,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Greenlee RT, et al. Prevalence, incidence, and natural history of simple ovarian cysts among women >55 years old. Obstet Gynecol. 2010;116(6):1310-1315'
     ],
     difficulty: 'medium',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -530,7 +530,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Timmerman D, et al. Simple ultrasound rules to distinguish between benign and malignant adnexal masses. BMJ. 2016;353:i2239'
     ],
     difficulty: 'easy',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -549,7 +549,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Cheong Y, et al. Non-surgical interventions for the management of chronic pelvic pain. Cochrane Database Syst Rev. 2014;(3):CD008797'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   },
   {
@@ -568,7 +568,7 @@ export const gynPainBleedingQuestions: Question[] = [
       'Keys HM, et al. A phase III trial of surgery with or without adjunctive external pelvic radiation therapy in intermediate risk endometrial adenocarcinoma. Gynecol Oncol. 2004;92(3):744-751'
     ],
     difficulty: 'hard',
-    topicId: 'gynecologic-emergencies',
+    topicId: 'gyn-pain-bleeding',
     category: 'gynecologic'
   }
 ];

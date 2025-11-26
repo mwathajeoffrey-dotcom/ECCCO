@@ -17,7 +17,7 @@ export const pretermLabourQuestions: Question[] = [
       'Haas DM, et al. Tocolytic therapy for preterm delivery. Cochrane Database Syst Rev. 2012;11:CD003246'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const pretermLabourQuestions: Question[] = [
       'Roberts D, et al. Antenatal corticosteroids for accelerating fetal lung maturation. Cochrane Database Syst Rev. 2017;3:CD004454'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const pretermLabourQuestions: Question[] = [
       'Doyle LW, et al. Magnesium sulphate for women at risk of preterm birth for neuroprotection of the fetus. Cochrane Database Syst Rev. 2009;1:CD004661'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const pretermLabourQuestions: Question[] = [
       'Roberts D, et al. Antenatal corticosteroids for accelerating fetal lung maturation. Cochrane Database Syst Rev. 2017;3:CD004454'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const pretermLabourQuestions: Question[] = [
       'Koren G, et al. Nonsteroidal antiinflammatory drugs during third trimester and risk of premature closure of ductus arteriosus. Lancet. 2006;368(9550):1749-1753'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const pretermLabourQuestions: Question[] = [
       'Berghella V, et al. Cerclage for short cervix on ultrasonography. Obstet Gynecol. 2011;117(3):663-671'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const pretermLabourQuestions: Question[] = [
       'Honest H, et al. Accuracy of cervical transvaginal sonography in predicting preterm birth. Ultrasound Obstet Gynecol. 2003;22(3):305-322'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const pretermLabourQuestions: Question[] = [
       'Iams JD, et al. The length of the cervix and the risk of spontaneous premature delivery. N Engl J Med. 1996;334(9):567-572'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const pretermLabourQuestions: Question[] = [
       'Verani JR, et al. Prevention of perinatal group B streptococcal disease. MMWR Recomm Rep. 2010;59(RR-10):1-36'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const pretermLabourQuestions: Question[] = [
       'Haas DM, et al. Tocolytic therapy for preterm delivery. Cochrane Database Syst Rev. 2012;11:CD003246'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const pretermLabourQuestions: Question[] = [
       'Haas DM, et al. Tocolytic therapy for preterm delivery. Cochrane Database Syst Rev. 2012;11:CD003246'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const pretermLabourQuestions: Question[] = [
       'ACOG Committee Opinion No. 764: Medically Indicated Late-Preterm and Early-Term Deliveries. Obstet Gynecol. 2019;133(2):e151-e155'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const pretermLabourQuestions: Question[] = [
       'Romero R, et al. Vaginal progesterone in women with an asymptomatic sonographic short cervix. Am J Obstet Gynecol. 2012;206(2):124.e1-19'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const pretermLabourQuestions: Question[] = [
       'Doyle LW, et al. Magnesium sulphate for women at risk of preterm birth. Cochrane Database Syst Rev. 2009;1:CD004661'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const pretermLabourQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 42: Preterm Birth'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const pretermLabourQuestions: Question[] = [
       'Berghella V, et al. Cerclage for sonographic short cervix in singletons without prior spontaneous preterm birth. Obstet Gynecol. 2017;130(4):892-899'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const pretermLabourQuestions: Question[] = [
       'Mercer BM. Preterm premature rupture of the membranes. Obstet Gynecol. 2003;101(1):178-193'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const pretermLabourQuestions: Question[] = [
       'Mercer BM, et al. Antibiotic therapy for reduction of infant morbidity after preterm premature rupture of membranes. JAMA. 1997;278(12):989-995'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const pretermLabourQuestions: Question[] = [
       'Lee SE, et al. Clinical significance of proteins of the insulin-like growth factor axis in amniotic fluid. J Perinat Med. 2008;36(4):334-341'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const pretermLabourQuestions: Question[] = [
       'Tita AT, Andrews WW. Diagnosis and management of clinical chorioamnionitis. Clin Perinatol. 2010;37(2):339-354'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const pretermLabourQuestions: Question[] = [
       'Mercer BM, et al. Is antibiotic therapy for preterm premature rupture of membranes sufficient? Clin Obstet Gynecol. 2011;54(2):357-366'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const pretermLabourQuestions: Question[] = [
       'Mercer BM. Preterm premature rupture of the membranes. Obstet Gynecol. 2003;101(1):178-193'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const pretermLabourQuestions: Question[] = [
       'Raju TN, et al. Morbidity and mortality in late preterm infants. Clin Perinatol. 2006;33(4):803-830'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const pretermLabourQuestions: Question[] = [
       'Iams JD, et al. Primary, secondary, and tertiary interventions to reduce the morbidity and mortality of preterm birth. Lancet. 2008;371(9607):164-175'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const pretermLabourQuestions: Question[] = [
       'Gyamfi-Bannerman C, et al. Antenatal betamethasone for women at risk for late preterm delivery. N Engl J Med. 2016;374(14):1311-1320'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const pretermLabourQuestions: Question[] = [
       'Panel on Treatment of Pregnant Women with HIV Infection. Recommendations for Use of Antiretroviral Drugs in Pregnant HIV-Infected Women. 2021'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const pretermLabourQuestions: Question[] = [
       'ACOG Committee Opinion No. 797: Prevention of Group B Streptococcal Disease. Obstet Gynecol. 2020;135(2):e51-e72'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const pretermLabourQuestions: Question[] = [
       'Berghella V, et al. Cerclage for short cervix on ultrasonography. Obstet Gynecol. 2011;117(3):663-671'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const pretermLabourQuestions: Question[] = [
       'Romero R, et al. Vaginal progesterone in women with asymptomatic sonographic short cervix. Am J Obstet Gynecol. 2012;206(2):124.e1-19'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const pretermLabourQuestions: Question[] = [
       'Nanda K, et al. Terbutaline pump maintenance therapy after threatened preterm labor. Cochrane Database Syst Rev. 2002;(4):CD003933'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preterm-labour',
     category: 'obstetric'
   }
 ];

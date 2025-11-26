@@ -17,7 +17,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Oyelese Y, et al. Vasa previa: the impact of prenatal diagnosis on outcomes. Obstet Gynecol. 2004;103(5 Pt 1):937-942'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Society for Maternal-Fetal Medicine. Vasa previa: diagnosis and management. Am J Obstet Gynecol. 2015;213(5):615-619'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Catanzarite V, et al. New approaches to the management of vasa previa. Obstet Gynecol Surv. 2001;56(5):297-303'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Oyelese Y, Smulian JC. Placenta previa, placenta accreta, and vasa previa. Obstet Gynecol. 2006;107(4):927-941'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Society for Maternal-Fetal Medicine. Vasa previa: diagnosis and management. Am J Obstet Gynecol. 2015;213(5):615-619'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. Risk of uterine rupture with a trial of labor in women with multiple and single prior cesarean delivery. Obstet Gynecol. 2006;108(1):12-20'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Guise JM, et al. Vaginal birth after cesarean: new insights. Evid Rep Technol Assess. 2010;(191):1-397'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. Maternal and perinatal outcomes associated with a trial of labor after prior cesarean delivery. N Engl J Med. 2004;351(25):2581-2589'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Parker WH. Uterine myomas: management. Fertil Steril. 2007;88(2):255-271'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. Risk of uterine rupture with a trial of labor in women with multiple and single prior cesarean delivery. Obstet Gynecol. 2006;108(1):12-20'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Grobman WA, et al. Development of a nomogram for prediction of vaginal birth after cesarean delivery. Obstet Gynecol. 2007;109(4):806-812'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const vasaRuptureQuestions: Question[] = [
       'ACOG Committee Opinion No. 649: Racial and Ethnic Disparities in Obstetrics and Gynecology. Obstet Gynecol. 2015;126(6):e130-e134'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. The MFMU Cesarean Registry: factors affecting the success of trial of labor after previous cesarean delivery. Am J Obstet Gynecol. 2005;193(3 Pt 2):1016-1023'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Oyelese Y, Smulian JC. Placenta previa, placenta accreta, and vasa previa. Obstet Gynecol. 2006;107(4):927-941'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Oyelese Y, et al. Vasa previa: the impact of prenatal diagnosis on outcomes. Obstet Gynecol. 2004;103(5 Pt 1):937-942'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Shipp TD, et al. Interdelivery interval and risk of symptomatic uterine rupture. Obstet Gynecol. 2001;97(2):175-177'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. Risk of uterine rupture with a trial of labor in women with multiple and single prior cesarean delivery. Obstet Gynecol. 2006;108(1):12-20'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Roberge S, et al. Single- versus double-layer closure of the hysterotomy incision during cesarean delivery and risk of uterine rupture. Int J Gynaecol Obstet. 2011;115(1):5-10'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Gagnon R, et al. Guidelines for the management of vasa previa. J Obstet Gynaecol Can. 2009;31(8):748-753'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Grobman WA, et al. Development of a nomogram for prediction of vaginal birth after cesarean delivery. Obstet Gynecol. 2007;109(4):806-812'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Leung AS, et al. Uterine rupture after previous cesarean delivery: maternal and fetal consequences. Am J Obstet Gynecol. 1993;169(4):945-950'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Guise JM, et al. Vaginal birth after cesarean: new insights. Evid Rep Technol Assess. 2010;(191):1-397'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Landon MB, et al. Factors affecting the success of trial of labor after previous cesarean delivery. Am J Obstet Gynecol. 2005;193(3 Pt 2):1016-1023'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Flamm BL, et al. Vaginal birth after cesarean delivery: results of a multicenter study. Am J Obstet Gynecol. 1988;158(5):1079-1084'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Ebbing C, et al. Velamentous or marginal cord insertion and the risk of spontaneous preterm birth. Obstet Gynecol. 2017;130(3):555-562'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Society for Maternal-Fetal Medicine. Vasa previa: diagnosis and management. Am J Obstet Gynecol. 2015;213(5):615-619'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Jozwiak M, et al. Mechanical methods for induction of labour. Cochrane Database Syst Rev. 2012;(3):CD001233'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Reyes-Ceja L, et al. Pregnancy following previous uterine rupture. Obstet Gynecol. 1969;34(3):387-389'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Society for Maternal-Fetal Medicine. Vasa previa: diagnosis and management. Am J Obstet Gynecol. 2015;213(5):615-619'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const vasaRuptureQuestions: Question[] = [
       'Society for Maternal-Fetal Medicine. Vasa previa: diagnosis and management. Am J Obstet Gynecol. 2015;213(5):615-619'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'vasa-previa-rupture',
     category: 'obstetric'
   }
 ];

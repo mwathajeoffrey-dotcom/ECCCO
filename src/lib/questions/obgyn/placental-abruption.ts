@@ -17,7 +17,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M. Placental abruption: epidemiology, risk factors and consequences. Acta Obstet Gynecol Scand. 2011;90(2):140-149'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M. Placental abruption: epidemiology, risk factors and consequences. Acta Obstet Gynecol Scand. 2011;90(2):140-149'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'ACOG Practice Bulletin No. 183: Postpartum Hemorrhage. Obstet Gynecol. 2017;130(4):e168-e186'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Thachil J, Toh CH. Disseminated intravascular coagulation in obstetric disorders and its acute haematological management. Blood Rev. 2009;23(4):167-176'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 41: Obstetrical Hemorrhage'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M, et al. Preeclampsia associates with increased risk of placental abruption in term deliveries. Acta Obstet Gynecol Scand. 2011;90(9):1024-1029'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M. Placental abruption: epidemiology, risk factors and consequences. Acta Obstet Gynecol Scand. 2011;90(2):140-149'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Mendez-Figueroa H, et al. Trauma in pregnancy: an updated systematic review. Am J Obstet Gynecol. 2013;209(1):1-10'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Sholl JS. Abruptio placentae: clinical management in nonacute cases. Am J Obstet Gynecol. 1987;156(1):40-51'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Oyelese Y, Ananth CV. Placental abruption. Obstet Gynecol. 2006;108(4):1005-1016'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Erez O, et al. DIC in pregnancy: insights in pathophysiology, diagnosis and management. Am J Obstet Gynecol. 2015;213(4):452-463'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Collins PW, et al. Management of coagulopathy associated with postpartum hemorrhage: guidance from the SSC of the ISTH. J Thromb Haemost. 2016;14(1):205-210'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M. Placental abruption: epidemiology, risk factors and consequences. Acta Obstet Gynecol Scand. 2011;90(2):140-149'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Sholl JS. Abruptio placentae: clinical management in nonacute cases. Am J Obstet Gynecol. 1987;156(1):40-51'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M, et al. Preeclampsia associates with increased risk of placental abruption in term deliveries. Acta Obstet Gynecol Scand. 2011;90(9):1024-1029'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Collins PW, et al. Management of coagulopathy associated with postpartum hemorrhage. J Thromb Haemost. 2016;14(1):205-210'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Oyelese Y, Ananth CV. Placental abruption. Obstet Gynecol. 2006;108(4):1005-1016'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Ananth CV, et al. Placental abruption and adverse perinatal outcomes. JAMA. 1999;282(17):1646-1651'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Oyelese Y, Ananth CV. Placental abruption. Obstet Gynecol. 2006;108(4):1005-1016'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Kaufman RM, et al. Platelet transfusion: a clinical practice guideline from the AABB. Ann Intern Med. 2015;162(3):205-213'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'ACOG Practice Bulletin No. 183: Postpartum Hemorrhage. Obstet Gynecol. 2017;130(4):e168-e186'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'ACOG Practice Bulletin No. 171: Management of Preterm Labor. Obstet Gynecol. 2016;128(4):e155-e164'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Collins PW, et al. Management of coagulopathy associated with postpartum hemorrhage. J Thromb Haemost. 2016;14(1):205-210'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Schiff MA, et al. Pregnant occupants in motor vehicle crashes. Obstet Gynecol. 2002;100(1):115-119'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Moise KJ Jr. Management of rhesus alloimmunization in pregnancy. Obstet Gynecol. 2008;112(1):164-176'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Oyelese Y, Ananth CV. Placental abruption. Obstet Gynecol. 2006;108(4):1005-1016'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Turney JH, et al. Acute renal failure attributable to acute cortical necrosis. BMJ. 2001;322(7296):1207-1208'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Tikkanen M. Placental abruption: epidemiology, risk factors and consequences. Acta Obstet Gynecol Scand. 2011;90(2):140-149'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Simpson KR, et al. AWHONN Practice Brief Number 3: Perinatal Patient Safety. J Obstet Gynecol Neonatal Nurs. 2016;45(5):749-751'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const placentalAbruptionQuestions: Question[] = [
       'Bramham K, et al. Pregnancy outcomes in systemic lupus erythematosus with and without previous nephritis. J Rheumatol. 2011;38(9):1906-1913'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'placental-abruption',
     category: 'obstetric'
   }
 ];

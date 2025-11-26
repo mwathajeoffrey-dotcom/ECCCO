@@ -17,7 +17,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Magee LA, et al. Diagnosis, evaluation, and management of the hypertensive disorders of pregnancy. Pregnancy Hypertens. 2014;4(2):105-145'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -36,7 +36,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Tranquilli AL, et al. The classification, diagnosis and management of the hypertensive disorders of pregnancy. Int J Gynaecol Obstet. 2014;124(2):89-96'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -55,7 +55,7 @@ export const preeclampsiaQuestions: Question[] = [
       'ACOG Practice Bulletin No. 222: Gestational Hypertension and Preeclampsia. Obstet Gynecol. 2020;135(6):e237-e260'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -74,7 +74,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Magnesium sulfate prophylaxis in preeclampsia. Am J Obstet Gynecol. 2014;211(3):191-203'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -93,7 +93,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Spong CY, et al. Timing of indicated late-preterm and early-term birth. Obstet Gynecol. 2011;118(2 Pt 1):323-333'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -112,7 +112,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Evaluation and management of severe preeclampsia before 34 weeks. Am J Obstet Gynecol. 2011;205(3):191-198'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -131,7 +131,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Haram K, et al. The HELLP syndrome: Clinical issues and management. BMC Pregnancy Childbirth. 2009;9:8'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -150,7 +150,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Diagnosis and management of gestational hypertension and preeclampsia. Obstet Gynecol. 2003;102(1):181-192'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -169,7 +169,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Magee LA, et al. Hydralazine for treatment of severe hypertension in pregnancy: meta-analysis. BMJ. 2003;327(7421):955-960'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -188,7 +188,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Chames MC, et al. Late postpartum eclampsia: a preventable disease? Am J Obstet Gynecol. 2002;186(6):1174-1177'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -207,7 +207,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Evaluation and management of severe preeclampsia before 34 weeks. Am J Obstet Gynecol. 2011;205(3):191-198'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -226,7 +226,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Côté AM, et al. Diagnostic accuracy of urinary spot protein:creatinine ratio for proteinuria in hypertensive pregnant women. BMJ. 2008;336(7651):1003-1006'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -245,7 +245,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Roberge S, et al. Early administration of low-dose aspirin for the prevention of preterm and term preeclampsia. Obstet Gynecol. 2012;119(3):562-571'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -264,7 +264,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Diagnosis, controversies, and management of HELLP syndrome. Obstet Gynecol. 2004;103(5 Pt 1):981-991'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -283,7 +283,7 @@ export const preeclampsiaQuestions: Question[] = [
       'ACOG Committee Opinion No. 743: Low-Dose Aspirin Use During Pregnancy. Obstet Gynecol. 2018;132(1):e44-e52'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -302,7 +302,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Magnesium sulfate prophylaxis in preeclampsia. Am J Obstet Gynecol. 2014;211(3):191-203'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -321,7 +321,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Haram K, et al. The HELLP syndrome: Clinical issues and management. BMC Pregnancy Childbirth. 2009;9:8'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -340,7 +340,7 @@ export const preeclampsiaQuestions: Question[] = [
       'ACOG Practice Bulletin No. 107: Induction of Labor. Obstet Gynecol. 2009;114(2 Pt 1):386-397'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -359,7 +359,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Bushnell C, et al. Guidelines for the Prevention of Stroke in Women. Stroke. 2014;45(5):1545-1588'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -378,7 +378,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sibai BM. Evaluation and management of severe preeclampsia before 34 weeks. Am J Obstet Gynecol. 2011;205(3):191-198'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -397,7 +397,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Schwartz RB, et al. Preeclampsia-eclampsia: clinical and neuroradiographic correlates and insights. Radiology. 2000;217(2):371-376'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -416,7 +416,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Sciscione AC, et al. Acute pulmonary edema in pregnancy. Obstet Gynecol. 2003;101(3):511-515'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -435,7 +435,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Magee LA, et al. The management of severe hypertension. Semin Perinatol. 2009;33(3):138-142'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -454,7 +454,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Cunningham FG, et al. Williams Obstetrics, 25th Edition. Chapter 40: Hypertensive Disorders'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -473,7 +473,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Too G, Hill JB. Hypertensive crisis during pregnancy and postpartum period. Semin Perinatol. 2013;37(4):280-287'
     ],
     difficulty: 'easy',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -492,7 +492,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Fugate JE, et al. Posterior reversible encephalopathy syndrome. J Clin Neurol. 2011;7(1):1-9'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -511,7 +511,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Haram K, et al. The HELLP syndrome: Clinical issues and management. BMC Pregnancy Childbirth. 2009;9:8'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -530,7 +530,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Podymow T, August P. Postpartum course of gestational hypertension and preeclampsia. Hypertens Pregnancy. 2010;29(3):294-300'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -549,7 +549,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Bellamy L, et al. Pre-eclampsia and risk of cardiovascular disease and cancer in later life. BMJ. 2007;335(7627):974'
     ],
     difficulty: 'medium',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   },
   {
@@ -568,7 +568,7 @@ export const preeclampsiaQuestions: Question[] = [
       'Reck T, et al. Spontaneous hepatic hemorrhage in HELLP syndrome. Eur J Obstet Gynecol Reprod Biol. 2001;99(1):57-70'
     ],
     difficulty: 'hard',
-    topicId: 'obstetric-gynecologic-emergencies',
+    topicId: 'preeclampsia',
     category: 'obstetric'
   }
 ];
