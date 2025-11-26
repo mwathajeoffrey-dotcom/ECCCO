@@ -10,10 +10,10 @@ async function getMonitoringOverview(timeRange: number) {
     const since = new Date(Date.now() - timeRange);
     const sessions = await prisma.examSession.findMany({
       where: { createdAt: { gte: since } },
-      include: {
-        topic: true,
-        user: true,
-      },
+      // include: {
+      //   topic: true,
+      //   user: true,
+      // },
     });
     if (!sessions || sessions.length === 0) {
       return Response.json({ sessions: [], message: 'No sessions found in time range.' });

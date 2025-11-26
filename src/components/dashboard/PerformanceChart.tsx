@@ -153,7 +153,7 @@ export function PerformanceChart({ data, recentActivity }: PerformanceChartProps
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percentage }) => window.innerWidth > 640 ? `${name}: ${percentage}%` : `${percentage}%`}
+                label={(props: any) => window.innerWidth > 640 ? `${props.name}: ${props.percentage}%` : `${props.percentage}%`}
                 outerRadius={window.innerWidth > 640 ? 80 : 60}
                 fill="#8884d8"
                 dataKey="value"
