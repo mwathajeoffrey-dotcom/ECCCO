@@ -21,7 +21,6 @@ export async function GET() {
     { id: 'infectious-disease-emergencies', name: 'Infectious Disease Emergencies', description: 'Recognition and treatment of serious infections and sepsis' },
     { id: 'mechanical-ventilation', name: 'Mechanical Ventilation', description: 'Principles and management of mechanical ventilation in critical care' },
     { id: 'neurological-emergencies', name: 'Neurological Emergencies', description: 'Management of stroke, seizures, and altered mental status' },
-    { id: 'obstetric-gynecologic-emergencies', name: 'OB/GYN Emergencies', description: 'Emergency care for pregnancy-related and gynecologic conditions' },
     // Detailed OB/GYN Topics
     { id: 'placenta-previa', name: 'Placenta Previa', description: 'Diagnosis and management of placental implantation over the cervical os' },
     { id: 'placental-abruption', name: 'Placental Abruption', description: 'Recognition and management of premature placental separation' },
