@@ -570,23 +570,23 @@ export default function ExamInterface() {
 
   // Exam Interface
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm border-b dark:bg-white dark:border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
               <h1 className="text-base sm:text-xl font-semibold text-gray-900 truncate">
                 {topics.find(t => t.id === selectedTopic)?.name} Exam
               </h1>
-              <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+              <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
                 {currentQuestionIndex + 1}/{questionsArray.length}
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-6">
               <div className="flex items-center space-x-1 sm:space-x-2">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                <span className={`font-mono text-sm sm:text-lg ${
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                <span className={`font-mono text-sm sm:text-lg font-semibold ${
                   timeRemaining < 300 ? 'text-red-600' : 'text-gray-900'
                 }`}>
                   {formatTime(timeRemaining)}
@@ -607,7 +607,7 @@ export default function ExamInterface() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
           {/* Question Navigation Sidebar */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:sticky lg:top-8">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:sticky lg:top-8 dark:bg-white">
               <h3 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Question Navigation</h3>
               
               {/* Settings Toggle */}
@@ -683,7 +683,7 @@ export default function ExamInterface() {
 
           {/* Question Content */}
           <div className="lg:col-span-3 order-1 lg:order-2">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 dark:bg-white dark:text-gray-900">
               <div className="flex items-start justify-between mb-4 sm:mb-6">
                 <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900 flex-1 leading-relaxed">
                   {currentQuestion?.question}
@@ -794,14 +794,22 @@ export default function ExamInterface() {
                             ? 'border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200'
                             : isSelected
                             ? 'border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300'
-                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                            : 'border-gray-300 bg-white hover:bg-gray-50 hover:border-gray-400 text-gray-900'
                         } ${showAnswer && !isExamFinished ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-start">
-                          <span className="font-medium mr-2 sm:mr-3 text-gray-600 text-sm sm:text-base">
+                          <span className={`font-medium mr-2 sm:mr-3 text-sm sm:text-base ${
+                            showAnswer && isCorrect ? 'text-emerald-700' :
+                            showAnswer && isSelected && !isCorrect ? 'text-red-700' :
+                            isSelected ? 'text-blue-700' : 'text-gray-700'
+                          }`}>
                             {String.fromCharCode(65 + index)}.
                           </span>
-                          <span className="text-sm sm:text-base leading-relaxed flex-1">{option}</span>
+                          <span className={`text-sm sm:text-base leading-relaxed flex-1 ${
+                            showAnswer && isCorrect ? 'text-emerald-900 font-medium' :
+                            showAnswer && isSelected && !isCorrect ? 'text-red-900' :
+                            isSelected ? 'text-blue-900 font-medium' : 'text-gray-900'
+                          }`}>{option}</span>
                           {showAnswer && isCorrect && (
                             <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
                           )}
