@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download } from 'lucide-react';
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
@@ -47,6 +48,9 @@ interface Topic {
 }
 
 export default function ExamInterface() {
+  const searchParams = useSearchParams();
+  const filterParam = searchParams?.get('filter');
+  
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -102,6 +106,27 @@ export default function ExamInterface() {
 
   // Helper function to categorize topics
   const categorizeTopics = () => {
+    // New medical comorbidity topic IDs (2024-2025)
+    const newTopicIds = [
+      'cardiac-disease-pregnancy',
+      'diabetes-pregnancy',
+      'hypertensive-disorders-pregnancy',
+      'thromboembolism-pregnancy',
+      'infectious-disease-pregnancy',
+      'renal-disease-pregnancy',
+      'thyroid-disorders-pregnancy',
+      'hematologic-disorders-pregnancy'
+    ];
+
+    // If filter=new is set, show only new topics
+    if (filterParam === 'new') {
+      const newTopics = topics.filter(t => newTopicIds.some(id => t.id.includes(id)));
+      return {
+        'New Medical Comorbidity Topics (2024-2025)': newTopics,
+      };
+    }
+
+    // Otherwise, show all OB/GYN topics categorized as before
     const obgynTopics = topics.filter(t => 
       // Original emergency topics
       t.id.includes('placenta') ||
@@ -111,15 +136,8 @@ export default function ExamInterface() {
       t.id.includes('gyn-pain') ||
       t.id === 'obstetric-emergencies' ||
       t.id === 'general-obgyn-emergencies' ||
-      // New medical comorbidity topics (2024-2025)
-      t.id.includes('cardiac-disease-pregnancy') ||
-      t.id.includes('diabetes-pregnancy') ||
-      t.id.includes('hypertensive-disorders-pregnancy') ||
-      t.id.includes('thromboembolism-pregnancy') ||
-      t.id.includes('infectious-disease-pregnancy') ||
-      t.id.includes('renal-disease-pregnancy') ||
-      t.id.includes('thyroid-disorders-pregnancy') ||
-      t.id.includes('hematologic-disorders-pregnancy')
+      // New medical comorbidity topics
+      newTopicIds.some(id => t.id.includes(id))
     );
 
     const otherTopics = topics.filter(t => !obgynTopics.includes(t));
@@ -286,7 +304,9 @@ export default function ExamInterface() {
   // Topic Selection Screen
   if (!isExamStarted) {
     const categorizedTopics = categorizeTopics();
-    const obgynTopics = categorizedTopics['OB/GYN Emergencies'];
+    const obgynTopics = filterParam === 'new' 
+      ? categorizedTopics['New Medical Comorbidity Topics (2024-2025)']
+      : categorizedTopics['OB/GYN Emergencies'];
     const otherTopics = categorizedTopics['Other Topics'];
 
     return (
@@ -303,18 +323,41 @@ export default function ExamInterface() {
 
           {/* OB/GYN Topics Section */}
           <div className="mb-8">
+            {filterParam === 'new' && (
+              <div className="mb-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-purple-600 p-1.5 rounded">
+                      <BookOpen className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-sm text-gray-700">
+                      Showing <span className="font-semibold text-purple-700">8 newly added topics</span> with 240 questions
+                    </p>
+                  </div>
+                  <Link 
+                    href="/exam" 
+                    className="text-sm font-medium text-purple-600 hover:text-purple-700 underline"
+                  >
+                    View All Topics →
+                  </Link>
+                </div>
+              </div>
+            )}
+            
             <div className="flex items-center mb-4 pb-2 border-b-2 border-blue-200">
               <div className="bg-blue-600 p-2 rounded-lg mr-3">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">OB/GYN Emergencies</h2>
-                <p className="text-sm text-gray-600">{obgynTopics.length} specialized topics • {obgynTopics.length * 30} questions</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {filterParam === 'new' ? 'New Medical Comorbidity Topics (2024-2025)' : 'OB/GYN Emergencies'}
+                </h2>
+                <p className="text-sm text-gray-600">{obgynTopics?.length || 0} specialized topics • {(obgynTopics?.length || 0) * 30} questions</p>
               </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {obgynTopics.map((topic) => (
+              {obgynTopics?.map((topic) => (
                 <div
                   key={topic.id}
                   className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation border-l-4 border-blue-500"
@@ -338,15 +381,16 @@ export default function ExamInterface() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="my-8 border-t border-gray-300"></div>
+          {/* Divider - Only show when not filtering */}
+          {!filterParam && <div className="my-8 border-t border-gray-300"></div>}
 
-          {/* Other Topics - Individual Cards (Not Grouped) */}
-          <div>
-            <div className="mb-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">All Emergency Topics</h2>
-              <p className="text-sm text-gray-600">Select from {otherTopics.length} additional emergency medicine topics</p>
-            </div>
+          {/* Other Topics - Only show when not filtering */}
+          {!filterParam && otherTopics && (
+            <div>
+              <div className="mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">All Emergency Topics</h2>
+                <p className="text-sm text-gray-600">Select from {otherTopics.length} additional emergency medicine topics</p>
+              </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {otherTopics.map((topic) => (
@@ -372,6 +416,7 @@ export default function ExamInterface() {
               ))}
             </div>
           </div>
+          )}
         </div>
       </div>
     );

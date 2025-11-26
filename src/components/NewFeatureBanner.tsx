@@ -49,18 +49,17 @@ export default function NewFeatureBanner() {
 
               <div className="flex gap-3 mt-4">
                 <a
-                  href="/exam"
+                  href="/exam?filter=new"
                   className="inline-flex items-center px-4 py-2 bg-white text-purple-600 rounded-lg font-semibold text-sm hover:bg-yellow-50 transition-colors shadow-md"
                 >
                   Try New Questions →
                 </a>
                 <a
-                  href="https://github.com/mwathajeoffrey-dotcom/ECCCO/blob/main/RELEASE_NOTES.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg font-medium text-sm hover:bg-white/20 transition-colors border border-white/30"
+                  href="/obgyn-references"
+                  className="inline-flex items-center gap-1 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg font-medium text-sm hover:bg-white/20 transition-colors border border-white/30"
                 >
-                  Read Full Release Notes
+                  <BookOpen className="w-4 h-4" />
+                  View Guidelines & References
                 </a>
               </div>
             </div>
