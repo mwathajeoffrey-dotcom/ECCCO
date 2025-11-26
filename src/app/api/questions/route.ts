@@ -2,6 +2,35 @@ import { NextRequest, NextResponse } from 'next/server';
 import { allQuestions, questionsByCategory, getAllQuestions } from '@/lib/questions';
 import { Question } from '@/lib/questions/types';
 
+/**
+ * Shuffle the options within a question and update the correctIndex accordingly
+ * This ensures the correct answer is not predictably in the same position
+ */
+function shuffleQuestionOptions(question: Question): Question {
+  const { options, correctIndex, ...rest } = question;
+  
+  // Create array of indices [0, 1, 2, 3]
+  const indices = options.map((_, i) => i);
+  
+  // Shuffle indices using Fisher-Yates algorithm for better randomization
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  
+  // Create shuffled options based on new order
+  const shuffledOptions = indices.map(i => options[i]);
+  
+  // Find new position of correct answer
+  const newCorrectIndex = indices.indexOf(correctIndex);
+  
+  return {
+    ...rest,
+    options: shuffledOptions,
+    correctIndex: newCorrectIndex
+  };
+}
+
 export async function GET(request: NextRequest) {
   console.log('✅ Questions API route hit!');
   try {
@@ -43,13 +72,16 @@ export async function GET(request: NextRequest) {
     // Limit the number of questions
     const limitedQuestions = shuffledQuestions.slice(0, Math.min(limit, shuffledQuestions.length));
 
-    console.log(`✅ Returning ${limitedQuestions.length} questions`);
+    // Shuffle options within each question to randomize correct answer position
+    const randomizedQuestions = limitedQuestions.map(q => shuffleQuestionOptions(q));
+
+    console.log(`✅ Returning ${randomizedQuestions.length} questions with randomized options`);
 
     return NextResponse.json({
       success: true,
-      count: limitedQuestions.length,
+      count: randomizedQuestions.length,
       total: questions.length,
-      questions: limitedQuestions,
+      questions: randomizedQuestions,
     });
   } catch (error) {
     console.error('❌ Error fetching questions:', error);
