@@ -100,6 +100,26 @@ export default function ExamInterface() {
     }
   }, [isExamStarted, isExamFinished, timeRemaining]);
 
+  // Helper function to categorize topics
+  const categorizeTopics = () => {
+    const obgynTopics = topics.filter(t => 
+      t.id.includes('placenta') ||
+      t.id.includes('preeclampsia') ||
+      t.id.includes('preterm') ||
+      t.id.includes('vasa') ||
+      t.id.includes('gyn-pain') ||
+      t.id === 'obstetric-emergencies' ||
+      t.id === 'general-obgyn-emergencies'
+    );
+
+    const otherTopics = topics.filter(t => !obgynTopics.includes(t));
+
+    return {
+      'OB/GYN Emergencies': obgynTopics,
+      'Other Topics': otherTopics
+    };
+  };
+
   const fetchQuestions = async (topicId: string) => {
     setIsLoading(true);
     try {
@@ -255,9 +275,13 @@ export default function ExamInterface() {
 
   // Topic Selection Screen
   if (!isExamStarted) {
+    const categorizedTopics = categorizeTopics();
+    const obgynTopics = categorizedTopics['OB/GYN Emergencies'];
+    const otherTopics = categorizedTopics['Other Topics'];
+
     return (
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8">
             <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
               <ChevronLeft className="w-4 h-4 mr-1" />
@@ -267,28 +291,76 @@ export default function ExamInterface() {
             <p className="text-gray-600 text-sm sm:text-base">Choose a topic for your 30-question timed exam</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {topics.map((topic) => (
-              <div
-                key={topic.id}
-                className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
-                onClick={() => {
-                  setSelectedTopic(topic.id);
-                  analytics.trackTopicSelection(topic.id, topic.name);
-                  fetchQuestions(topic.id);
-                }}
-              >
-                <div className="flex items-center mb-3">
-                  <BookOpen className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" />
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">{topic.name}</h3>
-                </div>
-                <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{topic.description}</p>
-                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
-                  <span>30 Questions</span>
-                  <span>45 Minutes</span>
-                </div>
+          {/* OB/GYN Topics Section */}
+          <div className="mb-8">
+            <div className="flex items-center mb-4 pb-2 border-b-2 border-blue-200">
+              <div className="bg-blue-600 p-2 rounded-lg mr-3">
+                <BookOpen className="w-6 h-6 text-white" />
               </div>
-            ))}
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">OB/GYN Emergencies</h2>
+                <p className="text-sm text-gray-600">{obgynTopics.length} specialized topics • {obgynTopics.length * 30} questions</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {obgynTopics.map((topic) => (
+                <div
+                  key={topic.id}
+                  className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation border-l-4 border-blue-500"
+                  onClick={() => {
+                    setSelectedTopic(topic.id);
+                    analytics.trackTopicSelection(topic.id, topic.name);
+                    fetchQuestions(topic.id);
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <BookOpen className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" />
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">{topic.name}</h3>
+                  </div>
+                  <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{topic.description}</p>
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                    <span>30 Questions</span>
+                    <span>45 Minutes</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="my-8 border-t border-gray-300"></div>
+
+          {/* Other Topics - Individual Cards (Not Grouped) */}
+          <div>
+            <div className="mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">All Emergency Topics</h2>
+              <p className="text-sm text-gray-600">Select from {otherTopics.length} additional emergency medicine topics</p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {otherTopics.map((topic) => (
+                <div
+                  key={topic.id}
+                  className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
+                  onClick={() => {
+                    setSelectedTopic(topic.id);
+                    analytics.trackTopicSelection(topic.id, topic.name);
+                    fetchQuestions(topic.id);
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <BookOpen className="w-5 h-5 text-gray-600 mr-2 flex-shrink-0" />
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">{topic.name}</h3>
+                  </div>
+                  <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{topic.description}</p>
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                    <span>30 Questions</span>
+                    <span>45 Minutes</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

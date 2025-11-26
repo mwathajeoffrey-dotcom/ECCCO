@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECCCO Topics Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .topic-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .topic-card.obgyn {
+            border-left: 4px solid #2196F3;
+        }
+        .topic-id {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+        }
+        .topic-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin: 8px 0;
+        }
+        .topic-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+        .timestamp {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏥 ECCCO Topics API Test</h1>
+    
+    <div class="info">
+        <strong>This page directly fetches from /api/topics</strong><br>
+        Use this to verify what data the API is actually returning (no cache, direct call)
+    </div>
+
+    <div id="stats" style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px;"></div>
+
+    <div id="loading" class="loading">Loading topics from API...</div>
+    <div id="topics" class="topics-grid"></div>
+    <div class="timestamp" id="timestamp"></div>
+
+    <script>
+        async function fetchTopics() {
+            try {
+                // Add timestamp to prevent any caching
+                const response = await fetch('/api/topics?t=' + Date.now(), {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                const topics = await response.json();
+                
+                // Filter OB/GYN related topics
+                const obgynTopics = topics.filter(t => 
+                    t.id.toLowerCase().includes('gyn') ||
+                    t.id.toLowerCase().includes('placenta') ||
+                    t.id.toLowerCase().includes('preeclampsia') ||
+                    t.id.toLowerCase().includes('preterm') ||
+                    t.id.toLowerCase().includes('vasa') ||
+                    t.id === 'obstetric-emergencies'
+                );
+
+                // Update stats
+                document.getElementById('stats').innerHTML = `
+                    <strong>📊 API Response Summary:</strong><br>
+                    Total topics: <strong>${topics.length}</strong><br>
+                    OB/GYN related topics: <strong>${obgynTopics.length}</strong><br>
+                    Fetched at: <strong>${new Date().toLocaleTimeString()}</strong>
+                `;
+
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+
+                // Display all OB/GYN topics
+                const topicsDiv = document.getElementById('topics');
+                topicsDiv.innerHTML = obgynTopics.map((topic, index) => `
+                    <div class="topic-card obgyn">
+                        <div class="topic-id">#${index + 1} - ID: ${topic.id}</div>
+                        <div class="topic-name">${topic.name}</div>
+                        <div class="topic-description">${topic.description}</div>
+                    </div>
+                `).join('');
+
+                // Update timestamp
+                document.getElementById('timestamp').innerHTML = 
+                    `Last updated: ${new Date().toLocaleString()}`;
+
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 
+                    `<div style="color: red;">Error: ${error.message}</div>`;
+                console.error('Error fetching topics:', error);
+            }
+        }
+
+        // Fetch on page load
+        fetchTopics();
+
+        // Add refresh button
+        const refreshBtn = document.createElement('button');
+        refreshBtn.textContent = '🔄 Refresh from API';
+        refreshBtn.style.cssText = 'display: block; margin: 20px auto; padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 4px;';
+        refreshBtn.onclick = fetchTopics;
+        document.body.insertBefore(refreshBtn, document.getElementById('topics'));
+    </script>
+</body>
+</html>
