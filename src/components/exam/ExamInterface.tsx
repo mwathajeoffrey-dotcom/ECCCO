@@ -105,7 +105,10 @@ export default function ExamInterface() {
     try {
       const response = await fetch(`/api/questions?topicId=${topicId}&limit=30`);
       const data = await response.json();
-      setQuestions(data);
+      
+      // API returns {success, count, total, questions: [...]}
+      // We need to extract the questions array
+      setQuestions(data.questions || []);
       setCurrentQuestionIndex(0);
       setSelectedAnswers({});
       setFlaggedQuestions(new Set());
