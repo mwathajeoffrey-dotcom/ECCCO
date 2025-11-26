@@ -30,7 +30,6 @@ import { infectiousDiseaseEmergenciesQuestions } from './infectious-disease-emer
 import { massivetransfusionQuestions } from './massive-transfusion-questions';
 import { mechanicalVentilationQuestions } from './mechanical-ventilation';
 import { neurologicalEmergenciesQuestions } from './neurological-emergencies';
-import { obstetricGynelogicEmergenciesQuestions } from './obstetric-gynecologic-emergencies';
 import { obgynQuestions } from './obgyn';
 import { palsQuestions } from './pals';
 import { pediatriccardiacarrestQuestions } from './pediatric-cardiac-arrest-questions';
@@ -79,7 +78,6 @@ export const allQuestions: Question[] = [
   ...massivetransfusionQuestions,
   ...mechanicalVentilationQuestions,
   ...neurologicalEmergenciesQuestions,
-  ...obstetricGynelogicEmergenciesQuestions,
   ...obgynQuestions,
   ...palsQuestions,
   ...pediatriccardiacarrestQuestions,
@@ -116,7 +114,7 @@ export const questionsByCategory = {
   'Toxicology': [...toxicologyQuestions, ...toxicologyoverdoseQuestions],
   'Sepsis': [...sepsisManagementQuestions, ...sepsishour1bundleQuestions],
   'Pediatric Emergencies': pediatricEmergenciesQuestions,
-  'OB/GYN Emergencies': [...obstetricGynelogicEmergenciesQuestions, ...obgynQuestions],
+  'OB/GYN Emergencies': obgynQuestions,
   'Procedures': proceduresQuestions,
   'Pharmacology': pharmacologyEmergenciesQuestions,
   'Blood Gas Analysis': bloodGasAnalysisQuestions,

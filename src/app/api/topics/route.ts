@@ -30,6 +30,7 @@ export async function GET() {
     { id: 'obstetric-emergencies', name: 'Obstetric Emergencies', description: 'Acute complications: cord prolapse, shoulder dystocia, PPH, uterine inversion' },
     { id: 'gyn-pain-bleeding', name: 'Gynecologic Pain & Bleeding', description: 'Postmenopausal bleeding, endometrial cancer, ovarian torsion, PID' },
     { id: 'vasa-previa-rupture', name: 'Vasa Previa & Uterine Rupture', description: 'Rare but critical obstetric complications requiring emergency intervention' },
+    { id: 'general-obgyn-emergencies', name: 'General OB/GYN Emergencies', description: 'Broad spectrum: ectopic pregnancy, ovarian torsion, hyperemesis, trauma in pregnancy' },
     { id: 'pals', name: 'Pediatric Advanced Life Support (PALS)', description: 'Advanced life support algorithms for pediatric patients' },
     { id: 'pediatric-emergencies', name: 'Pediatric Emergencies', description: 'Emergency care considerations specific to children and infants' },
     { id: 'pharmacology-emergencies', name: 'Pharmacology Emergencies', description: 'Emergency medications, dosing, and drug interactions' },

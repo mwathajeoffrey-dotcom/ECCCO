@@ -1,7 +1,7 @@
 /**
  * OB/GYN Emergency Medicine Question Bank
  * 
- * This module contains 210 comprehensive questions covering obstetric and gynecologic emergencies.
+ * This module contains 240 comprehensive questions covering obstetric and gynecologic emergencies.
  * All questions are evidence-based per ACOG/RCOG 2020-2025 guidelines.
  * 
  * @module obgyn
@@ -18,6 +18,7 @@ import { pretermLabourQuestions } from './preterm-labour';
 import { obEmergenciesQuestions } from './obstetric-emergencies';
 import { gynPainBleedingQuestions } from './gyn-pain-bleeding';
 import { vasaRuptureQuestions } from './vasa-previa-rupture';
+import { generalObgynEmergenciesQuestions } from './general-obgyn-emergencies';
 
 // ============================================================================
 // INDIVIDUAL TOPIC EXPORTS
@@ -85,6 +86,18 @@ export { gynPainBleedingQuestions } from './gyn-pain-bleeding';
  */
 export { vasaRuptureQuestions } from './vasa-previa-rupture';
 
+/**
+ * General OB/GYN Emergencies Questions (30)
+ * - Ectopic pregnancy
+ * - Ovarian torsion
+ * - Hyperemesis gravidarum
+ * - PID and vulvovaginal conditions
+ * - Gestational trophoblastic disease
+ * - Postpartum complications
+ * - Trauma in pregnancy
+ */
+export { generalObgynEmergenciesQuestions } from './general-obgyn-emergencies';
+
 // ============================================================================
 // ORGANIZED COLLECTIONS
 // ============================================================================
@@ -104,15 +117,16 @@ export const obstetricQuestions: Question[] = [
 ];
 
 /**
- * All Gynecologic Emergency Questions (30 questions)
- * Includes: pain, bleeding, torsion, PID, endometriosis
+ * All Gynecologic Emergency Questions (60 questions)
+ * Includes: pain, bleeding, torsion, PID, endometriosis, general emergencies
  */
 export const gynecologicQuestions: Question[] = [
   ...gynPainBleedingQuestions,
+  ...generalObgynEmergenciesQuestions,
 ];
 
 /**
- * All OB/GYN Questions Combined (210 questions)
+ * All OB/GYN Questions Combined (240 questions)
  * Complete question bank for comprehensive study
  */
 export const obgynQuestions: Question[] = [
@@ -175,6 +189,7 @@ export const obgynQuestionCount = {
   obstetricEmergencies: obEmergenciesQuestions.length,
   gynPainBleeding: gynPainBleedingQuestions.length,
   vasaPreviaRupture: vasaRuptureQuestions.length,
+  generalObgynEmergencies: generalObgynEmergenciesQuestions.length,
   
   // Category totals
   obstetricTotal: obstetricQuestions.length,
@@ -256,6 +271,15 @@ export const obgynTopics = [
     questionCount: vasaRuptureQuestions.length,
     difficulty: 'hard',
     estimatedMinutes: 50
+  },
+  {
+    id: 'general-obgyn-emergencies',
+    name: 'General OB/GYN Emergencies',
+    category: 'gynecologic',
+    subcategory: 'mixed',
+    questionCount: generalObgynEmergenciesQuestions.length,
+    difficulty: 'medium',
+    estimatedMinutes: 45
   }
 ];
 
