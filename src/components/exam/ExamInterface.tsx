@@ -148,10 +148,12 @@ export default function ExamInterface() {
   };
 
   const handleQuestionNavigation = (direction: 'prev' | 'next') => {
+    // Safety check: ensure questions is an array
+    const questionsLength = Array.isArray(questions) ? questions.length : 0;
     if (direction === 'prev' && currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex - 1] !== undefined);
-    } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
+    } else if (direction === 'next' && currentQuestionIndex < questionsLength - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setCurrentQuestionAnswered(selectedAnswers[currentQuestionIndex + 1] !== undefined);
     }
@@ -178,6 +180,10 @@ export default function ExamInterface() {
   };
 
   const calculateScore = () => {
+    // Safety check: ensure questions is an array
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return 0;
+    }
     let correct = 0;
     questions.forEach((question, index) => {
       if (selectedAnswers[index] === question.correctIndex) {
@@ -193,7 +199,35 @@ export default function ExamInterface() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Safety check: ensure questions is an array before accessing
+  const questionsArray = Array.isArray(questions) ? questions : [];
+  const currentQuestion = questionsArray[currentQuestionIndex];
+
+  // If exam is started but questions array is invalid, show error
+  if (isExamStarted && !isLoading && questionsArray.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Error Loading Questions</h2>
+            <p className="text-red-600 mb-4">
+              Questions failed to load properly. Please try selecting the topic again.
+            </p>
+            <button
+              onClick={() => {
+                setIsExamStarted(false);
+                setSelectedTopic('');
+                setQuestions([]);
+              }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Back to Topics
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Loading screen for topics
   if (loadingTopics) {
@@ -264,7 +298,9 @@ export default function ExamInterface() {
   // Exam Results Screen
   if (isExamFinished) {
     const score = calculateScore();
-    const correct = questions.filter((q, i) => selectedAnswers[i] === q.correctIndex).length;
+    // Safety check: ensure questions is an array
+    const questionsArray = Array.isArray(questions) ? questions : [];
+    const correct = questionsArray.filter((q, i) => selectedAnswers[i] === q.correctIndex).length;
 
     const handleDownloadPDF = () => {
       try {
@@ -307,13 +343,13 @@ export default function ExamInterface() {
                 <div className="text-gray-600">Correct Answers</div>
               </div>
               <div className="text-center p-6 bg-red-50 rounded-lg">
-                <div className="text-3xl font-bold text-red-600">{questions.length - correct}</div>
+                <div className="text-3xl font-bold text-red-600">{questionsArray.length - correct}</div>
                 <div className="text-gray-600">Incorrect Answers</div>
               </div>
             </div>
 
             <div className="space-y-6">
-              {questions.map((question, index) => {
+              {questionsArray.map((question, index) => {
                 const userAnswer = selectedAnswers[index];
                 const isCorrect = userAnswer === question.correctIndex;
                 const options = typeof question.options === 'string' 
@@ -472,7 +508,7 @@ export default function ExamInterface() {
                 {topics.find(t => t.id === selectedTopic)?.name} Exam
               </h1>
               <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
-                {currentQuestionIndex + 1}/{questions.length}
+                {currentQuestionIndex + 1}/{questionsArray.length}
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-6">
@@ -519,7 +555,7 @@ export default function ExamInterface() {
               </div>
               
               <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-5 gap-1 sm:gap-2">
-                {questions.map((_, index) => (
+                {questionsArray.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => {
@@ -791,7 +827,7 @@ export default function ExamInterface() {
 
                 <button
                   onClick={() => handleQuestionNavigation('next')}
-                  disabled={currentQuestionIndex === questions.length - 1}
+                  disabled={currentQuestionIndex === questionsArray.length - 1}
                   className="flex items-center px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base text-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed hover:text-gray-900 touch-manipulation"
                 >
                   Next
