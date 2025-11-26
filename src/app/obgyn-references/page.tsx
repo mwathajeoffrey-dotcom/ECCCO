@@ -1,8 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpen, ChevronDown, ChevronUp, ChevronLeft, Calendar, Award, FileText, TrendingUp } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronUp, ChevronLeft, Calendar, Award, FileText, TrendingUp, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+
+interface Reference {
+  title: string;
+  journal: string;
+  doi: string;
+  url: string;
+}
 
 interface GuidelineContent {
   id: string;
@@ -14,6 +21,7 @@ interface GuidelineContent {
   clinicalPearls: string[];
   evidenceLevel: string;
   citation: string;
+  references: Reference[];
 }
 
 export default function OBGYNReferencesPage() {
@@ -52,7 +60,15 @@ export default function OBGYNReferencesPage() {
             "Cardiac output increases 30-50% by 24 weeks; most decompensation occurs 28-32 weeks"
           ],
           evidenceLevel: "Class I, Level A",
-          citation: "Eur Heart J. 2023;44(39):3295-3396. doi:10.1093/eurheartj/ehad245"
+          citation: "Eur Heart J. 2023;44(39):3295-3396. doi:10.1093/eurheartj/ehad245",
+          references: [
+            {
+              title: "2023 ESC Guidelines for the management of cardiovascular disease in pregnancy",
+              journal: "European Heart Journal",
+              doi: "10.1093/eurheartj/ehad245",
+              url: "https://doi.org/10.1093/eurheartj/ehad245"
+            }
+          ]
         },
         {
           id: "carpreg-risk",
@@ -76,7 +92,15 @@ export default function OBGYNReferencesPage() {
             "Validated in 1938 pregnancies across multiple cardiac conditions"
           ],
           evidenceLevel: "Level B, External Validation Completed",
-          citation: "J Am Coll Cardiol. 2018;71(21):2419-2430. doi:10.1016/j.jacc.2018.02.076"
+          citation: "J Am Coll Cardiol. 2018;71(21):2419-2430. doi:10.1016/j.jacc.2018.02.076",
+          references: [
+            {
+              title: "CARPREG II: A Prediction Model for Cardiac Complications During Pregnancy",
+              journal: "Journal of the American College of Cardiology",
+              doi: "10.1016/j.jacc.2018.02.076",
+              url: "https://doi.org/10.1016/j.jacc.2018.02.076"
+            }
+          ]
         }
       ]
     },
@@ -109,7 +133,15 @@ export default function OBGYNReferencesPage() {
             "⚠️ Hypoglycemia awareness DECREASES in pregnancy - use CGM, educate on glucagon"
           ],
           evidenceLevel: "Class I, Level A (multiple RCTs)",
-          citation: "Diabetes Care. 2025;48(Suppl 1):S282-S294. doi:10.2337/dc25-S015"
+          citation: "Diabetes Care. 2025;48(Suppl 1):S282-S294. doi:10.2337/dc25-S015",
+          references: [
+            {
+              title: "ADA 2025 Standards of Care in Diabetes - Management of Diabetes in Pregnancy",
+              journal: "Diabetes Care",
+              doi: "10.2337/dc25-S015",
+              url: "https://doi.org/10.2337/dc25-S015"
+            }
+          ]
         },
         {
           id: "ata-2024-thyroid",
@@ -136,7 +168,15 @@ export default function OBGYNReferencesPage() {
             "📉 Postpartum: Decrease LT4 to pre-pregnancy dose; PPT occurs in 5-9% (hyperthyroid phase 1-6 mo → hypothyroid 4-8 mo)"
           ],
           evidenceLevel: "Strong Recommendation, Moderate-Quality Evidence",
-          citation: "Thyroid. 2017;27(3):315-389. doi:10.1089/thy.2016.0457 (Reaffirmed 2024)"
+          citation: "Thyroid. 2017;27(3):315-389. doi:10.1089/thy.2016.0457 (Reaffirmed 2024)",
+          references: [
+            {
+              title: "2017 Guidelines of the American Thyroid Association for the Diagnosis and Management of Thyroid Disease During Pregnancy and the Postpartum",
+              journal: "Thyroid",
+              doi: "10.1089/thy.2016.0457",
+              url: "https://doi.org/10.1089/thy.2016.0457"
+            }
+          ]
         }
       ]
     },
@@ -169,7 +209,15 @@ export default function OBGYNReferencesPage() {
             "👶 Fetal safety confirmed: Birth weight, SGA rates, NICU admission, neonatal outcomes SIMILAR both groups"
           ],
           evidenceLevel: "Level I Evidence (RCT), Class IA Recommendation",
-          citation: "N Engl J Med. 2022;386(19):1781-1792. doi:10.1056/NEJMoa2201295"
+          citation: "N Engl J Med. 2022;386(19):1781-1792. doi:10.1056/NEJMoa2201295",
+          references: [
+            {
+              title: "Chronic Hypertension and Pregnancy (CHAP) Trial: Blood-Pressure Targets in Pregnant Women with Chronic Hypertension",
+              journal: "New England Journal of Medicine",
+              doi: "10.1056/NEJMoa2201295",
+              url: "https://doi.org/10.1056/NEJMoa2201295"
+            }
+          ]
         },
         {
           id: "acog-202-2019",
@@ -196,7 +244,15 @@ export default function OBGYNReferencesPage() {
             "🧠 Neurologic symptoms (HA, vision changes) + BP ≥140/90 = severe features regardless of BP level"
           ],
           evidenceLevel: "Strong Recommendations, High-Quality Evidence",
-          citation: "Obstet Gynecol. 2019;133(1):e1-e25. doi:10.1097/AOG.0000000000003018 (Reaffirmed 2024)"
+          citation: "Obstet Gynecol. 2019;133(1):e1-e25. doi:10.1097/AOG.0000000000003018 (Reaffirmed 2024)",
+          references: [
+            {
+              title: "ACOG Practice Bulletin No. 203: Chronic Hypertension in Pregnancy",
+              journal: "Obstetrics & Gynecology",
+              doi: "10.1097/AOG.0000000000003018",
+              url: "https://doi.org/10.1097/AOG.0000000000003018"
+            }
+          ]
         }
       ]
     },
@@ -229,7 +285,15 @@ export default function OBGYNReferencesPage() {
             "⚠️ DON'T use: Warfarin (embryopathy 6-12 weeks), DOACs (lack safety data, cross placenta)"
           ],
           evidenceLevel: "Strong Recommendation, Moderate Evidence",
-          citation: "Blood Adv. 2024;8(12):3144-3168. doi:10.1182/bloodadvances.2024012464"
+          citation: "Blood Adv. 2024;8(12):3144-3168. doi:10.1182/bloodadvances.2024012464",
+          references: [
+            {
+              title: "ASH 2024 Guidelines for Management of Venous Thromboembolism: Pregnancy",
+              journal: "Blood Advances",
+              doi: "10.1182/bloodadvances.2024012464",
+              url: "https://doi.org/10.1182/bloodadvances.2024012464"
+            }
+          ]
         },
         {
           id: "asra-2024-neuraxial",
@@ -256,7 +320,15 @@ export default function OBGYNReferencesPage() {
             "✅ Best practice: Coordinate with anesthesia early in labor/before scheduled C-section to plan anticoagulation timing"
           ],
           evidenceLevel: "Strong Recommendation, Moderate-Quality Evidence",
-          citation: "Reg Anesth Pain Med. 2024;49(5):e1-e36. doi:10.1136/rapm-2023-105150"
+          citation: "Reg Anesth Pain Med. 2024;49(5):e1-e36. doi:10.1136/rapm-2023-105150",
+          references: [
+            {
+              title: "ASRA 2024 Guidelines on Neuraxial Anesthesia and Anticoagulation",
+              journal: "Regional Anesthesia and Pain Medicine",
+              doi: "10.1136/rapm-2023-105150",
+              url: "https://doi.org/10.1136/rapm-2023-105150"
+            }
+          ]
         }
       ]
     },
@@ -289,7 +361,15 @@ export default function OBGYNReferencesPage() {
             "👶 Infant testing: HIV DNA PCR at 14-21 days, 1-2 months, 4-6 months (ALL must be negative to exclude infection)"
           ],
           evidenceLevel: "Class A, Level I Evidence",
-          citation: "MMWR Recomm Rep. 2024;73(1):1-48. doi:10.15585/mmwr.rr7301a1"
+          citation: "MMWR Recomm Rep. 2024;73(1):1-48. doi:10.15585/mmwr.rr7301a1",
+          references: [
+            {
+              title: "CDC 2024 Recommendations for the Use of Antiretroviral Drugs During Pregnancy and Interventions to Reduce Perinatal HIV Transmission",
+              journal: "MMWR Recommendations and Reports",
+              doi: "10.15585/mmwr.rr7301a1",
+              url: "https://doi.org/10.15585/mmwr.rr7301a1"
+            }
+          ]
         },
         {
           id: "cdc-2021-gbs",
@@ -316,7 +396,15 @@ export default function OBGYNReferencesPage() {
             "🔬 Culture technique matters: Vaginal THEN rectal swab (increased yield), selective enrichment broth, test for clindamycin/erythromycin resistance"
           ],
           evidenceLevel: "Strong Recommendation, Moderate-Quality Evidence",
-          citation: "MMWR Recomm Rep. 2019;68(4):1-24. doi:10.15585/mmwr.rr6804a1 (Reaffirmed 2024)"
+          citation: "MMWR Recomm Rep. 2019;68(4):1-24. doi:10.15585/mmwr.rr6804a1 (Reaffirmed 2024)",
+          references: [
+            {
+              title: "CDC 2019 Prevention of Perinatal Group B Streptococcal Disease - Revised Guidelines",
+              journal: "MMWR Recommendations and Reports",
+              doi: "10.15585/mmwr.rr6804a1",
+              url: "https://doi.org/10.15585/mmwr.rr6804a1"
+            }
+          ]
         }
       ]
     },
@@ -349,7 +437,15 @@ export default function OBGYNReferencesPage() {
             "⏰ Delivery timing: CKD alone (well-controlled) → 38-39 weeks; CKD + complications → individualized, often 34-37 weeks"
           ],
           evidenceLevel: "Strong Recommendation, Moderate Evidence",
-          citation: "Kidney Int. 2024;105(3S):S1-S117. doi:10.1016/j.kint.2023.10.017"
+          citation: "Kidney Int. 2024;105(3S):S1-S117. doi:10.1016/j.kint.2023.10.017",
+          references: [
+            {
+              title: "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+              journal: "Kidney International",
+              doi: "10.1016/j.kint.2023.10.017",
+              url: "https://doi.org/10.1016/j.kint.2023.10.017"
+            }
+          ]
         }
       ]
     }
@@ -492,6 +588,40 @@ export default function OBGYNReferencesPage() {
                               </span>
                             </div>
                             <p className="text-xs text-gray-600 italic">{guideline.citation}</p>
+                          </div>
+                        </div>
+
+                        {/* References & Further Reading */}
+                        <div className="pt-3 border-t border-gray-200">
+                          <h5 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <ExternalLink className="w-4 h-4 text-blue-600" />
+                            Read Full Paper
+                          </h5>
+                          <div className="space-y-2">
+                            {guideline.references.map((ref, i) => (
+                              <a
+                                key={i}
+                                href={ref.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg hover:shadow-md hover:border-blue-400 transition-all group"
+                              >
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                                      {ref.title}
+                                    </p>
+                                    <p className="text-xs text-gray-600 mb-2">
+                                      <span className="font-medium">{ref.journal}</span>
+                                    </p>
+                                    <div className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono">
+                                      <span className="font-semibold">DOI:</span> {ref.doi}
+                                    </div>
+                                  </div>
+                                  <ExternalLink className="w-5 h-5 text-blue-500 flex-shrink-0 mt-1 group-hover:text-blue-700 transition-colors" />
+                                </div>
+                              </a>
+                            ))}
                           </div>
                         </div>
                       </div>
