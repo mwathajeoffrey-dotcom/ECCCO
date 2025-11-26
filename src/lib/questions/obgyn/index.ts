@@ -1,8 +1,9 @@
 /**
  * OB/GYN Emergency Medicine Question Bank
  * 
- * This module contains 240 comprehensive questions covering obstetric and gynecologic emergencies.
- * All questions are evidence-based per ACOG/RCOG 2020-2025 guidelines.
+ * This module contains 480 comprehensive questions covering obstetric and gynecologic emergencies
+ * and medical comorbidities in pregnancy.
+ * All questions are evidence-based per ACOG/RCOG/ASH/ATA/KDIGO 2023-2025 guidelines.
  * 
  * @module obgyn
  * @see README.md for detailed documentation
@@ -19,6 +20,16 @@ import { obEmergenciesQuestions } from './obstetric-emergencies';
 import { gynPainBleedingQuestions } from './gyn-pain-bleeding';
 import { vasaRuptureQuestions } from './vasa-previa-rupture';
 import { generalObgynEmergenciesQuestions } from './general-obgyn-emergencies';
+
+// Import medical comorbidities in pregnancy question sets (2024-2025)
+import cardiacDiseasePregnancyQuestions from './cardiac-disease-pregnancy';
+import diabetesPregnancyQuestions from './diabetes-pregnancy';
+import hypertensiveDisordersPregnancyQuestions from './hypertensive-disorders';
+import thromboembolismPregnancyQuestions from './thromboembolism-pregnancy';
+import infectiousDiseasePregnancyQuestions from './infectious-disease-pregnancy';
+import renalDiseasePregnancyQuestions from './renal-disease-pregnancy';
+import thyroidDisordersPregnancyQuestions from './thyroid-disorders-pregnancy';
+import hematologicDisordersPregnancyQuestions from './hematologic-disorders-pregnancy';
 
 // ============================================================================
 // INDIVIDUAL TOPIC EXPORTS
@@ -98,14 +109,114 @@ export { vasaRuptureQuestions } from './vasa-previa-rupture';
  */
 export { generalObgynEmergenciesQuestions } from './general-obgyn-emergencies';
 
+/**
+ * Cardiac Disease in Pregnancy Questions (30)
+ * - Valvular disease (mitral stenosis, aortic stenosis)
+ * - Congenital heart disease (WHO classification, tetralogy of Fallot, Marfan syndrome)
+ * - Peripartum cardiomyopathy (PPCM)
+ * - Mechanical valve anticoagulation
+ * - Based on ESC 2023/2024, ACC/AHA 2024 guidelines
+ */
+export { cardiacDiseasePregnancyQuestions };
+
+/**
+ * Diabetes in Pregnancy Questions (30)
+ * - GDM screening (1-hour GCT, 3-hour OGTT)
+ * - Glucose targets and HbA1c goals
+ * - Insulin and oral agent management
+ * - Delivery timing and macrosomia
+ * - Based on ADA 2025 Standards of Care
+ */
+export { diabetesPregnancyQuestions };
+
+/**
+ * Hypertensive Disorders in Pregnancy Questions (30)
+ * - Chronic hypertension (CHAP trial 2022 evidence)
+ * - Superimposed preeclampsia
+ * - Medication management (labetalol, nifedipine)
+ * - Aspirin prophylaxis
+ * - Based on AHA/ACC 2024, ACOG 2024, ISSHP 2024 guidelines
+ */
+export { hypertensiveDisordersPregnancyQuestions };
+
+/**
+ * Thromboembolism in Pregnancy Questions (30)
+ * - VTE prevention and treatment
+ * - LMWH dosing and anti-Xa monitoring
+ * - Antiphospholipid syndrome (revised Sydney 2023 criteria)
+ * - Neuraxial timing (ASRA 2024 guidelines)
+ * - Based on ASH 2024, ACCP 2021 guidelines
+ */
+export { thromboembolismPregnancyQuestions };
+
+/**
+ * Infectious Disease in Pregnancy Questions (30)
+ * - HIV (U=U concept, vertical transmission prevention)
+ * - Hepatitis B and C management
+ * - Herpes simplex virus (HSV) and suppression
+ * - Group B Streptococcus (GBS) prophylaxis
+ * - TORCH infections, COVID-19, vaccines
+ * - Based on CDC 2024, NIH 2024, WHO 2024 guidelines
+ */
+export { infectiousDiseasePregnancyQuestions };
+
+/**
+ * Renal Disease in Pregnancy Questions (30)
+ * - CKD staging and pregnancy outcomes
+ * - Dialysis intensification (≥20 hours/week)
+ * - Renal transplant management
+ * - Preeclampsia vs CKD flare differentiation
+ * - Based on KDIGO 2024, ASN 2024 guidelines
+ */
+export { renalDiseasePregnancyQuestions };
+
+/**
+ * Thyroid Disorders in Pregnancy Questions (30)
+ * - Hypothyroidism and levothyroxine adjustment
+ * - Hyperthyroidism and antithyroid drugs (PTU vs methimazole)
+ * - TSH pregnancy-specific ranges (ATA 2024)
+ * - TRAb monitoring and fetal thyrotoxicosis
+ * - Postpartum thyroiditis
+ * - Based on ATA 2024, Endocrine Society 2024 guidelines
+ */
+export { thyroidDisordersPregnancyQuestions };
+
+/**
+ * Hematologic Disorders in Pregnancy Questions (30)
+ * - Anemia (iron deficiency, B12, folate)
+ * - Thrombocytopenia (gestational, ITP)
+ * - Bleeding disorders (von Willebrand, hemophilia)
+ * - Sickle cell disease and thalassemia
+ * - Transfusion medicine
+ * - Based on ASH 2024, ACOG 2024, NHLBI 2024 guidelines
+ */
+export { hematologicDisordersPregnancyQuestions };
+
 // ============================================================================
 // ORGANIZED COLLECTIONS
 // ============================================================================
 
 /**
- * All Obstetric Emergency Questions (180 questions)
+ * Medical Comorbidities in Pregnancy (240 questions)
+ * Includes: cardiac disease, diabetes, hypertensive disorders, thromboembolism,
+ *          infectious disease, renal disease, thyroid disorders, hematologic disorders
+ * Based on 2024-2025 guidelines (ESC, ADA, CHAP, ASH, ASRA, CDC, NIH, WHO, KDIGO, ATA)
+ */
+export const medicalComorbidities: Question[] = [
+  ...cardiacDiseasePregnancyQuestions,
+  ...diabetesPregnancyQuestions,
+  ...hypertensiveDisordersPregnancyQuestions,
+  ...thromboembolismPregnancyQuestions,
+  ...infectiousDiseasePregnancyQuestions,
+  ...renalDiseasePregnancyQuestions,
+  ...thyroidDisordersPregnancyQuestions,
+  ...hematologicDisordersPregnancyQuestions,
+];
+
+/**
+ * All Obstetric Emergency Questions (420 questions)
  * Includes: placenta previa, abruption, preeclampsia, preterm labour, 
- *          acute emergencies, vasa previa/rupture
+ *          acute emergencies, vasa previa/rupture, medical comorbidities
  */
 export const obstetricQuestions: Question[] = [
   ...placentaPreviaQuestions,
@@ -114,6 +225,7 @@ export const obstetricQuestions: Question[] = [
   ...pretermLabourQuestions,
   ...obEmergenciesQuestions,
   ...vasaRuptureQuestions,
+  ...medicalComorbidities,
 ];
 
 /**
@@ -126,7 +238,7 @@ export const gynecologicQuestions: Question[] = [
 ];
 
 /**
- * All OB/GYN Questions Combined (240 questions)
+ * All OB/GYN Questions Combined (480 questions)
  * Complete question bank for comprehensive study
  */
 export const obgynQuestions: Question[] = [
@@ -181,7 +293,7 @@ export const acuteObstetricCrises: Question[] = [
  * Useful for verification and progress tracking
  */
 export const obgynQuestionCount = {
-  // Individual topics
+  // Individual topics - Emergencies
   placentaPrevia: placentaPreviaQuestions.length,
   placentalAbruption: placentalAbruptionQuestions.length,
   preeclampsia: preeclampsiaQuestions.length,
@@ -190,6 +302,16 @@ export const obgynQuestionCount = {
   gynPainBleeding: gynPainBleedingQuestions.length,
   vasaPreviaRupture: vasaRuptureQuestions.length,
   generalObgynEmergencies: generalObgynEmergenciesQuestions.length,
+  
+  // Individual topics - Medical Comorbidities (2024-2025)
+  cardiacDisease: cardiacDiseasePregnancyQuestions.length,
+  diabetesInPregnancy: diabetesPregnancyQuestions.length,
+  hypertensiveDisordersPregnancy: hypertensiveDisordersPregnancyQuestions.length,
+  thromboembolism: thromboembolismPregnancyQuestions.length,
+  infectiousDisease: infectiousDiseasePregnancyQuestions.length,
+  renalDisease: renalDiseasePregnancyQuestions.length,
+  thyroidDisorders: thyroidDisordersPregnancyQuestions.length,
+  hematologicDisorders: hematologicDisordersPregnancyQuestions.length,
   
   // Category totals
   obstetricTotal: obstetricQuestions.length,
@@ -200,6 +322,7 @@ export const obgynQuestionCount = {
   hypertensiveDisordersTotal: hypertensiveDisorders.length,
   pretermComplicationsTotal: pretermComplications.length,
   acuteObstetricCrisesTotal: acuteObstetricCrises.length,
+  medicalComorbiditiesTotal: medicalComorbidities.length,
   
   // Grand total
   total: obgynQuestions.length
@@ -280,6 +403,78 @@ export const obgynTopics = [
     questionCount: generalObgynEmergenciesQuestions.length,
     difficulty: 'medium',
     estimatedMinutes: 45
+  },
+  {
+    id: 'cardiac-disease-pregnancy',
+    name: 'Cardiac Disease in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: cardiacDiseasePregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'diabetes-pregnancy',
+    name: 'Diabetes in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: diabetesPregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'hypertensive-disorders-pregnancy',
+    name: 'Hypertensive Disorders in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: hypertensiveDisordersPregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'thromboembolism-pregnancy',
+    name: 'Thromboembolism in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: thromboembolismPregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'infectious-disease-pregnancy',
+    name: 'Infectious Disease in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: infectiousDiseasePregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'renal-disease-pregnancy',
+    name: 'Renal Disease in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: renalDiseasePregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'thyroid-disorders-pregnancy',
+    name: 'Thyroid Disorders in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: thyroidDisordersPregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
+  },
+  {
+    id: 'hematologic-disorders-pregnancy',
+    name: 'Hematologic Disorders in Pregnancy',
+    category: 'obstetric',
+    subcategory: 'medical-comorbidities',
+    questionCount: hematologicDisordersPregnancyQuestions.length,
+    difficulty: 'hard',
+    estimatedMinutes: 50
   }
 ];
 
