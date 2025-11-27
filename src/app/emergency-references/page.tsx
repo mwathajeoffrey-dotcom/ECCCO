@@ -488,41 +488,6 @@ export default function EmergencyReferencesPage() {
               url: "https://doi.org/10.1056/NEJMoa2109950"
             }
           ]
-        },
-        {
-          id: "point-trial-2018",
-          name: "POINT Trial - Dual Antiplatelet Therapy in Minor Stroke/TIA",
-          organization: "New England Journal of Medicine / NINDS-funded Trial",
-          year: "2018",
-          summary: "LANDMARK TRIAL (n=4,881): Clopidogrel + aspirin for 21 days reduced recurrent stroke in minor stroke/high-risk TIA (5% vs 6.5%) but increased major hemorrhage. Stopped early for benefit.",
-          keyRecommendations: [
-            "Aspirin 325mg loading + clopidogrel 600mg loading within 12 hours of symptom onset",
-            "Continue clopidogrel 75mg + aspirin 81mg daily for 21 days, then aspirin alone",
-            "For minor stroke (NIHSS ≤3) or high-risk TIA (ABCD² ≥4)",
-            "Reduces recurrent stroke: 5% vs 6.5% at 90 days (absolute reduction 1.5%, NNT=67)",
-            "Increased major hemorrhage: 0.9% vs 0.4% (absolute increase 0.5%) - acceptable risk"
-          ],
-          clinicalPearls: [
-            "📊 90-day stroke risk: DAPT 5% vs ASA alone 6.5% (HR 0.75, p=0.02, NNT=67)",
-            "⚡ Major hemorrhage: DAPT 0.9% vs ASA 0.4% (p=0.02) - small absolute increase",
-            "🎯 Time window: Within 12 hours of onset - earlier treatment likely more beneficial",
-            "💊 Loading doses: ASA 325mg + clopidogrel 600mg, then maintenance dosing",
-            "🔬 Duration: 21 days DAPT optimal - longer duration increases bleeding without added benefit",
-            "📈 Trial stopped early: Crossed efficacy boundary at interim analysis",
-            "⚠️ Minor stroke definition: NIHSS ≤3 + no disability (mRS ≤2)",
-            "🎪 High-risk TIA: ABCD² ≥4 (Age, BP, Clinical features, Duration, Diabetes)",
-            "💡 Practice impact: Now standard of care for minor stroke/high-risk TIA within 12h"
-          ],
-          evidenceLevel: "Level I Evidence (Large Multicenter RCT, n=4,881)",
-          citation: "N Engl J Med. 2018;379(3):215-225. doi:10.1056/NEJMoa1800410",
-          references: [
-            {
-              title: "Clopidogrel with Aspirin in Acute Minor Stroke or Transient Ischemic Attack (POINT)",
-              journal: "New England Journal of Medicine",
-              doi: "10.1056/NEJMoa1800410",
-              url: "https://doi.org/10.1056/NEJMoa1800410"
-            }
-          ]
         }
       ]
     },
@@ -598,74 +563,6 @@ export default function EmergencyReferencesPage() {
               journal: "New England Journal of Medicine",
               doi: "10.1056/NEJMoa2202707",
               url: "https://doi.org/10.1056/NEJMoa2202707"
-            }
-          ]
-        },
-        {
-          id: "process-trial-2014",
-          name: "ProCESS Trial - Early Goal-Directed Therapy vs Usual Care",
-          organization: "New England Journal of Medicine / Landmark Paradigm-Shifting Trial",
-          year: "2014",
-          summary: "LANDMARK TRIAL (n=1,341): Early goal-directed therapy (EGDT) protocol-based resuscitation offered NO mortality benefit vs usual care. Ended era of rigid sepsis protocols.",
-          keyRecommendations: [
-            "Protocol-based resuscitation (EGDT) not superior to physician-directed usual care",
-            "Early recognition and antibiotic administration remain critical",
-            "Fluid resuscitation important, but strict CVP/ScvO₂ targets not necessary",
-            "Clinical judgment equivalent to protocol-driven management when basics done well",
-            "Avoid unnecessary central lines, arterial lines if stable"
-          ],
-          clinicalPearls: [
-            "📊 60-day mortality: EGDT 21%, Protocol-based 18.2%, Usual care 18.9% (p=0.83)",
-            "💉 EGDT required: CVP monitoring, ScvO₂ monitoring, blood transfusions if Hct <30%",
-            "🎯 Trial impact: Moved field away from rigid protocols toward individualized care",
-            "⚡ What still matters: Early antibiotics (<1h), adequate initial fluid resuscitation (30 mL/kg)",
-            "📈 Hospital costs: EGDT group higher costs without outcome benefit",
-            "🚫 Unnecessary interventions: CVP monitoring, routine blood transfusions not needed",
-            "🔬 Rivers original EGDT (2001): Single-center trial showing benefit - not replicated",
-            "💊 Key lesson: Recognize sepsis early, give antibiotics + fluids, but individualize hemodynamic targets"
-          ],
-          evidenceLevel: "Level I Evidence (Multicenter RCT, n=1,341)",
-          citation: "N Engl J Med. 2014;370(18):1683-1693. doi:10.1056/NEJMoa1401602",
-          references: [
-            {
-              title: "A Randomized Trial of Protocol-Based Care for Early Septic Shock (ProCESS)",
-              journal: "New England Journal of Medicine",
-              doi: "10.1056/NEJMoa1401602",
-              url: "https://doi.org/10.1056/NEJMoa1401602"
-            }
-          ]
-        },
-        {
-          id: "aprocchss-trial-2018",
-          name: "APROCCHSS Trial - Hydrocortisone + Fludrocortisone in Septic Shock",
-          organization: "New England Journal of Medicine / French Multicenter RCT",
-          year: "2018",
-          summary: "LANDMARK TRIAL (n=1,241): Combination hydrocortisone + fludrocortisone reduced 90-day mortality in septic shock (43% vs 49.1%, p=0.03). First steroid trial showing mortality benefit.",
-          keyRecommendations: [
-            "Hydrocortisone 50mg IV q6h + fludrocortisone 50mcg PO/NG daily for 7 days in septic shock",
-            "Start if requiring vasopressors despite adequate fluid resuscitation",
-            "Reduces 90-day mortality: 43% vs 49.1% placebo (absolute reduction 6.1%, NNT=17)",
-            "Faster vasopressor weaning and ICU discharge",
-            "Benefits seen even without ACTH stimulation test"
-          ],
-          clinicalPearls: [
-            "📊 90-day mortality: Steroids 43% vs Placebo 49.1% (HR 0.88, 95% CI 0.78-0.99, p=0.03)",
-            "⚡ Vasopressor-free days: Steroids 17 days vs Placebo 15 days (p<0.001)",
-            "💊 Regimen: Hydrocortisone 50mg IV q6h (200mg/day total) + fludrocortisone 50mcg daily",
-            "🎯 Duration: 7 days (or until ICU discharge if sooner)",
-            "📈 Mechanism: Cortisol + mineralocorticoid restore vascular responsiveness to catecholamines",
-            "⚠️ Hyperglycemia: More common with steroids (watch glucose closely)",
-            "🔬 NNT: 17 to prevent one death at 90 days",
-            "💡 Practice change: Now recommended in SSC 2021 for refractory shock"
-          ],
-          evidenceLevel: "Level I Evidence (Double-Blind RCT, n=1,241)",
-          citation: "N Engl J Med. 2018;378(9):809-818. doi:10.1056/NEJMoa1705835",
-          references: [
-            {
-              title: "Effect of Hydrocortisone on Mortality in Septic Shock (APROCCHSS)",
-              journal: "New England Journal of Medicine",
-              doi: "10.1056/NEJMoa1705835",
-              url: "https://doi.org/10.1056/NEJMoa1705835"
             }
           ]
         },

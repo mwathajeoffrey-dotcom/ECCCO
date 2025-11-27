@@ -1,33 +1,21 @@
-# Emergency References - 5-Year Recency Compliance Update
+# Emergency References - 5-Year Recency Compliance Update (REVISED)
 
-## ❌ TRIALS TO REMOVE (Published before 2020)
+## 📋 POLICY: Keep older journals (>5 years) ONLY when no recent evidence available
 
-### Cardiac Arrest & Resuscitation
-- **ROC ALPS Trial** (2016) - 9 years old - REMOVE
+## ❌ TRIALS TO REMOVE (Published before 2020 AND newer evidence exists)
 
 ### Sepsis & Septic Shock  
-- **ProCESS Trial** (2014) - 11 years old - REMOVE
-- **APROCCHSS Trial** (2018) - 7 years old - REMOVE
-- **SOAP II Trial** (2010) - 15 years old - REMOVE
+- **APROCCHSS Trial** (2018) - 7 years old - REMOVE (replaced by CLOVERS 2023)
+- **ProCESS Trial** (2014) - 11 years old - REMOVE (replaced by CLOVERS 2023)
 
 ### Acute Stroke
-- **DEFUSE 3 Trial** (2018) - 7 years old - REMOVE
-- **POINT Trial** (2018) - 7 years old - REMOVE
+- **POINT Trial** (2018) - 7 years old - REMOVE (dual antiplatelet, covered in 2019 guidelines)
 
-### Acute Coronary Syndromes
-- **DETO2X-AMI Trial** (2017) - 8 years old - REMOVE
-- **COLCOT Trial** (2019) - 6 years old - REMOVE
-- **PARADIGM-HF Trial** (2014) - 11 years old - REMOVE
+**Total to Remove**: 3 trials (have newer replacements)
 
-### Trauma & Hemorrhagic Shock
-- **CRASH-2 Trial** (2010) - 15 years old - REMOVE
-- **SMART Trial** (2018) - 7 years old - REMOVE
+---
 
-### Respiratory & Airway
-- **FLORALI Trial** (2015) - 10 years old - REMOVE
-- **PROSEVA Trial** (2013) - 12 years old - REMOVE
-
-**Total to Remove**: 13 trials
+## ✅ KEEP OLDER TRIALS (>5 years) - NO RECENT REPLACEMENT AVAILABLE
 
 ---
 
