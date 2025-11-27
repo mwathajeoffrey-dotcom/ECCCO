@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Clock, Trophy, BarChart3, FileText, Users } from 'lucide-react';
+import { BookOpen, Clock, Trophy, BarChart3, FileText, Users, Library } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -23,6 +23,9 @@ export default function Home() {
               </Link>
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
+              </Link>
+              <Link href="/emergency-references" className="text-gray-700 hover:text-blue-600 font-medium">
+                Evidence Library
               </Link>
               <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
                 Analytics
@@ -96,6 +99,16 @@ export default function Home() {
             </p>
           </Link>
 
+          <Link href="/emergency-references" className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+              <Library className="w-6 h-6 text-indigo-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Evidence Library</h3>
+            <p className="text-gray-600">
+              Access 30+ landmark trials and guidelines from NEJM, Lancet, JAMA with clinical pearls and NNT calculations.
+            </p>
+          </Link>
+
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
               <FileText className="w-6 h-6 text-orange-600" />
@@ -117,8 +130,8 @@ export default function Home() {
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-              <Users className="w-6 h-6 text-indigo-600" />
+            <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+              <Users className="w-6 h-6 text-teal-600" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Expert Content</h3>
             <p className="text-gray-600">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3 } from 'lucide-react';
+import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Library, FileText, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import NewFeatureBanner from '@/components/NewFeatureBanner';
 
@@ -88,6 +88,9 @@ export default function DashboardPage() {
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
               </Link>
+              <Link href="/emergency-references" className="text-gray-700 hover:text-blue-600 font-medium">
+                Evidence Library
+              </Link>
               <Link href="/dashboard" className="text-blue-600 font-medium">
                 Dashboard
               </Link>
@@ -151,6 +154,104 @@ export default function DashboardPage() {
                 <p className="text-2xl font-bold text-gray-900">24h</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Evidence Library - Quick Access */}
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-md p-8 mb-8 border-2 border-indigo-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <Library className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">Evidence Library</h3>
+                <p className="text-gray-600">Review landmark trials & guidelines before your exams</p>
+              </div>
+            </div>
+            <div className="hidden sm:block">
+              <span className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold">
+                30 References Available
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {/* Emergency Guidelines */}
+            <Link
+              href="/emergency-references"
+              className="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-red-300 group"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                  <FileText className="w-5 h-5 text-red-600" />
+                </div>
+                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-red-600 transition-colors" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Emergency Medicine</h4>
+              <p className="text-sm text-gray-600 mb-3">ACLS, PALS, Sepsis, Stroke, Trauma, ARDS protocols</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-red-600">23 Guidelines & Trials</span>
+                <span className="text-xs text-gray-500">2020-2025</span>
+              </div>
+            </Link>
+
+            {/* OB/GYN Guidelines */}
+            <Link
+              href="/obgyn-references"
+              className="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-pink-300 group"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center group-hover:bg-pink-200 transition-colors">
+                  <FileText className="w-5 h-5 text-pink-600" />
+                </div>
+                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-pink-600 transition-colors" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">OB/GYN Medicine</h4>
+              <p className="text-sm text-gray-600 mb-3">Prenatal, labor, postpartum, gynecologic emergencies</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-pink-600">7 ACOG Guidelines</span>
+                <span className="text-xs text-gray-500">2018-2024</span>
+              </div>
+            </Link>
+
+            {/* Coming Soon - More Libraries */}
+            <div className="bg-white p-5 rounded-lg shadow-sm border-2 border-dashed border-gray-300 opacity-60">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+              <h4 className="font-bold text-gray-700 mb-2">More Topics</h4>
+              <p className="text-sm text-gray-500 mb-3">Additional evidence libraries coming soon</p>
+              <span className="text-xs font-semibold text-gray-400">Coming Soon</span>
+            </div>
+          </div>
+
+          {/* Why Use Evidence Library */}
+          <div className="bg-white/50 backdrop-blur-sm p-4 rounded-lg border border-indigo-200">
+            <h5 className="font-semibold text-gray-900 mb-2 flex items-center">
+              <Award className="w-4 h-4 text-indigo-600 mr-2" />
+              Why Review Evidence Before Exams?
+            </h5>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="text-indigo-600 mr-2">•</span>
+                <span>Understand the <strong>evidence basis</strong> behind clinical decisions</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-600 mr-2">•</span>
+                <span>Learn <strong>NNT calculations</strong> and statistical significance</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-600 mr-2">•</span>
+                <span>Review <strong>landmark trials</strong> cited in guidelines</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-600 mr-2">•</span>
+                <span>Access <strong>clinical pearls</strong> from top journals</span>
+              </li>
+            </ul>
           </div>
         </div>
 
