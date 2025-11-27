@@ -110,7 +110,7 @@ export default function QuickActions() {
         >
           <motion.div
             animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
-            className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+            className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
           >
             {/* Animated gradient border */}
             <div className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity`} />
@@ -128,7 +128,7 @@ export default function QuickActions() {
                 exit={{ opacity: 0, scale: 0 }}
                 className="absolute top-4 right-4"
               >
-                <Sparkles className="w-6 h-6 text-cyan-400" />
+                <Sparkles className="w-6 h-6 text-blue-400" />
               </motion.div>
             )}
           </motion.div>
@@ -153,7 +153,7 @@ export default function QuickActions() {
   };
 
   return (
-    <section className="relative py-32 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 overflow-hidden">
+    <section className="relative py-32 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -162,7 +162,7 @@ export default function QuickActions() {
             scale: [1, 1.2, 1],
           }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -170,7 +170,7 @@ export default function QuickActions() {
             scale: [1.2, 1, 1.2],
           }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"
         />
       </div>
 
@@ -187,7 +187,7 @@ export default function QuickActions() {
             className="inline-block mb-6"
           >
             <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-full px-6 py-3">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 font-bold">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 font-bold">
                 ⚡ QUICK ACCESS
               </span>
             </div>
@@ -195,7 +195,7 @@ export default function QuickActions() {
           
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
             What Would You Like To{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400">
               Do Today?
             </span>
           </h2>
@@ -231,7 +231,7 @@ export default function QuickActions() {
 
                 {/* Hover indicator */}
                 <motion.div 
-                  className="mt-6 flex items-center text-cyan-400 text-sm font-semibold"
+                  className="mt-6 flex items-center text-blue-400 text-sm font-semibold"
                   initial={{ x: 0 }}
                   whileHover={{ x: 5 }}
                 >

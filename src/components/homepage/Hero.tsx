@@ -37,7 +37,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       {/* Animated gradient mesh background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -46,7 +46,7 @@ export default function Hero() {
             rotate: [0, 90, 0],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-3xl"
+          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 blur-3xl"
         />
         <motion.div
           animate={{
@@ -54,7 +54,7 @@ export default function Hero() {
             rotate: [90, 0, 90],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tr from-pink-500/20 to-blue-500/20 blur-3xl"
+          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 blur-3xl"
         />
       </div>
 
@@ -98,7 +98,7 @@ export default function Hero() {
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-5 h-5 text-cyan-400" />
+              <Sparkles className="w-5 h-5 text-blue-400" />
             </motion.div>
             <span className="text-sm font-semibold text-white">
               Trusted by 10,000+ Healthcare Professionals Worldwide
@@ -120,7 +120,7 @@ export default function Hero() {
             <span className="block text-white mb-2">Master Emergency</span>
             <span className="block">
               <motion.span
-                className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400"
+                className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400"
                 animate={{
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                 }}
@@ -139,9 +139,9 @@ export default function Hero() {
             transition={{ delay: 0.6 }}
             className="text-lg sm:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            AI-powered learning platform with <span className="text-cyan-400 font-semibold">5,000+ evidence-based questions</span>, 
-            <span className="text-purple-400 font-semibold"> 30+ landmark trials</span> from NEJM, Lancet, JAMA, and 
-            <span className="text-pink-400 font-semibold"> personalized analytics</span>
+            AI-powered learning platform with <span className="text-blue-400 font-semibold">5,000+ evidence-based questions</span>, 
+            <span className="text-cyan-400 font-semibold"> 30+ landmark trials</span> from NEJM, Lancet, JAMA, and 
+            <span className="text-indigo-400 font-semibold"> personalized analytics</span>
           </motion.p>
 
           {/* CTA Buttons with 3D effect */}
@@ -153,9 +153,9 @@ export default function Hero() {
           >
             <Link
               href="/practice"
-              className="group relative px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 w-full sm:w-auto"
+              className="group relative px-10 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 w-full sm:w-auto"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
               <span className="relative z-10 flex items-center justify-center gap-2">
                 <Zap className="w-5 h-5" />
                 Start Learning Free

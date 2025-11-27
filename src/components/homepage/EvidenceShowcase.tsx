@@ -185,7 +185,7 @@ export default function EvidenceShowcase() {
             scale: [1, 1.2, 1],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -194,7 +194,7 @@ export default function EvidenceShowcase() {
             scale: [1.2, 1, 1.2],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"
         />
       </div>
 
@@ -211,8 +211,8 @@ export default function EvidenceShowcase() {
             className="inline-block mb-6"
           >
             <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-full px-6 py-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-cyan-400" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 font-bold">
+              <Sparkles className="w-5 h-5 text-blue-400" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 font-bold">
                 EVIDENCE-BASED LEARNING
               </span>
             </div>
@@ -220,7 +220,7 @@ export default function EvidenceShowcase() {
           
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
             Learn From{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400">
               Landmark Trials
             </span>
           </h2>
@@ -284,7 +284,7 @@ export default function EvidenceShowcase() {
                   transition={{ duration: 2, repeat: Infinity }}
                   className="absolute top-4 right-4"
                 >
-                  <Sparkles className="w-5 h-5 text-cyan-400" />
+                  <Sparkles className="w-5 h-5 text-blue-400" />
                 </motion.div>
               </motion.div>
             </motion.div>
@@ -303,7 +303,7 @@ export default function EvidenceShowcase() {
             className="relative backdrop-blur-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-3xl p-8 shadow-2xl overflow-hidden"
           >
             {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-pink-500/20 animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-cyan-500/20 animate-pulse" />
             
             <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex-1">
@@ -311,15 +311,15 @@ export default function EvidenceShowcase() {
                   Explore the Full Library
                 </h3>
                 <p className="text-lg text-gray-300">
-                  Access <span className="text-cyan-400 font-bold">30+ landmark trials</span> with DOI references from top journals
+                  Access <span className="text-blue-400 font-bold">30+ landmark trials</span> with DOI references from top journals
                 </p>
               </div>
               
               <Link href="/emergency-references">
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)" }}
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59, 130, 246, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl"
+                  className="flex items-center gap-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl"
                 >
                   Browse Library
                   <ArrowRight className="w-6 h-6" />
@@ -342,7 +342,7 @@ export default function EvidenceShowcase() {
                 transition={{ delay: 0.8 + i * 0.1 }}
                 className="flex items-center gap-2 backdrop-blur-md bg-white/5 px-4 py-2 rounded-full border border-white/10"
               >
-                <badge.icon className="w-5 h-5 text-cyan-400" />
+                <badge.icon className="w-5 h-5 text-blue-400" />
                 <span className="text-sm font-semibold text-gray-300">{badge.text}</span>
               </motion.div>
             ))}
