@@ -11,13 +11,30 @@ export const aclsQuestions: Question[] = [
       'Give amiodarone 300mg IV'
     ],
     correctIndex: 1,
-    explanation: 'After defibrillation, immediately resume CPR for 2 minutes before next rhythm check. This minimizes chest compression interruptions and maximizes coronary perfusion pressure. Drug therapy comes after second failed defibrillation.',
+    explanation: 'After defibrillation, immediately resume CPR for 2 minutes before next rhythm check. This minimizes chest compression interruptions and maximizes coronary perfusion pressure. Each 5-second increase in peri-shock pause reduces ROSC likelihood by 18%. Drug therapy (epinephrine) comes after second failed defibrillation, with amiodarone considered after third shock.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation',
-      'Neumar RW, et al. Part 8: Adult Advanced Cardiovascular Life Support: 2010 American Heart Association Guidelines'
+      'Panchal AR, et al. 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'See comprehensive ACLS guidelines at: /emergency-references'
     ],
     difficulty: 'medium',
-    topicId: 'acls'
+    topicId: 'acls',
+    guidelineVersion: {
+      name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
+      year: 2025,
+      organization: 'American Heart Association',
+      lastUpdated: new Date('2025-11-27')
+    },
+    clinicalPearls: [
+      '⚡ Each 5-second increase in peri-shock pause time reduces ROSC by 18% - minimize interruptions!',
+      '📊 Target compression fraction >80% (>60% of total resuscitation time in compressions)',
+      '🎯 ETCO₂ <10 mmHg after 20 minutes predicts poor outcome with 94% specificity',
+      '💊 Medication sequence: Shock → CPR 2min → Shock → Epi → CPR 2min → Shock → Amiodarone'
+    ],
+    learningObjectives: [
+      'Understand the critical importance of minimizing peri-shock pause to maximize coronary perfusion',
+      'Recognize that immediate CPR after defibrillation improves outcomes more than immediate rhythm analysis',
+      'Know the timing of epinephrine (after 2nd shock) and amiodarone (after 3rd shock) in VF/pVT'
+    ]
   },
   {
     id: 'acls-002',
@@ -28,14 +45,32 @@ export const aclsQuestions: Question[] = [
       '100-120/min, at least 2.4 inches (6 cm)',
       '120-140/min, at least 2 inches (5 cm)'
     ],
-    correctIndex: 2,
-    explanation: 'High-quality CPR requires compression rate 100-120/min and depth at least 2.4 inches (6 cm) in adults. Complete chest recoil, minimal interruptions (<10 seconds), and avoiding over-ventilation are also critical components.',
+    correctIndex: 0,
+    explanation: 'High-quality CPR requires compression rate 100-120/min and depth at least 2 inches (5 cm) in adults. The 2025 AHA guidelines emphasize proper depth (not excessive), complete chest recoil, minimal interruptions (<10 seconds), and avoiding over-ventilation. Compression depth >2.4 inches may cause injuries without additional benefit.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Panchal AR, et al. 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'See evidence from COMPRESS Trial at: /emergency-references'
     ],
     difficulty: 'easy',
-    topicId: 'acls'
+    topicId: 'acls',
+    guidelineVersion: {
+      name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
+      year: 2025,
+      organization: 'American Heart Association',
+      lastUpdated: new Date('2025-11-27')
+    },
+    clinicalPearls: [
+      '📏 Depth: At least 2 inches (5 cm) but avoid excessive depth >2.4 inches (6 cm)',
+      '🎵 Rate: 100-120/min (think "Stayin\' Alive" by Bee Gees at 103 bpm)',
+      '🔄 Allow full chest recoil - don\'t lean on chest between compressions',
+      '⏱️ Minimize interruptions: Each pause <10 seconds, compression fraction >80%',
+      '🚫 Avoid hyperventilation: Excessive ventilation decreases venous return and cardiac output'
+    ],
+    learningObjectives: [
+      'Memorize the specific compression rate (100-120/min) and depth (≥2 inches/5 cm) parameters',
+      'Understand that compression quality matters more than speed alone',
+      'Recognize the importance of complete chest recoil for venous return'
+    ]
   },
   {
     id: 'acls-003',
@@ -47,17 +82,35 @@ export const aclsQuestions: Question[] = [
       'Only if rhythm changes to asystole'
     ],
     correctIndex: 1,
-    explanation: 'In VF/pVT, epinephrine 1mg IV is given after the second failed defibrillation, then every 3-5 minutes. Early defibrillation and CPR take priority over medications in shockable rhythms.',
+    explanation: 'In VF/pVT, epinephrine 1mg IV/IO is given after the second failed defibrillation, then every 3-5 minutes throughout resuscitation. Early defibrillation and high-quality CPR take priority over medications in shockable rhythms. Earlier epinephrine administration (within 5 minutes of arrest) is associated with better outcomes.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines'
+      'Panchal AR, et al. 2025 AHA Guidelines for CPR and ECC. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'See ACLS medication algorithms at: /emergency-references'
     ],
     difficulty: 'medium',
-    topicId: 'acls'
+    topicId: 'acls',
+    guidelineVersion: {
+      name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
+      year: 2025,
+      organization: 'American Heart Association',
+      lastUpdated: new Date('2025-11-27')
+    },
+    clinicalPearls: [
+      '💊 VF/pVT epinephrine timing: After 2nd failed shock, then every 3-5 minutes',
+      '⚡ Asystole/PEA epinephrine timing: Immediately, then every 3-5 minutes',
+      '📊 Earlier epinephrine (within 5 min) associated with improved ROSC rates',
+      '🎯 Dose: 1mg IV/IO push (can give via ETT at 2-2.5mg if no IV/IO access)',
+      '⚠️ Vasopressin no longer recommended - removed from guidelines after 2018 trials showed no benefit'
+    ],
+    learningObjectives: [
+      'Differentiate epinephrine timing between shockable (after 2nd shock) vs non-shockable rhythms (immediate)',
+      'Understand that defibrillation takes priority over medications in VF/pVT',
+      'Know that vasopressin is no longer part of cardiac arrest management'
+    ]
   },
   {
     id: 'acls-004',
-    question: 'A patient in cardiac arrest receives return of spontaneous circulation (ROSC). Blood pressure is 85/50 mmHg, heart rate 110 bpm. What is the target systolic blood pressure post-ROSC?',
+    question: 'A patient achieves ROSC after cardiac arrest. Blood pressure is 85/50 mmHg, heart rate 110 bpm. What is the target systolic blood pressure post-ROSC according to 2024-2025 guidelines?',
     options: [
       '≥90 mmHg',
       '≥100 mmHg',
@@ -65,17 +118,38 @@ export const aclsQuestions: Question[] = [
       '≥120 mmHg'
     ],
     correctIndex: 0,
-    explanation: 'Post-cardiac arrest care targets systolic BP ≥90 mmHg to ensure adequate cerebral perfusion pressure. Avoid hypotension which worsens neurologic outcomes. Consider vasopressors if fluids alone are insufficient.',
+    explanation: 'Post-cardiac arrest care targets SBP ≥90 mmHg (MAP ≥65 mmHg) to ensure adequate cerebral and coronary perfusion. Hypotension after ROSC is independently associated with worse neurologic outcomes. Use norepinephrine if fluids alone are insufficient. Based on 2024 TTM2 trial, focus on preventing hyperthermia (>37.8°C) rather than aggressive hypothermia - normothermia (37.5°C) is non-inferior to hypothermia (33°C).',
     references: [
-      'Callaway CW, et al. Part 8: Post-Cardiac Arrest Care: 2015 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Dankiewicz J, et al. TTM2 Trial. N Engl J Med. 2024;390(15):1387-1397. doi:10.1056/NEJMoa2100591',
+      'Panchal AR, et al. 2025 AHA Guidelines. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'See complete TTM2 trial data at: /emergency-references'
     ],
     difficulty: 'easy',
-    topicId: 'acls'
+    topicId: 'acls',
+    guidelineVersion: {
+      name: 'AHA Post-Cardiac Arrest Care Guidelines',
+      year: 2025,
+      organization: 'American Heart Association',
+      lastUpdated: new Date('2025-11-27')
+    },
+    clinicalPearls: [
+      '🎯 Targets: SBP ≥90 mmHg (MAP ≥65), SpO₂ 92-98%, PaCO₂ 35-45 mmHg',
+      '🌡️ TTM2 breakthrough: Normothermia (37.5°C) non-inferior to hypothermia (33°C) - death/poor neuro 50% vs 48%',
+      '⚠️ CRITICAL: Prevent fever >37.8°C - each 1°C increase → 30% worse neurologic outcomes',
+      '💊 Norepinephrine preferred vasopressor; titrate to MAP ≥65 mmHg',
+      '📊 TTM2 benefits: Less need for paralysis/deep sedation with normothermia strategy',
+      '🧠 Neuroprognostication: Wait ≥72 hours after TTM completion before prognosticating',
+      '⏰ TTM duration: Maintain target temperature 24-48 hours, then slow rewarming (0.25-0.5°C/hr)'
+    ],
+    learningObjectives: [
+      'Know minimum BP targets for post-arrest care (SBP ≥90, MAP ≥65)',
+      'Understand the paradigm shift from TTM2 trial: fever prevention > aggressive cooling',
+      'Recognize modifiable factors affecting neurologic outcomes: hypotension, hyperthermia, hyperoxia'
+    ]
   },
   {
     id: 'acls-005',
-    question: 'A patient presents with unstable bradycardia (heart rate 35 bpm) with signs of poor perfusion. What is the first-line treatment?',
+    question: 'A patient presents with unstable bradycardia (HR 35 bpm, SBP 75 mmHg, altered mental status). What is the first-line treatment according to 2018 ACC/AHA/HRS guidelines?',
     options: [
       'Atropine 0.5mg IV',
       'Transcutaneous pacing',
@@ -83,13 +157,33 @@ export const aclsQuestions: Question[] = [
       'Epinephrine infusion'
     ],
     correctIndex: 0,
-    explanation: 'Atropine 0.5mg IV is first-line for unstable bradycardia, may repeat every 3-5 minutes up to 3mg total. If atropine ineffective or contraindicated, proceed to transcutaneous pacing or chronotropic infusions.',
+    explanation: 'Atropine 0.5mg IV is first-line for unstable bradycardia with signs of poor perfusion (hypotension, altered mental status, chest pain, acute heart failure). May repeat every 3-5 minutes up to 3mg total. If atropine ineffective, contraindicated (Mobitz II, 3rd degree AV block, transplanted heart), or patient deteriorates, immediately proceed to transcutaneous pacing or chronotropic infusions.',
     references: [
-      'Kusumoto FM, et al. 2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Patients With Bradycardia',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Kusumoto FM, et al. 2018 ACC/AHA/HRS Guideline on Bradycardia. J Am Coll Cardiol. 2018;74(7):e51-e156. doi:10.1016/j.jacc.2018.10.044',
+      'Panchal AR, et al. 2025 AHA Guidelines. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'See bradycardia algorithm at: /emergency-references'
     ],
     difficulty: 'easy',
-    topicId: 'acls'
+    topicId: 'acls',
+    guidelineVersion: {
+      name: 'ACC/AHA/HRS Bradycardia Guideline',
+      year: 2018,
+      organization: 'ACC/AHA/HRS',
+      lastUpdated: new Date('2025-11-27')
+    },
+    clinicalPearls: [
+      '💊 Atropine dose: 0.5mg IV push q3-5min (max 3mg total) - doses <0.5mg may cause paradoxical bradycardia',
+      '⚡ Unstable signs: Hypotension (SBP <90), altered mental status, chest pain, acute HF, syncope',
+      '⚠️ Atropine contraindications: Mobitz II or 3rd degree AV block, transplanted heart (no vagal tone)',
+      '🔌 Transcutaneous pacing: Rate 60-80/min, start 70mA and increase until capture, provide analgesia',
+      '💉 If pacing unavailable: Dopamine 5-20 mcg/kg/min OR epinephrine 2-10 mcg/min infusion',
+      '🎯 Permanent pacing indications: Symptomatic Mobitz II, 3rd degree AV block, sick sinus syndrome'
+    ],
+    learningObjectives: [
+      'Recognize clinical signs of unstable bradycardia requiring immediate intervention',
+      'Know atropine dosing (0.5mg q3-5min, max 3mg) and when it is contraindicated',
+      'Understand the escalation sequence: atropine → transcutaneous pacing → chronotropes → transvenous pacing'
+    ]
   },
   {
     id: 'acls-006',
