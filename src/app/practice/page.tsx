@@ -69,8 +69,8 @@ export default function PracticePage() {
           </p>
         </div>
 
-        {/* Quick Practice Options - Optimized compact cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        {/* Quick Practice Options + Guidelines & References - All in one row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-12">
           <div className="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Target className="w-5 h-5 text-blue-600" />
@@ -126,6 +126,34 @@ export default function PracticePage() {
               Study Now
             </Link>
           </div>
+
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <BookOpen className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Guidelines</h3>
+            <p className="text-gray-600 text-xs mb-3">ACLS, PALS & clinical protocols</p>
+            <Link
+              href="/guidelines"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors inline-block"
+            >
+              View All
+            </Link>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow border border-green-100">
+            <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <BookOpen className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">References</h3>
+            <p className="text-gray-600 text-xs mb-3">30+ landmark trials & evidence</p>
+            <Link
+              href="/emergency-references"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors inline-block"
+            >
+              Browse
+            </Link>
+          </div>
         </div>
 
         {/* Topic Selection - Compact cards */}
@@ -165,81 +193,6 @@ export default function PracticePage() {
               ))}
             </div>
           </EnhancedErrorBoundary>
-        </div>
-
-        {/* Guidelines & References Section - NEW */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 shadow-md">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">Clinical Guidelines</h3>
-            </div>
-            <p className="text-gray-700 text-sm mb-4">
-              Access evidence-based clinical guidelines from leading organizations including AHA, ERC, and ACEP.
-            </p>
-            <ul className="space-y-2 text-sm text-gray-700 mb-4">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>ACLS & PALS algorithms</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Sepsis management protocols</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Trauma care guidelines</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Critical care best practices</span>
-              </li>
-            </ul>
-            <Link
-              href="/guidelines"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors inline-block"
-            >
-              View Guidelines
-            </Link>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-6 shadow-md">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">Evidence Library</h3>
-            </div>
-            <p className="text-gray-700 text-sm mb-4">
-              Explore landmark trials and meta-analyses from NEJM, Lancet, and JAMA that shape modern practice.
-            </p>
-            <ul className="space-y-2 text-sm text-gray-700 mb-4">
-              <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
-                <span>30+ landmark clinical trials</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
-                <span>Systematic reviews & meta-analyses</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
-                <span>Evidence-based practice summaries</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
-                <span>DOI links to original publications</span>
-              </li>
-            </ul>
-            <Link
-              href="/emergency-references"
-              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors inline-block"
-            >
-              Browse Evidence
-            </Link>
-          </div>
         </div>
 
         {/* Study Tips */}
