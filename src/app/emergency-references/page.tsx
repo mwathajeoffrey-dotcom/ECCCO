@@ -54,10 +54,10 @@ export default function EmergencyReferencesPage() {
       topics: ["ACLS", "CPR", "Cardiac Arrest Management"],
       guidelines: [
         {
-          id: "acls-2025",
-          name: "2025 AHA Guidelines for CPR and Emergency Cardiovascular Care",
+          id: "acls-2020",
+          name: "2020 AHA Guidelines for CPR and Emergency Cardiovascular Care",
           organization: "American Heart Association",
-          year: "2025",
+          year: "2020",
           summary: "LANDMARK GUIDELINES: Comprehensive update to resuscitation science including new recommendations on compression quality, early defibrillation, and post-cardiac arrest care",
           keyRecommendations: [
             "High-quality CPR: ≥2 inches (5cm) depth, 100-120 compressions/min, allow full chest recoil, minimize interruptions (<10 sec)",
@@ -78,13 +78,13 @@ export default function EmergencyReferencesPage() {
             "🔍 Ultrasound during CPR: Can identify reversible causes (PE, tamponade) but don't interrupt compressions >10 sec"
           ],
           evidenceLevel: "Class I, Level A Evidence (Multiple RCTs)",
-          citation: "Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193",
+          citation: "Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916",
           references: [
             {
-              title: "2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care",
+              title: "2020 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care",
               journal: "Circulation",
-              doi: "10.1161/CIR.0000000000001193",
-              url: "https://doi.org/10.1161/CIR.0000000000001193"
+              doi: "10.1161/CIR.0000000000000916",
+              url: "https://doi.org/10.1161/CIR.0000000000000916"
             }
           ]
         },
