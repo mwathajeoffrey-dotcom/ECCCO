@@ -19,6 +19,9 @@ export default function Hero() {
   }, [inView]);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -56,7 +59,7 @@ export default function Hero() {
       </div>
 
       {/* Floating particles */}
-      {[...Array(20)].map((_, i) => (
+      {typeof window !== 'undefined' && [...Array(20)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-white rounded-full"

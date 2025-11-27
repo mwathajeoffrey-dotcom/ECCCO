@@ -19,6 +19,9 @@ export default function EvidenceShowcase() {
 
   // Particle system
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
 
