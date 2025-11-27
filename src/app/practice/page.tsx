@@ -69,66 +69,66 @@ export default function PracticePage() {
           </p>
         </div>
 
-        {/* Quick Practice Options */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Target className="w-6 h-6 text-blue-600" />
+        {/* Quick Practice Options - Optimized compact cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          <div className="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Target className="w-5 h-5 text-blue-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Quick Practice</h3>
-            <p className="text-gray-600 text-sm mb-4">10 random questions from all topics</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Quick Practice</h3>
+            <p className="text-gray-600 text-xs mb-3">10 random questions from all topics</p>
             <Link
               href="/exam"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors inline-block"
             >
               Start Now
             </Link>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Users className="w-6 h-6 text-green-600" />
+          <div className="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Users className="w-5 h-5 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Mixed Review</h3>
-            <p className="text-gray-600 text-sm mb-4">30 questions across multiple topics</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Mixed Review</h3>
+            <p className="text-gray-600 text-xs mb-3">30 questions across multiple topics</p>
             <Link
               href="/exam"
-              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors inline-block"
             >
               Start Review
             </Link>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
+          <div className="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <TrendingUp className="w-5 h-5 text-purple-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Weak Areas</h3>
-            <p className="text-gray-600 text-sm mb-4">Focus on your challenging topics</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Weak Areas</h3>
+            <p className="text-gray-600 text-xs mb-3">Focus on your challenging topics</p>
             <Link
               href="/dashboard"
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors inline-block"
             >
               Analyze
             </Link>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-orange-600" />
+          <div className="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <BookOpen className="w-5 h-5 text-orange-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Study Mode</h3>
-            <p className="text-gray-600 text-sm mb-4">Questions with immediate explanations</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Study Mode</h3>
+            <p className="text-gray-600 text-xs mb-3">Questions with immediate explanations</p>
             <Link
               href="/exam"
-              className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors inline-block"
             >
               Study Now
             </Link>
           </div>
         </div>
 
-        {/* Topic Selection */}
+        {/* Topic Selection - Compact cards */}
         <div className="mb-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Practice by Topic</h3>
           <EnhancedErrorBoundary fallback={
@@ -139,24 +139,24 @@ export default function PracticePage() {
               </Link>
             </div>
           }>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {topics.map((topic) => (
                 <div
                   key={topic.id}
-                  className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 >
-                  <div className="flex items-center mb-3">
-                    <BookOpen className="w-5 h-5 text-blue-600 mr-2" />
-                    <h4 className="text-lg font-semibold text-gray-900">{topic.name}</h4>
+                  <div className="flex items-center mb-2">
+                    <BookOpen className="w-4 h-4 text-blue-600 mr-2" />
+                    <h4 className="text-base font-semibold text-gray-900">{topic.name}</h4>
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
+                  <p className="text-gray-600 text-xs mb-3 line-clamp-2">{topic.description}</p>
                   <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-500">
-                      <span>30 Questions Available</span>
+                    <div className="text-xs text-gray-500">
+                      <span>30 Questions</span>
                     </div>
                     <Link
                       href={`/exam?topic=${topic.id}`}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                      className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors"
                     >
                       Practice
                     </Link>
@@ -165,6 +165,81 @@ export default function PracticePage() {
               ))}
             </div>
           </EnhancedErrorBoundary>
+        </div>
+
+        {/* Guidelines & References Section - NEW */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 shadow-md">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <BookOpen className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Clinical Guidelines</h3>
+            </div>
+            <p className="text-gray-700 text-sm mb-4">
+              Access evidence-based clinical guidelines from leading organizations including AHA, ERC, and ACEP.
+            </p>
+            <ul className="space-y-2 text-sm text-gray-700 mb-4">
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>ACLS & PALS algorithms</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Sepsis management protocols</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Trauma care guidelines</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Critical care best practices</span>
+              </li>
+            </ul>
+            <Link
+              href="/guidelines"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors inline-block"
+            >
+              View Guidelines
+            </Link>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-6 shadow-md">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                <BookOpen className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Evidence Library</h3>
+            </div>
+            <p className="text-gray-700 text-sm mb-4">
+              Explore landmark trials and meta-analyses from NEJM, Lancet, and JAMA that shape modern practice.
+            </p>
+            <ul className="space-y-2 text-sm text-gray-700 mb-4">
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">•</span>
+                <span>30+ landmark clinical trials</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">•</span>
+                <span>Systematic reviews & meta-analyses</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">•</span>
+                <span>Evidence-based practice summaries</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">•</span>
+                <span>DOI links to original publications</span>
+              </li>
+            </ul>
+            <Link
+              href="/emergency-references"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors inline-block"
+            >
+              Browse Evidence
+            </Link>
+          </div>
         </div>
 
         {/* Study Tips */}
