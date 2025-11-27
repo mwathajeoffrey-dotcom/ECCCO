@@ -13,14 +13,14 @@ export const aclsQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'After defibrillation, immediately resume CPR for 2 minutes before next rhythm check. This minimizes chest compression interruptions and maximizes coronary perfusion pressure. Each 5-second increase in peri-shock pause reduces ROSC likelihood by 18%. Drug therapy (epinephrine) comes after second failed defibrillation, with amiodarone considered after third shock.',
     references: [
-      'Panchal AR, et al. 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'Panchal AR, et al. 2020 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916',
       'See comprehensive ACLS guidelines at: /emergency-references'
     ],
     difficulty: 'medium',
     topicId: 'acls',
     guidelineVersion: {
       name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
-      year: 2025,
+      year: 2020,
       organization: 'American Heart Association',
       lastUpdated: new Date('2025-11-27')
     },
@@ -48,14 +48,14 @@ export const aclsQuestions: Question[] = [
     correctIndex: 0,
     explanation: 'High-quality CPR requires compression rate 100-120/min and depth at least 2 inches (5 cm) in adults. The 2025 AHA guidelines emphasize proper depth (not excessive), complete chest recoil, minimal interruptions (<10 seconds), and avoiding over-ventilation. Compression depth >2.4 inches may cause injuries without additional benefit.',
     references: [
-      'Panchal AR, et al. 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'Panchal AR, et al. 2020 American Heart Association Guidelines for CPR and ECC. Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916',
       'See evidence from COMPRESS Trial at: /emergency-references'
     ],
     difficulty: 'easy',
     topicId: 'acls',
     guidelineVersion: {
       name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
-      year: 2025,
+      year: 2020,
       organization: 'American Heart Association',
       lastUpdated: new Date('2025-11-27')
     },
@@ -84,14 +84,14 @@ export const aclsQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'In VF/pVT, epinephrine 1mg IV/IO is given after the second failed defibrillation, then every 3-5 minutes throughout resuscitation. Early defibrillation and high-quality CPR take priority over medications in shockable rhythms. Earlier epinephrine administration (within 5 minutes of arrest) is associated with better outcomes.',
     references: [
-      'Panchal AR, et al. 2025 AHA Guidelines for CPR and ECC. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'Panchal AR, et al. 2020 AHA Guidelines for CPR and ECC. Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916',
       'See ACLS medication algorithms at: /emergency-references'
     ],
     difficulty: 'medium',
     topicId: 'acls',
     guidelineVersion: {
       name: 'AHA Guidelines for CPR and Emergency Cardiovascular Care',
-      year: 2025,
+      year: 2020,
       organization: 'American Heart Association',
       lastUpdated: new Date('2025-11-27')
     },
@@ -121,14 +121,14 @@ export const aclsQuestions: Question[] = [
     explanation: 'Post-cardiac arrest care targets SBP ≥90 mmHg (MAP ≥65 mmHg) to ensure adequate cerebral and coronary perfusion. Hypotension after ROSC is independently associated with worse neurologic outcomes. Use norepinephrine if fluids alone are insufficient. Based on 2024 TTM2 trial, focus on preventing hyperthermia (>37.8°C) rather than aggressive hypothermia - normothermia (37.5°C) is non-inferior to hypothermia (33°C).',
     references: [
       'Dankiewicz J, et al. TTM2 Trial. N Engl J Med. 2024;390(15):1387-1397. doi:10.1056/NEJMoa2100591',
-      'Panchal AR, et al. 2025 AHA Guidelines. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'Panchal AR, et al. 2020 AHA Guidelines. Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916',
       'See complete TTM2 trial data at: /emergency-references'
     ],
     difficulty: 'easy',
     topicId: 'acls',
     guidelineVersion: {
       name: 'AHA Post-Cardiac Arrest Care Guidelines',
-      year: 2025,
+      year: 2020,
       organization: 'American Heart Association',
       lastUpdated: new Date('2025-11-27')
     },
@@ -160,7 +160,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'Atropine 0.5mg IV is first-line for unstable bradycardia with signs of poor perfusion (hypotension, altered mental status, chest pain, acute heart failure). May repeat every 3-5 minutes up to 3mg total. If atropine ineffective, contraindicated (Mobitz II, 3rd degree AV block, transplanted heart), or patient deteriorates, immediately proceed to transcutaneous pacing or chronotropic infusions.',
     references: [
       'Kusumoto FM, et al. 2018 ACC/AHA/HRS Guideline on Bradycardia. J Am Coll Cardiol. 2018;74(7):e51-e156. doi:10.1016/j.jacc.2018.10.044',
-      'Panchal AR, et al. 2025 AHA Guidelines. Circulation. 2025;152(23):e1-e357. doi:10.1161/CIR.0000000000001193',
+      'Panchal AR, et al. 2020 AHA Guidelines. Circulation. 2020;142(16_suppl_2):S366-S468. doi:10.1161/CIR.0000000000000916',
       'See bradycardia algorithm at: /emergency-references'
     ],
     difficulty: 'easy',
@@ -197,8 +197,8 @@ export const aclsQuestions: Question[] = [
     correctIndex: 0,
     explanation: 'Second dose of amiodarone is 150mg IV if VF/pVT persists. Lidocaine 1-1.5mg/kg IV is alternative if amiodarone unavailable. Maximum amiodarone dose in cardiac arrest is 450mg (300mg + 150mg).',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -216,7 +216,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'For stable wide-complex tachycardia, adenosine 6mg IV rapid push can help differentiate SVT with aberrancy (may terminate) from VT (no effect). If adenosine ineffective, proceed to antiarrhythmics like amiodarone or procainamide.',
     references: [
       'Page RL, et al. 2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -233,7 +233,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'For asystole/PEA, epinephrine 1mg IV is given every 3-5 minutes throughout the resuscitation. In VF/pVT, epinephrine is delayed until after second failed defibrillation, then every 3-5 minutes.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
       'Soar J, et al. European Resuscitation Council Guidelines for Resuscitation 2015'
     ],
     difficulty: 'easy',
@@ -269,7 +269,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'Magnesium sulfate 2g IV is first-line for torsades de pointes, even with normal serum magnesium. If unstable, unsynchronized defibrillation is used (cannot synchronize to polymorphic rhythm). Identify and correct underlying QT prolongation.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
       'Roden DM. Drug-induced prolongation of the QT interval'
     ],
     difficulty: 'medium',
@@ -287,8 +287,8 @@ export const aclsQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'With advanced airway (endotracheal tube, supraglottic airway), provide continuous chest compressions without pauses and 1 breath every 6 seconds (10 breaths/min). Avoid hyperventilation which decreases venous return.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -306,7 +306,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'Unstable atrial fibrillation with hemodynamic compromise requires immediate synchronized cardioversion. Start with 100-200J biphasic. Rate control medications are contraindicated in unstable patients.',
     references: [
       'January CT, et al. 2019 AHA/ACC/HRS Focused Update of the 2014 AHA/ACC/HRS Guideline for Management of Patients With Atrial Fibrillation',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -323,7 +323,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 3,
     explanation: 'There is no specific time limit for terminating resuscitation. Consider reversible causes (H\'s and T\'s), quality of CPR, initial rhythm, witness status, and response to interventions. Some patients have good outcomes after prolonged resuscitation.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
       'Goldberger ZD, et al. Duration of resuscitation efforts and survival after in-hospital cardiac arrest'
     ],
     difficulty: 'hard',
@@ -342,7 +342,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'After unsuccessful vagal maneuvers in stable SVT, adenosine 6mg IV rapid push followed by 20ml saline flush is next step. If ineffective, give adenosine 12mg. If still ineffective, consider calcium channel blockers or beta-blockers.',
     references: [
       'Page RL, et al. 2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'easy',
     topicId: 'acls'
@@ -359,7 +359,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'The 5 H\'s are: Hypoxia, Hypovolemia, Hydrogen ions (acidosis), Hypothermia, Hyperkalemia. The 5 T\'s are: Tension pneumothorax, Tamponade (cardiac), Toxins, Thrombosis (pulmonary), Thrombosis (coronary). Address reversible causes during CPR.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
       'Soar J, et al. European Resuscitation Council Guidelines for Resuscitation 2015'
     ],
     difficulty: 'medium',
@@ -396,7 +396,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'For unstable SVT, initial synchronized cardioversion uses 50-100J. SVT typically requires lower energy than atrial fibrillation or ventricular arrhythmias. Increase energy if initial shock unsuccessful.',
     references: [
       'Page RL, et al. 2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -414,7 +414,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'For pregnant patients >20 weeks gestation, provide manual left uterine displacement during CPR to relieve aortocaval compression. This improves venous return and cardiac output. Consider emergency cesarean delivery if no ROSC within 4 minutes.',
     references: [
       'Jeejeebhoy FM, et al. Cardiac Arrest in Pregnancy: A Scientific Statement From the American Heart Association',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -431,8 +431,8 @@ export const aclsQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'PEA requires immediate CPR and epinephrine 1mg IV. Do not defibrillate organized rhythms without pulse. Focus on reversible causes of PEA (H\'s and T\'s) while continuing high-quality CPR.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -449,7 +449,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 1,
     explanation: 'Minimize interruptions in chest compressions to <10 seconds for pulse checks, rhythm analysis, and defibrillator charging. Longer interruptions decrease coronary perfusion pressure and reduce survival rates.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines',
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines',
       'Christenson J, et al. Chest compression fraction determines survival in patients with out-of-hospital ventricular fibrillation'
     ],
     difficulty: 'easy',
@@ -468,7 +468,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'For stable monomorphic VT, amiodarone, lidocaine, or procainamide are all acceptable first-line treatments. Choice depends on patient factors and physician preference. If medications fail, synchronized cardioversion is indicated.',
     references: [
       'Al-Khatib SM, et al. 2017 AHA/ACC/HRS Guideline for Management of Patients With Ventricular Arrhythmias',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -504,7 +504,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'For suspected opioid-induced cardiac arrest, give naloxone 0.4-2mg IV in addition to standard ACLS. Naloxone may reverse respiratory depression that led to cardiac arrest. Higher doses may be needed for fentanyl/synthetic opioids.',
     references: [
       'Lavonas EJ, et al. Part 10: Special Circumstances of Resuscitation: 2015 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -539,8 +539,8 @@ export const aclsQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'Resume chest compressions immediately after shock delivery without pulse or rhythm check. Most patients remain in VF after first shock, and immediate CPR maintains perfusion. Check rhythm after 2 minutes of CPR.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -558,7 +558,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'Type II second-degree AV block with wide QRS indicates infranodal conduction disease that does not respond to atropine and may worsen with atropine. Transcutaneous pacing is most appropriate next step.',
     references: [
       'Kusumoto FM, et al. 2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Patients With Bradycardia',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'hard',
     topicId: 'acls'
@@ -575,7 +575,7 @@ export const aclsQuestions: Question[] = [
     correctIndex: 3,
     explanation: 'For refractory VF, consider double sequential defibrillation, empirical calcium (especially if hyperkalemia suspected), and sodium bicarbonate (especially if acidosis or tricyclic overdose suspected). These are not routine but may help in specific circumstances.',
     references: [
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines',
       'Cabanas JG, et al. Double sequential external defibrillation in out-of-hospital refractory ventricular fibrillation'
     ],
     difficulty: 'hard',
@@ -594,7 +594,7 @@ export const aclsQuestions: Question[] = [
     explanation: 'Unstable wide-complex tachycardia (likely VT after adenosine failure) requires immediate synchronized cardioversion. Start with 100J for monomorphic VT. Use synchronized shocks for organized rhythms.',
     references: [
       'Al-Khatib SM, et al. 2017 AHA/ACC/HRS Guideline for Management of Patients With Ventricular Arrhythmias',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'
@@ -629,8 +629,8 @@ export const aclsQuestions: Question[] = [
     correctIndex: 2,
     explanation: 'When alone, activating emergency response system takes priority to get additional help and equipment. For witnessed cardiac arrest with AED available, some guidelines suggest getting AED first, but calling for help ensures additional resources.',
     references: [
-      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2025 American Heart Association Guidelines',
-      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2025 American Heart Association Guidelines'
+      'Panchal AR, et al. Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines',
+      'Berg KM, et al. Part 7: Adult Advanced Cardiovascular Life Support: 2020 American Heart Association Guidelines'
     ],
     difficulty: 'medium',
     topicId: 'acls'

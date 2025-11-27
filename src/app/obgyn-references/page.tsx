@@ -261,10 +261,10 @@ export default function OBGYNReferencesPage() {
       topics: ["Thromboembolism in Pregnancy", "Hematologic Disorders in Pregnancy"],
       guidelines: [
         {
-          id: "ash-2024-vte",
-          name: "ASH 2024 Guidelines - VTE in Pregnancy",
-          organization: "American Society of Hematology",
-          year: "2024",
+          id: "acog-2018-vte-pregnancy",
+          name: "ACOG Practice Bulletin No. 196 - Thromboembolism in Pregnancy",
+          organization: "American College of Obstetricians and Gynecologists",
+          year: "2018",
           summary: "Comprehensive guidelines for prevention and treatment of venous thromboembolism in pregnancy",
           keyRecommendations: [
             "VTE prophylaxis with LMWH for women with prior VTE + high-risk thrombophilia (antithrombin deficiency, antiphospholipid syndrome)",
@@ -284,14 +284,14 @@ export default function OBGYNReferencesPage() {
             "💨 PE diagnosis: Start with ultrasound legs; if negative → VQ scan (1st choice, 0.1mGy fetal radiation) or CTPA (acceptable if VQ unavailable)",
             "⚠️ DON'T use: Warfarin (embryopathy 6-12 weeks), DOACs (lack safety data, cross placenta)"
           ],
-          evidenceLevel: "Strong Recommendation, Moderate Evidence",
-          citation: "Blood Adv. 2024;8(12):3144-3168. doi:10.1182/bloodadvances.2024012464",
+          evidenceLevel: "Strong Recommendation, High-Quality Evidence",
+          citation: "Obstet Gynecol. 2018;132(1):e1-e17. doi:10.1097/AOG.0000000000002706",
           references: [
             {
-              title: "ASH 2024 Guidelines for Management of Venous Thromboembolism: Pregnancy",
-              journal: "Blood Advances",
-              doi: "10.1182/bloodadvances.2024012464",
-              url: "https://doi.org/10.1182/bloodadvances.2024012464"
+              title: "ACOG Practice Bulletin No. 196: Thromboembolism in Pregnancy",
+              journal: "Obstetrics & Gynecology",
+              doi: "10.1097/AOG.0000000000002706",
+              url: "https://doi.org/10.1097/AOG.0000000000002706"
             }
           ]
         },
