@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ElementType, useState } from 'react';
 import Link from 'next/link';
 import { 
   FileText, 
@@ -39,6 +39,16 @@ interface GuidelineCategory {
   category: string;
   topics: string[];
   guidelines: GuidelineContent[];
+}
+
+interface FlowchartGuide {
+  id: string;
+  title: string;
+  summary: string;
+  highlights: string[];
+  link: string;
+  badge: string;
+  icon: ElementType;
 }
 
 export default function EmergencyReferencesPage() {
@@ -898,6 +908,51 @@ export default function EmergencyReferencesPage() {
     }
   ];
 
+  const flowchartGuidelines: FlowchartGuide[] = [
+    {
+      id: 'acls-cardiac-arrest-flowchart',
+      title: '2025 ACLS Cardiac Arrest Algorithm Flowchart',
+      summary: 'Stepwise ACLS path from immediate arrest recognition through ROSC care aligned with the 2025 AHA guidelines.',
+      highlights: [
+        'Recognize arrest → immediate high-quality CPR + 911 activation per 2025 AHA metrics',
+        'Shockable vs non-shockable rhythm decision tree, timed rhythm checks with ≤10-second pulse checks',
+        'Epinephrine/Amiodarone dosing cadence, airway guidance, and postarrest airway management',
+        'Post-ROSC care: TTM or normothermia, MAP ≥65, SpO₂ 92-98%, and neurologic prognostication timing'
+      ],
+      link: '/exam?topic=acls-cardiac-arrest',
+      badge: 'Cardiac Arrest Algorithm',
+      icon: Zap
+    },
+    {
+      id: 'sepsis-resuscitation-flowchart',
+      title: 'Surviving Sepsis Flowchart (2024 Update)',
+      summary: 'Updated qSOFA/SIRS screening to bundle completion with the 2024 Surviving Sepsis Campaign guidance.',
+      highlights: [
+        'Screen for qSOFA/SIRS + lactate within 10 minutes, obtain cultures before antibiotics per 2024 bundle',
+        '30 mL/kg balanced crystalloid within 3 hours and reassess fluid responsiveness with dynamic testing',
+        'Norepinephrine first-line for MAP <65, add vasopressin/epinephrine as stepwise escalation',
+        'Re-evaluate lactate, bedside echo, or passive leg raise to guide further resuscitation decisions'
+      ],
+      link: '/exam?topic=sepsis',
+      badge: 'Sepsis Flowchart',
+      icon: Activity
+    },
+    {
+      id: 'stroke-code-flowchart',
+      title: 'Stroke Code & Thrombectomy Flowchart (2024-25)',
+      summary: 'Rapid triage for tPA, thrombectomy, and post-reperfusion blood pressure control aligned with 2024-25 AHA/ASA updates.',
+      highlights: [
+        'Door-to-CT ≤10 minutes, CTA for LVO detection, NIHSS-based activation, and mobile stroke team alerts',
+        'tPA within 4.5 hours (up to 9 with perfusion mismatch) with BP <185/110 pre-tPA and BP management protocols',
+        'Thrombectomy up to 24 hours with favorable perfusion mismatch (DAWN/DEFUSE-3) plus advanced imaging triage',
+        'Post-reperfusion BP <140/90 for 24h, admit all thrombectomy patients to stroke unit/neuro-ICU'
+      ],
+      link: '/exam?topic=stroke',
+      badge: 'Stroke Code Algorithm',
+      icon: Heart
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -966,6 +1021,50 @@ export default function EmergencyReferencesPage() {
             </div>
           </div>
         </div>
+
+        {/* Flowchart Guidelines */}
+        <section className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+          <div className="flex flex-col space-y-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-red-600 mb-1">Flowchart Guidelines</p>
+              <h2 className="text-2xl font-bold text-gray-900">Algorithmic pathways for life-saving decisions</h2>
+            </div>
+            <p className="text-sm text-gray-600 max-w-2xl">
+              These flow charts — featuring the 2025 ACLS cardiac arrest algorithm, the latest surviving sepsis pathway, and updated stroke code algorithm — document the decision-tree logic behind each critical care guideline and make this page distinct from the DOI-only reference list.
+            </p>
+          </div>
+
+          <div className="grid gap-6 mt-6 md:grid-cols-3">
+            {flowchartGuidelines.map((guide) => (
+              <Link
+                key={guide.id}
+                href={guide.link}
+                className="group flex flex-col h-full border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-red-600 bg-red-50 px-2 py-1 rounded-full">
+                    {guide.badge}
+                  </span>
+                  <guide.icon className="w-7 h-7 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{guide.title}</h3>
+                <p className="text-sm text-gray-600 mb-3">{guide.summary}</p>
+                <ul className="mt-auto text-xs space-y-1 text-gray-500">
+                  {guide.highlights.map((item, highlightIndex) => (
+                    <li key={highlightIndex} className="flex items-start gap-2">
+                      <span className="text-red-500 mt-0.5">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <span className="inline-flex items-center mt-4 text-sm font-semibold text-red-600 group-hover:underline">
+                  View Flow Chart
+                  <ExternalLink className="w-4 h-4 ml-1" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* Guidelines by Category */}
         {guidelines.map((category, idx) => (
