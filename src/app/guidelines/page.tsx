@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Download, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Download, AlertCircle, ZoomIn, ZoomOut, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { ACLSFlowchart } from '@/components/flowcharts/ACLSFlowchart';
 import { ACLSBradycardiaFlowchart } from '@/components/flowcharts/ACLSBradycardiaFlowchart';
@@ -14,6 +14,30 @@ export const dynamic = 'force-dynamic';
 
 export default function GuidelinesPage() {
   const [expandedFlowchart, setExpandedFlowchart] = useState<string | null>(null);
+  const [zoomLevels, setZoomLevels] = useState<Record<string, number>>({});
+
+  const getZoom = (flowchartId: string) => zoomLevels[flowchartId] || 1;
+
+  const handleZoomIn = (flowchartId: string) => {
+    setZoomLevels(prev => ({
+      ...prev,
+      [flowchartId]: Math.min((prev[flowchartId] || 1) + 0.2, 2)
+    }));
+  };
+
+  const handleZoomOut = (flowchartId: string) => {
+    setZoomLevels(prev => ({
+      ...prev,
+      [flowchartId]: Math.max((prev[flowchartId] || 1) - 0.2, 0.5)
+    }));
+  };
+
+  const handleZoomReset = (flowchartId: string) => {
+    setZoomLevels(prev => ({
+      ...prev,
+      [flowchartId]: 1
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -48,51 +72,76 @@ export default function GuidelinesPage() {
         {/* Flowcharts Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <FlowchartCard
+            flowchartId="cardiac-arrest"
             title="ACLS: Cardiac Arrest"
             description="Ventricular fibrillation, pulseless ventricular tachycardia, asystole, pulseless electrical activity, and post-resuscitation care"
             category="ACLS"
             isExpanded={expandedFlowchart === 'cardiac-arrest'}
             onToggle={() => setExpandedFlowchart(expandedFlowchart === 'cardiac-arrest' ? null : 'cardiac-arrest')}
+            zoom={getZoom('cardiac-arrest')}
+            onZoomIn={() => handleZoomIn('cardiac-arrest')}
+            onZoomOut={() => handleZoomOut('cardiac-arrest')}
+            onZoomReset={() => handleZoomReset('cardiac-arrest')}
           >
             <ACLSFlowchart />
           </FlowchartCard>
 
           <FlowchartCard
+            flowchartId="bradycardia"
             title="ACLS: Bradycardia"
             description="Symptomatic bradycardia assessment and management including atropine, transcutaneous pacing, and AV block classification"
             category="ACLS"
             isExpanded={expandedFlowchart === 'bradycardia'}
             onToggle={() => setExpandedFlowchart(expandedFlowchart === 'bradycardia' ? null : 'bradycardia')}
+            zoom={getZoom('bradycardia')}
+            onZoomIn={() => handleZoomIn('bradycardia')}
+            onZoomOut={() => handleZoomOut('bradycardia')}
+            onZoomReset={() => handleZoomReset('bradycardia')}
           >
             <ACLSBradycardiaFlowchart />
           </FlowchartCard>
 
           <FlowchartCard
+            flowchartId="tachycardia"
             title="ACLS: Tachycardia"
             description="Stable and unstable tachycardia management including SVT, ventricular tachycardia, and atrial fibrillation with RVR"
             category="ACLS"
             isExpanded={expandedFlowchart === 'tachycardia'}
             onToggle={() => setExpandedFlowchart(expandedFlowchart === 'tachycardia' ? null : 'tachycardia')}
+            zoom={getZoom('tachycardia')}
+            onZoomIn={() => handleZoomIn('tachycardia')}
+            onZoomOut={() => handleZoomOut('tachycardia')}
+            onZoomReset={() => handleZoomReset('tachycardia')}
           >
             <ACLSTachycardiaFlowchart />
           </FlowchartCard>
 
           <FlowchartCard
+            flowchartId="sepsis"
             title="Sepsis Management"
             description="Early recognition and management of sepsis including fluid resuscitation, lactate clearance, and antibiotic timing"
             category="Medical"
             isExpanded={expandedFlowchart === 'sepsis'}
             onToggle={() => setExpandedFlowchart(expandedFlowchart === 'sepsis' ? null : 'sepsis')}
+            zoom={getZoom('sepsis')}
+            onZoomIn={() => handleZoomIn('sepsis')}
+            onZoomOut={() => handleZoomOut('sepsis')}
+            onZoomReset={() => handleZoomReset('sepsis')}
           >
             <SepsisFlowchart />
           </FlowchartCard>
 
           <FlowchartCard
+            flowchartId="stroke"
             title="Acute Ischemic Stroke"
             description="Stroke assessment and intervention including time windows, thrombolysis eligibility, and mechanical thrombectomy"
             category="Medical"
             isExpanded={expandedFlowchart === 'stroke'}
             onToggle={() => setExpandedFlowchart(expandedFlowchart === 'stroke' ? null : 'stroke')}
+            zoom={getZoom('stroke')}
+            onZoomIn={() => handleZoomIn('stroke')}
+            onZoomOut={() => handleZoomOut('stroke')}
+            onZoomReset={() => handleZoomReset('stroke')}
           >
             <StrokeFlowchart />
           </FlowchartCard>
@@ -183,6 +232,11 @@ interface FlowchartCardProps {
   isExpanded: boolean;
   onToggle: () => void;
   children: React.ReactNode;
+  flowchartId: string;
+  zoom: number;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onZoomReset: () => void;
 }
 
 function FlowchartCard({
@@ -191,7 +245,12 @@ function FlowchartCard({
   category,
   isExpanded,
   onToggle,
-  children
+  children,
+  flowchartId,
+  zoom,
+  onZoomIn,
+  onZoomOut,
+  onZoomReset
 }: FlowchartCardProps) {
   const categoryColor = category === 'ACLS' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700';
 
@@ -221,9 +280,45 @@ function FlowchartCard({
       </div>
 
       {isExpanded && (
-        <div className="border-t border-gray-200 p-6 bg-gray-50">
-          <div className="overflow-x-auto">
-            {children}
+        <div className="border-t border-gray-200 bg-gray-50">
+          {/* Zoom Controls */}
+          <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 sticky top-0 z-10">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onZoomOut}
+                disabled={zoom <= 0.5}
+                className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="Zoom out"
+              >
+                <ZoomOut className="h-4 w-4 text-gray-600" />
+              </button>
+              <span className="px-3 py-1 bg-gray-100 rounded text-sm font-medium text-gray-700 w-16 text-center">
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                onClick={onZoomIn}
+                disabled={zoom >= 2}
+                className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="Zoom in"
+              >
+                <ZoomIn className="h-4 w-4 text-gray-600" />
+              </button>
+              <button
+                onClick={onZoomReset}
+                className="ml-2 px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+                title="Reset zoom"
+              >
+                Reset
+              </button>
+            </div>
+            <p className="text-xs text-gray-500">💡 Use zoom to view details on mobile devices</p>
+          </div>
+          
+          {/* Flowchart Container with Zoom */}
+          <div className="p-6 overflow-x-auto" style={{ userSelect: 'none' }}>
+            <div style={{ transform: `scale(${zoom})`, transformOrigin: 'top left', transition: 'transform 0.2s ease' }}>
+              {children}
+            </div>
           </div>
         </div>
       )}

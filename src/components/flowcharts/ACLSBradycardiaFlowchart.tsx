@@ -58,10 +58,10 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="280" cy="185" r="18" fill="white" stroke="#1e40af" strokeWidth="2" />
           <text x="287" y="192" fontSize="16" fontWeight="bold" fill="#1e40af">1</text>
           <text x="330" y="185" fontSize="16" fontWeight="bold" fill="white">Initial Management</text>
-          <text x="330" y="210" fontSize="12" fill="white">✓ Call for help & AED/defibrillator</text>
-          <text x="330" y="232" fontSize="12" fill="white">✓ Place on continuous cardiac monitor & pulse oximetry</text>
-          <text x="330" y="254" fontSize="12" fill="white">✓ Establish IV access (peripheral or central)</text>
-          <text x="330" y="272" fontSize="12" fill="white">✓ 12-lead ECG within 10 minutes (assess for AV block, MI)</text>
+          <text x="340" y="205" fontSize="11" fill="white" textAnchor="start">✓ Call for help & AED/defibrillator</text>
+          <text x="340" y="222" fontSize="11" fill="white" textAnchor="start">✓ Continuous cardiac monitor & pulse oximetry</text>
+          <text x="340" y="239" fontSize="11" fill="white" textAnchor="start">✓ Establish IV access (peripheral or central)</text>
+          <text x="340" y="256" fontSize="11" fill="white" textAnchor="start">✓ 12-lead ECG within 10 minutes</text>
 
           {/* Arrow down */}
           <line x1="500" y1="280" x2="500" y2="320" stroke="#333" strokeWidth="3" />
@@ -71,9 +71,9 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="280" cy="345" r="18" fill="white" stroke="#0284c7" strokeWidth="2" />
           <text x="287" y="352" fontSize="16" fontWeight="bold" fill="#0284c7">2</text>
           <text x="330" y="345" fontSize="14" fontWeight="bold" fill="#0c4a6e">Oxygen & Airway Support</text>
-          <text x="330" y="370" fontSize="11" fill="#0c4a6e">✓ Provide oxygen to maintain SpO₂ 94–99% (avoid hyperoxia)</text>
-          <text x="330" y="390" fontSize="11" fill="#0c4a6e">✓ Prepare for airway support if altered mental status worsens</text>
-          <text x="330" y="408" fontSize="11" fill="#0c4a6e">✓ Monitor breath sounds & capnography if intubated</text>
+          <text x="340" y="365" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Oxygen to maintain SpO₂ 94–99% (avoid hyperoxia)</text>
+          <text x="340" y="382" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Prepare for airway support if altered mental status</text>
+          <text x="340" y="399" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Monitor breath sounds & capnography if intubated</text>
 
           {/* Arrow down */}
           <line x1="500" y1="420" x2="500" y2="460" stroke="#333" strokeWidth="3" />
@@ -96,9 +96,9 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="720" cy="495" r="14" fill="white" stroke="#15803d" strokeWidth="2" />
           <text x="725" y="501" fontSize="14" fontWeight="bold" fill="#15803d">5</text>
           <text x="760" y="495" fontSize="13" fontWeight="bold" fill="white">Atropine IV/IO</text>
-          <text x="760" y="520" fontSize="11" fill="white">0.5 mg IV push every 3–5 min</text>
-          <text x="760" y="540" fontSize="11" fill="white">Max dose: 3 mg (3–5 doses)</text>
-          <text x="760" y="558" fontSize="11" fill="white">Goal: HR {'>'}60 & adequate BP</text>
+          <text x="765" y="516" fontSize="10" fill="white" textAnchor="start">0.5 mg IV push</text>
+          <text x="765" y="531" fontSize="10" fill="white" textAnchor="start">every 3–5 min</text>
+          <text x="765" y="546" fontSize="10" fill="white" textAnchor="start">Max: 3 mg (3–5 doses)</text>
 
           {/* Arrow from Atropine */}
           <line x1="835" y1="570" x2="835" y2="610" stroke="#333" strokeWidth="3" />
@@ -108,10 +108,10 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="70" cy="495" r="14" fill="white" stroke="#991b1b" strokeWidth="2" />
           <text x="75" y="501" fontSize="14" fontWeight="bold" fill="#991b1b">6</text>
           <text x="110" y="495" fontSize="12" fontWeight="bold" fill="white">Pacing</text>
-          <text x="110" y="520" fontSize="10" fill="white">Transcutaneous:</text>
-          <text x="115" y="535" fontSize="10" fill="white">Immediate</text>
-          <text x="110" y="555" fontSize="10" fill="white">Transvenous:</text>
-          <text x="115" y="570" fontSize="10" fill="white">Backup plan</text>
+          <text x="65" y="516" fontSize="9" fill="white" textAnchor="start">Transcutaneous:</text>
+          <text x="70" y="529" fontSize="9" fill="white" textAnchor="start">Immediate</text>
+          <text x="65" y="548" fontSize="9" fill="white" textAnchor="start">Transvenous:</text>
+          <text x="70" y="561" fontSize="9" fill="white" textAnchor="start">Backup</text>
 
           {/* Arrow from Pacing */}
           <line x1="140" y1="570" x2="140" y2="610" stroke="#333" strokeWidth="3" />
@@ -121,10 +121,10 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="75" cy="640" r="14" fill="white" stroke="#15803d" strokeWidth="2" />
           <text x="80" y="646" fontSize="14" fontWeight="bold" fill="#15803d">7</text>
           <text x="120" y="640" fontSize="14" fontWeight="bold" fill="#166534">Assess Response</text>
-          <text x="120" y="665" fontSize="11" fill="#166534">✓ HR {'>'}60 bpm AND SBP {'>'}90 mmHg = SUCCESS (continue support, monitor closely)</text>
-          <text x="120" y="685" fontSize="11" fill="#166534">✓ Still hypotensive/bradycardic = Continue atropine OR start transvenous pacing immediately</text>
-          <text x="120" y="705" fontSize="11" fill="#166534">✓ Refractory bradycardia with shock = Consider epinephrine 2–10 mcg/min IV infusion + transcutaneous pacing</text>
-          <text x="120" y="725" fontSize="11" fill="#166534">✓ Consider underlying cause: heart block, hypothermia, medication toxicity, hyperkalemia, hypoxia</text>
+          <text x="120" y="662" fontSize="10" fill="#166534" textAnchor="start">✓ HR {'>'}60 & SBP {'>'}90 = SUCCESS (continue support, monitor)</text>
+          <text x="120" y="679" fontSize="10" fill="#166534" textAnchor="start">✓ Still hypotensive/bradycardic = Continue atropine OR pacing</text>
+          <text x="120" y="696" fontSize="10" fill="#166534" textAnchor="start">✓ Refractory = Epinephrine 2–10 mcg/min IV + pacing</text>
+          <text x="120" y="713" fontSize="10" fill="#166534" textAnchor="start">✓ Consider underlying cause: AV block, hypothermia, meds, K+, O₂</text>
 
           {/* Arrow down */}
           <line x1="500" y1="750" x2="500" y2="790" stroke="#333" strokeWidth="3" />
@@ -134,12 +134,12 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="75" cy="820" r="14" fill="white" stroke="#d97706" strokeWidth="2" />
           <text x="80" y="826" fontSize="14" fontWeight="bold" fill="#d97706">8</text>
           <text x="120" y="820" fontSize="14" fontWeight="bold" fill="#92400e">Treat Underlying Causes (PATCH-MD)</text>
-          <text x="120" y="845" fontSize="11" fill="#333">✓ P: Pulmonary (COPD exacerbation, PE) – Ventilatory support, anticoagulation</text>
-          <text x="120" y="863" fontSize="11" fill="#333">✓ A: AV block (2nd/3rd degree) – Pacing required, avoid beta blockers</text>
-          <text x="120" y="881" fontSize="11" fill="#333">✓ T: Toxins (beta blocker, CCB, digoxin toxicity) – Glucagon, calcium, digoxin-specific Fab</text>
-          <text x="120" y="899" fontSize="11" fill="#333">✓ C: Cardiac (MI, myocarditis, cardiomyopathy) – Cardiology consult, possible CathLab</text>
-          <text x="120" y="917" fontSize="11" fill="#333">✓ H: Hypothermia – Passive/active rewarming, supportive care (Osborn wave on ECG)</text>
-          <text x="120" y="935" fontSize="11" fill="#333">✓ M-D: Metabolic (hyperkalemia, hyponatremia) – Labs, dialysis if needed; Drugs (opioids) – Naloxone</text>
+          <text x="120" y="842" fontSize="10" fill="#333" textAnchor="start">✓ P: Pulmonary – Ventilatory support, anticoagulation if PE</text>
+          <text x="120" y="858" fontSize="10" fill="#333" textAnchor="start">✓ A: AV block (2nd/3rd degree) – Pacing, avoid beta blockers</text>
+          <text x="120" y="874" fontSize="10" fill="#333" textAnchor="start">✓ T: Toxins (beta blocker, CCB, digoxin) – Glucagon, calcium, Fab</text>
+          <text x="120" y="890" fontSize="10" fill="#333" textAnchor="start">✓ C: Cardiac (MI, myocarditis) – Cardiology consult, possible CathLab</text>
+          <text x="120" y="906" fontSize="10" fill="#333" textAnchor="start">✓ H: Hypothermia – Passive/active rewarming, Osborn wave on ECG</text>
+          <text x="120" y="922" fontSize="10" fill="#333" textAnchor="start">✓ M-D: Metabolic (hyperkalemia) or Drugs (opioids) – Labs, naloxone</text>
 
           {/* Critical Boxes */}
           <rect x="50" y="1000" width="900" height="440" rx="10" fill="#f9fafb" stroke="#d1d5db" strokeWidth="2" />

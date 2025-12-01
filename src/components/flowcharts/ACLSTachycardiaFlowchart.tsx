@@ -118,12 +118,12 @@ export function ACLSTachycardiaFlowchart() {
           <circle cx="870" cy="500" r="12" fill="white" stroke="#15803d" strokeWidth="2" />
           <text x="875" y="506" fontSize="12" fontWeight="bold" fill="#15803d">5N</text>
           <text x="910" y="500" fontSize="11" fontWeight="bold" fill="white">Treat SVT</text>
-          <text x="910" y="520" fontSize="10" fill="white">1. Vagal maneuvers</text>
-          <text x="920" y="534" fontSize="9" fill="white">(Valsalva, ice pack)</text>
-          <text x="910" y="552" fontSize="10" fill="white">2. Adenosine 6 mg IV</text>
-          <text x="920" y="566" fontSize="9" fill="white">(if no effect: 12 mg)</text>
-          <text x="910" y="583" fontSize="10" fill="white">3. Consider diltiazem</text>
-          <text x="920" y="597" fontSize="9" fill="white">or verapamil if stable</text>
+          <text x="860" y="519" fontSize="9" fill="white" textAnchor="start">1. Vagal maneuvers</text>
+          <text x="865" y="533" fontSize="8" fill="white" textAnchor="start">(Valsalva, ice)</text>
+          <text x="860" y="549" fontSize="9" fill="white" textAnchor="start">2. Adenosine 6 mg</text>
+          <text x="865" y="563" fontSize="8" fill="white" textAnchor="start">(if no effect: 12 mg)</text>
+          <text x="860" y="579" fontSize="9" fill="white" textAnchor="start">3. Diltiazem/</text>
+          <text x="865" y="593" fontSize="8" fill="white" textAnchor="start">Verapamil if stable</text>
 
           {/* WIDE QRS PATH */}
           <rect x="400" y="330" width="150" height="100" rx="8" fill="url(#orangeGradTach)" stroke="#b45309" strokeWidth="2" />
@@ -140,22 +140,22 @@ export function ACLSTachycardiaFlowchart() {
           <circle cx="400" cy="500" r="12" fill="white" stroke="#991b1b" strokeWidth="2" />
           <text x="405" y="506" fontSize="12" fontWeight="bold" fill="#991b1b">5W</text>
           <text x="440" y="500" fontSize="11" fontWeight="bold" fill="white">Treat VT</text>
-          <text x="440" y="520" fontSize="10" fill="white">Amiodarone 150 mg</text>
-          <text x="450" y="533" fontSize="9" fill="white">IV over 10 min</text>
-          <text x="440" y="551" fontSize="10" fill="white">OR Procainamide</text>
-          <text x="450" y="564" fontSize="9" fill="white">12–17 mg/kg IV</text>
-          <text x="440" y="582" fontSize="10" fill="white">OR Sotalol 1.5 mg/kg</text>
-          <text x="450" y="596" fontSize="9" fill="white">IV if stable</text>
+          <text x="390" y="519" fontSize="9" fill="white" textAnchor="start">Amiodarone 150 mg</text>
+          <text x="395" y="533" fontSize="8" fill="white" textAnchor="start">IV over 10 min</text>
+          <text x="390" y="549" fontSize="9" fill="white" textAnchor="start">OR Procainamide</text>
+          <text x="395" y="563" fontSize="8" fill="white" textAnchor="start">12–17 mg/kg IV</text>
+          <text x="390" y="579" fontSize="9" fill="white" textAnchor="start">OR Sotalol 1.5</text>
+          <text x="395" y="593" fontSize="8" fill="white" textAnchor="start">mg/kg IV if stable</text>
 
           {/* IRREGULAR PATH: Probable AFIB */}
           <rect x="400" y="400" width="300" height="120" rx="10" fill="#f0fdf4" stroke="#15803d" strokeWidth="2" />
           <circle cx="425" cy="430" r="12" fill="white" stroke="#15803d" strokeWidth="2" />
           <text x="430" y="436" fontSize="12" fontWeight="bold" fill="#15803d">4I</text>
           <text x="470" y="430" fontSize="12" fontWeight="bold" fill="#166534">Irregular Tachycardia</text>
-          <text x="470" y="455" fontSize="10" fill="#166534">Most common: Atrial Fibrillation with RVR</text>
-          <text x="470" y="472" fontSize="10" fill="#166534">Treatment (if stable): Rate control with AV nodal</text>
-          <text x="470" y="489" fontSize="10" fill="#166534">blockers (diltiazem, verapamil, beta blocker)</text>
-          <text x="470" y="504" fontSize="10" fill="#166534">or Digoxin (especially if CHF or Afib RVRA)</text>
+          <text x="410" y="450" fontSize="9" fill="#166534" textAnchor="start">Most likely: Afib with RVR</text>
+          <text x="410" y="466" fontSize="9" fill="#166534" textAnchor="start">Rate control if stable:</text>
+          <text x="410" y="482" fontSize="9" fill="#166534" textAnchor="start">Diltiazem, verapamil,</text>
+          <text x="410" y="498" fontSize="9" fill="#166534" textAnchor="start">beta blocker or Digoxin</text>
 
           {/* Merge lines */}
           <line x1="50" y1="270" x2="250" y2="270" stroke="#dc2626" strokeWidth="2" />
@@ -166,18 +166,19 @@ export function ACLSTachycardiaFlowchart() {
           {/* Synchronized Cardioversion */}
           <rect x="70" y="670" width="420" height="140" rx="8" fill="#fee2e2" stroke="#991b1b" strokeWidth="2" />
           <text x="280" y="695" fontSize="12" fontWeight="bold" fill="#991b1b" textAnchor="middle">SYNCHRONIZED CARDIOVERSION (Unstable)</text>
-          <text x="80" y="720" fontSize="10" fill="#333">✓ Energies: 100 J (or 1–2 J/kg) → 200 J → 300 J → 360 J</text>
-          <text x="80" y="738" fontSize="10" fill="#333">✓ MUST synchronize with QRS (reduce risk of VF)</text>
-          <text x="80" y="756" fontSize="10" fill="#333">✓ Analgesia/sedation REQUIRED (fentanyl + midazolam if patient conscious)</text>
-          <text x="80" y="774" fontSize="10" fill="#333">✓ Recharge between attempts; reassess rhythm after each shock</text>
-          <text x="80" y="792" fontSize="10" fill="#333">✓ If pulseless VT/VF develops → switch to UNSYNCHRONIZED defibrillation</text>
+          <text x="80" y="719" fontSize="9" fill="#333" textAnchor="start">✓ Energies: 100 J → 200 J → 300 J → 360 J</text>
+          <text x="80" y="734" fontSize="9" fill="#333" textAnchor="start">✓ MUST synchronize with QRS (prevent VF)</text>
+          <text x="80" y="749" fontSize="9" fill="#333" textAnchor="start">✓ Analgesia/sedation REQUIRED if conscious</text>
+          <text x="80" y="764" fontSize="9" fill="#333" textAnchor="start">✓ Recharge between attempts; reassess rhythm</text>
+          <text x="80" y="779" fontSize="9" fill="#333" textAnchor="start">✓ If pulseless VT/VF → UNSYNC defibrillation</text>
 
           {/* Adenosine */}
           <rect x="530" y="670" width="420" height="140" rx="8" fill="#dbeafe" stroke="#0284c7" strokeWidth="2" />
           <text x="740" y="695" fontSize="12" fontWeight="bold" fill="#0284c7" textAnchor="middle">ADENOSINE FOR SVT</text>
-          <text x="540" y="720" fontSize="10" fill="#333">✓ Dosing: 6 mg IV rapid push (flush with saline immediately)</text>
-          <text x="540" y="738" fontSize="10" fill="#333">✓ If no conversion in 1–2 min: 12 mg IV (repeat once)</text>
-          <text x="540" y="756" fontSize="10" fill="#333">✓ Onset: {'<'}10 sec; duration {'<'}30 sec (cardiac arrest-like feeling, flushing, chest discomfort common)</text>
+          <text x="540" y="719" fontSize="9" fill="#333" textAnchor="start">✓ Dosing: 6 mg IV rapid push (flush immediately)</text>
+          <text x="540" y="734" fontSize="9" fill="#333" textAnchor="start">✓ If no conversion in 1–2 min: 12 mg IV (repeat once)</text>
+          <text x="540" y="749" fontSize="9" fill="#333" textAnchor="start">✓ Onset {'<'}10 sec; duration {'<'}30 sec (arrest-like</text>
+          <text x="540" y="764" fontSize="9" fill="#333" textAnchor="start">feeling, flushing, chest discomfort common)</text>
           <text x="540" y="774" fontSize="10" fill="#333">✓ Success rate: ~90% for PSVT, ~10–15% for AFIB/Flutter</text>
           <text x="540" y="792" fontSize="10" fill="#333">✓ CONTRAINDICATIONS: Severe asthma (bronchoconstriction), 2nd/3rd degree AV block, theophylline use</text>
 
