@@ -40,14 +40,14 @@ export function ACLSTachycardiaFlowchart() {
 
           {/* STEP 1: Recognize Tachycardia */}
           <rect x="250" y="20" width="500" height="100" rx="15" fill="url(#orangeGradTach)" stroke="#b45309" strokeWidth="2" />
-          <text x="500" y="55" fontSize="18" fontWeight="bold" fill="white" textAnchor="middle">
-            Tachycardia: HR {'>'}100 bpm (regular or irregular)
+          <text x="270" y="55" fontSize="17" fontWeight="bold" fill="white" textAnchor="start">
+            Tachycardia: HR {'>'}100 bpm
           </text>
-          <text x="500" y="80" fontSize="12" fill="white" textAnchor="middle">
+          <text x="270" y="75" fontSize="11" fill="white" textAnchor="start">
             Assess: Is patient stable or unstable?
           </text>
-          <text x="500" y="100" fontSize="12" fill="white" textAnchor="middle">
-            (Stable = alert, coherent, normal BP; Unstable = hypotension, altered mental status, chest pain, shock)
+          <text x="270" y="91" fontSize="11" fill="white" textAnchor="start">
+            Stable = normal BP, alert; Unstable = low BP, altered status
           </text>
 
           {/* Arrow down */}

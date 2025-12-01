@@ -40,14 +40,14 @@ export function ACLSBradycardiaFlowchart() {
 
           {/* STEP 1: Recognize Bradycardia */}
           <rect x="250" y="20" width="500" height="100" rx="15" fill="url(#purpleGradBrad)" stroke="#6b21a8" strokeWidth="2" />
-          <text x="500" y="55" fontSize="18" fontWeight="bold" fill="white" textAnchor="middle">
+          <text x="270" y="55" fontSize="18" fontWeight="bold" fill="white" textAnchor="start">
             Bradycardia: HR {'<'} 60 bpm
           </text>
-          <text x="500" y="80" fontSize="12" fill="white" textAnchor="middle">
-            PLUS Hypotension (SBP {'<'}90), altered mental status, or signs of shock
+          <text x="270" y="80" fontSize="11" fill="white" textAnchor="start">
+            + Hypotension (SBP {'<'}90), altered mental status, or shock
           </text>
-          <text x="500" y="100" fontSize="12" fill="white" textAnchor="middle">
-            (Asymptomatic bradycardia = observe only, no intervention needed)
+          <text x="270" y="100" fontSize="11" fill="white" textAnchor="start">
+            (Asymptomatic = observe only, no intervention needed)
           </text>
 
           {/* Arrow down */}
@@ -57,11 +57,11 @@ export function ACLSBradycardiaFlowchart() {
           <rect x="250" y="160" width="500" height="120" rx="15" fill="url(#blueGradBrad)" stroke="#1e40af" strokeWidth="3" />
           <circle cx="280" cy="185" r="18" fill="white" stroke="#1e40af" strokeWidth="2" />
           <text x="287" y="192" fontSize="16" fontWeight="bold" fill="#1e40af">1</text>
-          <text x="330" y="185" fontSize="16" fontWeight="bold" fill="white">Initial Management</text>
-          <text x="340" y="205" fontSize="11" fill="white" textAnchor="start">✓ Call for help & AED/defibrillator</text>
-          <text x="340" y="222" fontSize="11" fill="white" textAnchor="start">✓ Continuous cardiac monitor & pulse oximetry</text>
-          <text x="340" y="239" fontSize="11" fill="white" textAnchor="start">✓ Establish IV access (peripheral or central)</text>
-          <text x="340" y="256" fontSize="11" fill="white" textAnchor="start">✓ 12-lead ECG within 10 minutes</text>
+          <text x="330" y="185" fontSize="15" fontWeight="bold" fill="white">Initial Management</text>
+          <text x="340" y="203" fontSize="10" fill="white" textAnchor="start">✓ Call for help & AED/defibrillator</text>
+          <text x="340" y="218" fontSize="10" fill="white" textAnchor="start">✓ Continuous cardiac monitor</text>
+          <text x="340" y="233" fontSize="10" fill="white" textAnchor="start">✓ Establish IV access</text>
+          <text x="340" y="248" fontSize="10" fill="white" textAnchor="start">✓ 12-lead ECG within 10 min</text>
 
           {/* Arrow down */}
           <line x1="500" y1="280" x2="500" y2="320" stroke="#333" strokeWidth="3" />
@@ -71,9 +71,9 @@ export function ACLSBradycardiaFlowchart() {
           <circle cx="280" cy="345" r="18" fill="white" stroke="#0284c7" strokeWidth="2" />
           <text x="287" y="352" fontSize="16" fontWeight="bold" fill="#0284c7">2</text>
           <text x="330" y="345" fontSize="14" fontWeight="bold" fill="#0c4a6e">Oxygen & Airway Support</text>
-          <text x="340" y="365" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Oxygen to maintain SpO₂ 94–99% (avoid hyperoxia)</text>
-          <text x="340" y="382" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Prepare for airway support if altered mental status</text>
-          <text x="340" y="399" fontSize="11" fill="#0c4a6e" textAnchor="start">✓ Monitor breath sounds & capnography if intubated</text>
+          <text x="340" y="363" fontSize="10" fill="#0c4a6e" textAnchor="start">✓ Oxygen to maintain SpO₂ 94–99%</text>
+          <text x="340" y="378" fontSize="10" fill="#0c4a6e" textAnchor="start">✓ Prepare airway if altered mental status</text>
+          <text x="340" y="393" fontSize="10" fill="#0c4a6e" textAnchor="start">✓ Monitor breath sounds & capnography</text>
 
           {/* Arrow down */}
           <line x1="500" y1="420" x2="500" y2="460" stroke="#333" strokeWidth="3" />
@@ -146,35 +146,35 @@ export function ACLSBradycardiaFlowchart() {
 
           {/* Atropine Details */}
           <rect x="70" y="1020" width="420" height="120" rx="8" fill="#e0e7ff" stroke="#6366f1" strokeWidth="2" />
-          <text x="280" y="1045" fontSize="12" fontWeight="bold" fill="#4338ca" textAnchor="middle">ATROPINE FOR BRADYCARDIA</text>
-          <text x="80" y="1070" fontSize="10" fill="#333">✓ Dosing: 0.5 mg IV/IO push every 3–5 min</text>
-          <text x="80" y="1088" fontSize="10" fill="#333">✓ Max cumulative dose: 3 mg (6–12 doses if prolonged)</text>
-          <text x="80" y="1106" fontSize="10" fill="#333">✓ Onset: 30–60 sec; peak effect 5–10 min</text>
-          <text x="80" y="1124" fontSize="10" fill="#333">✓ CONTRAINDICATIONS: Atropine PARADOX - may worsen bradycardia if {'<'}0.5 mg or Denervated Heart</text>
+          <text x="280" y="1040" fontSize="11" fontWeight="bold" fill="#4338ca" textAnchor="middle">ATROPINE FOR BRADYCARDIA</text>
+          <text x="80" y="1062" fontSize="9" fill="#333">✓ Dosing: 0.5 mg IV push every 3–5 min</text>
+          <text x="80" y="1078" fontSize="9" fill="#333">✓ Max: 3 mg cumulative</text>
+          <text x="80" y="1094" fontSize="9" fill="#333">✓ Onset: 30–60 sec; peak effect 5–10 min</text>
+          <text x="80" y="1110" fontSize="9" fill="#333">✓ CAUTION: Paradox - may worsen</text>
 
           {/* Pacing Details */}
           <rect x="530" y="1020" width="420" height="120" rx="8" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" />
-          <text x="740" y="1045" fontSize="12" fontWeight="bold" fill="#166534" textAnchor="middle">TRANSCUTANEOUS PACING (TCP)</text>
-          <text x="540" y="1070" fontSize="10" fill="#333">✓ Rate: 60–100 ppm (start 80 if unstable)</text>
-          <text x="540" y="1088" fontSize="10" fill="#333">✓ Output: Start {'<'}0 mA, increase until electrical capture (QRS after each spike)</text>
-          <text x="540" y="1106" fontSize="10" fill="#333">✓ Verify mechanical capture: Pulse palpable synchronously with pacing</text>
-          <text x="540" y="1124" fontSize="10" fill="#333">✓ Analgesia required (ALWAYS if conscious: fentanyl or morphine + sedation)</text>
+          <text x="740" y="1040" fontSize="11" fontWeight="bold" fill="#166534" textAnchor="middle">TRANSCUTANEOUS PACING (TCP)</text>
+          <text x="540" y="1062" fontSize="9" fill="#333">✓ Rate: 60–100 ppm</text>
+          <text x="540" y="1078" fontSize="9" fill="#333">✓ Output: Start lowest, increase</text>
+          <text x="540" y="1094" fontSize="9" fill="#333">✓ Verify mechanical capture (pulse)</text>
+          <text x="540" y="1110" fontSize="9" fill="#333">✓ Analgesia required if conscious</text>
 
           {/* Medications - Refractory */}
           <rect x="70" y="1160" width="420" height="120" rx="8" fill="#fee2e2" stroke="#991b1b" strokeWidth="2" />
-          <text x="280" y="1185" fontSize="12" fontWeight="bold" fill="#991b1b" textAnchor="middle">REFRACTORY BRADYCARDIA + SHOCK</text>
-          <text x="80" y="1210" fontSize="10" fill="#333">✓ Epinephrine 2–10 mcg/min IV infusion (continuous titration)</text>
-          <text x="80" y="1228" fontSize="10" fill="#333">✓ Dopamine 5–20 mcg/kg/min (may tachycardic; not first-line)</text>
-          <text x="80" y="1246" fontSize="10" fill="#333">✓ Isoproterenol 2–10 mcg/min (last resort; caution in CAD)</text>
-          <text x="80" y="1264" fontSize="10" fill="#333">✓ Combined: TCP + atropine + vasopressor infusion until transvenous pacing available</text>
+          <text x="280" y="1180" fontSize="11" fontWeight="bold" fill="#991b1b" textAnchor="middle">REFRACTORY BRADYCARDIA</text>
+          <text x="80" y="1202" fontSize="9" fill="#333">✓ Epinephrine 2–10 mcg/min IV</text>
+          <text x="80" y="1218" fontSize="9" fill="#333">✓ Dopamine 5–20 mcg/kg/min</text>
+          <text x="80" y="1234" fontSize="9" fill="#333">✓ Isoproterenol 2–10 mcg/min</text>
+          <text x="80" y="1250" fontSize="9" fill="#333">✓ TCP + atropine + vasopressor</text>
 
           {/* AV Block Classification */}
           <rect x="530" y="1160" width="420" height="120" rx="8" fill="#f5f3ff" stroke="#7c3aed" strokeWidth="2" />
-          <text x="740" y="1185" fontSize="12" fontWeight="bold" fill="#7c3aed" textAnchor="middle">AV BLOCK CLASSIFICATION</text>
-          <text x="540" y="1210" fontSize="10" fill="#333">✓ 1st degree: Prolonged PR ({'>'}0.20 sec) - Observe, no treatment</text>
-          <text x="540" y="1228" fontSize="10" fill="#333">✓ 2nd degree Type I (Wenckebach): Progressive PR; skip QRS - Usually benign, monitor</text>
-          <text x="540" y="1246" fontSize="10" fill="#333">✓ 2nd degree Type II: Dropped QRS, fixed PR - HIGH RISK, pacing likely needed</text>
-          <text x="540" y="1264" fontSize="10" fill="#333">✓ 3rd degree (complete): No AV conduction - PACING MANDATORY, consider temporary wire</text>
+          <text x="740" y="1180" fontSize="11" fontWeight="bold" fill="#7c3aed" textAnchor="middle">AV BLOCK CLASSIFICATION</text>
+          <text x="540" y="1202" fontSize="9" fill="#333">✓ 1st degree: Prolonged PR - Observe</text>
+          <text x="540" y="1218" fontSize="9" fill="#333">✓ 2nd Type I: Progressive PR - Monitor</text>
+          <text x="540" y="1234" fontSize="9" fill="#333">✓ 2nd Type II: Dropped QRS - Pacing</text>
+          <text x="540" y="1250" fontSize="9" fill="#333">✓ 3rd degree: NO conduction - PACE</text>
 
           {/* Decision Points */}
           <rect x="70" y="1300" width="850" height="120" rx="8" fill="#fef3c7" stroke="#d97706" strokeWidth="2" />

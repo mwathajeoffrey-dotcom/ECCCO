@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Download, AlertCircle, ZoomIn, ZoomOut, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { ACLSFlowchart } from '@/components/flowcharts/ACLSFlowchart';
@@ -15,6 +15,8 @@ export const dynamic = 'force-dynamic';
 export default function GuidelinesPage() {
   const [expandedFlowchart, setExpandedFlowchart] = useState<string | null>(null);
   const [zoomLevels, setZoomLevels] = useState<Record<string, number>>({});
+  const [touchStartDistance, setTouchStartDistance] = useState<number>(0);
+  const containerRefs = useRef<Record<string, HTMLDivElement>>({});
 
   const getZoom = (flowchartId: string) => zoomLevels[flowchartId] || 1;
 
@@ -37,6 +39,51 @@ export default function GuidelinesPage() {
       ...prev,
       [flowchartId]: 1
     }));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent, flowchartId: string) => {
+    if (e.touches.length === 2) {
+      // Pinch gesture - calculate distance between two touch points
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      setTouchStartDistance(distance);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent, flowchartId: string) => {
+    if (e.touches.length === 2 && touchStartDistance > 0) {
+      // Two-finger touch move - pinch zoom
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+
+      // Calculate pinch ratio
+      const ratio = distance / touchStartDistance;
+      const currentZoom = getZoom(flowchartId);
+      let newZoom = currentZoom * ratio;
+
+      // Clamp between 0.5 and 2
+      newZoom = Math.max(0.5, Math.min(2, newZoom));
+
+      setZoomLevels(prev => ({
+        ...prev,
+        [flowchartId]: newZoom
+      }));
+
+      setTouchStartDistance(distance);
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStartDistance(0);
   };
 
   return (
@@ -82,6 +129,9 @@ export default function GuidelinesPage() {
             onZoomIn={() => handleZoomIn('cardiac-arrest')}
             onZoomOut={() => handleZoomOut('cardiac-arrest')}
             onZoomReset={() => handleZoomReset('cardiac-arrest')}
+            onTouchStart={(e) => handleTouchStart(e, 'cardiac-arrest')}
+            onTouchMove={(e) => handleTouchMove(e, 'cardiac-arrest')}
+            onTouchEnd={handleTouchEnd}
           >
             <ACLSFlowchart />
           </FlowchartCard>
@@ -97,6 +147,9 @@ export default function GuidelinesPage() {
             onZoomIn={() => handleZoomIn('bradycardia')}
             onZoomOut={() => handleZoomOut('bradycardia')}
             onZoomReset={() => handleZoomReset('bradycardia')}
+            onTouchStart={(e) => handleTouchStart(e, 'bradycardia')}
+            onTouchMove={(e) => handleTouchMove(e, 'bradycardia')}
+            onTouchEnd={handleTouchEnd}
           >
             <ACLSBradycardiaFlowchart />
           </FlowchartCard>
@@ -112,6 +165,9 @@ export default function GuidelinesPage() {
             onZoomIn={() => handleZoomIn('tachycardia')}
             onZoomOut={() => handleZoomOut('tachycardia')}
             onZoomReset={() => handleZoomReset('tachycardia')}
+            onTouchStart={(e) => handleTouchStart(e, 'tachycardia')}
+            onTouchMove={(e) => handleTouchMove(e, 'tachycardia')}
+            onTouchEnd={handleTouchEnd}
           >
             <ACLSTachycardiaFlowchart />
           </FlowchartCard>
@@ -127,6 +183,9 @@ export default function GuidelinesPage() {
             onZoomIn={() => handleZoomIn('sepsis')}
             onZoomOut={() => handleZoomOut('sepsis')}
             onZoomReset={() => handleZoomReset('sepsis')}
+            onTouchStart={(e) => handleTouchStart(e, 'sepsis')}
+            onTouchMove={(e) => handleTouchMove(e, 'sepsis')}
+            onTouchEnd={handleTouchEnd}
           >
             <SepsisFlowchart />
           </FlowchartCard>
@@ -142,6 +201,9 @@ export default function GuidelinesPage() {
             onZoomIn={() => handleZoomIn('stroke')}
             onZoomOut={() => handleZoomOut('stroke')}
             onZoomReset={() => handleZoomReset('stroke')}
+            onTouchStart={(e) => handleTouchStart(e, 'stroke')}
+            onTouchMove={(e) => handleTouchMove(e, 'stroke')}
+            onTouchEnd={handleTouchEnd}
           >
             <StrokeFlowchart />
           </FlowchartCard>
@@ -237,6 +299,9 @@ interface FlowchartCardProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomReset: () => void;
+  onTouchStart?: (e: React.TouchEvent) => void;
+  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchEnd?: (e: React.TouchEvent) => void;
 }
 
 function FlowchartCard({
@@ -250,7 +315,10 @@ function FlowchartCard({
   zoom,
   onZoomIn,
   onZoomOut,
-  onZoomReset
+  onZoomReset,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd
 }: FlowchartCardProps) {
   const categoryColor = category === 'ACLS' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700';
 
@@ -311,11 +379,17 @@ function FlowchartCard({
                 Reset
               </button>
             </div>
-            <p className="text-xs text-gray-500">💡 Use zoom to view details on mobile devices</p>
+            <p className="text-xs text-gray-500">💡 Pinch to zoom or use buttons (works on mobile & desktop)</p>
           </div>
           
-          {/* Flowchart Container with Zoom */}
-          <div className="p-6 overflow-x-auto" style={{ userSelect: 'none' }}>
+          {/* Flowchart Container with Zoom and Touch Support */}
+          <div 
+            className="p-6 overflow-x-auto touch-none"
+            style={{ userSelect: 'none' }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             <div style={{ transform: `scale(${zoom})`, transformOrigin: 'top left', transition: 'transform 0.2s ease' }}>
               {children}
             </div>
