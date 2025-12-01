@@ -165,37 +165,39 @@ export function ACLSFlowchart() {
 
           {/* Post-ROSC Care Box */}
           <rect x="550" y="950" width="400" height="100" rx="10" fill="url(#greenGrad)" stroke="#15803d" strokeWidth="2" />
-          <text x="750" y="975" fontSize="14" fontWeight="bold" fill="white" textAnchor="middle">POST-ROSC CARE (2025 Updates)</text>
-          <text x="560" y="998" fontSize="11" fill="white">✓ Targeted Temperature Management (TTM): 37.5°C (normothermia) non-inferior to hypothermia</text>
-          <text x="560" y="1018" fontSize="11" fill="white">✓ MAP ≥65 mmHg, SpO₂ 92–98% (avoid hyperoxia), glucose {'<'}180 mg/dL</text>
-          <text x="560" y="1038" fontSize="11" fill="white">✓ ETCO₂ monitoring: {'>'}20 mmHg suggests adequate perfusion; {'<'}10 mmHg at 20 min = poor prognosis</text>
+          <text x="750" y="970" fontSize="13" fontWeight="bold" fill="white" textAnchor="middle">POST-ROSC CARE (2025)</text>
+          <text x="560" y="988" fontSize="10" fill="white">✓ Targeted Temperature: 37.5°C (normothermia)</text>
+          <text x="560" y="1004" fontSize="10" fill="white">✓ MAP ≥65, SpO₂ 92–98%, glucose {'<'}180</text>
+          <text x="560" y="1020" fontSize="10" fill="white">✓ ETCO₂ {'>'}20 = good perfusion; {'<'}10 = poor</text>
+          <text x="560" y="1036" fontSize="10" fill="white">✓ Wait 72h post-TTM for prognosis</text>
 
           {/* CPR Quality Box */}
           <rect x="50" y="950" width="450" height="100" rx="10" fill="#f0f9ff" stroke="#0284c7" strokeWidth="2" />
-          <text x="275" y="975" fontSize="14" fontWeight="bold" fill="#0284c7" textAnchor="middle">CPR QUALITY METRICS (2025 AHA)</text>
-          <text x="60" y="998" fontSize="11" fill="#0c4a6e">• Push hard ≥2 inches (5 cm) at 100–120 compressions/min with complete recoil</text>
-          <text x="60" y="1018" fontSize="11" fill="#0c4a6e">• Minimize interruptions {'<'}10 sec; target compression fraction {'>'}80%</text>
-          <text x="60" y="1038" fontSize="11" fill="#0c4a6e">• Rotate compressor every 2 minutes if fatigued; use capnography for real-time feedback</text>
+          <text x="275" y="970" fontSize="13" fontWeight="bold" fill="#0284c7" textAnchor="middle">CPR QUALITY METRICS (2025)</text>
+          <text x="60" y="988" fontSize="10" fill="#0c4a6e">• Push ≥2 inches at 100–120 comp/min</text>
+          <text x="60" y="1004" fontSize="10" fill="#0c4a6e">• Minimize breaks {'<'}10 sec, compression</text>
+          <text x="60" y="1020" fontSize="10" fill="#0c4a6e">  fraction {'>'}80%</text>
+          <text x="60" y="1036" fontSize="10" fill="#0c4a6e">• Rotate every 2 min; use capnography</text>
 
           {/* Legend */}
           <rect x="50" y="1080" width="900" height="280" rx="10" fill="#f9fafb" stroke="#d1d5db" strokeWidth="2" />
-          <text x="500" y="1105" fontSize="14" fontWeight="bold" fill="#111" textAnchor="middle">REFERENCE GUIDE & REVERSIBLE CAUSES</text>
+          <text x="500" y="1103" fontSize="12" fontWeight="bold" fill="#111" textAnchor="middle">REFERENCE GUIDE & REVERSIBLE CAUSES</text>
 
-          <text x="60" y="1135" fontSize="12" fontWeight="bold" fill="#dc2626">Shock Energy:</text>
-          <text x="60" y="1153" fontSize="11" fill="#374151">• Biphasic Manual: 120–200 J (initial), then 120–200 J (subsequent)</text>
-          <text x="60" y="1170" fontSize="11" fill="#374151">• Monophasic: 360 J (all shocks)</text>
+          <text x="60" y="1130" fontSize="11" fontWeight="bold" fill="#dc2626">Shock Energy:</text>
+          <text x="60" y="1145" fontSize="10" fill="#374151">• Biphasic: 120–200 J (initial & subsequent)</text>
+          <text x="60" y="1159" fontSize="10" fill="#374151">• Monophasic: 360 J (all shocks)</text>
 
-          <text x="60" y="1195" fontSize="12" fontWeight="bold" fill="#dc2626">Epinephrine Dosing:</text>
-          <text x="60" y="1213" fontSize="11" fill="#374151">• Initial: 1 mg IV/IO every 3–5 minutes</text>
-          <text x="60" y="1230" fontSize="11" fill="#374151">• High-dose epinephrine (HDE): NOT recommended (no benefit over standard dose)</text>
+          <text x="60" y="1195" fontSize="11" fontWeight="bold" fill="#dc2626">Epinephrine Dosing:</text>
+          <text x="60" y="1210" fontSize="10" fill="#374151">• Initial: 1 mg IV/IO every 3–5 minutes</text>
+          <text x="60" y="1224" fontSize="10" fill="#374151">• High-dose: NOT recommended</text>
 
-          <text x="60" y="1255" fontSize="12" fontWeight="bold" fill="#dc2626">Antiarrhythmics:</text>
-          <text x="60" y="1273" fontSize="11" fill="#374151">• Amiodarone: 300 mg IV/IO after 3rd shock, then 150 mg</text>
-          <text x="60" y="1290" fontSize="11" fill="#374151">• Lidocaine: 1–1.5 mg/kg IV/IO (alternative if Amiodarone unavailable)</text>
+          <text x="60" y="1244" fontSize="11" fontWeight="bold" fill="#dc2626">Antiarrhythmics:</text>
+          <text x="60" y="1259" fontSize="10" fill="#374151">• Amiodarone: 300 mg after shock 3, then 150 mg</text>
+          <text x="60" y="1273" fontSize="10" fill="#374151">• Lidocaine: 1–1.5 mg/kg IV/IO (alternative)</text>
 
-          <text x="60" y="1315" fontSize="12" fontWeight="bold" fill="#059669">4 Hs & 4 Ts (Reversible Causes):</text>
-          <text x="60" y="1333" fontSize="11" fill="#374151">• Hypovolemia • Hypoxia • Hydrogen ion (acidosis) • Hypo-/hyperkalemia</text>
-          <text x="60" y="1350" fontSize="11" fill="#374151">• Tension pneumothorax • Tamponade • Thrombosis (PE, MI) • Toxins</text>
+          <text x="60" y="1293" fontSize="11" fontWeight="bold" fill="#059669">4 Hs & 4 Ts (Reversible Causes):</text>
+          <text x="60" y="1308" fontSize="10" fill="#374151">• Hypovolemia • Hypoxia • Acidosis • Hyper/hypokalemia</text>
+          <text x="60" y="1322" fontSize="10" fill="#374151">• Tension pneumothorax • Tamponade • Thrombosis • Toxins</text>
         </svg>
       </div>
 
