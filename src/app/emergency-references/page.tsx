@@ -714,6 +714,46 @@ export default function EmergencyReferencesPage() {
           ]
         },
         {
+          id: "hypertonic-saline-mannitol-tbi-2020",
+          name: "Hypertonic Saline vs Mannitol in Traumatic Brain Injury: Systematic Review & Meta-Analysis",
+          organization: "Medicine (Baltimore) / Chinese Database Meta-Analysis",
+          year: "2020",
+          summary: "META-ANALYSIS (n=544, 10 RCTs): 3% hypertonic saline vs 20% mannitol for intracranial hypertension in TBI. Both reduce ICP effectively, but hypertonic saline has longer duration of effect and better cerebral perfusion pressure.",
+          keyRecommendations: [
+            "Both 3% hypertonic saline and 20% mannitol effectively reduce intracranial pressure (no difference in ICP reduction)",
+            "Hypertonic saline has longer duration of effect for ICP control (MD: 0.84, 95% CI: 0.64-1.05, p<0.00001)",
+            "Hypertonic saline increases cerebral perfusion pressure more than mannitol (MD: 0.53, 95% CI: 0.15-0.92, p=0.007)",
+            "No significant difference in onset time between agents",
+            "3% hypertonic saline preferred for sustained ICP control and CPP improvement",
+            "Consider patient volume status: mannitol may be preferred in hypervolemia, HTS in hypovolemia",
+            "Monitor serum sodium with HTS (target <155-160 mEq/L), renal function with mannitol"
+          ],
+          clinicalPearls: [
+            "📊 Meta-analysis: 544 patients (270 HTS, 274 mannitol), 10 RCTs from Chinese databases 2010-2019",
+            "⚡ Duration of effect: HTS superior - longer ICP control (mean difference 0.84 hours)",
+            "🎯 Cerebral perfusion pressure: HTS increases CPP more than mannitol (MD: 0.53 mmHg, p=0.007)",
+            "💡 ICP reduction: Both equally effective at lowering ICP (no statistical difference)",
+            "🔬 HTS mechanism: Osmotic gradient, reduces brain water, improves rheology, may have anti-inflammatory effects",
+            "📈 Mannitol mechanism: Osmotic diuresis, free radical scavenger, reduces blood viscosity",
+            "⚠️ HTS advantages: Volume expansion, sustained effect, safe in hypovolemia, improves CPP",
+            "🚫 Mannitol cautions: Can worsen hypovolemia, renal toxicity with repeated doses, rebound ICP possible",
+            "💊 Typical HTS dose: 3% saline 250mL bolus over 20-30 min (or 23.4% 30mL bolus for emergent ICP)",
+            "🎪 Typical mannitol dose: 20% mannitol 0.25-1 g/kg IV bolus over 15-30 minutes",
+            "⏱️ Monitor: Serum sodium q6h with HTS (stop if Na+ >155), serum osm with mannitol (stop if >320)",
+            "🔍 ICP goals: Target ICP <20-22 mmHg, CPP 60-70 mmHg (MAP - ICP = CPP)"
+          ],
+          evidenceLevel: "Level II Evidence (Systematic Review & Meta-Analysis of 10 RCTs, n=544)",
+          citation: "Medicine (Baltimore). 2020;99(35):e21655. doi:10.1097/MD.0000000000021655",
+          references: [
+            {
+              title: "Hypertonic saline and mannitol in patients with traumatic brain injury: A systematic and meta-analysis",
+              journal: "Medicine (Baltimore)",
+              doi: "10.1097/MD.0000000000021655",
+              url: "https://doi.org/10.1097/MD.0000000000021655"
+            }
+          ]
+        },
+        {
           id: "swat-trial-2023",
           name: "SWAT Trial - Whole Blood vs Components in Trauma",
           organization: "New England Journal of Medicine / Military-Civilian Trauma Trial",
