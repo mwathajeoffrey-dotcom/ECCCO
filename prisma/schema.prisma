@@ -8,9 +8,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // For development with SQLite, uncomment below:
-  // provider = "sqlite"
-  // url      = "file:./dev.db"
 }
 
 model Topic {
@@ -57,5 +54,76 @@ model ExamSession {
   @@index([topicId])
   @@index([sessionId])
   @@index([createdAt])
+}
+
+// Feature: Question Bookmarking
+model Bookmark {
+  id          String   @id @default(cuid())
+  userId      String   // Session or authenticated user ID
+  questionId  String   // Reference to question (can be external ID from TypeScript files)
+  notes       String?  // User's personal notes on this question
+  category    String?  // Question category for filtering
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, questionId]) // Prevent duplicate bookmarks
+  @@index([userId])
+  @@index([questionId])
+  @@index([category])
+}
+
+// Feature: Question Rating & Comments
+model QuestionRating {
+  id          String   @id @default(cuid())
+  userId      String   // Session or authenticated user ID
+  questionId  String   // Reference to question
+  isHelpful   Boolean  // true = thumbs up, false = thumbs down
+  comment     String?  // Optional user comment
+  flagged     Boolean  @default(false) // Flag for outdated/incorrect explanation
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, questionId]) // One rating per user per question
+  @@index([questionId])
+  @@index([isHelpful])
+  @@index([flagged])
+}
+
+// Feature: Case-Based Learning
+model CaseScenario {
+  id              String   @id @default(cuid())
+  title           String   // e.g., "55M with Chest Pain"
+  presentation    String   // Clinical case presentation
+  category        String   // e.g., "Cardiac", "Trauma", "Sepsis"
+  difficulty      String   @default("medium") // easy, medium, hard
+  questionIds     String   // JSON array of question IDs in sequence
+  learningPoints  String   // JSON array of key teaching points
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@index([difficulty])
+}
+
+// Track case completion
+model CaseSession {
+  id              String   @id @default(cuid())
+  userId          String   // Session or authenticated user ID
+  caseId          String   // Reference to CaseScenario
+  currentQuestion Int      @default(0) // Which question in sequence
+  answers         String   // JSON string of answers array
+  completed       Boolean  @default(false)
+  score           Int?     // Overall case score
+  totalTime       Int?     // Time taken in seconds
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([caseId])
+  @@index([completed])
 }
 
