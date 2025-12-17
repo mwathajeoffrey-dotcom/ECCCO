@@ -24,6 +24,15 @@ export default function Home() {
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
               </Link>
+              <Link href="/review" className="text-gray-700 hover:text-blue-600 font-medium">
+                Review
+              </Link>
+              <Link href="/bookmarks" className="text-gray-700 hover:text-blue-600 font-medium">
+                Bookmarks
+              </Link>
+              <Link href="/cases" className="text-gray-700 hover:text-blue-600 font-medium">
+                Cases
+              </Link>
               <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
                 Analytics
               </Link>
@@ -43,7 +52,7 @@ export default function Home() {
             <span className="text-blue-600"> Critical Care</span>
           </h2>
           <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive question bank with over 5,000 evidence-based questions covering all emergency
+            Comprehensive question bank with over 2,000 evidence-based questions covering all emergency
             and critical care topics. Practice with timed exams, detailed explanations, and performance tracking.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
@@ -70,7 +79,7 @@ export default function Home() {
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
               <BookOpen className="w-6 h-6 text-blue-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">5,000+ Questions</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">2,000+ Questions</h3>
             <p className="text-gray-600">
               Comprehensive question bank covering all emergency and critical care topics with evidence-based explanations.
             </p>

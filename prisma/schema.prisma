@@ -56,21 +56,29 @@ model ExamSession {
   @@index([createdAt])
 }
 
-// Feature: Question Bookmarking
+// Feature: Question Bookmarking with Spaced Repetition
 model Bookmark {
-  id          String   @id @default(cuid())
-  userId      String   // Session or authenticated user ID
-  questionId  String   // Reference to question (can be external ID from TypeScript files)
-  notes       String?  // User's personal notes on this question
-  category    String?  // Question category for filtering
+  id              String    @id @default(cuid())
+  userId          String    // Session or authenticated user ID
+  questionId      String    // Reference to question (can be external ID from TypeScript files)
+  notes           String?   // User's personal notes on this question
+  category        String?   // Question category for filtering
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // Spaced Repetition Fields (SM-2 Algorithm)
+  nextReviewDate  DateTime? // When to review this bookmark next
+  reviewCount     Int       @default(0) // Number of times reviewed
+  easeFactor      Float     @default(2.5) // SM-2 ease factor (2.5 is default)
+  interval        Int       @default(1) // Days until next review
+  lastReviewGrade Int?      // Last review quality (0-5 scale)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@unique([userId, questionId]) // Prevent duplicate bookmarks
   @@index([userId])
   @@index([questionId])
   @@index([category])
+  @@index([nextReviewDate]) // For efficient review queue queries
 }
 
 // Feature: Question Rating & Comments

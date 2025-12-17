@@ -88,6 +88,12 @@ export default function DashboardPage() {
               <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
                 Exams
               </Link>
+              <Link href="/bookmarks" className="text-gray-700 hover:text-blue-600 font-medium">
+                Bookmarks
+              </Link>
+              <Link href="/cases" className="text-gray-700 hover:text-blue-600 font-medium">
+                Cases
+              </Link>
               <Link href="/emergency-references" className="text-gray-700 hover:text-blue-600 font-medium">
                 Evidence Library
               </Link>

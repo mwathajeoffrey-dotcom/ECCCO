@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { analytics } from '@/lib/analytics/service';
+import BookmarkButton from '@/components/BookmarkButton';
+import QuestionRating from '@/components/QuestionRating';
 
 interface Question {
   id: string;
@@ -64,6 +66,19 @@ export default function ExamInterface() {
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [showAnswerAfterAttempt, setShowAnswerAfterAttempt] = useState(false);
   const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
+  
+  // User ID for bookmarks and ratings
+  const [userId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      let id = localStorage.getItem('userId');
+      if (!id) {
+        id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('userId', id);
+      }
+      return id;
+    }
+    return 'anonymous';
+  });
 
   // Fetch topics on component mount
   useEffect(() => {
@@ -931,6 +946,15 @@ export default function ExamInterface() {
                       </ul>
                     </div>
                   )}
+                  
+                  {/* Bookmark & Rating Section */}
+                  <div className="mt-4 pt-4 border-t border-blue-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <BookmarkButton questionId={currentQuestion.id} userId={userId} />
+                      <span className="text-xs text-blue-600">Save this question for review later</span>
+                    </div>
+                    <QuestionRating questionId={currentQuestion.id} userId={userId} />
+                  </div>
                 </div>
               )}
 
