@@ -786,6 +786,52 @@ export default function EmergencyReferencesPage() {
       ]
     },
     {
+      category: "Stroke & Cerebrovascular",
+      topics: ["Ischemic Stroke", "TIA", "Dual Antiplatelet Therapy", "Secondary Prevention"],
+      guidelines: [
+        {
+          id: "dapt-stroke-review-2024",
+          name: "Dual Antiplatelet Therapy for Ischemic Stroke and TIA - Updated Review",
+          organization: "Journal of Cardiovascular Development and Disease / National University Hospital Singapore",
+          year: "2024",
+          summary: "COMPREHENSIVE REVIEW: Evidence-based recommendations for dual antiplatelet therapy (DAPT) in acute and long-term management of non-cardioembolic stroke. Reviews all major trials through 2023 including CHANCE, POINT, THALES, CHANCE-2, and INSPIRES.",
+          keyRecommendations: [
+            "Aspirin + Clopidogrel for 21 days strongly recommended for minor stroke (NIHSS ≤3) or high-risk TIA (ABCD2 ≥4) within 24h",
+            "DAPT reduces 90-day stroke risk from 11.7% to 8.2% (CHANCE trial, NNT=29)",
+            "Loading: Aspirin 300mg + Clopidogrel 300mg (600mg in very high-risk cases)",
+            "Duration: 21 days optimal - benefits occur in first 10 days, bleeding risk increases after 90 days",
+            "Aspirin + Ticagrelor may be considered for CYP2C19 loss-of-function carriers or clopidogrel failures",
+            "Severe intracranial stenosis (70-99%): DAPT reasonable for up to 3 months",
+            "DAPT acceptable alternative to tPA for non-disabling stroke (NIHSS ≤5) within 4.5h"
+          ],
+          clinicalPearls: [
+            "🎯 CHANCE Trial (n=5,170): ASA+Clopidogrel 21d → 8.2% vs 11.7% stroke at 90d (p<0.001)",
+            "🎯 POINT Trial (n=4,881): ASA+Clopidogrel 90d → 4.8% vs 6.4% stroke (p=0.02) but ↑bleeding",
+            "⚡ Timing matters: DAPT most effective when started within 12-24h of symptom onset",
+            "💊 Loading doses critical: ASA 300mg + Clopidogrel 300mg for immediate platelet inhibition",
+            "📊 Duration sweet spot: 21 days balances efficacy vs bleeding - extension to 90d only for high-risk",
+            "🧬 Genetics: CYP2C19 loss-of-function carriers (58.8% in Chinese) don't benefit from clopidogrel",
+            "🔬 CHANCE-2: Ticagrelor superior to clopidogrel in LOF carriers (6.0% vs 7.6% stroke, p=0.004)",
+            "⚠️ Avoid in: Large infarcts, hemorrhagic transformation, uncontrolled HTN >185/110",
+            "📈 INSPIRES (2023): DAPT effective even 24-72h after onset for large artery atherosclerosis",
+            "💡 Lacunar stroke: Short-term DAPT (21d) acceptable despite SPS3 contraindication for long-term",
+            "🎪 Instead of tPA: ARAMIS trial showed DAPT non-inferior to alteplase for NIHSS ≤5",
+            "🚫 Long-term DAPT >3mo: Associated with ↑bleeding, ↑mortality, no ischemic benefit"
+          ],
+          evidenceLevel: "Class I Evidence - Systematic Review of Multiple RCTs (LOE: A)",
+          citation: "J Cardiovasc Dev Dis. 2024;11(2):48. doi:10.3390/jcdd11020048",
+          references: [
+            {
+              title: "Dual Antiplatelet Therapy for the Acute Management and Long-term Secondary Prevention of Ischemic Stroke and Transient Ischemic Attack, An Updated Review",
+              journal: "Journal of Cardiovascular Development and Disease",
+              doi: "10.3390/jcdd11020048",
+              url: "https://doi.org/10.3390/jcdd11020048"
+            }
+          ]
+        }
+      ]
+    },
+    {
       category: "Respiratory & Airway Management",
       topics: ["ARDS", "Mechanical Ventilation", "Airway Management", "Oxygenation"],
       guidelines: [
