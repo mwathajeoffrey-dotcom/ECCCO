@@ -941,6 +941,52 @@ export default function EmergencyReferencesPage() {
           ]
         }
       ]
+    },
+    {
+      category: "Women's Health & Rhinology",
+      topics: ["Hormonal Contraceptives", "Allergic Rhinitis", "Women's Health", "Otolaryngology"],
+      guidelines: [
+        {
+          id: "hormonal-contraceptives-rhinitis-2025",
+          name: "Systemic Hormonal Contraceptive Use and Rhinitis Among Adult Women",
+          organization: "Laryngoscope Investigative Otolaryngology / All of Us Research Program",
+          year: "2025",
+          summary: "LARGE DATABASE ANALYSIS (n=46,205): First U.S. study investigating association between systemic hormonal contraceptives and rhinitis. Found significant association with allergic rhinitis (OR 1.32) but not non-allergic rhinitis. Both progestin-only and estrogen-containing contraceptives independently associated with allergic rhinitis.",
+          keyRecommendations: [
+            "Systemic hormonal contraceptives associated with increased odds of allergic rhinitis (OR: 1.32, 95% CI: 1.20-1.44)",
+            "Both progestin-only (OR: 1.29) and estrogen-containing contraceptives (OR: 1.35) show similar association with AR",
+            "No significant association found with non-allergic rhinitis (NAR)",
+            "Women may consider rhinitis risk before starting hormonal contraceptives",
+            "Clinicians should maintain higher vigilance for rhinitis symptoms in women on systemic hormonal contraceptives",
+            "Evidence supports hormonal role in pathogenesis of allergic and inflammatory conditions",
+            "Sex hormones (estrogen and progesterone) may modulate nasal inflammation through eosinophil recruitment and cytokine production"
+          ],
+          clinicalPearls: [
+            "📊 Study size: 46,205 women aged 20-40 from All of Us Research Program national database",
+            "⚡ Allergic rhinitis association: OR 1.32 (95% CI: 1.20-1.44) for any systemic hormonal contraceptive",
+            "🎯 No difference between POCs and ECCs: Both types show similar AR association (overlapping confidence intervals)",
+            "💡 Mechanism: Estrogen and progesterone have proinflammatory roles in nasal mucosa (eosinophil recruitment, cytokine production, degranulation)",
+            "🔬 Rhinitis prevalence: 4,606 participants (10%) had rhinitis - 92.4% allergic, 7.6% non-allergic",
+            "📈 Contraceptive use: 4.8% used progestin-only, 7.5% used estrogen-containing contraceptives",
+            "⚠️ NAR not associated: OR 1.20 (95% CI: 0.90-1.56) - not statistically significant",
+            "🎪 Progesterone role: Findings suggest progesterone may play larger role in nasal inflammation than previously thought",
+            "💊 Clinical implications: Women with rhinitis on contraceptives may need to weigh risks/benefits",
+            "🧬 Hormonal rhinitis paradigm: Traditional view that hormone-related rhinitis is inherently non-allergic may be oversimplification",
+            "⚕️ Comorbidities matter: Asthma (OR 6.84) and GERD (OR 4.02) strongly associated with allergic rhinitis in multivariate analysis",
+            "🔍 First U.S. study: No prior literature investigated systemic hormonal contraceptives and rhinitis in premenopausal U.S. women"
+          ],
+          evidenceLevel: "Level III Evidence (Large Retrospective Cross-Sectional Database Analysis, n=46,205)",
+          citation: "Laryngoscope Investig Otolaryngol. 2025;10(2):e70123. doi:10.1002/lio2.70123",
+          references: [
+            {
+              title: "Systemic Hormonal Contraceptive Use and Rhinitis Among Adult Women: An All of Us Database Analysis",
+              journal: "Laryngoscope Investigative Otolaryngology",
+              doi: "10.1002/lio2.70123",
+              url: "https://doi.org/10.1002/lio2.70123"
+            }
+          ]
+        }
+      ]
     }
   ];
 
