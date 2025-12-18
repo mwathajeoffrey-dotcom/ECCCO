@@ -1,0 +1,31 @@
+[
+  {
+    "id": "mock_1766072143187",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pa-019",
+    "notes": null,
+    "createdAt": "2025-12-18T15:35:43.187Z"
+  },
+  {
+    "id": "mock_1766071962126",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pp-013",
+    "notes": null,
+    "createdAt": "2025-12-18T15:32:42.126Z"
+  },
+  {
+    "id": "mock_1766071910910",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pp-015",
+    "notes": null,
+    "createdAt": "2025-12-18T15:31:50.910Z"
+  },
+  {
+    "id": "mock_1766071581428",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pp-001",
+    "notes": "internal cervical os",
+    "createdAt": "2025-12-18T15:26:21.428Z",
+    "updatedAt": "2025-12-18T15:26:45.272Z"
+  }
+]

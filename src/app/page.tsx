@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { BookOpen, Clock, Trophy, BarChart3, FileText, Users } from 'lucide-react';
+import UserMenu from '@/components/UserMenu';
 
 export default function Home() {
   return (
@@ -40,6 +41,7 @@ export default function Home() {
                 Dashboard
               </Link>
             </nav>
+            <UserMenu />
           </div>
         </div>
       </header>

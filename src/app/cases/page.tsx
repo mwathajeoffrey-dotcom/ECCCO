@@ -376,12 +376,11 @@ export default function CasesPage() {
               <div className="flex flex-wrap items-center gap-4 pt-4">
                 <BookmarkButton
                   questionId={currentQuestion.id}
-                  userId={userId}
                   category={selectedCase.category}
                 />
               </div>
 
-              <QuestionRating questionId={currentQuestion.id} userId={userId} />
+              <QuestionRating questionId={currentQuestion.id} />
 
               {/* Next Button */}
               <button

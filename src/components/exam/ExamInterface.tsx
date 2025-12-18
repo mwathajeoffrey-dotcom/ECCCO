@@ -946,17 +946,17 @@ export default function ExamInterface() {
                       </ul>
                     </div>
                   )}
-                  
-                  {/* Bookmark & Rating Section */}
-                  <div className="mt-4 pt-4 border-t border-blue-200 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <BookmarkButton questionId={currentQuestion.id} userId={userId} />
-                      <span className="text-xs text-blue-600">Save this question for review later</span>
-                    </div>
-                    <QuestionRating questionId={currentQuestion.id} userId={userId} />
-                  </div>
                 </div>
               )}
+
+              {/* Bookmark & Rating Section - Always Visible */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                  <BookmarkButton questionId={currentQuestion.id} />
+                  <span className="text-xs text-gray-600">Save this question for review later</span>
+                </div>
+                <QuestionRating questionId={currentQuestion.id} />
+              </div>
 
               {/* Navigation */}
               <div className="flex items-center justify-between flex-wrap gap-2">

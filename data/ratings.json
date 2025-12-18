@@ -1,0 +1,32 @@
+[
+  {
+    "id": "mock_rating_1766072928916",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "obe-008",
+    "isHelpful": true,
+    "comment": null,
+    "flagged": false,
+    "createdAt": "2025-12-18T15:48:48.916Z",
+    "updatedAt": "2025-12-18T15:49:05.551Z"
+  },
+  {
+    "id": "mock_rating_1766072151398",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pa-027",
+    "isHelpful": false,
+    "comment": null,
+    "flagged": false,
+    "createdAt": "2025-12-18T15:35:51.398Z",
+    "updatedAt": "2025-12-18T15:35:51.398Z"
+  },
+  {
+    "id": "mock_rating_1766071923274",
+    "userId": "user_371H3N8bQ5kWMu1ExtSo5nf48AV",
+    "questionId": "pp-015",
+    "isHelpful": true,
+    "comment": "helpful",
+    "flagged": false,
+    "createdAt": "2025-12-18T15:32:03.274Z",
+    "updatedAt": "2025-12-18T15:32:03.274Z"
+  }
+]

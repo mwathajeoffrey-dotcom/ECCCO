@@ -2,11 +2,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { ThumbsUp, ThumbsDown, MessageSquare, Flag } from 'lucide-react';
 
 interface QuestionRatingProps {
   questionId: string;
-  userId: string;
 }
 
 interface RatingStats {
@@ -19,12 +19,14 @@ interface RatingStats {
 
 interface Comment {
   id: string;
+  userId?: string;
   comment: string;
   isHelpful: boolean;
   createdAt: string;
 }
 
-export default function QuestionRating({ questionId, userId }: QuestionRatingProps) {
+export default function QuestionRating({ questionId }: QuestionRatingProps) {
+  const { user, isSignedIn } = useUser();
   const [stats, setStats] = useState<RatingStats | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [userRating, setUserRating] = useState<boolean | null>(null);
@@ -33,19 +35,36 @@ export default function QuestionRating({ questionId, userId }: QuestionRatingPro
   const [showAllComments, setShowAllComments] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const apiBase = process.env.NEXT_PUBLIC_USE_MOCK_DB === 'true' 
+    ? `/api/questions/${questionId}/rating-mock` 
+    : `/api/questions/${questionId}/rating`;
+
   // Fetch ratings and comments
   useEffect(() => {
     fetchRatings();
+    // Reset user rating state when question changes
+    setUserRating(null);
+    setUserComment('');
+    setShowCommentForm(false);
   }, [questionId]);
 
   const fetchRatings = async () => {
     try {
-      const response = await fetch(`/api/questions/${questionId}/rating`);
+      const response = await fetch(apiBase);
       const data = await response.json();
 
       if (data.success) {
         setStats(data.stats);
         setComments(data.comments);
+        
+        // Check if current user has rated this question
+        if (isSignedIn && user) {
+          const userRatingComment = data.comments?.find((c: Comment) => c.userId === user.id);
+          if (userRatingComment) {
+            setUserRating(userRatingComment.isHelpful);
+            setUserComment(userRatingComment.comment || '');
+          }
+        }
       }
     } catch (error) {
       console.error('Error fetching ratings:', error);
@@ -53,15 +72,29 @@ export default function QuestionRating({ questionId, userId }: QuestionRatingPro
   };
 
   const handleRating = async (isHelpful: boolean) => {
+    if (!isSignedIn || !user) {
+      alert('Please sign in to rate questions');
+      return;
+    }
+    
+    // If clicking the same rating, allow them to remove it
+    if (userRating === isHelpful) {
+      if (!confirm('Remove your rating?')) {
+        return;
+      }
+      // For now, just update to opposite to simulate removal
+      // In a real app, you'd add a DELETE endpoint
+    }
+    
     setLoading(true);
     try {
-      const response = await fetch(`/api/questions/${questionId}/rating`, {
+      const response = await fetch(apiBase, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId,
+          userId: user.id,
           isHelpful,
           comment: userComment || null,
         }),
@@ -83,19 +116,24 @@ export default function QuestionRating({ questionId, userId }: QuestionRatingPro
   };
 
   const handleFlag = async () => {
+    if (!isSignedIn || !user) {
+      alert('Please sign in to flag questions');
+      return;
+    }
+    
     if (!confirm('Flag this explanation as outdated or incorrect? This will be reviewed by our team.')) {
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/questions/${questionId}/rating`, {
+      const response = await fetch(apiBase, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId,
+          userId: user.id,
           isHelpful: false,
           flagged: true,
           comment: 'Flagged for review',
@@ -124,7 +162,7 @@ export default function QuestionRating({ questionId, userId }: QuestionRatingPro
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleRating(true)}
-            disabled={loading || userRating !== null}
+            disabled={loading}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
               userRating === true
                 ? 'bg-green-500 text-white'
@@ -137,7 +175,7 @@ export default function QuestionRating({ questionId, userId }: QuestionRatingPro
 
           <button
             onClick={() => handleRating(false)}
-            disabled={loading || userRating !== null}
+            disabled={loading}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
               userRating === false
                 ? 'bg-red-500 text-white'
