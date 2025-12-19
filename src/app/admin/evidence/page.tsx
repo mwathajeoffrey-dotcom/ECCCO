@@ -46,8 +46,11 @@ export default function AdminEvidencePage() {
   const [message, setMessage] = useState('');
 
   // Check admin access
-  const isAdmin = user?.primaryEmailAddress?.emailAddress === 'mwathaje@yahoo.com' || 
-                  user?.primaryEmailAddress?.emailAddress === 'admin@eccco.com';
+  // For development: allow any signed-in user
+  // For production: restrict to specific emails
+  const isAdmin = !!user; // Temporarily allow all signed-in users
+  // const isAdmin = user?.primaryEmailAddress?.emailAddress === 'mwathaje@yahoo.com' || 
+  //                 user?.primaryEmailAddress?.emailAddress === 'admin@eccco.com';
 
   useEffect(() => {
     if (isAdmin) {
