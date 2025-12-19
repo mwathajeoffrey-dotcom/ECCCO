@@ -44,7 +44,8 @@ export default function BookmarkButton({
       }
     };
     fetchBookmark();
-  }, [questionId, user.id, apiBase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionId, user.id]);
 
   const handleBookmark = async () => {
     setLoading(true);

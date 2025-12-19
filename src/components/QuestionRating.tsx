@@ -39,15 +39,6 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
     ? `/api/questions/${questionId}/rating-mock` 
     : `/api/questions/${questionId}/rating`;
 
-  // Fetch ratings and comments
-  useEffect(() => {
-    fetchRatings();
-    // Reset user rating state when question changes
-    setUserRating(null);
-    setUserComment('');
-    setShowCommentForm(false);
-  }, [questionId]);
-
   const fetchRatings = async () => {
     try {
       const response = await fetch(apiBase);
@@ -70,6 +61,16 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
       console.error('Error fetching ratings:', error);
     }
   };
+
+  // Fetch ratings and comments
+  useEffect(() => {
+    fetchRatings();
+    // Reset user rating state when question changes
+    setUserRating(null);
+    setUserComment('');
+    setShowCommentForm(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionId]);
 
   const handleRating = async (isHelpful: boolean) => {
     if (!isSignedIn || !user) {
