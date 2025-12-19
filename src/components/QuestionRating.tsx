@@ -72,14 +72,14 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionId]);
 
-  const handleRating = async (isHelpful: boolean) => {
+  const handleRating = async (isHelpful: boolean, skipConfirmation = false) => {
     if (!isSignedIn || !user) {
       alert('Please sign in to rate questions');
       return;
     }
     
-    // If clicking the same rating, allow them to remove it
-    if (userRating === isHelpful) {
+    // If clicking the same rating, allow them to remove it (but skip if submitting comment)
+    if (userRating === isHelpful && !skipConfirmation) {
       if (!confirm('Remove your rating?')) {
         return;
       }
@@ -224,7 +224,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
               Cancel
             </button>
             <button
-              onClick={() => handleRating(userRating ?? true)}
+              onClick={() => handleRating(userRating ?? true, true)}
               disabled={!userComment.trim() || loading}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 text-sm"
             >
