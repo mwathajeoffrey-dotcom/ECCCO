@@ -135,3 +135,69 @@ model CaseSession {
   @@index([completed])
 }
 
+// Feature: Evidence Library Papers
+model Evidence {
+  id              String    @id @default(cuid())
+  
+  // Paper metadata
+  pmid            String?   @unique // PubMed ID
+  doi             String?   // Digital Object Identifier
+  title           String    // Paper title
+  authors         String    // JSON array of authors
+  journal         String    // Journal name
+  year            Int       // Publication year
+  abstract        String?   @db.Text // Full abstract
+  
+  // Categorization
+  specialty       String    // e.g., "Emergency Medicine", "Cardiology"
+  category        String    // e.g., "Trial", "Meta-Analysis", "Guideline"
+  tags            String?   // JSON array of tags
+  
+  // Content
+  summary         String?   @db.Text // AI-generated or manual summary
+  keyPoints       String?   // JSON array of key takeaways
+  clinicalImpact  String?   // How this changes practice
+  
+  // Management
+  status          String    @default("pending") // pending, approved, rejected
+  source          String    @default("pubmed") // pubmed, manual, crossref
+  addedBy         String?   // User who added (for manual entries)
+  reviewedBy      String?   // Admin who reviewed
+  
+  // Engagement
+  views           Int       @default(0)
+  bookmarks       Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([specialty])
+  @@index([category])
+  @@index([year])
+  @@index([status])
+  @@index([pmid])
+}
+
+// Feature: Study Sessions for Spaced Repetition
+model StudySession {
+  id              String    @id @default(cuid())
+  userId          String    // Session or authenticated user ID
+  
+  // Session details
+  questionId      String    // Which question was studied
+  reviewGrade     Int       // Quality of recall (0-5 scale)
+  timeSpent       Int?      // Seconds spent on question
+  
+  // Context
+  wasCorrect      Boolean   // Did user answer correctly
+  wasReview       Boolean   @default(true) // true if from review queue, false if new
+  previousInterval Int?     // Days since last review
+  newInterval     Int       // Days until next review
+  
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+  @@index([questionId])
+  @@index([createdAt])
+}
+
