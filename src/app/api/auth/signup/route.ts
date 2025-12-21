@@ -32,14 +32,8 @@ export async function POST(request: Request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
     
-    // Generate a unique sessionId for the user with better randomness
-    const sessionId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${Math.random().toString(36).substring(2, 15)}`;
-    
-    console.log('=== SIGNUP ATTEMPT ===');
-    console.log('Email:', email.toLowerCase());
-    console.log('Name:', body.name || email.split('@')[0]);
-    console.log('SessionId:', sessionId);
-    console.log('===================');
+    // Generate a unique sessionId for the user
+    const sessionId = `user-${Date.now()}-${Math.random().toString(36).substring(7)}`;
     
     // Create user
     const user = await prisma.user.create({
@@ -47,8 +41,7 @@ export async function POST(request: Request) {
         email: email.toLowerCase(),
         password: hashedPassword,
         sessionId,
-        name: body.name || email.split('@')[0], // Use provided name or part before @ as default
-        role: 'student', // Default role
+        name: email.split('@')[0], // Use part before @ as default name
       },
       select: {
         id: true,
@@ -71,12 +64,7 @@ export async function POST(request: Request) {
     );
     
   } catch (error) {
-    // Detailed error logging for debugging
-    console.error('=== SIGNUP ERROR START ===');
-    console.error('Error type:', error?.constructor?.name);
-    console.error('Error message:', error instanceof Error ? error.message : 'Unknown');
-    console.error('Full error:', JSON.stringify(error, null, 2));
-    console.error('=== SIGNUP ERROR END ===');
+    console.error('Signup error:', error);
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -85,41 +73,8 @@ export async function POST(request: Request) {
       );
     }
     
-    // Check for specific Prisma errors
-    if (error && typeof error === 'object' && 'code' in error) {
-      const prismaError = error as { code: string; meta?: any };
-      
-      // P2002: Unique constraint violation
-      if (prismaError.code === 'P2002') {
-        return NextResponse.json(
-          { message: 'An account with this email already exists' },
-          { status: 400 }
-        );
-      }
-      
-      // P2003: Foreign key constraint failed
-      if (prismaError.code === 'P2003') {
-        return NextResponse.json(
-          { message: 'Database constraint error' },
-          { status: 500 }
-        );
-      }
-    }
-    
-    // In development, return detailed error
-    if (process.env.NODE_ENV === 'development') {
-      return NextResponse.json(
-        { 
-          message: 'Signup failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          details: error
-        },
-        { status: 500 }
-      );
-    }
-    
     return NextResponse.json(
-      { message: 'Internal server error. Please check the logs or try again later.' },
+      { message: 'Internal server error' },
       { status: 500 }
     );
   }
