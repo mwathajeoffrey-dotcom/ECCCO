@@ -26,6 +26,8 @@ import {
   ChevronRight,
   Bookmark,
   StickyNote,
+  LogIn,
+  User,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -349,6 +351,23 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             <Settings className="w-5 h-5 flex-shrink-0" />
             <span>⚙️ Settings</span>
+          </Link>
+
+          {/* Divider */}
+          <div className="border-t border-gray-200 my-2" />
+
+          {/* Sign In Link - December 19th working auth */}
+          <Link
+            href="/auth/signin"
+            onClick={onClose}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
+              pathname === '/auth/signin'
+                ? 'ring-2 ring-blue-300'
+                : ''
+            }`}
+          >
+            <LogIn className="w-5 h-5 flex-shrink-0" />
+            <span>🔐 Sign In</span>
           </Link>
         </nav>
 
