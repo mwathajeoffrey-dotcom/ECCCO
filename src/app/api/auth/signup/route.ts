@@ -1,80 +1,68 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma-client';
 import bcrypt from 'bcryptjs';
-import { z } from 'zod';
 
-const signUpSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    
+    const body = await req.json();
+    const { name, email, password } = body;
+
     // Validate input
-    const { email, password } = signUpSchema.parse(body);
-    
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: email.toLowerCase(),
-      },
-    });
-    
-    if (existingUser) {
+    if (!email || !password) {
       return NextResponse.json(
-        { message: 'User with this email already exists' },
+        { message: 'Email and password are required' },
         { status: 400 }
       );
     }
-    
+
+    if (password.length < 6) {
+      return NextResponse.json(
+        { message: 'Password must be at least 6 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { message: 'An account with this email already exists' },
+        { status: 409 }
+      );
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
-    
-    // Generate a unique sessionId for the user
-    const sessionId = `user-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-    
-    // Create user
+
+    // Create user in database
     const user = await prisma.user.create({
       data: {
+        name: name || email.split('@')[0],
         email: email.toLowerCase(),
         password: hashedPassword,
-        sessionId,
-        name: email.split('@')[0], // Use part before @ as default name
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
+        emailVerified: new Date(), // Auto-verify for simplicity
+        role: 'student',
       },
     });
-    
+
     return NextResponse.json(
-      { 
+      {
         message: 'Account created successfully',
         user: {
           id: user.id,
-          email: user.email,
           name: user.name,
-        }
+          email: user.email,
+        },
       },
       { status: 201 }
     );
-    
   } catch (error) {
     console.error('Signup error:', error);
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { message: error.errors[0].message },
-        { status: 400 }
-      );
-    }
-    
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: 'Failed to create account. Please try again.' },
       { status: 500 }
     );
   }
