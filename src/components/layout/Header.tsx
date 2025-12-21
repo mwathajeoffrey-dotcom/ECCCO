@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { BookOpen, User, LogIn, LogOut, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import GlobalSearch from '@/components/GlobalSearch';
 
 interface HeaderProps {
   title?: string;
@@ -92,11 +91,6 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                 </Link>
               )}
             </nav>
-
-            {/* Global Search */}
-            <div className="hidden md:block">
-              <GlobalSearch />
-            </div>
 
             {/* Authentication Section */}
             <div className="relative">

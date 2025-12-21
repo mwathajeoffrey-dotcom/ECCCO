@@ -27,38 +27,24 @@ export default function AnalyticsPage() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/dashboard"
-                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5 mr-1" />
-                Back to Dashboard
-              </Link>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Advanced Analytics</h1>
-                  <p className="text-sm text-gray-600">Deep insights and performance analysis</p>
-                </div>
+          <div className="flex items-center space-x-4">
+            <Link 
+              href="/dashboard"
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ChevronLeft className="h-5 w-5 mr-1" />
+              Back to Dashboard
+            </Link>
+            
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Advanced Analytics</h1>
+                <p className="text-sm text-gray-600">Deep insights and performance analysis</p>
               </div>
             </div>
-
-            <nav className="flex space-x-6">
-              <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium text-sm">
-                Practice
-              </Link>
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium text-sm">
-                Exams
-              </Link>
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium text-sm">
-                Dashboard
-              </Link>
-            </nav>
           </div>
         </div>
       </header>

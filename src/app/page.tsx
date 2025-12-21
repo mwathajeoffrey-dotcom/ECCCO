@@ -1,191 +1,256 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, Clock, Trophy, BarChart3, FileText, Users } from 'lucide-react';
-import UserMenu from '@/components/UserMenu';
+import Sidebar from '@/components/navigation/Sidebar';
+import { 
+  BookOpen, Clock, Trophy, BarChart3, FileText, Users, 
+  Brain, HeartPulse, Activity, FlaskConical, Zap,
+  BookMarked, Sparkles, Target, MessageSquare, Calendar, Menu
+} from 'lucide-react';
 
 export default function Home() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Sidebar */}
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+      />
+
+      {/* Header - Scrolls with page */}
+      <header className="bg-white/80 backdrop-blur-md shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
-                <p className="text-sm text-gray-600">Emergency & Critical Care Comprehensive Online</p>
-              </div>
+          <div className="flex items-center justify-between gap-4">
+            {/* Left Side: Menu Button + Logo Icon + Text */}
+            <div className="flex items-center gap-3">
+              {/* Menu Toggle Button */}
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
+                aria-label="Toggle menu"
+              >
+                <Menu className="w-6 h-6 text-gray-700" />
+              </button>
+
+              {/* Logo Icon + Text */}
+              <Link href="/" className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ECCCO</h1>
+                  <p className="text-xs text-gray-600 hidden sm:block">Emergency & Critical Care Comprehensive Online</p>
+                </div>
+              </Link>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium">
-                Practice
-              </Link>
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
-                Exams
-              </Link>
-              <Link href="/review" className="text-gray-700 hover:text-blue-600 font-medium">
-                Review
-              </Link>
-              <Link href="/bookmarks" className="text-gray-700 hover:text-blue-600 font-medium">
-                Bookmarks
-              </Link>
-              <Link href="/cases" className="text-gray-700 hover:text-blue-600 font-medium">
-                Cases
-              </Link>
-              <Link href="/learning-analytics" className="text-gray-700 hover:text-blue-600 font-medium">
-                Analytics
-              </Link>
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-                Dashboard
-              </Link>
-            </nav>
-            <UserMenu />
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-900 sm:text-6xl">
+          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
+            <span>New: AI-Powered Learning Analytics & Live Quiz Mode</span>
+          </div>
+          <h2 className="text-5xl font-bold text-gray-900 sm:text-6xl lg:text-7xl">
             Master Emergency &
-            <span className="text-blue-600"> Critical Care</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              Critical Care Medicine
+            </span>
           </h2>
-          <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive question bank with over 2,000 evidence-based questions covering all emergency
-            and critical care topics. Practice with timed exams, detailed explanations, and performance tracking.
+          <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Complete evidence-based learning platform with 5,000+ questions, real-time quizzes, 
+            comprehensive guidelines, and AI-powered analytics to help you excel.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/practice"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              href="/dashboard"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
             >
-              Start Practicing
+              Go to Dashboard →
             </Link>
             <Link
-              href="/exam"
-              className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              href="/emergency-references"
+              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
             >
-              Take Full Exam
+              Browse Evidence Library
             </Link>
+          </div>
+          
+          {/* Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl shadow-sm">
+              <div className="text-3xl font-bold text-blue-600">5,000+</div>
+              <div className="text-sm text-gray-600 mt-1">Practice Questions</div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl shadow-sm">
+              <div className="text-3xl font-bold text-indigo-600">30+</div>
+              <div className="text-sm text-gray-600 mt-1">Evidence References</div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl shadow-sm">
+              <div className="text-3xl font-bold text-purple-600">15+</div>
+              <div className="text-sm text-gray-600 mt-1">Topic Categories</div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl shadow-sm">
+              <div className="text-3xl font-bold text-pink-600">24/7</div>
+              <div className="text-sm text-gray-600 mt-1">Live Quiz Access</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Key Features Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-              <BookOpen className="w-6 h-6 text-blue-600" />
+        <div className="text-center mb-12">
+          <h3 className="text-4xl font-bold text-gray-900 mb-4">Everything You Need to Excel</h3>
+          <p className="text-xl text-gray-600">Comprehensive tools for emergency and critical care mastery</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Practice Mode */}
+          <Link href="/practice" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <BookOpen className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">2,000+ Questions</h3>
-            <p className="text-gray-600">
-              Comprehensive question bank covering all emergency and critical care topics with evidence-based explanations.
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Practice Mode</h3>
+            <p className="text-gray-600 mb-4">
+              5,000+ evidence-based questions with detailed explanations and references.
             </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-              <Clock className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Timed Exams</h3>
-            <p className="text-gray-600">
-              Simulate real exam conditions with timed sessions and proper pacing for optimal preparation.
-            </p>
-          </div>
-
-          <Link href="/learning-analytics" className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-              <BarChart3 className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Learning Analytics</h3>
-            <p className="text-gray-600">
-              Advanced AI-powered insights, adaptive recommendations, and personalized study plans for optimal learning.
-            </p>
+            <span className="text-blue-600 font-semibold group-hover:underline">Start Practicing →</span>
           </Link>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-              <FileText className="w-6 h-6 text-orange-600" />
+          {/* Live Quiz */}
+          <Link href="/live-quiz" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Zap className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Detailed Explanations</h3>
-            <p className="text-gray-600">
-              Every question includes comprehensive explanations with references to current guidelines.
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Live Quiz Mode</h3>
+            <p className="text-gray-600 mb-4">
+              Real-time collaborative quizzes with instant feedback and leaderboards.
             </p>
-          </div>
+            <span className="text-pink-600 font-semibold group-hover:underline">Join Live Quiz →</span>
+          </Link>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-              <Trophy className="w-6 h-6 text-red-600" />
+          {/* Evidence Library */}
+          <Link href="/emergency-references" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <BookMarked className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Topic Mastery</h3>
-            <p className="text-gray-600">
-              Focus on specific topics with 30-question packs designed for targeted learning.
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Evidence Library</h3>
+            <p className="text-gray-600 mb-4">
+              30+ curated guidelines, trials, and clinical pearls with DOI references.
             </p>
-          </div>
+            <span className="text-emerald-600 font-semibold group-hover:underline">Browse References →</span>
+          </Link>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-              <Users className="w-6 h-6 text-indigo-600" />
+          {/* AI Analytics */}
+          <Link href="/learning-analytics" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Brain className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Expert Content</h3>
-            <p className="text-gray-600">
-              Questions developed by emergency and critical care experts based on current best practices.
+            <h3 className="text-xl font-bold text-gray-900 mb-2">AI Learning Analytics</h3>
+            <p className="text-gray-600 mb-4">
+              Advanced insights, adaptive recommendations, and personalized study plans.
             </p>
-          </div>
+            <span className="text-purple-600 font-semibold group-hover:underline">View Analytics →</span>
+          </Link>
+
+          {/* Timed Exams */}
+          <Link href="/exam" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Clock className="w-7 h-7 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Timed Exams</h3>
+            <p className="text-gray-600 mb-4">
+              Simulate real exam conditions with full-length timed assessments.
+            </p>
+            <span className="text-orange-600 font-semibold group-hover:underline">Take Exam →</span>
+          </Link>
+
+          {/* Performance Tracking */}
+          <Link href="/dashboard" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <BarChart3 className="w-7 h-7 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Performance Tracking</h3>
+            <p className="text-gray-600 mb-4">
+              Detailed progress tracking, topic mastery scores, and improvement trends.
+            </p>
+            <span className="text-cyan-600 font-semibold group-hover:underline">View Dashboard →</span>
+          </Link>
         </div>
       </section>
 
       {/* Topics Overview */}
-      <section className="bg-white py-16">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Topics Covered
+          <h3 className="text-4xl font-bold text-center text-white mb-4">
+            Comprehensive Topic Coverage
           </h3>
+          <p className="text-center text-blue-100 text-lg mb-12 max-w-2xl mx-auto">
+            Master all critical domains of emergency and critical care medicine
+          </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
-              'Airway Management',
-              'Mechanical Ventilation',
-              'Sepsis Management',
-              'Shock & Resuscitation',
-              'Cardiac Emergencies',
-              'Neurological Emergencies',
-              'Toxicology',
-              'Trauma Management',
-              'Respiratory Emergencies',
-              'Renal Emergencies',
-              'Endocrine Emergencies',
-              'Critical Care Pharmacology',
-              'Procedures',
-              'Infection Control',
-              'Ethical & Legal Issues'
-            ].map((topic) => (
-              <div key={topic} className="bg-gray-50 p-4 rounded-lg text-center">
-                <span className="text-sm font-medium text-gray-700">{topic}</span>
-              </div>
-            ))}
+              { name: 'Airway Management', icon: Activity },
+              { name: 'Mechanical Ventilation', icon: Activity },
+              { name: 'Sepsis & Shock', icon: HeartPulse },
+              { name: 'Cardiac Emergencies', icon: HeartPulse },
+              { name: 'Neurological Care', icon: Brain },
+              { name: 'Trauma Management', icon: Activity },
+              { name: 'Toxicology', icon: FlaskConical },
+              { name: 'Critical Pharmacology', icon: FlaskConical },
+              { name: 'Procedures', icon: Target },
+              { name: 'Respiratory Emergencies', icon: Activity },
+              { name: 'Renal Emergencies', icon: Activity },
+              { name: 'Endocrine Emergencies', icon: Activity },
+              { name: 'Infection Control', icon: Activity },
+              { name: 'Ethical & Legal', icon: BookMarked },
+              { name: 'Evidence-Based Care', icon: BookMarked }
+            ].map((topic) => {
+              const Icon = topic.icon;
+              return (
+                <div key={topic.name} className="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-xl text-center hover:bg-white/20 transition-all">
+                  <Icon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <span className="text-sm font-medium text-white">{topic.name}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-blue-600 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-3xl font-bold text-white mb-4">
-            Ready to Excel in Emergency & Critical Care?
-          </h3>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands of healthcare professionals who have improved their knowledge and skills with our comprehensive platform.
-          </p>
-          <Link
-            href="/practice"
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
-          >
-            Get Started Today
-          </Link>
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 text-center shadow-2xl">
+            <h3 className="text-4xl font-bold text-white mb-4">
+              Ready to Excel in Emergency & Critical Care?
+            </h3>
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of healthcare professionals improving their knowledge and clinical skills with our comprehensive platform.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/dashboard"
+                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all inline-block"
+              >
+                Get Started Free
+              </Link>
+              <Link
+                href="/support"
+                className="bg-blue-500/20 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-xl font-semibold hover:bg-blue-500/30 transition-all inline-block"
+              >
+                <MessageSquare className="w-5 h-5 inline mr-2" />
+                Contact Support
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -195,43 +260,47 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <BookOpen className="w-6 h-6" />
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-white" />
+                </div>
                 <span className="text-xl font-bold">ECCCO</span>
               </div>
-              <p className="text-gray-400">
-                Emergency & Critical Care Comprehensive Online platform for medical education.
+              <p className="text-gray-400 text-sm">
+                Emergency & Critical Care Comprehensive Online platform for medical education excellence.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/practice" className="hover:text-white">Practice Questions</Link></li>
-                <li><Link href="/exam" className="hover:text-white">Timed Exams</Link></li>
-                <li><Link href="/learning-analytics" className="hover:text-white">Learning Analytics</Link></li>
-                <li><Link href="/guidelines" className="hover:text-white">Medical Guidelines</Link></li>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><Link href="/practice" className="hover:text-white transition-colors">Practice Questions</Link></li>
+                <li><Link href="/live-quiz" className="hover:text-white transition-colors">Live Quiz Mode</Link></li>
+                <li><Link href="/learning-analytics" className="hover:text-white transition-colors">AI Analytics</Link></li>
+                <li><Link href="/emergency-references" className="hover:text-white transition-colors">Evidence Library</Link></li>
+                <li><Link href="/exam" className="hover:text-white transition-colors">Timed Exams</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Topics</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Emergency Medicine</li>
-                <li>Critical Care</li>
-                <li>Trauma Management</li>
-                <li>Pharmacology</li>
+              <h4 className="font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
+                <li><Link href="/emergency-references" className="hover:text-white transition-colors">Clinical Guidelines</Link></li>
+                <li><Link href="/learning-analytics" className="hover:text-white transition-colors">Performance Analytics</Link></li>
+                <li><Link href="/support" className="hover:text-white transition-colors">Help Center</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Documentation</li>
-                <li>Contact Us</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><Link href="/support" className="hover:text-white transition-colors">Contact Support</Link></li>
+                <li><Link href="/support" className="hover:text-white transition-colors">Send Feedback</Link></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ECCCO. All rights reserved.</p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+            <p>&copy; 2024 ECCCO. All rights reserved. Emergency & Critical Care Comprehensive Online.</p>
           </div>
         </div>
       </footer>

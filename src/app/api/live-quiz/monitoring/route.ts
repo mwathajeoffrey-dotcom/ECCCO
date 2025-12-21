@@ -1,5 +1,6 @@
 // Analytics: session metrics, engagement, learning outcomes, performance
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function getMonitoringOverview(timeRange: number) {
   try {

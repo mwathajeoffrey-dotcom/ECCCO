@@ -268,53 +268,38 @@ export default function PALSPracticeResources() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo and Navigation */}
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Target className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl font-bold text-gray-900">ECCCO</span>
-              </Link>
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">ECCCO</span>
+            </Link>
 
-              {/* Tool Navigation */}
-              {activeTool !== 'overview' && (
-                <nav className="hidden md:flex space-x-6">
+            {/* Tool Navigation - Only show when not in overview */}
+            {activeTool !== 'overview' && (
+              <nav className="hidden md:flex space-x-6">
+                <button
+                  onClick={() => setActiveTool('overview')}
+                  className="text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Overview
+                </button>
+                {resources.filter(r => r.available).map((resource) => (
                   <button
-                    onClick={() => setActiveTool('overview')}
-                    className="text-gray-700 hover:text-blue-600 font-medium"
+                    key={resource.id}
+                    onClick={() => setActiveTool(resource.id)}
+                    className={`font-medium transition-colors ${
+                      activeTool === resource.id
+                        ? 'text-blue-600'
+                        : 'text-gray-700 hover:text-blue-600'
+                    }`}
                   >
-                    Overview
+                    {resource.title}
                   </button>
-                  {resources.filter(r => r.available).map((resource) => (
-                    <button
-                      key={resource.id}
-                      onClick={() => setActiveTool(resource.id)}
-                      className={`font-medium transition-colors ${
-                        activeTool === resource.id
-                          ? 'text-blue-600'
-                          : 'text-gray-700 hover:text-blue-600'
-                      }`}
-                    >
-                      {resource.title}
-                    </button>
-                  ))}
-                </nav>
-              )}
-            </div>
-
-            {/* Main Navigation */}
-            <nav className="flex space-x-6">
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
-                Exams
-              </Link>
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-                Dashboard
-              </Link>
-              <Link href="/practice" className="text-blue-600 font-medium">
-                Practice
-              </Link>
-            </nav>
+                ))}
+              </nav>
+            )}
           </div>
         </div>
       </header>

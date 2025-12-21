@@ -21,11 +21,11 @@ import {
 } from 'lucide-react';
 
 interface StickyHeaderProps {
-  onMobileMenuToggle: () => void;
-  isMobileMenuOpen: boolean;
+  onSidebarToggle?: () => void;
+  isSidebarOpen?: boolean;
 }
 
-export default function StickyHeader({ onMobileMenuToggle, isMobileMenuOpen }: StickyHeaderProps) {
+export default function StickyHeader({ onSidebarToggle, isSidebarOpen }: StickyHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -97,18 +97,32 @@ export default function StickyHeader({ onMobileMenuToggle, isMobileMenuOpen }: S
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
-              <BookOpen className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                ECCCO
-              </h1>
-              <p className="text-xs text-gray-600 hidden sm:block">Emergency & Critical Care</p>
-            </div>
-          </Link>
+          {/* Left Side - Sidebar Toggle + Logo */}
+          <div className="flex items-center gap-4">
+            {/* Sidebar Toggle Button */}
+            {onSidebarToggle && (
+              <button
+                onClick={onSidebarToggle}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:block hidden"
+                aria-label="Toggle sidebar"
+              >
+                <Menu className="w-5 h-5 text-gray-700" />
+              </button>
+            )}
+            
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  ECCCO
+                </h1>
+                <p className="text-xs text-gray-600 hidden sm:block">Emergency & Critical Care</p>
+              </div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
@@ -181,18 +195,16 @@ export default function StickyHeader({ onMobileMenuToggle, isMobileMenuOpen }: S
               Sign Up
             </Link>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={onMobileMenuToggle}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-700" />
-              ) : (
+            {/* Sidebar Toggle Button (Mobile & Desktop) */}
+            {onSidebarToggle && (
+              <button
+                onClick={onSidebarToggle}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label="Toggle sidebar"
+              >
                 <Menu className="w-6 h-6 text-gray-700" />
-              )}
-            </button>
+              </button>
+            )}
           </div>
         </div>
       </div>

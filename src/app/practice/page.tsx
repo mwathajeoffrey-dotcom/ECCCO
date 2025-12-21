@@ -30,32 +30,19 @@ export default function PracticePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Simple Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
-                  <p className="text-sm text-gray-600">Practice Mode</p>
-                </div>
-              </Link>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/practice" className="text-blue-600 font-medium">
-                Practice
-              </Link>
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
-                Exams
-              </Link>
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-                Dashboard
-              </Link>
-            </nav>
+          <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
+                <p className="text-sm text-gray-600">Practice Mode</p>
+              </div>
+            </Link>
           </div>
         </div>
       </header>

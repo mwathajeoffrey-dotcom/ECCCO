@@ -1,7 +1,7 @@
 // Bookmark Button Component
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Star, StickyNote } from 'lucide-react';
 
@@ -27,25 +27,6 @@ export default function BookmarkButton({
   if (!isSignedIn || !user) return null;
 
   const apiBase = process.env.NEXT_PUBLIC_USE_MOCK_DB === 'true' ? '/api/bookmarks-mock' : '/api/bookmarks';
-
-  // Fetch bookmark status when question changes
-  useEffect(() => {
-    const fetchBookmark = async () => {
-      try {
-        const res = await fetch(`${apiBase}?userId=${user.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          const bookmark = data.bookmarks?.find((b: any) => b.questionId === questionId);
-          setIsBookmarked(!!bookmark);
-          setNotes(bookmark?.notes || '');
-        }
-      } catch (e) {
-        console.error('Error fetching bookmark:', e);
-      }
-    };
-    fetchBookmark();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionId, user.id]);
 
   const handleBookmark = async () => {
     setLoading(true);

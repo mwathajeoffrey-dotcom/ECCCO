@@ -1,6 +1,6 @@
 'use client';
 
-import { ElementType, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { 
   FileText, 
@@ -714,46 +714,6 @@ export default function EmergencyReferencesPage() {
           ]
         },
         {
-          id: "hypertonic-saline-mannitol-tbi-2020",
-          name: "Hypertonic Saline vs Mannitol in Traumatic Brain Injury: Systematic Review & Meta-Analysis",
-          organization: "Medicine (Baltimore) / Chinese Database Meta-Analysis",
-          year: "2020",
-          summary: "META-ANALYSIS (n=544, 10 RCTs): 3% hypertonic saline vs 20% mannitol for intracranial hypertension in TBI. Both reduce ICP effectively, but hypertonic saline has longer duration of effect and better cerebral perfusion pressure.",
-          keyRecommendations: [
-            "Both 3% hypertonic saline and 20% mannitol effectively reduce intracranial pressure (no difference in ICP reduction)",
-            "Hypertonic saline has longer duration of effect for ICP control (MD: 0.84, 95% CI: 0.64-1.05, p<0.00001)",
-            "Hypertonic saline increases cerebral perfusion pressure more than mannitol (MD: 0.53, 95% CI: 0.15-0.92, p=0.007)",
-            "No significant difference in onset time between agents",
-            "3% hypertonic saline preferred for sustained ICP control and CPP improvement",
-            "Consider patient volume status: mannitol may be preferred in hypervolemia, HTS in hypovolemia",
-            "Monitor serum sodium with HTS (target <155-160 mEq/L), renal function with mannitol"
-          ],
-          clinicalPearls: [
-            "📊 Meta-analysis: 544 patients (270 HTS, 274 mannitol), 10 RCTs from Chinese databases 2010-2019",
-            "⚡ Duration of effect: HTS superior - longer ICP control (mean difference 0.84 hours)",
-            "🎯 Cerebral perfusion pressure: HTS increases CPP more than mannitol (MD: 0.53 mmHg, p=0.007)",
-            "💡 ICP reduction: Both equally effective at lowering ICP (no statistical difference)",
-            "🔬 HTS mechanism: Osmotic gradient, reduces brain water, improves rheology, may have anti-inflammatory effects",
-            "📈 Mannitol mechanism: Osmotic diuresis, free radical scavenger, reduces blood viscosity",
-            "⚠️ HTS advantages: Volume expansion, sustained effect, safe in hypovolemia, improves CPP",
-            "🚫 Mannitol cautions: Can worsen hypovolemia, renal toxicity with repeated doses, rebound ICP possible",
-            "💊 Typical HTS dose: 3% saline 250mL bolus over 20-30 min (or 23.4% 30mL bolus for emergent ICP)",
-            "🎪 Typical mannitol dose: 20% mannitol 0.25-1 g/kg IV bolus over 15-30 minutes",
-            "⏱️ Monitor: Serum sodium q6h with HTS (stop if Na+ >155), serum osm with mannitol (stop if >320)",
-            "🔍 ICP goals: Target ICP <20-22 mmHg, CPP 60-70 mmHg (MAP - ICP = CPP)"
-          ],
-          evidenceLevel: "Level II Evidence (Systematic Review & Meta-Analysis of 10 RCTs, n=544)",
-          citation: "Medicine (Baltimore). 2020;99(35):e21655. doi:10.1097/MD.0000000000021655",
-          references: [
-            {
-              title: "Hypertonic saline and mannitol in patients with traumatic brain injury: A systematic and meta-analysis",
-              journal: "Medicine (Baltimore)",
-              doi: "10.1097/MD.0000000000021655",
-              url: "https://doi.org/10.1097/MD.0000000000021655"
-            }
-          ]
-        },
-        {
           id: "swat-trial-2023",
           name: "SWAT Trial - Whole Blood vs Components in Trauma",
           organization: "New England Journal of Medicine / Military-Civilian Trauma Trial",
@@ -820,52 +780,6 @@ export default function EmergencyReferencesPage() {
               journal: "New England Journal of Medicine",
               doi: "10.1056/NEJMoa1711586",
               url: "https://doi.org/10.1056/NEJMoa1711586"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      category: "Stroke & Cerebrovascular",
-      topics: ["Ischemic Stroke", "TIA", "Dual Antiplatelet Therapy", "Secondary Prevention"],
-      guidelines: [
-        {
-          id: "dapt-stroke-review-2024",
-          name: "Dual Antiplatelet Therapy for Ischemic Stroke and TIA - Updated Review",
-          organization: "Journal of Cardiovascular Development and Disease / National University Hospital Singapore",
-          year: "2024",
-          summary: "COMPREHENSIVE REVIEW: Evidence-based recommendations for dual antiplatelet therapy (DAPT) in acute and long-term management of non-cardioembolic stroke. Reviews all major trials through 2023 including CHANCE, POINT, THALES, CHANCE-2, and INSPIRES.",
-          keyRecommendations: [
-            "Aspirin + Clopidogrel for 21 days strongly recommended for minor stroke (NIHSS ≤3) or high-risk TIA (ABCD2 ≥4) within 24h",
-            "DAPT reduces 90-day stroke risk from 11.7% to 8.2% (CHANCE trial, NNT=29)",
-            "Loading: Aspirin 300mg + Clopidogrel 300mg (600mg in very high-risk cases)",
-            "Duration: 21 days optimal - benefits occur in first 10 days, bleeding risk increases after 90 days",
-            "Aspirin + Ticagrelor may be considered for CYP2C19 loss-of-function carriers or clopidogrel failures",
-            "Severe intracranial stenosis (70-99%): DAPT reasonable for up to 3 months",
-            "DAPT acceptable alternative to tPA for non-disabling stroke (NIHSS ≤5) within 4.5h"
-          ],
-          clinicalPearls: [
-            "🎯 CHANCE Trial (n=5,170): ASA+Clopidogrel 21d → 8.2% vs 11.7% stroke at 90d (p<0.001)",
-            "🎯 POINT Trial (n=4,881): ASA+Clopidogrel 90d → 4.8% vs 6.4% stroke (p=0.02) but ↑bleeding",
-            "⚡ Timing matters: DAPT most effective when started within 12-24h of symptom onset",
-            "💊 Loading doses critical: ASA 300mg + Clopidogrel 300mg for immediate platelet inhibition",
-            "📊 Duration sweet spot: 21 days balances efficacy vs bleeding - extension to 90d only for high-risk",
-            "🧬 Genetics: CYP2C19 loss-of-function carriers (58.8% in Chinese) don't benefit from clopidogrel",
-            "🔬 CHANCE-2: Ticagrelor superior to clopidogrel in LOF carriers (6.0% vs 7.6% stroke, p=0.004)",
-            "⚠️ Avoid in: Large infarcts, hemorrhagic transformation, uncontrolled HTN >185/110",
-            "📈 INSPIRES (2023): DAPT effective even 24-72h after onset for large artery atherosclerosis",
-            "💡 Lacunar stroke: Short-term DAPT (21d) acceptable despite SPS3 contraindication for long-term",
-            "🎪 Instead of tPA: ARAMIS trial showed DAPT non-inferior to alteplase for NIHSS ≤5",
-            "🚫 Long-term DAPT >3mo: Associated with ↑bleeding, ↑mortality, no ischemic benefit"
-          ],
-          evidenceLevel: "Class I Evidence - Systematic Review of Multiple RCTs (LOE: A)",
-          citation: "J Cardiovasc Dev Dis. 2024;11(2):48. doi:10.3390/jcdd11020048",
-          references: [
-            {
-              title: "Dual Antiplatelet Therapy for the Acute Management and Long-term Secondary Prevention of Ischemic Stroke and Transient Ischemic Attack, An Updated Review",
-              journal: "Journal of Cardiovascular Development and Disease",
-              doi: "10.3390/jcdd11020048",
-              url: "https://doi.org/10.3390/jcdd11020048"
             }
           ]
         }
@@ -981,52 +895,6 @@ export default function EmergencyReferencesPage() {
           ]
         }
       ]
-    },
-    {
-      category: "Women's Health & Rhinology",
-      topics: ["Hormonal Contraceptives", "Allergic Rhinitis", "Women's Health", "Otolaryngology"],
-      guidelines: [
-        {
-          id: "hormonal-contraceptives-rhinitis-2025",
-          name: "Systemic Hormonal Contraceptive Use and Rhinitis Among Adult Women",
-          organization: "Laryngoscope Investigative Otolaryngology / All of Us Research Program",
-          year: "2025",
-          summary: "LARGE DATABASE ANALYSIS (n=46,205): First U.S. study investigating association between systemic hormonal contraceptives and rhinitis. Found significant association with allergic rhinitis (OR 1.32) but not non-allergic rhinitis. Both progestin-only and estrogen-containing contraceptives independently associated with allergic rhinitis.",
-          keyRecommendations: [
-            "Systemic hormonal contraceptives associated with increased odds of allergic rhinitis (OR: 1.32, 95% CI: 1.20-1.44)",
-            "Both progestin-only (OR: 1.29) and estrogen-containing contraceptives (OR: 1.35) show similar association with AR",
-            "No significant association found with non-allergic rhinitis (NAR)",
-            "Women may consider rhinitis risk before starting hormonal contraceptives",
-            "Clinicians should maintain higher vigilance for rhinitis symptoms in women on systemic hormonal contraceptives",
-            "Evidence supports hormonal role in pathogenesis of allergic and inflammatory conditions",
-            "Sex hormones (estrogen and progesterone) may modulate nasal inflammation through eosinophil recruitment and cytokine production"
-          ],
-          clinicalPearls: [
-            "📊 Study size: 46,205 women aged 20-40 from All of Us Research Program national database",
-            "⚡ Allergic rhinitis association: OR 1.32 (95% CI: 1.20-1.44) for any systemic hormonal contraceptive",
-            "🎯 No difference between POCs and ECCs: Both types show similar AR association (overlapping confidence intervals)",
-            "💡 Mechanism: Estrogen and progesterone have proinflammatory roles in nasal mucosa (eosinophil recruitment, cytokine production, degranulation)",
-            "🔬 Rhinitis prevalence: 4,606 participants (10%) had rhinitis - 92.4% allergic, 7.6% non-allergic",
-            "📈 Contraceptive use: 4.8% used progestin-only, 7.5% used estrogen-containing contraceptives",
-            "⚠️ NAR not associated: OR 1.20 (95% CI: 0.90-1.56) - not statistically significant",
-            "🎪 Progesterone role: Findings suggest progesterone may play larger role in nasal inflammation than previously thought",
-            "💊 Clinical implications: Women with rhinitis on contraceptives may need to weigh risks/benefits",
-            "🧬 Hormonal rhinitis paradigm: Traditional view that hormone-related rhinitis is inherently non-allergic may be oversimplification",
-            "⚕️ Comorbidities matter: Asthma (OR 6.84) and GERD (OR 4.02) strongly associated with allergic rhinitis in multivariate analysis",
-            "🔍 First U.S. study: No prior literature investigated systemic hormonal contraceptives and rhinitis in premenopausal U.S. women"
-          ],
-          evidenceLevel: "Level III Evidence (Large Retrospective Cross-Sectional Database Analysis, n=46,205)",
-          citation: "Laryngoscope Investig Otolaryngol. 2025;10(2):e70123. doi:10.1002/lio2.70123",
-          references: [
-            {
-              title: "Systemic Hormonal Contraceptive Use and Rhinitis Among Adult Women: An All of Us Database Analysis",
-              journal: "Laryngoscope Investigative Otolaryngology",
-              doi: "10.1002/lio2.70123",
-              url: "https://doi.org/10.1002/lio2.70123"
-            }
-          ]
-        }
-      ]
     }
   ];
 
@@ -1035,25 +903,12 @@ export default function EmergencyReferencesPage() {
       {/* Header */}
       <header className="bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between mb-4">
-            <Link 
-              href="/dashboard"
-              className="flex items-center text-white hover:text-red-100 transition-colors"
-            >
-              <span className="text-sm font-medium">← Back to Dashboard</span>
-            </Link>
-            <nav className="flex space-x-4 text-sm">
-              <Link href="/exam" className="text-white hover:text-red-100 font-medium transition-colors">
-                Exams
-              </Link>
-              <Link href="/obgyn-references" className="text-white hover:text-red-100 font-medium transition-colors">
-                OB/GYN Guidelines
-              </Link>
-              <Link href="/emergency-references" className="text-white font-semibold underline">
-                Emergency Guidelines
-              </Link>
-            </nav>
-          </div>
+          <Link 
+            href="/dashboard"
+            className="flex items-center text-white hover:text-red-100 transition-colors mb-4"
+          >
+            <span className="text-sm font-medium">← Back to Dashboard</span>
+          </Link>
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-3">

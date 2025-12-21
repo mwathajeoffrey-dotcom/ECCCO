@@ -23,4 +23,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Prevent scroll chaining - sidebar scroll won't affect body */
+  .sidebar-scroll-container {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
 }

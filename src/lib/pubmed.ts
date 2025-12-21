@@ -1,222 +1,384 @@
 /**
- * PubMed E-utilities API Integration
+ * PubMed Integration Library
+ * Interfaces with NCBI E-utilities API to search and fetch research papers
  * 
- * Reference: https://www.ncbi.nlm.nih.gov/books/NBK25501/
- * 
- * E-utilities are free to use but require:
- * 1. Rate limiting (max 3 requests/second without API key, 10/second with key)
- * 2. API key for production (get from https://www.ncbi.nlm.nih.gov/account/)
+ * API Documentation: https://www.ncbi.nlm.nih.gov/books/NBK25501/
+ * E-utilities Base URL: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/
  */
+
+const PUBMED_BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
+const DEFAULT_RETMAX = 20; // Number of results to return
+const API_DELAY = 334; // ~3 requests per second (NCBI rate limit for no API key)
+
+export interface PubMedSearchParams {
+  query: string;
+  retmax?: number;
+  retstart?: number;
+  sort?: 'relevance' | 'pub_date' | 'recently_added';
+  mindate?: string; // YYYY/MM/DD
+  maxdate?: string; // YYYY/MM/DD
+}
 
 export interface PubMedArticle {
   pmid: string;
-  doi?: string;
   title: string;
   authors: string[];
   journal: string;
   year: number;
+  volume?: string;
+  issue?: string;
+  pages?: string;
+  doi?: string;
   abstract?: string;
-  publicationDate?: string;
+  pubDate: string;
+  pmcid?: string;
+  url: string;
 }
 
-const PUBMED_BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
-const API_KEY = process.env.PUBMED_API_KEY || ''; // Optional but recommended
+export interface PubMedSearchResult {
+  count: number;
+  pmids: string[];
+  retmax: number;
+  retstart: number;
+}
 
 /**
- * Search PubMed for articles
- * 
- * @param query - Search query (e.g., "sepsis AND emergency medicine[MeSH]")
- * @param maxResults - Maximum number of results to return (default: 20)
- * @returns Array of PMIDs
+ * Search PubMed for articles matching a query
+ * @param params Search parameters
+ * @returns Search results with PMIDs
  */
-export async function searchPubMed(query: string, maxResults: number = 20): Promise<string[]> {
-  const params = new URLSearchParams({
+export async function searchPubMed(
+  params: PubMedSearchParams
+): Promise<PubMedSearchResult> {
+  const {
+    query,
+    retmax = DEFAULT_RETMAX,
+    retstart = 0,
+    sort = 'relevance',
+    mindate,
+    maxdate,
+  } = params;
+
+  const searchParams = new URLSearchParams({
     db: 'pubmed',
     term: query,
-    retmax: maxResults.toString(),
+    retmax: retmax.toString(),
+    retstart: retstart.toString(),
     retmode: 'json',
-    ...(API_KEY && { api_key: API_KEY }),
+    sort: sort,
   });
 
-  const response = await fetch(`${PUBMED_BASE_URL}/esearch.fcgi?${params}`);
-  
-  if (!response.ok) {
-    throw new Error(`PubMed search failed: ${response.statusText}`);
-  }
+  if (mindate) searchParams.append('mindate', mindate);
+  if (maxdate) searchParams.append('maxdate', maxdate);
 
-  const data = await response.json();
-  return data.esearchresult?.idlist || [];
+  const url = `${PUBMED_BASE_URL}/esearch.fcgi?${searchParams.toString()}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`PubMed search failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const result = data.esearchresult;
+
+    return {
+      count: parseInt(result.count || '0', 10),
+      pmids: result.idlist || [],
+      retmax,
+      retstart,
+    };
+  } catch (error) {
+    console.error('PubMed search error:', error);
+    throw new Error(
+      `Failed to search PubMed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 }
 
 /**
- * Fetch article details from PubMed
- * 
- * @param pmids - Array of PubMed IDs
+ * Fetch detailed article information for given PMIDs
+ * @param pmids Array of PubMed IDs
  * @returns Array of article details
  */
-export async function fetchPubMedArticles(pmids: string[]): Promise<PubMedArticle[]> {
-  if (pmids.length === 0) return [];
-
-  const params = new URLSearchParams({
-    db: 'pubmed',
-    id: pmids.join(','),
-    retmode: 'xml',
-    ...(API_KEY && { api_key: API_KEY }),
-  });
-
-  const response = await fetch(`${PUBMED_BASE_URL}/efetch.fcgi?${params}`);
-  
-  if (!response.ok) {
-    throw new Error(`PubMed fetch failed: ${response.statusText}`);
+export async function fetchPubMedArticles(
+  pmids: string[]
+): Promise<PubMedArticle[]> {
+  if (!pmids || pmids.length === 0) {
+    return [];
   }
 
-  const xmlText = await response.text();
-  return parsePubMedXML(xmlText);
-}
-
-/**
- * Parse PubMed XML response (server-side with regex)
- */
-function parsePubMedXML(xml: string): PubMedArticle[] {
+  // NCBI recommends fetching in batches of 200 or less
+  const batchSize = 200;
   const articles: PubMedArticle[] = [];
-  
-  try {
-    // Split XML into individual articles (replace newlines for easier matching)
-    const cleanXml = xml.replace(/\n/g, ' ');
-    const articleRegex = /<PubmedArticle>(.*?)<\/PubmedArticle>/g;
-    let articleMatch;
 
-    while ((articleMatch = articleRegex.exec(cleanXml)) !== null) {
-      const articleXml = articleMatch[1];
-      
-      try {
-        // Extract PMID
-        const pmidMatch = articleXml.match(/<PMID[^>]*>(\d+)<\/PMID>/);
-        const pmid = pmidMatch ? pmidMatch[1] : '';
+  for (let i = 0; i < pmids.length; i += batchSize) {
+    const batch = pmids.slice(i, i + batchSize);
+    const batchArticles = await fetchPubMedBatch(batch);
+    articles.push(...batchArticles);
 
-        // Extract title
-        const titleMatch = articleXml.match(/<ArticleTitle>(.*?)<\/ArticleTitle>/);
-        const title = titleMatch ? titleMatch[1].replace(/<[^>]*>/g, '').trim() : '';
-
-        // Extract authors
-        const authors: string[] = [];
-        const authorRegex = /<Author[^>]*>(.*?)<\/Author>/g;
-        let authorMatch;
-        while ((authorMatch = authorRegex.exec(articleXml)) !== null) {
-          const authorXml = authorMatch[1];
-          const lastNameMatch = authorXml.match(/<LastName>(.*?)<\/LastName>/);
-          const initialsMatch = authorXml.match(/<Initials>(.*?)<\/Initials>/);
-          if (lastNameMatch) {
-            const lastName = lastNameMatch[1];
-            const initials = initialsMatch ? initialsMatch[1] : '';
-            authors.push(`${lastName} ${initials}`.trim());
-          }
-        }
-
-        // Extract journal
-        const journalMatch = articleXml.match(/<Journal>.*?<Title>(.*?)<\/Title>.*?<\/Journal>/);
-        const journal = journalMatch ? journalMatch[1] : '';
-
-        // Extract year
-        const yearMatch = articleXml.match(/<PubDate>.*?<Year>(\d{4})<\/Year>.*?<\/PubDate>/);
-        const medlineYearMatch = articleXml.match(/<MedlineDate>.*?(\d{4}).*?<\/MedlineDate>/);
-        const year = yearMatch ? parseInt(yearMatch[1]) : (medlineYearMatch ? parseInt(medlineYearMatch[1]) : new Date().getFullYear());
-
-        // Extract abstract
-        let abstract = '';
-        const abstractRegex = /<AbstractText[^>]*Label="([^"]*)"[^>]*>(.*?)<\/AbstractText>/g;
-        let absMatch;
-        while ((absMatch = abstractRegex.exec(articleXml)) !== null) {
-          const label = absMatch[1];
-          const text = absMatch[2].replace(/<[^>]*>/g, '').trim();
-          abstract += `${label}: ${text}\n\n`;
-        }
-        
-        // Also check for unlabeled abstract
-        if (!abstract) {
-          const simpleAbstractMatch = articleXml.match(/<AbstractText>(.*?)<\/AbstractText>/);
-          if (simpleAbstractMatch) {
-            abstract = simpleAbstractMatch[1].replace(/<[^>]*>/g, '').trim();
-          }
-        }
-
-        // Extract DOI
-        const doiMatch = articleXml.match(/<ArticleId IdType="doi">(.*?)<\/ArticleId>/);
-        const doi = doiMatch ? doiMatch[1] : undefined;
-
-        if (pmid && title) {
-          articles.push({
-            pmid,
-            doi,
-            title,
-            authors,
-            journal,
-            year,
-            abstract: abstract.trim() || undefined,
-          });
-        }
-      } catch (error) {
-        console.error('Error parsing article:', error);
-      }
+    // Rate limiting: wait between batches
+    if (i + batchSize < pmids.length) {
+      await delay(API_DELAY);
     }
-  } catch (error) {
-    console.error('Error parsing PubMed XML:', error);
   }
 
   return articles;
 }
 
 /**
- * Search and fetch articles in one call
- * 
- * @param query - Search query
- * @param maxResults - Maximum number of results
+ * Fetch a batch of articles
+ * @param pmids Array of PMIDs (max 200)
  * @returns Array of article details
  */
-export async function searchAndFetchPubMed(
-  query: string,
-  maxResults: number = 20
-): Promise<PubMedArticle[]> {
-  // Add delay to respect rate limits (333ms = ~3 requests/second)
-  await new Promise(resolve => setTimeout(resolve, 333));
-  
-  const pmids = await searchPubMed(query, maxResults);
-  
-  if (pmids.length === 0) return [];
-  
-  // Add delay before fetch
-  await new Promise(resolve => setTimeout(resolve, 333));
-  
-  return fetchPubMedArticles(pmids);
-}
+async function fetchPubMedBatch(pmids: string[]): Promise<PubMedArticle[]> {
+  const url = `${PUBMED_BASE_URL}/efetch.fcgi?db=pubmed&id=${pmids.join(',')}&retmode=xml`;
 
-/**
- * Build PubMed search query for emergency medicine topics
- */
-export function buildEmergencyMedicineQuery(topic: string): string {
-  // Add MeSH terms and filters for emergency medicine
-  return `${topic} AND ("emergency medicine"[MeSH Terms] OR "critical care"[MeSH Terms]) AND (Clinical Trial[ptyp] OR Meta-Analysis[ptyp] OR Randomized Controlled Trial[ptyp])`;
-}
-
-/**
- * Rate limiter for PubMed API
- */
-class RateLimiter {
-  private lastRequestTime: number = 0;
-  private readonly minInterval: number = 333; // 3 requests per second
-
-  async wait(): Promise<void> {
-    const now = Date.now();
-    const timeSinceLastRequest = now - this.lastRequestTime;
-    
-    if (timeSinceLastRequest < this.minInterval) {
-      await new Promise(resolve => 
-        setTimeout(resolve, this.minInterval - timeSinceLastRequest)
-      );
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`PubMed fetch failed: ${response.statusText}`);
     }
-    
-    this.lastRequestTime = Date.now();
+
+    const xmlText = await response.text();
+    return parseArticlesFromXML(xmlText);
+  } catch (error) {
+    console.error('PubMed fetch error:', error);
+    throw new Error(
+      `Failed to fetch PubMed articles: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
-export const pubmedRateLimiter = new RateLimiter();
+/**
+ * Parse article data from PubMed XML response
+ * @param xmlText XML response from PubMed
+ * @returns Array of parsed articles
+ */
+function parseArticlesFromXML(xmlText: string): PubMedArticle[] {
+  const articles: PubMedArticle[] = [];
+
+  try {
+    // Simple XML parsing - in production, consider using a proper XML parser
+    const articleRegex = /<PubmedArticle>([\s\S]*?)<\/PubmedArticle>/g;
+    let match;
+    
+    while ((match = articleRegex.exec(xmlText)) !== null) {
+      const articleXml = match[1];
+      const article = parseArticle(articleXml);
+      if (article) {
+        articles.push(article);
+      }
+    }
+  } catch (error) {
+    console.error('XML parsing error:', error);
+  }
+
+  return articles;
+}
+
+/**
+ * Parse a single article from XML
+ * @param xml Article XML content
+ * @returns Parsed article or null
+ */
+function parseArticle(xml: string): PubMedArticle | null {
+  try {
+    // Extract PMID
+    const pmidMatch = xml.match(/<PMID[^>]*>(\d+)<\/PMID>/);
+    const pmid = pmidMatch ? pmidMatch[1] : '';
+
+    if (!pmid) return null;
+
+    // Extract title
+    const titleMatch = xml.match(/<ArticleTitle>([\s\S]*?)<\/ArticleTitle>/);
+    const title = titleMatch ? cleanHtml(titleMatch[1]) : 'No title available';
+
+    // Extract authors
+    const authors = extractAuthors(xml);
+
+    // Extract journal info
+    const journalMatch = xml.match(/<Title>(.*?)<\/Title>/);
+    const journal = journalMatch ? cleanHtml(journalMatch[1]) : 'Unknown Journal';
+
+    // Extract publication year
+    const yearMatch = xml.match(/<PubDate>[\s\S]*?<Year>(\d{4})<\/Year>[\s\S]*?<\/PubDate>/);
+    const year = yearMatch ? parseInt(yearMatch[1], 10) : new Date().getFullYear();
+
+    // Extract volume, issue, pages
+    const volumeMatch = xml.match(/<Volume>(.*?)<\/Volume>/);
+    const volume = volumeMatch ? volumeMatch[1] : undefined;
+
+    const issueMatch = xml.match(/<Issue>(.*?)<\/Issue>/);
+    const issue = issueMatch ? issueMatch[1] : undefined;
+
+    const pagesMatch = xml.match(/<MedlinePgn>(.*?)<\/MedlinePgn>/);
+    const pages = pagesMatch ? pagesMatch[1] : undefined;
+
+    // Extract DOI
+    const doiMatch = xml.match(/<ArticleId IdType="doi">(.*?)<\/ArticleId>/);
+    const doi = doiMatch ? doiMatch[1] : undefined;
+
+    // Extract PMCID
+    const pmcidMatch = xml.match(/<ArticleId IdType="pmc">(.*?)<\/ArticleId>/);
+    const pmcid = pmcidMatch ? pmcidMatch[1] : undefined;
+
+    // Extract abstract
+    const abstractMatch = xml.match(/<Abstract>([\s\S]*?)<\/Abstract>/);
+    const abstract = abstractMatch ? extractAbstractText(abstractMatch[1]) : undefined;
+
+    // Extract publication date
+    const pubDateMatch = xml.match(/<PubDate>[\s\S]*?<\/PubDate>/);
+    const pubDate = pubDateMatch ? extractPubDate(pubDateMatch[0]) : year.toString();
+
+    return {
+      pmid,
+      title,
+      authors,
+      journal,
+      year,
+      volume,
+      issue,
+      pages,
+      doi,
+      abstract,
+      pubDate,
+      pmcid,
+      url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
+    };
+  } catch (error) {
+    console.error('Error parsing article:', error);
+    return null;
+  }
+}
+
+/**
+ * Extract author names from article XML
+ * @param xml Article XML content
+ * @returns Array of author names
+ */
+function extractAuthors(xml: string): string[] {
+  const authors: string[] = [];
+  const authorRegex = /<Author[^>]*>([\s\S]*?)<\/Author>/g;
+  let match;
+  
+  while ((match = authorRegex.exec(xml)) !== null) {
+    const authorXml = match[1];
+    const lastNameMatch = authorXml.match(/<LastName>(.*?)<\/LastName>/);
+    const firstNameMatch = authorXml.match(/<ForeName>(.*?)<\/ForeName>/);
+    const initialsMatch = authorXml.match(/<Initials>(.*?)<\/Initials>/);
+
+    if (lastNameMatch) {
+      const lastName = lastNameMatch[1];
+      const firstName = firstNameMatch ? firstNameMatch[1] : (initialsMatch ? initialsMatch[1] : '');
+      authors.push(firstName ? `${lastName} ${firstName}` : lastName);
+    }
+  }
+
+  return authors.length > 0 ? authors : ['Unknown Authors'];
+}
+
+/**
+ * Extract abstract text from abstract XML
+ * @param abstractXml Abstract XML content
+ * @returns Plain text abstract
+ */
+function extractAbstractText(abstractXml: string): string {
+  const sections: string[] = [];
+  const textRegex = /<AbstractText[^>]*>([\s\S]*?)<\/AbstractText>/g;
+  let match;
+  
+  while ((match = textRegex.exec(abstractXml)) !== null) {
+    const text = cleanHtml(match[1]);
+    if (text) sections.push(text);
+  }
+
+  return sections.join(' ');
+}
+
+/**
+ * Extract publication date from PubDate XML
+ * @param pubDateXml PubDate XML content
+ * @returns Formatted date string
+ */
+function extractPubDate(pubDateXml: string): string {
+  const yearMatch = pubDateXml.match(/<Year>(\d{4})<\/Year>/);
+  const monthMatch = pubDateXml.match(/<Month>(\w+)<\/Month>/);
+  const dayMatch = pubDateXml.match(/<Day>(\d+)<\/Day>/);
+
+  const year = yearMatch ? yearMatch[1] : '';
+  const month = monthMatch ? monthMatch[1] : '';
+  const day = dayMatch ? dayMatch[1] : '';
+
+  return [year, month, day].filter(Boolean).join(' ');
+}
+
+/**
+ * Clean HTML tags and entities from text
+ * @param text Text with potential HTML
+ * @returns Cleaned text
+ */
+function cleanHtml(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+}
+
+/**
+ * Delay execution for rate limiting
+ * @param ms Milliseconds to delay
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Search and fetch articles in one call
+ * @param params Search parameters
+ * @returns Array of articles with full details
+ */
+export async function searchAndFetchArticles(
+  params: PubMedSearchParams
+): Promise<{ articles: PubMedArticle[]; totalCount: number }> {
+  // Search for articles
+  const searchResult = await searchPubMed(params);
+
+  // Fetch full article details
+  const articles = await fetchPubMedArticles(searchResult.pmids);
+
+  return {
+    articles,
+    totalCount: searchResult.count,
+  };
+}
+
+/**
+ * Format article as citation
+ * @param article PubMed article
+ * @returns Formatted citation string
+ */
+export function formatCitation(article: PubMedArticle): string {
+  const authorList =
+    article.authors.length > 3
+      ? `${article.authors.slice(0, 3).join(', ')}, et al.`
+      : article.authors.join(', ');
+
+  const parts = [
+    authorList,
+    article.title,
+    article.journal,
+    article.year,
+  ];
+
+  if (article.volume) parts.push(`${article.volume}${article.issue ? `(${article.issue})` : ''}`);
+  if (article.pages) parts.push(article.pages);
+  if (article.doi) parts.push(`doi: ${article.doi}`);
+
+  return parts.filter(Boolean).join('. ') + '.';
+}

@@ -7,8 +7,6 @@ import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { analytics } from '@/lib/analytics/service';
-import BookmarkButton from '@/components/BookmarkButton';
-import QuestionRating from '@/components/QuestionRating';
 
 interface Question {
   id: string;
@@ -66,19 +64,6 @@ export default function ExamInterface() {
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [showAnswerAfterAttempt, setShowAnswerAfterAttempt] = useState(false);
   const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
-  
-  // User ID for bookmarks and ratings
-  const [userId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      let id = localStorage.getItem('userId');
-      if (!id) {
-        id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('userId', id);
-      }
-      return id;
-    }
-    return 'anonymous';
-  });
 
   // Fetch topics on component mount
   useEffect(() => {
@@ -328,37 +313,12 @@ export default function ExamInterface() {
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8">
-            <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Back to Home
-            </Link>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Select Exam Topic</h1>
             <p className="text-gray-600 text-sm sm:text-base">Choose a topic for your 30-question timed exam</p>
           </div>
 
           {/* OB/GYN Topics Section */}
           <div className="mb-8">
-            {filterParam === 'new' && (
-              <div className="mb-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="bg-purple-600 p-1.5 rounded">
-                      <BookOpen className="w-4 h-4 text-white" />
-                    </div>
-                    <p className="text-sm text-gray-700">
-                      Showing <span className="font-semibold text-purple-700">8 newly added topics</span> with 240 questions
-                    </p>
-                  </div>
-                  <Link 
-                    href="/exam" 
-                    className="text-sm font-medium text-purple-600 hover:text-purple-700 underline"
-                  >
-                    View All Topics →
-                  </Link>
-                </div>
-              </div>
-            )}
-            
             <div className="flex items-center mb-4 pb-2 border-b-2 border-blue-200">
               <div className="bg-blue-600 p-2 rounded-lg mr-3">
                 <BookOpen className="w-6 h-6 text-white" />
@@ -624,12 +584,6 @@ export default function ExamInterface() {
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
                 Take Another Exam
-              </Link>
-              <Link
-                href="/"
-                className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-              >
-                Back to Home
               </Link>
             </div>
           </div>
@@ -948,15 +902,6 @@ export default function ExamInterface() {
                   )}
                 </div>
               )}
-
-              {/* Bookmark & Rating Section - Always Visible */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="flex items-center justify-between mb-3">
-                  <BookmarkButton questionId={currentQuestion.id} />
-                  <span className="text-xs text-gray-600">Save this question for review later</span>
-                </div>
-                <QuestionRating questionId={currentQuestion.id} />
-              </div>
 
               {/* Navigation */}
               <div className="flex items-center justify-between flex-wrap gap-2">

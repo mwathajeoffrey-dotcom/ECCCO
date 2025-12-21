@@ -8,6 +8,9 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // For development with SQLite, uncomment below:
+  // provider = "sqlite"
+  // url      = "file:./dev.db"
 }
 
 model Topic {
@@ -56,148 +59,90 @@ model ExamSession {
   @@index([createdAt])
 }
 
-// Feature: Question Bookmarking with Spaced Repetition
-model Bookmark {
-  id              String    @id @default(cuid())
-  userId          String    // Session or authenticated user ID
-  questionId      String    // Reference to question (can be external ID from TypeScript files)
-  notes           String?   // User's personal notes on this question
-  category        String?   // Question category for filtering
-  
-  // Spaced Repetition Fields (SM-2 Algorithm)
-  nextReviewDate  DateTime? // When to review this bookmark next
-  reviewCount     Int       @default(0) // Number of times reviewed
-  easeFactor      Float     @default(2.5) // SM-2 ease factor (2.5 is default)
-  interval        Int       @default(1) // Days until next review
-  lastReviewGrade Int?      // Last review quality (0-5 scale)
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@unique([userId, questionId]) // Prevent duplicate bookmarks
-  @@index([userId])
-  @@index([questionId])
-  @@index([category])
-  @@index([nextReviewDate]) // For efficient review queue queries
-}
-
-// Feature: Question Rating & Comments
-model QuestionRating {
-  id          String   @id @default(cuid())
-  userId      String   // Session or authenticated user ID
-  questionId  String   // Reference to question
-  isHelpful   Boolean  // true = thumbs up, false = thumbs down
-  comment     String?  // Optional user comment
-  flagged     Boolean  @default(false) // Flag for outdated/incorrect explanation
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@unique([userId, questionId]) // One rating per user per question
-  @@index([questionId])
-  @@index([isHelpful])
-  @@index([flagged])
-}
-
-// Feature: Case-Based Learning
-model CaseScenario {
+// Evidence Library - Medical References, Guidelines, and Trials
+model EvidenceReference {
   id              String   @id @default(cuid())
-  title           String   // e.g., "55M with Chest Pain"
-  presentation    String   // Clinical case presentation
-  category        String   // e.g., "Cardiac", "Trauma", "Sepsis"
-  difficulty      String   @default("medium") // easy, medium, hard
-  questionIds     String   // JSON array of question IDs in sequence
-  learningPoints  String   // JSON array of key teaching points
+  referenceId     String   @unique // e.g., "acls-2020", "clovers-trial-2023"
   
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@index([category])
-  @@index([difficulty])
-}
-
-// Track case completion
-model CaseSession {
-  id              String   @id @default(cuid())
-  userId          String   // Session or authenticated user ID
-  caseId          String   // Reference to CaseScenario
-  currentQuestion Int      @default(0) // Which question in sequence
-  answers         String   // JSON string of answers array
-  completed       Boolean  @default(false)
-  score           Int?     // Overall case score
-  totalTime       Int?     // Time taken in seconds
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@index([userId])
-  @@index([caseId])
-  @@index([completed])
-}
-
-// Feature: Evidence Library Papers
-model Evidence {
-  id              String    @id @default(cuid())
-  
-  // Paper metadata
-  pmid            String?   @unique // PubMed ID
-  doi             String?   // Digital Object Identifier
-  title           String    // Paper title
-  authors         String    // JSON array of authors
-  journal         String    // Journal name
-  year            Int       // Publication year
-  abstract        String?   @db.Text // Full abstract
-  
-  // Categorization
-  specialty       String    // e.g., "Emergency Medicine", "Cardiology"
-  category        String    // e.g., "Trial", "Meta-Analysis", "Guideline"
-  tags            String?   // JSON array of tags
+  // Basic Information
+  category        String   // e.g., "Cardiac Arrest & Resuscitation"
+  name            String   // e.g., "2020 AHA Guidelines for CPR"
+  organization    String?  // e.g., "American Heart Association"
+  year            Int
   
   // Content
-  summary         String?   @db.Text // AI-generated or manual summary
-  keyPoints       String?   // JSON array of key takeaways
-  clinicalImpact  String?   // How this changes practice
+  summary         String   @db.Text
+  keyRecommendations String @db.Text // JSON array of strings
+  clinicalPearls     String @db.Text // JSON array of strings
   
-  // Management
-  status          String    @default("pending") // pending, approved, rejected
-  source          String    @default("pubmed") // pubmed, manual, crossref
-  addedBy         String?   // User who added (for manual entries)
-  reviewedBy      String?   // Admin who reviewed
+  // Evidence & Citation
+  evidenceLevel   String   // e.g., "Level I Evidence (Multiple RCTs)"
+  citation        String   @db.Text
   
-  // Engagement
-  views           Int       @default(0)
-  bookmarks       Int       @default(0)
+  // References (JSON array of {title, journal, doi, url})
+  references      String   @db.Text
   
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([specialty])
+  // Additional Metadata
+  topics          String?  @db.Text // JSON array of topic strings
+  journal         String?
+  doi             String?
+  pmid            String?  // PubMed ID for future integration
+  
+  
+  // Publishing & Display
+  published       Boolean  @default(true)
+  featured        Boolean  @default(false)
+  displayOrder    Int      @default(0)
+  
+  // Audit Fields
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?  // User ID who created
+  updatedBy       String?  // User ID who last updated
+  
   @@index([category])
   @@index([year])
-  @@index([status])
-  @@index([pmid])
+  @@index([published])
+  @@index([featured])
+  @@index([displayOrder])
+  @@index([referenceId])
 }
 
-// Feature: Study Sessions for Spaced Repetition
-model StudySession {
-  id              String    @id @default(cuid())
-  userId          String    // Session or authenticated user ID
+// User Feedback & Support
+model Feedback {
+  id              String   @id @default(cuid())
   
-  // Session details
-  questionId      String    // Which question was studied
-  reviewGrade     Int       // Quality of recall (0-5 scale)
-  timeSpent       Int?      // Seconds spent on question
+  // User Information
+  userId          String?  // Optional - for logged-in users
+  userName        String?  // Name provided by user
+  userEmail       String   // Email for response
+  
+  // Feedback Details
+  type            String   // "bug", "feature", "question", "complaint", "praise"
+  category        String?  // "technical", "content", "ux", "other"
+  subject         String   // Brief subject line
+  message         String   @db.Text // Detailed message
   
   // Context
-  wasCorrect      Boolean   // Did user answer correctly
-  wasReview       Boolean   @default(true) // true if from review queue, false if new
-  previousInterval Int?     // Days since last review
-  newInterval     Int       // Days until next review
+  pageUrl         String?  // Where the feedback was submitted from
+  userAgent       String?  // Browser/device info
   
-  createdAt       DateTime  @default(now())
-
-  @@index([userId])
-  @@index([questionId])
+  // Status & Resolution
+  status          String   @default("new") // "new", "in-progress", "resolved", "closed"
+  priority        String   @default("medium") // "low", "medium", "high", "urgent"
+  assignedTo      String?  // Admin user ID assigned to handle this
+  resolution      String?  @db.Text // Admin response/resolution
+  resolvedAt      DateTime? // When it was resolved
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([type])
+  @@index([priority])
+  @@index([userEmail])
   @@index([createdAt])
 }
+
 

@@ -30,10 +30,10 @@ export default function Hero() {
   }, []);
 
   const stats = [
-    { icon: BookOpen, label: 'Questions', value: 2000, suffix: '+', gradient: 'from-blue-500 to-cyan-500' },
+    { icon: BookOpen, label: 'Questions', value: 5000, suffix: '+', gradient: 'from-blue-500 to-cyan-500' },
     { icon: Library, label: 'Landmark Trials', value: 30, suffix: '+', gradient: 'from-purple-500 to-pink-500' },
     { icon: Trophy, label: 'Pass Rate', value: 95, suffix: '%', gradient: 'from-green-500 to-emerald-500' },
-    { icon: Users, label: 'Active Users', value: 5000, suffix: '+', gradient: 'from-orange-500 to-red-500' },
+    { icon: Users, label: 'Active Users', value: 10000, suffix: '+', gradient: 'from-orange-500 to-red-500' },
   ];
 
   return (

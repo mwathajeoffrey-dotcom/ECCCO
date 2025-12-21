@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Library, FileText, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import NewFeatureBanner from '@/components/NewFeatureBanner';
 
 interface Topic {
   id: string;
@@ -63,44 +62,19 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* New Feature Banner */}
-      <NewFeatureBanner />
-      
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
-                  <p className="text-sm text-gray-600">Performance Dashboard</p>
-                </div>
-              </Link>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/practice" className="text-gray-700 hover:text-blue-600 font-medium">
-                Practice
-              </Link>
-              <Link href="/exam" className="text-gray-700 hover:text-blue-600 font-medium">
-                Exams
-              </Link>
-              <Link href="/bookmarks" className="text-gray-700 hover:text-blue-600 font-medium">
-                Bookmarks
-              </Link>
-              <Link href="/cases" className="text-gray-700 hover:text-blue-600 font-medium">
-                Cases
-              </Link>
-              <Link href="/emergency-references" className="text-gray-700 hover:text-blue-600 font-medium">
-                Evidence Library
-              </Link>
-              <Link href="/dashboard" className="text-blue-600 font-medium">
-                Dashboard
-              </Link>
-            </nav>
+          <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">ECCCO</h1>
+                <p className="text-sm text-gray-600">Performance Dashboard</p>
+              </div>
+            </Link>
           </div>
         </div>
       </header>
