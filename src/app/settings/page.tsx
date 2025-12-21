@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import {
   User,
   Bell,
@@ -19,7 +18,6 @@ import {
 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('profile');
   const [saved, setSaved] = useState(false);
 
@@ -102,7 +100,8 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="text"
-                        defaultValue={session?.user?.name || ''}
+                        defaultValue={''}
+                        placeholder="Your full name"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -113,7 +112,8 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="email"
-                        defaultValue={session?.user?.email || ''}
+                        defaultValue={''}
+                        placeholder="your.email@example.com"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>

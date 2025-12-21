@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import {
   Bookmark,
   FileText,
@@ -14,7 +13,6 @@ import {
 } from 'lucide-react';
 
 export default function BookmarksPage() {
-  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
 
   return (

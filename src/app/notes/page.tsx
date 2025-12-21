@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import {
   StickyNote,
   FileText,
@@ -29,7 +28,6 @@ interface Note {
 }
 
 export default function NotesPage() {
-  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 

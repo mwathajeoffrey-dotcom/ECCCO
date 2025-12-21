@@ -68,10 +68,7 @@ A 55-year-old male presents to the ED with sudden onset chest pain that began 2 
       correctIndex: 0,
       explanation: '**Right-sided ECG leads** (especially V4R) are critical in inferior STEMI with hypotension to assess for **right ventricular (RV) infarction**. RV infarction occurs in 30-50% of inferior STEMIs and requires preload maintenance (avoid nitrates/diuretics, give IV fluids instead). ST elevation ≥1mm in V4R has 88% sensitivity and 78% specificity for RV infarction.',
       references: [
-        "
-Right Ventricular Infarction: JACC Review -
- https://doi.org/10.1016/j.jacc.2016.11.035",
-        
+        "Right Ventricular Infarction: JACC Review - https://doi.org/10.1016/j.jacc.2016.11.035",
       ],
       difficulty: 'hard',
       category: 'Cardiac Emergencies',
@@ -88,9 +85,7 @@ Right Ventricular Infarction: JACC Review -
       correctIndex: 1,
       explanation: 'In **inferior STEMI with hypotension**, suspect RV involvement. The priority is **IV fluid resuscitation** (NS 250-500mL boluses) to maintain preload. **AVOID nitrates** (can cause profound hypotension by reducing preload) and **AVOID diuretics** (worsen hypotension). The patient is preload-dependent due to RV dysfunction.',
       references: [
-        "
-AHA 2013 STEMI Guidelines -
- https://doi.org/10.1161/CIR.0b013e3182742cf6",
+        "AHA 2013 STEMI Guidelines - https://doi.org/10.1161/CIR.0b013e3182742cf6",
         
       ],
       difficulty: 'hard',
@@ -108,9 +103,7 @@ AHA 2013 STEMI Guidelines -
       correctIndex: 2,
       explanation: 'The **door-to-balloon time goal is ≤90 minutes** for primary PCI in STEMI. If PCI is not available within 120 minutes of first medical contact, **fibrinolysis** should be considered (door-to-needle <30 min). Every 30-minute delay in reperfusion increases 1-year mortality by 7.5%.',
       references: [
-        "
-2013 ACCF/AHA STEMI Guideline -
- https://doi.org/10.1161/CIR.0b013e3182742cf6",
+        "2013 ACCF/AHA STEMI Guideline - https://doi.org/10.1161/CIR.0b013e3182742cf6",
         
       ],
       difficulty: 'easy',
@@ -163,9 +156,7 @@ A 28-year-old male arrives via EMS with a stab wound to the left anterior chest 
       correctIndex: 1,
       explanation: '**Cardiac tamponade** presents with Beck\'s triad: (1) hypotension, (2) jugular venous distension (JVD), and (3) muffled/distant heart sounds. The stab wound at 4th ICS midclavicular line is in the **cardiac box** (anatomical boundaries: medial to midclavicular lines, between clavicles and costal margin). Even small amounts of blood (50-100mL) in the pericardium can cause tamponade physiology.',
       references: [
-        "
-ATLS 10th Edition: Thoracic Trauma -
- https://www.facs.org/quality-programs/trauma/atls/",
+        "ATLS 10th Edition: Thoracic Trauma - https://www.facs.org/quality-programs/trauma/atls/",
         
       ],
       difficulty: 'medium',
@@ -183,9 +174,7 @@ ATLS 10th Edition: Thoracic Trauma -
       correctIndex: 1,
       explanation: '**Pericardiocentesis** is the emergent treatment for cardiac tamponade when the patient is hemodynamically unstable but not in cardiac arrest. The subxiphoid approach is standard: insert 18G needle at 30-45° angle toward left shoulder, aspirating continuously. Removing even 10-20mL can dramatically improve hemodynamics (the "golden period"). If in cardiac arrest from penetrating thoracic trauma, proceed directly to **resuscitative thoracotomy**.',
       references: [
-        "
-Western Trauma Association: Penetrating Cardiac Injury -
- https://doi.org/10.1097/TA.0000000000002198",
+        "Western Trauma Association: Penetrating Cardiac Injury - https://doi.org/10.1097/TA.0000000000002198",
         
       ],
       difficulty: 'hard',
@@ -203,9 +192,7 @@ Western Trauma Association: Penetrating Cardiac Injury -
       correctIndex: 2,
       explanation: 'Any **penetrating injury to the cardiac box requires operative exploration** to evaluate for cardiac injury, even if initially stable. Pericardiocentesis is a temporizing measure (buys time for OR). Up to 80-90% of patients with penetrating cardiac injuries who reach hospital alive can survive with prompt surgical repair. Delayed diagnosis has 50% mortality. The injury likely involves myocardium, coronary vessels, or cardiac chambers.',
       references: [
-        "
-J Trauma: Penetrating Cardiac Injuries -
- https://doi.org/10.1097/TA.0b013e318290cd86",
+        "J Trauma: Penetrating Cardiac Injuries - https://doi.org/10.1097/TA.0b013e318290cd86",
         
       ],
       difficulty: 'medium',
@@ -223,9 +210,7 @@ J Trauma: Penetrating Cardiac Injuries -
       correctIndex: 1,
       explanation: '**Left anterolateral thoracotomy** (incision along 4th or 5th ICS from sternum to mid-axillary line) is the standard approach for ED resuscitative thoracotomy. This provides access to: (1) pericardium for relief of tamponade, (2) descending aorta for cross-clamping, (3) hilum for hemorrhage control, and (4) heart for open cardiac massage. Can be extended across sternum (clamshell) if needed for right chest access.',
       references: [
-        "
-EAST Practice Management Guidelines: Resuscitative Thoracotomy -
- https://doi.org/10.1097/TA.0000000000001559",
+        "EAST Practice Management Guidelines: Resuscitative Thoracotomy - https://doi.org/10.1097/TA.0000000000001559",
         
       ],
       difficulty: 'medium',
@@ -283,9 +268,7 @@ A 68-year-old female is brought to the ED by family for 3 days of fever, cough p
       correctIndex: 2,
       explanation: 'This patient scores **3 points on qSOFA**: (1) Altered mental status (GCS <15, oriented only to self), (2) Respiratory rate ≥22/min (RR 28), (3) Systolic BP ≤100 mmHg (BP 88/52). **qSOFA ≥2** suggests sepsis with high mortality risk. qSOFA is a bedside screening tool but **does NOT replace SOFA score** for formal sepsis diagnosis.',
       references: [
-        "
-Sepsis-3 Definitions: JAMA 2016 -
- https://doi.org/10.1001/jama.2016.0287",
+        "Sepsis-3 Definitions: JAMA 2016 - https://doi.org/10.1001/jama.2016.0287",
         
       ],
       difficulty: 'easy',
@@ -303,9 +286,7 @@ Sepsis-3 Definitions: JAMA 2016 -
       correctIndex: 2,
       explanation: 'The **Hour-1 Bundle** prioritizes: (1) **30mL/kg crystalloid bolus** for hypotension or lactate ≥4 mmol/L (this patient has both: BP 88/52, lactate 4.2), (2) obtain blood cultures **before** antibiotics, (3) administer broad-spectrum antibiotics within 1 hour, (4) remeasure lactate if initially elevated. Early aggressive fluid resuscitation (within 3 hours) reduces mortality by 15-20%.',
       references: [
-        "
-Surviving Sepsis Campaign Guidelines 2021 -
- https://doi.org/10.1097/CCM.0000000000005337",
+        "Surviving Sepsis Campaign Guidelines 2021 - https://doi.org/10.1097/CCM.0000000000005337",
         
       ],
       difficulty: 'medium',
@@ -323,9 +304,7 @@ Surviving Sepsis Campaign Guidelines 2021 -
       correctIndex: 3,
       explanation: 'Severe CAP with **septic shock** requires **broad-spectrum coverage**: Beta-lactam (piperacillin-tazobactam 4.5g IV or cefepime 2g IV) + **vancomycin** (covers MRSA) + consider azithromycin (atypicals). Risk factors for MRSA pneumonia include: prior MRSA infection, recent hospitalization, IV drug use, recent antibiotics. Vancomycin is recommended for all severe CAP with septic shock until MRSA ruled out.',
       references: [
-        "
-IDSA/ATS CAP Guidelines 2019 -
- https://doi.org/10.1093/cid/ciz1250",
+        "IDSA/ATS CAP Guidelines 2019 - https://doi.org/10.1093/cid/ciz1250",
         
       ],
       difficulty: 'hard',
@@ -343,9 +322,7 @@ IDSA/ATS CAP Guidelines 2019 -
       correctIndex: 1,
       explanation: '**Norepinephrine is the first-line vasopressor** for septic shock refractory to fluid resuscitation. Start at 0.05-0.1 mcg/kg/min, titrate to MAP ≥65 mmHg. Norepinephrine has superior outcomes vs dopamine (lower mortality, fewer arrhythmias). **Vasopressors should not delay** while giving additional fluids—start early via peripheral line if needed (central line preferred but not required to initiate).',
       references: [
-        "
-Surviving Sepsis Campaign 2021: Vasopressors -
- https://doi.org/10.1097/CCM.0000000000005337",
+        "Surviving Sepsis Campaign 2021: Vasopressors - https://doi.org/10.1097/CCM.0000000000005337",
         
       ],
       difficulty: 'medium',
