@@ -14,7 +14,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
 
   // Pages that should not show the sidebar (e.g., auth pages)
-  const noSidebarPages = ['/sign-in', '/sign-up', '/login'];
+  const noSidebarPages = ['/sign-in', '/sign-up', '/login', '/auth/signin', '/auth/signup', '/auth'];
   const shouldShowSidebar = !noSidebarPages.some(page => pathname.startsWith(page));
 
   if (!shouldShowSidebar) {
