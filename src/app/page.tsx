@@ -46,6 +46,15 @@ export default function Home() {
                 </div>
               </Link>
             </div>
+
+            {/* Right Side: Sign In Button */}
+            <Link
+              href="/auth/signin"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <span className="hidden sm:inline">Sign In</span>
+              <span className="sm:hidden">Sign In</span>
+            </Link>
           </div>
         </div>
       </header>
