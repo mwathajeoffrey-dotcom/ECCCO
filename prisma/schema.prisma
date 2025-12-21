@@ -6,11 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // For development with SQLite, uncomment below:
-  // provider = "sqlite"
-  // url      = "file:./dev.db"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Topic {
@@ -71,19 +68,19 @@ model EvidenceReference {
   year            Int
   
   // Content
-  summary         String   @db.Text
-  keyRecommendations String @db.Text // JSON array of strings
-  clinicalPearls     String @db.Text // JSON array of strings
+  summary         String   
+  keyRecommendations String  // JSON array of strings
+  clinicalPearls     String  // JSON array of strings
   
   // Evidence & Citation
   evidenceLevel   String   // e.g., "Level I Evidence (Multiple RCTs)"
-  citation        String   @db.Text
+  citation        String   
   
   // References (JSON array of {title, journal, doi, url})
-  references      String   @db.Text
+  references      String   
   
   // Additional Metadata
-  topics          String?  @db.Text // JSON array of topic strings
+  topics          String?   // JSON array of topic strings
   journal         String?
   doi             String?
   pmid            String?  // PubMed ID for future integration
@@ -108,7 +105,71 @@ model EvidenceReference {
   @@index([referenceId])
 }
 
+// ============================================
+// NextAuth.js Models (Required for Authentication)
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // For credentials provider
+  role          String    @default("student") // student, teacher, admin
+  sessionId     String?   // For tracking browser sessions
+  
+  accounts      Account[]
+  sessions      Session[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? 
+  access_token      String? 
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? 
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
 // User Feedback & Support
+// ============================================
+
 model Feedback {
   id              String   @id @default(cuid())
   
@@ -121,7 +182,7 @@ model Feedback {
   type            String   // "bug", "feature", "question", "complaint", "praise"
   category        String?  // "technical", "content", "ux", "other"
   subject         String   // Brief subject line
-  message         String   @db.Text // Detailed message
+  message         String    // Detailed message
   
   // Context
   pageUrl         String?  // Where the feedback was submitted from
@@ -131,7 +192,7 @@ model Feedback {
   status          String   @default("new") // "new", "in-progress", "resolved", "closed"
   priority        String   @default("medium") // "low", "medium", "high", "urgent"
   assignedTo      String?  // Admin user ID assigned to handle this
-  resolution      String?  @db.Text // Admin response/resolution
+  resolution      String?   // Admin response/resolution
   resolvedAt      DateTime? // When it was resolved
   
   // Metadata
