@@ -7,8 +7,8 @@ export default function SignUpRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to the actual auth signup page
-    router.push('/auth/signup');
+    // Redirect to the auth signin page (which handles both signin and signup)
+    router.push('/auth/signin');
   }, [router]);
 
   return (
