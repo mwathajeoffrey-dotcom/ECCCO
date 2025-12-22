@@ -32,7 +32,7 @@ export async function GET() {
       success: true,
       hasAccountModel,
       accountTest,
-      dbTables: tables.map(t => t.table_name),
+      dbTables: tables.map((t: { table_name: string }) => t.table_name),
       prismaModels,
       databaseUrl: process.env.DATABASE_URL?.substring(0, 30) + '...',
       nodeEnv: process.env.NODE_ENV,
