@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useUser, SignOutButton } from '@clerk/nextjs';
 import Sidebar from '@/components/navigation/Sidebar';
 import { 
   BookOpen, Clock, Trophy, BarChart3, FileText, Users, 
   Brain, HeartPulse, Activity, FlaskConical, Zap,
-  BookMarked, Sparkles, Target, MessageSquare, Calendar, Menu
+  BookMarked, Sparkles, Target, MessageSquare, Calendar, Menu, LogOut, User
 } from 'lucide-react';
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isSignedIn, user } = useUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -47,14 +49,42 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right Side: Sign In Button */}
-            <Link
-              href="/auth/signin"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-200"
-            >
-              <span className="hidden sm:inline">Sign In</span>
-              <span className="sm:hidden">Sign In</span>
-            </Link>
+            {/* Right Side: User Menu or Sign In Button */}
+            {isSignedIn ? (
+              <div className="flex items-center gap-3">
+                {/* User Profile Button */}
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                    {user?.firstName?.[0] || user?.emailAddresses[0]?.emailAddress[0] || 'U'}
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-semibold text-gray-900">
+                      {user?.firstName || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-600">Dashboard</p>
+                  </div>
+                </Link>
+
+                {/* Sign Out Button */}
+                <SignOutButton>
+                  <button className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                    <LogOut className="w-5 h-5" />
+                  </button>
+                </SignOutButton>
+              </div>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                <User className="w-4 h-4" />
+                <span className="hidden sm:inline">Sign In</span>
+                <span className="sm:hidden">Sign In</span>
+              </Link>
+            )}
           </div>
         </div>
       </header>
