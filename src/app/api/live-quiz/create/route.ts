@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/next-auth';
+import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/database/prisma-client';
 
 // Generate a unique 6-character access code
@@ -37,9 +36,9 @@ async function generateUniqueAccessCode(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const { userId } = await auth();
     
-    if (!session?.user?.id) {
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -115,7 +114,7 @@ export async function POST(request: NextRequest) {
         title,
         description,
         accessCode,
-        hostId: session.user.id,
+        hostId: userId,
         topicId: finalTopicId,
         questionIds: JSON.stringify(questionIds),
         settings: JSON.stringify(settings),

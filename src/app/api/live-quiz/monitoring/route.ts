@@ -131,12 +131,12 @@ import { NextRequest } from 'next/server';
 import { LiveQuizErrorHandler } from '@/lib/live-quiz/error-handler';
 import { LiveQuizSessionState } from '@/lib/live-quiz/session-state';
 import { logger } from '@/lib/logger';
-import { auth } from '@/lib/auth/auth-config';
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
+    const { userId } = await auth();
+    if (!userId) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

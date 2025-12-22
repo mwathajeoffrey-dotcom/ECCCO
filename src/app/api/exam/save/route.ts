@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth/next-auth';
+
 import { prisma } from '@/lib/database/prisma-client';
 
 interface ExamQuestion {
@@ -24,7 +25,7 @@ interface SaveExamRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const { userId } = await auth();
     
     if (!session?.user?.email) {
       return NextResponse.json(
@@ -47,13 +48,13 @@ export async function POST(request: NextRequest) {
 
     // Find or create user by email
     let user = await prisma.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: userId }
     });
 
     if (!user) {
       user = await prisma.user.create({
         data: {
-          email: session.user.email,
+          email: userId,
           name: session.user.name || '',
           image: session.user.image || null
         }

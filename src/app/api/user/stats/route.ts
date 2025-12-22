@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth/next-auth';
+
 import { prisma } from '@/lib/database/prisma-client';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const { userId } = await auth();
     
     if (!session?.user?.email) {
       return NextResponse.json(
@@ -16,7 +17,7 @@ export async function GET() {
 
     // Find user by email
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: userId }
     });
 
     if (!user) {

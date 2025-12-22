@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/next-auth';
+import { auth } from '@clerk/nextjs/server';
+
+
 import { prisma } from '@/lib/database/prisma-client';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const { userId } = await auth();
     
-    if (!session?.user?.id) {
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const sessions = await prisma.liveQuizSession.findMany({
       where: {
-        hostId: session.user.id,
+        hostId: userId,
       },
       include: {
         topic: {

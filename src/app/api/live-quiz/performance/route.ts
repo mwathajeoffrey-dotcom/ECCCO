@@ -1,13 +1,13 @@
 // Performance monitoring API for live quiz system
 import { NextRequest } from 'next/server';
 import { liveQuizPerformanceManager } from '@/lib/live-quiz/performance-manager';
-import { auth } from '@/lib/auth/auth-config';
+import { auth } from '@clerk/nextjs/server';
 import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
+    const { userId } = await auth();
+    if (!userId) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

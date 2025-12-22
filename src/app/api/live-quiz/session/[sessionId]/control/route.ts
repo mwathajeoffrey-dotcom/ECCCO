@@ -4,7 +4,7 @@ import { prisma } from '@/lib/database/prisma-client';
 import { LiveQuizSessionState } from '@/lib/live-quiz/session-state';
 import { liveQuizWSManager } from '@/lib/live-quiz/websocket-manager';
 import { logger } from '@/lib/logger';
-import { auth } from '@/lib/auth/auth-config';
+import { auth } from '@clerk/nextjs/server';
 import { rateLimit } from '@/lib/middleware/rate-limit';
 
 // Rate limiting for live quiz operations
@@ -24,8 +24,8 @@ export async function POST(
     const rateLimitResult = await liveQuizLimiter(request);
     if (rateLimitResult) return rateLimitResult;
 
-    const session = await auth();
-    if (!session?.user) {
+    const { userId } = await auth();
+    if (!userId) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

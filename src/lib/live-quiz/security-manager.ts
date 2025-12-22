@@ -1,7 +1,7 @@
 // Security manager for live quiz sessions
 import { NextRequest } from 'next/server';
 import { headers } from 'next/headers';
-import { auth } from '@/lib/auth/auth-config';
+import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/database/prisma-client';
 import { logger } from '@/lib/logger';
 import { rateLimit } from '@/lib/middleware/rate-limit';
