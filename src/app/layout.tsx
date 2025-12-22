@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider } from '@clerk/nextjs';
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
@@ -80,25 +81,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3B82F6" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-          <AppLayout>
-            {children}
-          </AppLayout>
-        </ErrorBoundary>
-        <PWAInstallPrompt />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <head>
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#3B82F6" />
+          <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
+        </head>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+            <AppLayout>
+              {children}
+            </AppLayout>
+          </ErrorBoundary>
+          <PWAInstallPrompt />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/auth/admin';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { auth } from '@clerk/nextjs/server';
+import { prisma } from '@/lib/database/prisma-client';
 
 /**
  * PATCH /api/admin/feedback/[id]
@@ -14,8 +12,8 @@ export async function PATCH(
 ) {
   try {
     // Check admin authorization
-    const { authorized } = await requireAdmin();
-    if (!authorized) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
