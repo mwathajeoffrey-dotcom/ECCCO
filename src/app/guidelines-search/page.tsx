@@ -102,7 +102,7 @@ export default function GuidelinesSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-green-600 via-teal-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -146,9 +146,10 @@ export default function GuidelinesSearchPage() {
       
       {/* Search Bar */}
       <div className="max-w-5xl mx-auto px-4 -mt-8">
-        <div className="bg-white rounded-2xl shadow-2xl p-6">
-          <div className="flex gap-3">
-            <div className="flex-1 relative">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6">
+          {/* Search Input */}
+          <div className="w-full mb-3 sm:mb-0">
+            <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -156,21 +157,28 @@ export default function GuidelinesSearchPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Search guidelines... (e.g., 'sepsis', 'ACLS', 'stroke', 'diabetes')"
-                className="w-full pl-12 pr-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                className="w-full pl-12 pr-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
               />
             </div>
+          </div>
+          
+          {/* Mobile-Friendly Search Button */}
+          <div className="mt-3">
             <button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl hover:from-green-700 hover:to-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full sm:w-auto px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl hover:from-green-700 hover:to-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span className="flex items-center gap-2">
+                <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   Searching...
-                </span>
+                </>
               ) : (
-                'Search'
+                <>
+                  <Search className="w-5 h-5" />
+                  Search Guidelines
+                </>
               )}
             </button>
           </div>
