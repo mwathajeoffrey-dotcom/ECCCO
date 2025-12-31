@@ -68,7 +68,10 @@ A 55-year-old male presents to the ED with sudden onset chest pain that began 2 
       correctIndex: 0,
       explanation: '**Right-sided ECG leads** (especially V4R) are critical in inferior STEMI with hypotension to assess for **right ventricular (RV) infarction**. RV infarction occurs in 30-50% of inferior STEMIs and requires preload maintenance (avoid nitrates/diuretics, give IV fluids instead). ST elevation ≥1mm in V4R has 88% sensitivity and 78% specificity for RV infarction.',
       references: [
-        "Right Ventricular Infarction: JACC Review - https://doi.org/10.1016/j.jacc.2016.11.035",
+        "
+Right Ventricular Infarction: JACC Review -
+ https://doi.org/10.1016/j.jacc.2016.11.035",
+        
       ],
       difficulty: 'hard',
       category: 'Cardiac Emergencies',
