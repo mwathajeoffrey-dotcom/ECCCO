@@ -30,6 +30,7 @@ import {
   LogIn,
   LogOut,
   User,
+  Search,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -134,6 +135,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: 'Resources',
       icon: Library,
       items: [
+        {
+          label: 'Evidence Search',
+          href: '/evidence-search',
+          icon: Search,
+        },
         {
           label: 'Evidence Library',
           href: '/emergency-references',
