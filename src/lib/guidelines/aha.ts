@@ -82,20 +82,43 @@ export async function getNRPAlgorithms(): Promise<AHAGuideline[]> {
 }
 
 /**
- * Mock AHA Guidelines with Real PDF Links
+ * Mock AHA Guidelines
+ * Only algorithms with LOCAL PDFs will show the "FLOWCHART PDF" badge
+ * Others show as text guidelines until flowchart PDFs are uploaded
  */
 function getMockAHAGuidelines(): AHAGuideline[] {
   return [
-    // ACLS ALGORITHMS
+    // LOCALLY HOSTED FLOWCHART - SEPSIS (YOUR PDF!)
+    {
+      id: 'aha-acls-sepsis',
+      title: 'Sepsis and Septic Shock Treatment Algorithm',
+      category: 'ACLS',
+      published: '2024-12-31',
+      summary: 'Visual summary treatment algorithm for sepsis and septic shock management with time-critical interventions and resuscitation bundles. FLOWCHART PDF AVAILABLE!',
+      pdfUrl: '/algorithms/acls/sepsis-algorithm.pdf',  // ✅ LOCAL FILE
+      fullTextUrl: 'https://www.sccm.org/SurvivingSepsisCampaign/Guidelines',
+      evidenceLevel: 'Class I',
+      recommendations: [
+        'Recognize sepsis early using qSOFA or SIRS criteria',
+        'Obtain blood cultures before antibiotics',
+        'Administer broad-spectrum antibiotics within 1 hour',
+        'Begin fluid resuscitation with 30 mL/kg crystalloid',
+        'Target MAP ≥65 mmHg with vasopressors if needed',
+        'Measure lactate and remeasure if elevated (>2 mmol/L)',
+        'Source control within 12 hours if feasible'
+      ],
+      topics: ['Sepsis', 'Septic Shock', 'Antibiotics', 'Fluid Resuscitation', 'Vasopressors', 'Lactate', 'qSOFA']
+    },
+    
+    // TEXT-BASED ALGORITHMS (No flowchart PDF yet - add PDFs to public/algorithms/)
     {
       id: 'aha-acls-cardiac-arrest',
       title: 'Adult Cardiac Arrest Algorithm - ACLS',
       category: 'ACLS',
       published: '2020-10-21',
-      summary: 'Complete ACLS cardiac arrest algorithm flowchart including VF/pVT and asystole/PEA pathways with CPR quality metrics.',
-      pdfUrl: 'https://www.acls.net/images/algo-acls-cardiac-arrest.pdf',
+      summary: 'Complete ACLS cardiac arrest algorithm including VF/pVT and asystole/PEA pathways with CPR quality metrics.',
+      pdfUrl: '',  // ❌ No local PDF yet - upload to /public/algorithms/acls/cardiac-arrest.pdf
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      imageUrl: 'https://www.acls.net/images/algo-acls-cardiac-arrest.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'High-quality CPR: 100-120/min, depth 2-2.4 inches',
@@ -113,9 +136,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'ACLS',
       published: '2020-10-21',
       summary: 'ACLS bradycardia algorithm for symptomatic bradycardia with detailed treatment pathways.',
-      pdfUrl: 'https://www.acls.net/images/algo-bradycardia.pdf',
+      pdfUrl: '',  // ❌ No local PDF yet - upload to /public/algorithms/acls/bradycardia.pdf
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      imageUrl: 'https://www.acls.net/images/algo-bradycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Identify and treat underlying cause',
@@ -133,9 +155,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'ACLS',
       published: '2020-10-21',
       summary: 'ACLS tachycardia algorithm for stable and unstable tachycardia with pulse.',
-      pdfUrl: 'https://www.acls.net/images/algo-tachycardia.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-tachycardia.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      imageUrl: 'https://www.acls.net/images/algo-tachycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Assess stability (hypotension, altered mental status, shock, chest pain)',
@@ -153,9 +174,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'ACS',
       published: '2020-10-21',
       summary: 'ACLS algorithm for acute coronary syndromes including STEMI and NSTEMI pathways.',
-      pdfUrl: 'https://www.acls.net/images/algo-acs.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-acs.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/clinical/cpr-ecc-guidelines/acs',
-      imageUrl: 'https://www.acls.net/images/algo-acs.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Aspirin 162-325mg chewed immediately',
@@ -173,9 +193,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'Stroke',
       published: '2020-10-21',
       summary: 'ACLS stroke algorithm with time-critical interventions for acute ischemic stroke.',
-      pdfUrl: 'https://www.acls.net/images/algo-stroke.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-stroke.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/clinical/cpr-ecc-guidelines/stroke',
-      imageUrl: 'https://www.acls.net/images/algo-stroke.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Cincinnati Stroke Scale assessment',
@@ -195,9 +214,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'PALS',
       published: '2020-10-21',
       summary: 'PALS pediatric cardiac arrest algorithm with pediatric-specific interventions.',
-      pdfUrl: 'https://www.acls.net/images/algo-pals-cardiac-arrest.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-pals-cardiac-arrest.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
-      imageUrl: 'https://www.acls.net/images/algo-pals-cardiac-arrest.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'CPR: 15:2 compression-ventilation ratio (2 rescuers)',
@@ -215,9 +233,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'PALS',
       published: '2020-10-21',
       summary: 'PALS algorithm for symptomatic bradycardia in pediatric patients.',
-      pdfUrl: 'https://www.acls.net/images/algo-pals-bradycardia.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-pals-bradycardia.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
-      imageUrl: 'https://www.acls.net/images/algo-pals-bradycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Ensure adequate oxygenation and ventilation',
@@ -235,9 +252,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'PALS',
       published: '2020-10-21',
       summary: 'PALS algorithm for tachycardia with pulse in pediatric patients.',
-      pdfUrl: 'https://www.acls.net/images/algo-pals-tachycardia.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-pals-tachycardia.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
-      imageUrl: 'https://www.acls.net/images/algo-pals-tachycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Adenosine 0.1mg/kg rapid IV push (max 6mg)',
@@ -257,9 +273,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'BLS',
       published: '2020-10-21',
       summary: 'Basic Life Support algorithm for adult cardiac arrest with C-A-B sequence.',
-      pdfUrl: 'https://www.acls.net/images/algo-bls-adult.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-bls-adult.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-and-advanced-life-support',
-      imageUrl: 'https://www.acls.net/images/algo-bls-adult.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Check responsiveness and pulse (≤10 seconds)',
@@ -277,9 +292,8 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'BLS',
       published: '2020-10-21',
       summary: 'BLS algorithm for foreign-body airway obstruction in conscious and unconscious victims.',
-      pdfUrl: 'https://www.acls.net/images/algo-choking.pdf',
+      pdfUrl: '', // ❌ No PDF yet - upload to /public/algorithms/ // OLD: 'https://www.acls.net/images/algo-choking.pdf',
       fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-and-advanced-life-support',
-      imageUrl: 'https://www.acls.net/images/algo-choking.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Conscious victim: Back blows and abdominal thrusts',
@@ -299,7 +313,7 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'NRP',
       published: '2020-10-21',
       summary: 'Complete NRP algorithm for newborn resuscitation with detailed steps from birth through advanced interventions.',
-      pdfUrl: 'https://www.aap.org/en/pages/neonatal-resuscitation-program/nrp-algorithm',
+      pdfUrl: '', // ❌ No PDF yet // OLD: 'https://www.aap.org/en/pages/neonatal-resuscitation-program/nrp-algorithm',
       fullTextUrl: 'https://publications.aap.org/pediatrics/article/146/Supplement_1/S135/33322/2020-American-Heart-Association-Guidelines-for',
       imageUrl: 'https://www.aap.org/globalassets/nrp-algorithm-2020.png',
       evidenceLevel: 'Class I',
@@ -323,7 +337,7 @@ function getMockAHAGuidelines(): AHAGuideline[] {
       category: 'ACLS',
       published: '2020-10-21',
       summary: 'Complete 2020 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care.',
-      pdfUrl: 'https://www.ahajournals.org/doi/pdf/10.1161/CIR.0000000000000916',
+      pdfUrl: '', // ❌ No PDF yet // OLD: 'https://www.ahajournals.org/doi/pdf/10.1161/CIR.0000000000000916',
       fullTextUrl: 'https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916',
       evidenceLevel: 'Class I',
       recommendations: [

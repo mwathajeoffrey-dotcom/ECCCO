@@ -1,0 +1,10 @@
+This is a placeholder. 
+
+Upload algorithm flowchart PDFs to this directory:
+- cardiac-arrest-algorithm.pdf
+- bradycardia-algorithm.pdf
+- tachycardia-algorithm.pdf
+- acs-algorithm.pdf
+- stroke-algorithm.pdf
+
+See /public/algorithms/README.md for instructions.
