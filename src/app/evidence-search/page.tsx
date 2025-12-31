@@ -10,6 +10,7 @@ import {
 import { exportFormats, downloadFile, type ExportFormat } from '@/lib/export/citation-formatter';
 import { calculateQualityScore, getQualityColor, type QualityScore } from '@/lib/quality/evidence-scorer';
 import { calculateReadingTime, getReadingTimeCategory } from '@/lib/reading-time/estimator';
+import { findRelatedStudies, getSimilarityColor, formatSimilarityPercentage } from '@/lib/recommendations/related-finder';
 
 interface Article {
   id: string;
@@ -779,6 +780,75 @@ export default function EvidenceSearchPage() {
                                   <span>Cited {article.citationCount} times</span>
                                 </div>
                               )}
+
+                              {/* Related Studies */}
+                              {(() => {
+                                const relatedStudies = findRelatedStudies(article, articles, 5);
+                                if (relatedStudies.length === 0) return null;
+
+                                return (
+                                  <div className="border-t border-gray-200 pt-4">
+                                    <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                      <Link2 className="w-4 h-4 text-indigo-600" />
+                                      Related Studies ({relatedStudies.length})
+                                    </h4>
+                                    <div className="space-y-3">
+                                      {relatedStudies.map((related, idx) => (
+                                        <div
+                                          key={related.article.id}
+                                          className={`p-3 rounded-lg border ${getSimilarityColor(related.similarityScore).bg} ${getSimilarityColor(related.similarityScore).border}`}
+                                        >
+                                          <div className="flex items-start justify-between gap-2 mb-2">
+                                            <div className="flex-1 min-w-0">
+                                              <button
+                                                onClick={() => {
+                                                  // Scroll to the related article
+                                                  const element = document.getElementById(related.article.id);
+                                                  element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                  // Expand it
+                                                  toggleArticle(related.article.id);
+                                                }}
+                                                className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline text-left"
+                                              >
+                                                {related.article.title}
+                                              </button>
+                                            </div>
+                                            <span className={`flex-shrink-0 text-xs font-bold ${getSimilarityColor(related.similarityScore).text}`}>
+                                              {formatSimilarityPercentage(related.similarityScore)}
+                                            </span>
+                                          </div>
+                                          <div className="flex items-center gap-2 text-xs text-gray-600">
+                                            <span>{related.article.journal}</span>
+                                            <span>•</span>
+                                            <span>{related.article.published}</span>
+                                            {related.article.citationCount > 0 && (
+                                              <>
+                                                <span>•</span>
+                                                <span>{related.article.citationCount} citations</span>
+                                              </>
+                                            )}
+                                          </div>
+                                          {related.matchingKeywords.length > 0 && (
+                                            <div className="mt-2 flex flex-wrap gap-1">
+                                              {related.matchingKeywords.map((kw, kwIdx) => (
+                                                <span
+                                                  key={kwIdx}
+                                                  className="px-2 py-0.5 bg-white rounded text-xs text-gray-600 border border-gray-200"
+                                                >
+                                                  {kw}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          )}
+                                          <div className="mt-2 text-xs text-gray-500 italic">
+                                            {related.reason}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
                             </div>
                           </div>
                         )}
