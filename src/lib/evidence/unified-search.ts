@@ -6,19 +6,22 @@
  * 1. PubMed/NCBI - 35M+ biomedical citations
  * 2. CrossRef - 130M+ academic articles (all journals)
  * 3. Europe PMC - 8M+ full-text open access
+ * 4. Semantic Scholar - 200M+ papers with AI recommendations
  */
 
 import { searchPubMed, fetchPubMedArticles, type PubMedArticle } from '../pubmed';
 import { searchCrossRef, searchJournal, type CrossRefArticle } from '../crossref';
 import { searchEuropePMC, searchOpenAccessArticles, type EuropePMCArticle } from '../europepmc';
+import { searchSemanticScholar, toUnifiedArticle as convertSemanticScholar, type SemanticScholarPaper } from '../semanticscholar';
 
 export interface UnifiedArticle {
   // Identifiers
   id: string;
-  source: 'pubmed' | 'crossref' | 'europepmc';
+  source: 'pubmed' | 'crossref' | 'europepmc' | 'semanticscholar';
   pmid?: string;
   doi?: string;
   pmcid?: string;
+  paperId?: string; // Semantic Scholar ID
   
   // Core metadata
   title: string;
@@ -41,6 +44,7 @@ export interface UnifiedArticle {
   
   // Metrics
   citationCount: number;
+  influentialCitationCount?: number; // Semantic Scholar AI metric
   isOpenAccess: boolean;
   
   // Additional metadata
@@ -54,7 +58,7 @@ export interface UnifiedArticle {
 
 export interface UnifiedSearchParams {
   query: string;
-  sources?: ('pubmed' | 'crossref' | 'europepmc')[]; // Which sources to search
+  sources?: ('pubmed' | 'crossref' | 'europepmc' | 'semanticscholar')[]; // Which sources to search
   maxResults?: number; // Total results to return
   filters?: {
     journal?: string; // Specific journal name or ISSN
@@ -76,7 +80,7 @@ export interface UnifiedSearchParams {
 export async function searchAllSources(
   params: UnifiedSearchParams
 ): Promise<{ articles: UnifiedArticle[]; totalResults: number; sourceBreakdown: Record<string, number> }> {
-  const sources = params.sources || ['pubmed', 'crossref', 'europepmc'];
+  const sources = params.sources || ['pubmed', 'crossref', 'europepmc', 'semanticscholar'];
   const maxPerSource = Math.ceil((params.maxResults || 30) / sources.length);
   
   const searchPromises: Promise<{ source: string; articles: UnifiedArticle[]; total: number }>[] = [];
@@ -94,6 +98,11 @@ export async function searchAllSources(
   // Search Europe PMC
   if (sources.includes('europepmc')) {
     searchPromises.push(searchEuropePMCSource(params, maxPerSource));
+  }
+  
+  // Search Semantic Scholar
+  if (sources.includes('semanticscholar')) {
+    searchPromises.push(searchSemanticScholarSource(params, maxPerSource));
   }
   
   const results = await Promise.all(searchPromises);
@@ -286,6 +295,42 @@ async function searchEuropePMCSource(
   } catch (error) {
     console.error('Europe PMC search error:', error);
     return { source: 'europepmc', articles: [], total: 0 };
+  }
+}
+
+async function searchSemanticScholarSource(
+  params: UnifiedSearchParams,
+  maxResults: number
+): Promise<{ source: string; articles: UnifiedArticle[]; total: number }> {
+  try {
+    const currentYear = new Date().getFullYear();
+    let yearFilter: string | undefined;
+    
+    if (params.filters?.fromDate && params.filters?.toDate) {
+      const fromYear = new Date(params.filters.fromDate).getFullYear();
+      const toYear = new Date(params.filters.toDate).getFullYear();
+      yearFilter = `${fromYear}-${toYear}`;
+    } else if (params.filters?.fromDate) {
+      const fromYear = new Date(params.filters.fromDate).getFullYear();
+      yearFilter = `${fromYear}-${currentYear}`;
+    }
+    
+    const result = await searchSemanticScholar({
+      query: params.query,
+      limit: maxResults,
+      year: yearFilter,
+      openAccessPdf: params.filters?.openAccessOnly,
+      fieldsOfStudy: ['Medicine', 'Biology'],
+    });
+    
+    return {
+      source: 'semanticscholar',
+      articles: result.papers.map(convertSemanticScholar),
+      total: result.total,
+    };
+  } catch (error) {
+    console.error('Semantic Scholar search error:', error);
+    return { source: 'semanticscholar', articles: [], total: 0 };
   }
 }
 
