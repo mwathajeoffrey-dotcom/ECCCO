@@ -78,8 +78,10 @@ export default function EvidenceSearchPage() {
   const [dateTo, setDateTo] = useState('');
   const [openAccessOnly, setOpenAccessOnly] = useState(false);
   const [hasAbstract, setHasAbstract] = useState(false);
-  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations'>('relevance');
+  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('quality'); // Default to quality sort
   const [showFilters, setShowFilters] = useState(false);
+  const [minQualityScore, setMinQualityScore] = useState(8.5); // Filter for high-quality only
+  const [showHighQualityOnly, setShowHighQualityOnly] = useState(true); // Default to high-quality filter
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -115,13 +117,28 @@ export default function EvidenceSearchPage() {
           })
         }));
         
-        setArticles(articlesWithScores);
+        // Filter by minimum quality score if enabled
+        let filteredArticles = articlesWithScores;
+        if (showHighQualityOnly) {
+          filteredArticles = articlesWithScores.filter(
+            (article: Article) => (article.qualityScore?.overallScore || 0) >= minQualityScore
+          );
+        }
+        
+        // Sort by quality score if selected
+        if (sortBy === 'quality') {
+          filteredArticles.sort((a: Article, b: Article) => 
+            (b.qualityScore?.overallScore || 0) - (a.qualityScore?.overallScore || 0)
+          );
+        }
+        
+        setArticles(filteredArticles);
         setTotalResults(data.totalResults);
         setSourceBreakdown(data.sourceBreakdown || {});
         
         // Generate comprehensive overall summary from top results (OpenEvidence-style)
-        if (articlesWithScores && articlesWithScores.length > 0) {
-          const topArticles = articlesWithScores.slice(0, 5); // Use top 5 for richer summary
+        if (filteredArticles && filteredArticles.length > 0) {
+          const topArticles = filteredArticles.slice(0, 5); // Use top 5 for richer summary
           
           // Combine summaries with paragraph breaks for readability
           const combinedSummary = topArticles
@@ -373,14 +390,42 @@ export default function EvidenceSearchPage() {
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
+                  <option value="quality">⭐ Highest Quality (8.5+)</option>
                   <option value="relevance">Relevance</option>
                   <option value="date">Newest First</option>
                   <option value="citations">Most Cited</option>
                 </select>
               </div>
 
+              {/* Quality Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Minimum Quality Score
+                </label>
+                <select
+                  value={minQualityScore}
+                  onChange={(e) => setMinQualityScore(Number(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="0">All Quality (0+)</option>
+                  <option value="6.0">Moderate+ (6.0+)</option>
+                  <option value="7.5">High+ (7.5+)</option>
+                  <option value="8.5">Excellent (8.5+)</option>
+                  <option value="9.0">Outstanding (9.0+)</option>
+                </select>
+              </div>
+
               {/* Checkboxes */}
-              <div className="md:col-span-2 lg:col-span-3 flex gap-6">
+              <div className="md:col-span-2 lg:col-span-3 flex flex-wrap gap-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showHighQualityOnly}
+                    onChange={(e) => setShowHighQualityOnly(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-semibold text-blue-700">⭐ High-Quality Studies Only (8.5+)</span>
+                </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
@@ -406,20 +451,30 @@ export default function EvidenceSearchPage() {
 
         {/* Results Stats */}
         {totalResults > 0 && !loading && (
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <span className="text-lg font-semibold text-gray-900">
-                {totalResults.toLocaleString()} total results
-              </span>
-              {Object.entries(sourceBreakdown).map(([source, count]) => (
-                <span key={source} className="text-sm text-gray-600">
-                  {source}: <span className="font-semibold">{count.toLocaleString()}</span>
+          <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-6 flex-wrap">
+                <span className="text-lg font-semibold text-gray-900">
+                  {totalResults.toLocaleString()} total results
                 </span>
-              ))}
+                {Object.entries(sourceBreakdown).map(([source, count]) => (
+                  <span key={source} className="text-sm text-gray-600">
+                    {source}: <span className="font-semibold">{count.toLocaleString()}</span>
+                  </span>
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                {showHighQualityOnly && (
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold flex items-center gap-1">
+                    <Award className="w-4 h-4" />
+                    High-Quality Filter: {minQualityScore}+
+                  </span>
+                )}
+                <span className="text-sm text-gray-500">
+                  Showing {articles.length} articles
+                </span>
+              </div>
             </div>
-            <span className="text-sm text-gray-500">
-              Showing {articles.length} articles
-            </span>
           </div>
         )}
 
