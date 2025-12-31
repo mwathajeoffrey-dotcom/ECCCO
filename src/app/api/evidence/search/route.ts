@@ -6,6 +6,7 @@ import {
   searchOpenAccess,
   type UnifiedSearchParams 
 } from '@/lib/evidence/unified-search';
+import { enhanceArticleWithContent } from '@/lib/evidence/content-extractor';
 
 /**
  * GET /api/evidence/search
@@ -84,11 +85,19 @@ export async function GET(request: NextRequest) {
       result = await searchAllSources(params);
     }
     
+    // Enhance articles with extracted content (key findings, relevant paragraphs)
+    const enhancedArticles = result.articles.map(article => ({
+      ...article,
+      ...enhanceArticleWithContent(article, query),
+    }));
+    
     return NextResponse.json({
       success: true,
       query,
       mode,
-      ...result,
+      articles: enhancedArticles,
+      totalResults: result.totalResults,
+      sourceBreakdown: 'sourceBreakdown' in result ? result.sourceBreakdown : {},
     });
   } catch (error) {
     console.error('Evidence search error:', error);
@@ -127,9 +136,17 @@ export async function POST(request: NextRequest) {
     
     const result = await searchAllSources(params);
     
+    // Enhance articles with extracted content
+    const enhancedArticles = result.articles.map(article => ({
+      ...article,
+      ...enhanceArticleWithContent(article, body.query),
+    }));
+    
     return NextResponse.json({
       success: true,
-      ...result,
+      articles: enhancedArticles,
+      totalResults: result.totalResults,
+      sourceBreakdown: result.sourceBreakdown,
     });
   } catch (error) {
     console.error('Evidence batch search error:', error);
