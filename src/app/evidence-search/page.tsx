@@ -5,8 +5,11 @@ import {
   Search, Filter, BookOpen, ExternalLink, Download, 
   Calendar, TrendingUp, Award, FileText, ChevronDown, ChevronUp,
   Sparkles, Database, CheckCircle2, Quote, Link2, BookmarkPlus,
-  Copy, Check
+  Copy, Check, FileDown
 } from 'lucide-react';
+import { exportFormats, downloadFile, type ExportFormat } from '@/lib/export/citation-formatter';
+import { calculateQualityScore, getQualityColor, type QualityScore } from '@/lib/quality/evidence-scorer';
+import { calculateReadingTime, getReadingTimeCategory } from '@/lib/reading-time/estimator';
 
 interface Article {
   id: string;
@@ -36,6 +39,7 @@ interface Article {
     url: string;
     doi?: string;
   }>;
+  qualityScore?: QualityScore; // Evidence quality rating
 }
 
 const POPULAR_JOURNALS = [
@@ -63,6 +67,7 @@ export default function EvidenceSearchPage() {
   const [expandedArticles, setExpandedArticles] = useState<Set<string>>(new Set());
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [overallSummary, setOverallSummary] = useState<string>('');
+  const [showExportMenu, setShowExportMenu] = useState(false);
   
   // Filters
   const [selectedSources, setSelectedSources] = useState<string[]>(['pubmed', 'crossref', 'europepmc']);
@@ -98,13 +103,24 @@ export default function EvidenceSearchPage() {
       const data = await response.json();
       
       if (data.success) {
-        setArticles(data.articles);
+        // Calculate quality scores for all articles
+        const articlesWithScores = data.articles.map((article: Article) => ({
+          ...article,
+          qualityScore: calculateQualityScore({
+            abstract: article.abstract,
+            title: article.title,
+            journal: article.journal,
+            citationCount: article.citationCount || 0
+          })
+        }));
+        
+        setArticles(articlesWithScores);
         setTotalResults(data.totalResults);
         setSourceBreakdown(data.sourceBreakdown || {});
         
         // Generate comprehensive overall summary from top results (OpenEvidence-style)
-        if (data.articles && data.articles.length > 0) {
-          const topArticles = data.articles.slice(0, 5); // Use top 5 for richer summary
+        if (articlesWithScores && articlesWithScores.length > 0) {
+          const topArticles = articlesWithScores.slice(0, 5); // Use top 5 for richer summary
           
           // Combine summaries with paragraph breaks for readability
           const combinedSummary = topArticles
@@ -155,6 +171,15 @@ export default function EvidenceSearchPage() {
     await navigator.clipboard.writeText(text);
     setCopiedText(id);
     setTimeout(() => setCopiedText(null), 2000);
+  };
+
+  const handleExport = (format: ExportFormat) => {
+    const formatConfig = exportFormats[format];
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `evidence-search-${timestamp}${formatConfig.extension}`;
+    const content = formatConfig.export(articles);
+    downloadFile(content, filename, formatConfig.mimeType);
+    setShowExportMenu(false);
   };
 
   const highlightQuery = (text: string) => {
@@ -450,7 +475,7 @@ export default function EvidenceSearchPage() {
                 </div>
 
                 {/* Summary Actions */}
-                <div className="mt-6 flex items-center gap-3">
+                <div className="mt-6 flex flex-wrap items-center gap-3">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(overallSummary);
@@ -471,6 +496,46 @@ export default function EvidenceSearchPage() {
                       </>
                     )}
                   </button>
+                  
+                  {/* Export Dropdown */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowExportMenu(!showExportMenu)}
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors text-sm font-medium shadow-sm"
+                    >
+                      <FileDown className="w-4 h-4" />
+                      Export Citations
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {showExportMenu && (
+                      <div className="absolute top-full mt-2 left-0 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[240px] z-50">
+                        <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase border-b border-gray-100">
+                          Choose Format
+                        </div>
+                        {(Object.keys(exportFormats) as ExportFormat[]).map(format => {
+                          const config = exportFormats[format];
+                          return (
+                            <button
+                              key={format}
+                              onClick={() => handleExport(format)}
+                              className="w-full px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3 text-left"
+                            >
+                              <span className="text-2xl">{config.icon}</span>
+                              <div className="flex-1">
+                                <div className="font-semibold text-gray-900 text-sm">{config.name}</div>
+                                <div className="text-xs text-gray-500">{config.description}</div>
+                              </div>
+                              <Download className="w-4 h-4 text-gray-400" />
+                            </button>
+                          );
+                        })}
+                        <div className="px-4 py-2 text-xs text-gray-400 border-t border-gray-100 mt-1">
+                          Exporting {articles.length} {articles.length === 1 ? 'article' : 'articles'}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -513,15 +578,52 @@ export default function EvidenceSearchPage() {
                             </div>
 
                             <div className="flex-1">
-                              {/* Journal Badge */}
-                              <div className="mb-3">
+                              {/* Journal Badge & Quality Score */}
+                              <div className="mb-3 flex flex-wrap items-center gap-2">
                                 <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
                                   {article.journal}
                                 </span>
                                 {article.isOpenAccess && (
-                                  <span className="inline-block ml-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">
+                                  <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">
                                     Open Access
                                   </span>
+                                )}
+                                {/* Quality Score Badge */}
+                                {article.qualityScore && (
+                                  <div className="flex items-center gap-2">
+                                    <div className={`px-3 py-1 rounded-full text-xs font-bold border ${getQualityColor(article.qualityScore.overallScore).bg} ${getQualityColor(article.qualityScore.overallScore).text} ${getQualityColor(article.qualityScore.overallScore).border}`}>
+                                      ⭐ {article.qualityScore.overallScore}/10 - {article.qualityScore.grade} Quality
+                                    </div>
+                                    <div className="group relative">
+                                      <div className="w-16 bg-gray-200 rounded-full h-2 cursor-help">
+                                        <div 
+                                          className={`h-2 rounded-full ${
+                                            article.qualityScore.overallScore >= 7.5 ? 'bg-green-500' :
+                                            article.qualityScore.overallScore >= 5.5 ? 'bg-blue-500' :
+                                            article.qualityScore.overallScore >= 3.5 ? 'bg-yellow-500' :
+                                            'bg-orange-500'
+                                          }`}
+                                          style={{ width: `${article.qualityScore.overallScore * 10}%` }}
+                                        />
+                                      </div>
+                                      {/* Tooltip */}
+                                      <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-10 w-72 bg-gray-900 text-white text-xs rounded-lg shadow-lg p-4">
+                                        <div className="font-bold mb-2">Evidence Quality Breakdown:</div>
+                                        <div className="space-y-1">
+                                          <div>📊 Study: {article.qualityScore.studyDesign.type}</div>
+                                          <div>👥 Sample: {article.qualityScore.sampleSize.n ? `n=${article.qualityScore.sampleSize.n.toLocaleString()}` : 'Unknown'} ({article.qualityScore.sampleSize.category})</div>
+                                          <div>📰 Journal: {article.qualityScore.journalQuality.tier} Tier</div>
+                                          <div>⚠️ Risk of Bias: {article.qualityScore.riskOfBias}</div>
+                                          {article.qualityScore.methodologyFactors.randomization && <div>✓ Randomized</div>}
+                                          {article.qualityScore.methodologyFactors.blinding && <div>✓ Blinded</div>}
+                                          {article.qualityScore.methodologyFactors.multiCenter && <div>✓ Multi-center</div>}
+                                        </div>
+                                        <div className="mt-2 pt-2 border-t border-gray-700 text-gray-300">
+                                          GRADE: {article.qualityScore.grade}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 )}
                               </div>
 
@@ -536,6 +638,14 @@ export default function EvidenceSearchPage() {
                                 {article.authors.length > 3 && ', et al.'}
                                 {' • '}
                                 <span className="text-gray-500">{article.published}</span>
+                                {article.abstract && (
+                                  <>
+                                    {' • '}
+                                    <span className={`${getReadingTimeCategory(calculateReadingTime(article.abstract).minutes).color} font-medium`}>
+                                      {getReadingTimeCategory(calculateReadingTime(article.abstract).minutes).icon} {calculateReadingTime(article.abstract).formattedTime} read
+                                    </span>
+                                  </>
+                                )}
                               </p>
 
                               {/* Action Buttons */}
