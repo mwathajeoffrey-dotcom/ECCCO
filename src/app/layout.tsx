@@ -82,8 +82,9 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className="h-full">
         <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
           <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#3B82F6" />
           <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
@@ -92,7 +93,8 @@ export default function RootLayout({
           <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
         </head>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full`}
+          style={{ WebkitOverflowScrolling: 'touch', overscrollBehaviorY: 'none' } as React.CSSProperties}
         >
           <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
             <AppLayout>

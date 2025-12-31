@@ -17,6 +17,27 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  /* Enable smooth scrolling on mobile */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
+
+/* Fix for iOS Safari scroll issues */
+html {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Ensure touch scrolling works on all mobile devices */
+* {
+  -webkit-overflow-scrolling: touch !important;
 }
 
 @layer utilities {
@@ -28,5 +49,12 @@ body {
   .sidebar-scroll-container {
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Mobile scroll fix for all pages */
+  .mobile-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
   }
 }
