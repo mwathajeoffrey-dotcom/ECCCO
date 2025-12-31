@@ -649,8 +649,6 @@ export default function EvidenceSearchPage() {
               )}
             </div>
           </div>
-            })}
-          </div>
         )}
       </div>
     </div>
