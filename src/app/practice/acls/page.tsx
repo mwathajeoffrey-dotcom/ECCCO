@@ -12,12 +12,15 @@ import { useRouter } from 'next/navigation';
 
 interface Question {
   id: string;
-  text: string;
+  question: string;  // Changed from 'text' to match API
   options: string[];
   correctIndex: number;
   explanation?: string;
   category: string;
   topic?: string;
+  difficulty?: string;
+  references?: string[];
+  topicId?: string;
 }
 
 export default function ACLSPracticePage() {
@@ -172,7 +175,7 @@ export default function ACLSPracticePage() {
                 <span className="text-blue-600 font-bold">{currentQuestionIndex + 1}</span>
               </div>
               <h2 className="text-xl font-semibold text-gray-900 flex-1">
-                {currentQuestion.text}
+                {currentQuestion.question}
               </h2>
             </div>
           </div>
