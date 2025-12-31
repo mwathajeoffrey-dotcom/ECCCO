@@ -1,31 +1,18 @@
-/**
- * American Heart Association (AHA) Guidelines Integration
- * FREE access to ACLS, BLS, PALS algorithms and cardiac guidelines
- * 
- * API Documentation: https://professional.heart.org/en/guidelines-and-statements
- * No API key required! Public access to guidelines
- * 
- * Coverage:
- * - ACLS algorithms (Advanced Cardiac Life Support)
- * - BLS protocols (Basic Life Support)
- * - PALS guidelines (Pediatric Advanced Life Support)
- * - Cardiac care guidelines
- * - Stroke protocols
- */
-
-const AHA_BASE_URL = 'https://professional.heart.org';
+// AHA Guidelines with Direct PDF Links to Flowchart Algorithms
+// Links to actual AHA algorithm PDFs and flowcharts
 
 export interface AHAGuideline {
   id: string;
   title: string;
-  category: 'ACLS' | 'BLS' | 'PALS' | 'Cardiac' | 'Stroke' | 'Resuscitation';
+  category: 'ACLS' | 'BLS' | 'PALS' | 'NRP' | 'Stroke' | 'ACS';
   published: string;
   summary: string;
-  algorithmUrl?: string;
-  pdfUrl?: string;
+  pdfUrl: string;  // Direct link to algorithm PDF/flowchart
+  fullTextUrl: string;  // Link to full guideline page
   evidenceLevel: string;
   recommendations: string[];
   topics: string[];
+  imageUrl?: string;  // Direct link to algorithm image
 }
 
 export interface AHASearchParams {
@@ -43,23 +30,21 @@ export async function searchAHAGuidelines(
   try {
     const mockGuidelines = getMockAHAGuidelines();
     
-    // Filter by query
     let filtered = mockGuidelines.filter(g => {
       const searchText = `${g.title} ${g.summary} ${g.category} ${g.topics.join(' ')}`.toLowerCase();
       return searchText.includes(params.query.toLowerCase());
     });
     
-    // Filter by category if specified
     if (params.category) {
       filtered = filtered.filter(g => g.category === params.category);
     }
     
     return {
       guidelines: filtered.slice(0, params.limit || 20),
-      totalResults: filtered.length,
+      totalResults: filtered.length
     };
   } catch (error) {
-    console.error('AHA search error:', error);
+    console.error('Error searching AHA guidelines:', error);
     return { guidelines: [], totalResults: 0 };
   }
 }
@@ -89,259 +74,287 @@ export async function getBLSProtocols(): Promise<AHAGuideline[]> {
 }
 
 /**
- * Mock AHA Guidelines Database
+ * Get NRP (Neonatal Resuscitation) algorithms
+ */
+export async function getNRPAlgorithms(): Promise<AHAGuideline[]> {
+  const { guidelines } = await searchAHAGuidelines({ query: '', category: 'NRP' });
+  return guidelines;
+}
+
+/**
+ * Mock AHA Guidelines with Real PDF Links
  */
 function getMockAHAGuidelines(): AHAGuideline[] {
   return [
+    // ACLS ALGORITHMS
     {
-      id: 'aha-acls-001',
-      title: 'Adult Cardiac Arrest Algorithm',
+      id: 'aha-acls-cardiac-arrest',
+      title: 'Adult Cardiac Arrest Algorithm - ACLS',
       category: 'ACLS',
       published: '2020-10-21',
-      summary: 'Updated ACLS algorithm for adult cardiac arrest, including VF/pVT and asystole/PEA pathways.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'Complete ACLS cardiac arrest algorithm flowchart including VF/pVT and asystole/PEA pathways with CPR quality metrics.',
+      pdfUrl: 'https://www.acls.net/images/algo-acls-cardiac-arrest.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
+      imageUrl: 'https://www.acls.net/images/algo-acls-cardiac-arrest.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'High-quality CPR: Rate 100-120/min, depth 2-2.4 inches',
-        'Minimize interruptions in chest compressions',
-        'Defibrillate VF/pVT as soon as possible',
-        'Epinephrine 1mg every 3-5 minutes',
+        'High-quality CPR: 100-120/min, depth 2-2.4 inches',
+        'Minimize interruptions (<10 seconds)',
+        'Defibrillate VF/pVT immediately',
+        'Epinephrine 1mg IV/IO every 3-5 min',
         'Amiodarone 300mg for refractory VF/pVT',
-        'Identify and treat reversible causes (H\'s and T\'s)'
+        'Treat reversible causes (H\'s and T\'s)'
       ],
-      topics: ['Cardiac Arrest', 'CPR', 'Defibrillation', 'VF', 'Asystole', 'PEA'],
+      topics: ['Cardiac Arrest', 'VF', 'pVT', 'Asystole', 'PEA', 'CPR', 'Defibrillation']
     },
     {
-      id: 'aha-acls-002',
-      title: 'Bradycardia Algorithm',
+      id: 'aha-acls-bradycardia',
+      title: 'Bradycardia Algorithm - ACLS',
       category: 'ACLS',
       published: '2020-10-21',
-      summary: 'ACLS algorithm for symptomatic bradycardia in adults.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'ACLS bradycardia algorithm for symptomatic bradycardia with detailed treatment pathways.',
+      pdfUrl: 'https://www.acls.net/images/algo-bradycardia.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
+      imageUrl: 'https://www.acls.net/images/algo-bradycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Identify and treat underlying cause',
-        'Atropine 1mg IV for symptomatic bradycardia',
-        'May repeat atropine every 3-5 minutes (max 3mg)',
-        'Consider transcutaneous pacing if atropine ineffective',
-        'Dopamine 5-20 mcg/kg/min or epinephrine 2-10 mcg/min infusion',
-        'Prepare for transvenous pacing if needed'
+        'Atropine 1mg IV (repeat q3-5min, max 3mg)',
+        'Transcutaneous pacing if atropine ineffective',
+        'Dopamine 5-20 mcg/kg/min infusion',
+        'Epinephrine 2-10 mcg/min infusion',
+        'Prepare for transvenous pacing'
       ],
-      topics: ['Bradycardia', 'Heart Block', 'Atropine', 'Pacing'],
+      topics: ['Bradycardia', 'Heart Block', 'Atropine', 'Pacing']
     },
     {
-      id: 'aha-acls-003',
-      title: 'Tachycardia with Pulse Algorithm',
+      id: 'aha-acls-tachycardia',
+      title: 'Tachycardia Algorithm - ACLS',
       category: 'ACLS',
       published: '2020-10-21',
-      summary: 'ACLS algorithm for adult tachycardia with pulses, including narrow and wide complex rhythms.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'ACLS tachycardia algorithm for stable and unstable tachycardia with pulse.',
+      pdfUrl: 'https://www.acls.net/images/algo-tachycardia.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
+      imageUrl: 'https://www.acls.net/images/algo-tachycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Assess if patient is stable or unstable',
+        'Assess stability (hypotension, altered mental status, shock, chest pain)',
         'Synchronized cardioversion if unstable',
-        'Vagal maneuvers for regular narrow complex',
-        'Adenosine 6mg rapid IV push for SVT',
-        'Adenosine 12mg if first dose ineffective',
-        'Amiodarone or procainamide for wide complex tachycardia'
+        'Adenosine 6mg rapid IV push for regular narrow complex',
+        'If no conversion: Adenosine 12mg',
+        'Wide complex: Amiodarone 150mg over 10min',
+        'Expert consultation recommended'
       ],
-      topics: ['Tachycardia', 'SVT', 'VT', 'Adenosine', 'Cardioversion'],
+      topics: ['Tachycardia', 'SVT', 'Adenosine', 'Cardioversion', 'Amiodarone']
     },
     {
-      id: 'aha-acls-004',
-      title: 'Acute Coronary Syndromes Algorithm',
-      category: 'ACLS',
+      id: 'aha-acls-acs',
+      title: 'Acute Coronary Syndromes Algorithm - ACLS',
+      category: 'ACS',
       published: '2020-10-21',
-      summary: 'ACLS algorithm for suspected acute coronary syndromes (STEMI/NSTEMI/Unstable Angina).',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'ACLS algorithm for acute coronary syndromes including STEMI and NSTEMI pathways.',
+      pdfUrl: 'https://www.acls.net/images/algo-acs.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/clinical/cpr-ecc-guidelines/acs',
+      imageUrl: 'https://www.acls.net/images/algo-acs.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
         'Aspirin 162-325mg chewed immediately',
+        'Oxygen if SpO2 <90%',
+        'Nitroglycerin 0.4mg SL q5min (max 3 doses)',
+        'Morphine for pain if needed',
         '12-lead ECG within 10 minutes',
-        'Nitroglycerin for chest pain (contraindicated if right ventricular infarct)',
-        'Morphine 2-4mg IV for pain not relieved by nitrates',
-        'PCI within 90 minutes for STEMI',
-        'Dual antiplatelet therapy (aspirin + P2Y12 inhibitor)'
+        'STEMI: Door-to-balloon <90 minutes'
       ],
-      topics: ['ACS', 'STEMI', 'NSTEMI', 'Chest Pain', 'Myocardial Infarction'],
+      topics: ['ACS', 'STEMI', 'NSTEMI', 'Chest Pain', 'MI']
     },
     {
-      id: 'aha-acls-005',
-      title: 'Stroke Assessment and Management',
+      id: 'aha-acls-stroke',
+      title: 'Stroke Algorithm - ACLS',
       category: 'Stroke',
-      published: '2019-10-30',
-      summary: 'AHA/ASA guidelines for early management of acute ischemic stroke.',
-      algorithmUrl: 'https://www.ahajournals.org/doi/10.1161/STR.0000000000000211',
-      pdfUrl: 'https://www.ahajournals.org/doi/pdf/10.1161/STR.0000000000000211',
+      published: '2020-10-21',
+      summary: 'ACLS stroke algorithm with time-critical interventions for acute ischemic stroke.',
+      pdfUrl: 'https://www.acls.net/images/algo-stroke.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/clinical/cpr-ecc-guidelines/stroke',
+      imageUrl: 'https://www.acls.net/images/algo-stroke.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Cincinnati Prehospital Stroke Scale or FAST assessment',
-        'Non-contrast CT scan immediately',
-        'tPA within 3-4.5 hours of symptom onset if eligible',
-        'Thrombectomy for large vessel occlusion within 24 hours',
-        'Blood pressure management (target <185/110 for tPA)',
-        'Aspirin 325mg within 24-48 hours (after tPA excluded)'
+        'Cincinnati Stroke Scale assessment',
+        'Last known well time documentation',
+        'CT scan within 25 minutes of arrival',
+        'tPA if within 3-4.5 hours and eligible',
+        'Blood pressure management',
+        'Consider thrombectomy within 24 hours'
       ],
-      topics: ['Stroke', 'tPA', 'Thrombectomy', 'Neurology', 'Emergency'],
+      topics: ['Stroke', 'CVA', 'tPA', 'Thrombectomy', 'NIH Stroke Scale']
     },
+
+    // PALS ALGORITHMS
     {
-      id: 'aha-pals-001',
-      title: 'Pediatric Cardiac Arrest Algorithm',
+      id: 'aha-pals-cardiac-arrest',
+      title: 'Pediatric Cardiac Arrest Algorithm - PALS',
       category: 'PALS',
       published: '2020-10-21',
-      summary: 'PALS algorithm for pediatric cardiac arrest management.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_494556.pdf',
+      summary: 'PALS pediatric cardiac arrest algorithm with pediatric-specific interventions.',
+      pdfUrl: 'https://www.acls.net/images/algo-pals-cardiac-arrest.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
+      imageUrl: 'https://www.acls.net/images/algo-pals-cardiac-arrest.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'High-quality CPR: 100-120/min, depth at least 1/3 chest diameter',
-        'Compression-to-ventilation ratio 15:2 (2 rescuers), 30:2 (1 rescuer)',
-        'Epinephrine 0.01mg/kg IV/IO every 3-5 minutes',
-        'Defibrillation 2 J/kg initial, 4 J/kg subsequent',
+        'CPR: 15:2 compression-ventilation ratio (2 rescuers)',
+        'Compression rate: 100-120/min',
+        'Epinephrine 0.01mg/kg IV/IO (max 1mg)',
+        'Defibrillation: 2 J/kg initially, then 4 J/kg',
         'Amiodarone 5mg/kg for refractory VF/pVT',
-        'Consider reversible causes (H\'s and T\'s)'
+        'Consider reversible causes'
       ],
-      topics: ['Pediatric', 'Cardiac Arrest', 'CPR', 'Children', 'Resuscitation'],
+      topics: ['Pediatric', 'Cardiac Arrest', 'PALS', 'CPR', 'Defibrillation']
     },
     {
-      id: 'aha-pals-002',
-      title: 'Pediatric Bradycardia with Pulse and Poor Perfusion',
+      id: 'aha-pals-bradycardia',
+      title: 'Pediatric Bradycardia Algorithm - PALS',
       category: 'PALS',
       published: '2020-10-21',
-      summary: 'PALS algorithm for bradycardia with poor perfusion in children.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_494556.pdf',
+      summary: 'PALS algorithm for symptomatic bradycardia in pediatric patients.',
+      pdfUrl: 'https://www.acls.net/images/algo-pals-bradycardia.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
+      imageUrl: 'https://www.acls.net/images/algo-pals-bradycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Support airway, breathing, and circulation',
-        'Oxygen and ventilation as needed',
-        'Cardiac monitor and pulse oximetry',
-        'If bradycardia persists: Epinephrine 0.01mg/kg IV/IO',
-        'Atropine 0.02mg/kg IV/IO (minimum 0.1mg, maximum 0.5mg single dose)',
-        'Consider cardiac pacing if refractory to medications'
+        'Ensure adequate oxygenation and ventilation',
+        'CPR if HR <60/min with poor perfusion',
+        'Epinephrine 0.01mg/kg IV/IO',
+        'Atropine 0.02mg/kg (min 0.1mg, max 0.5mg)',
+        'Consider pacing for complete heart block',
+        'Treat underlying causes'
       ],
-      topics: ['Pediatric', 'Bradycardia', 'Shock', 'Perfusion'],
+      topics: ['Pediatric', 'Bradycardia', 'PALS', 'Heart Block']
     },
     {
-      id: 'aha-pals-003',
-      title: 'Pediatric Tachycardia with Pulse and Poor Perfusion',
+      id: 'aha-pals-tachycardia',
+      title: 'Pediatric Tachycardia Algorithm - PALS',
       category: 'PALS',
       published: '2020-10-21',
-      summary: 'PALS algorithm for tachycardia with poor perfusion in children.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_494556.pdf',
+      summary: 'PALS algorithm for tachycardia with pulse in pediatric patients.',
+      pdfUrl: 'https://www.acls.net/images/algo-pals-tachycardia.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-and-advanced-life-support',
+      imageUrl: 'https://www.acls.net/images/algo-pals-tachycardia.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Assess if narrow (<0.09 sec) or wide (≥0.09 sec) complex',
-        'Synchronized cardioversion 0.5-1 J/kg if unstable',
-        'Vagal maneuvers for stable SVT (if appropriate)',
         'Adenosine 0.1mg/kg rapid IV push (max 6mg)',
-        'Adenosine 0.2mg/kg second dose (max 12mg)',
-        'Amiodarone 5mg/kg IV over 20-60 min for wide complex'
+        'Second dose: 0.2mg/kg (max 12mg)',
+        'Synchronized cardioversion if unstable: 0.5-1 J/kg',
+        'Amiodarone 5mg/kg over 20-60min',
+        'Vagal maneuvers for SVT',
+        'Expert consultation recommended'
       ],
-      topics: ['Pediatric', 'Tachycardia', 'SVT', 'Shock', 'Adenosine'],
+      topics: ['Pediatric', 'Tachycardia', 'SVT', 'PALS', 'Adenosine']
     },
+
+    // BLS ALGORITHMS
     {
-      id: 'aha-bls-001',
+      id: 'aha-bls-adult-cpr',
       title: 'BLS Adult Cardiac Arrest Algorithm',
       category: 'BLS',
       published: '2020-10-21',
-      summary: 'Basic Life Support algorithm for adult cardiac arrest.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'Basic Life Support algorithm for adult cardiac arrest with C-A-B sequence.',
+      pdfUrl: 'https://www.acls.net/images/algo-bls-adult.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-and-advanced-life-support',
+      imageUrl: 'https://www.acls.net/images/algo-bls-adult.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Check for responsiveness and breathing',
-        'Activate emergency response and get AED',
-        'Check pulse (no more than 10 seconds)',
-        'If no pulse: Begin CPR (C-A-B sequence)',
-        'Compression rate 100-120/min, depth 2-2.4 inches',
-        'Allow complete chest recoil between compressions',
-        '30 compressions to 2 breaths ratio',
-        'Use AED as soon as available'
+        'Check responsiveness and pulse (≤10 seconds)',
+        'Call for help and get AED',
+        'Compressions: 100-120/min, depth 2-2.4 inches',
+        'Compression-ventilation ratio: 30:2',
+        'Use AED as soon as available',
+        'Continue until ROSC or advanced help arrives'
       ],
-      topics: ['BLS', 'CPR', 'AED', 'Cardiac Arrest', 'Resuscitation'],
+      topics: ['BLS', 'CPR', 'Cardiac Arrest', 'AED']
     },
     {
-      id: 'aha-bls-002',
-      title: 'Choking (Foreign-Body Airway Obstruction) Adult',
+      id: 'aha-bls-choking',
+      title: 'Choking Relief Algorithm - BLS',
       category: 'BLS',
       published: '2020-10-21',
-      summary: 'BLS management of choking in conscious and unconscious adults.',
-      algorithmUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms',
-      pdfUrl: 'https://professional.heart.org/idc/groups/ahamah-public/@wcm/@sop/@smd/documents/downloadable/ucm_477263.pdf',
+      summary: 'BLS algorithm for foreign-body airway obstruction in conscious and unconscious victims.',
+      pdfUrl: 'https://www.acls.net/images/algo-choking.pdf',
+      fullTextUrl: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-and-advanced-life-support',
+      imageUrl: 'https://www.acls.net/images/algo-choking.jpg',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Ask "Are you choking?"',
-        'If conscious with severe airway obstruction: Heimlich maneuver',
-        'Abdominal thrusts until object expelled or patient unconscious',
-        'If patient becomes unconscious: Activate emergency response',
-        'Begin CPR starting with chest compressions',
-        'Look for object in mouth before giving breaths',
-        'Do not perform blind finger sweeps'
+        'Conscious victim: Back blows and abdominal thrusts',
+        'Continue until object expelled or unconscious',
+        'If unconscious: Begin CPR',
+        'Look for object before giving breaths',
+        'Remove if visible and easily accessible',
+        'Call for advanced help if persistent obstruction'
       ],
-      topics: ['Choking', 'Heimlich', 'Airway Obstruction', 'Foreign Body'],
+      topics: ['Choking', 'Airway Obstruction', 'Heimlich', 'BLS']
     },
+
+    // NEONATAL RESUSCITATION
     {
-      id: 'aha-cardiac-001',
-      title: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-      category: 'Cardiac',
-      published: '2019-03-17',
-      summary: 'Comprehensive guideline on cardiovascular disease risk assessment and prevention strategies.',
-      algorithmUrl: 'https://www.ahajournals.org/doi/10.1161/CIR.0000000000000678',
-      pdfUrl: 'https://www.ahajournals.org/doi/pdf/10.1161/CIR.0000000000000678',
-      evidenceLevel: 'Class I',
-      recommendations: [
-        'Use pooled cohort equations for 10-year ASCVD risk',
-        'Aspirin for primary prevention in select high-risk patients',
-        'Statin therapy for LDL ≥70 mg/dL and 10-year risk ≥7.5%',
-        'Lifestyle modifications: diet, exercise, smoking cessation',
-        'Blood pressure target <130/80 mmHg',
-        'Diabetes screening for adults age 40-70 who are overweight'
-      ],
-      topics: ['Prevention', 'Cardiovascular Disease', 'Risk Assessment', 'Statin'],
-    },
-    {
-      id: 'aha-cardiac-002',
-      title: '2020 AHA Guidelines for CPR and Emergency Cardiovascular Care',
-      category: 'Resuscitation',
+      id: 'aha-nrp-newborn',
+      title: 'Neonatal Resuscitation Algorithm - NRP',
+      category: 'NRP',
       published: '2020-10-21',
-      summary: 'Updated evidence-based guidelines for cardiopulmonary resuscitation and emergency cardiovascular care.',
-      algorithmUrl: 'https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916',
-      pdfUrl: 'https://www.ahajournals.org/doi/pdf/10.1161/CIR.0000000000000916',
+      summary: 'Complete NRP algorithm for newborn resuscitation with detailed steps from birth through advanced interventions.',
+      pdfUrl: 'https://www.aap.org/en/pages/neonatal-resuscitation-program/nrp-algorithm',
+      fullTextUrl: 'https://publications.aap.org/pediatrics/article/146/Supplement_1/S135/33322/2020-American-Heart-Association-Guidelines-for',
+      imageUrl: 'https://www.aap.org/globalassets/nrp-algorithm-2020.png',
       evidenceLevel: 'Class I',
       recommendations: [
-        'Dispatcher-assisted CPR for suspected cardiac arrest',
-        'Compression-only CPR for untrained lay rescuers',
-        'Early defibrillation with AED',
-        'Mechanical CPR devices may be considered in specific situations',
-        'Epinephrine administration during cardiac arrest',
-        'Post-cardiac arrest care and targeted temperature management'
+        'Antenatal counseling and equipment check',
+        'Warm, dry, stimulate newborn',
+        'Position airway, clear secretions if needed',
+        'Evaluate: respirations, heart rate, color',
+        'PPV if gasping or apneic or HR <100',
+        'Chest compressions if HR <60 after 30 sec PPV',
+        'Epinephrine 0.01-0.03 mg/kg if HR <60',
+        'Consider volume if hypovolemic'
       ],
-      topics: ['CPR', 'Resuscitation', 'Guidelines', 'Emergency Care', 'ECC'],
+      topics: ['Neonatal', 'Resuscitation', 'NRP', 'Newborn', 'Delivery Room']
     },
+
+    // 2020 GUIDELINES
+    {
+      id: 'aha-guidelines-2020',
+      title: '2020 AHA CPR and ECC Guidelines',
+      category: 'ACLS',
+      published: '2020-10-21',
+      summary: 'Complete 2020 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care.',
+      pdfUrl: 'https://www.ahajournals.org/doi/pdf/10.1161/CIR.0000000000000916',
+      fullTextUrl: 'https://www.ahajournals.org/doi/10.1161/CIR.0000000000000916',
+      evidenceLevel: 'Class I',
+      recommendations: [
+        'Updated compression depth and rate guidelines',
+        'Emphasis on high-quality CPR',
+        'Early defibrillation for VF/pVT',
+        'Dispatcher-assisted CPR',
+        'Post-cardiac arrest care optimization',
+        'Team dynamics and communication'
+      ],
+      topics: ['Guidelines', 'CPR', 'ECC', 'ACLS', 'BLS', 'PALS']
+    }
   ];
 }
 
 /**
  * Convert AHA guideline to unified format
  */
-export function toUnifiedGuideline(guideline: AHAGuideline): any {
+export function toUnifiedGuideline(aha: AHAGuideline): any {
   return {
-    id: `aha-${guideline.id}`,
-    source: 'aha',
-    title: guideline.title,
-    summary: guideline.summary,
-    published: guideline.published,
-    fullTextUrl: guideline.algorithmUrl || guideline.pdfUrl || '',
-    pdfUrl: guideline.pdfUrl,
-    evidenceLevel: guideline.evidenceLevel,
-    recommendations: guideline.recommendations,
-    topics: guideline.topics,
-    category: guideline.category,
+    id: aha.id,
+    source: 'aha' as const,
+    title: aha.title,
+    summary: aha.summary,
+    published: aha.published,
+    fullTextUrl: aha.fullTextUrl,
+    pdfUrl: aha.pdfUrl,
+    evidenceLevel: aha.evidenceLevel,
+    recommendations: aha.recommendations,
+    topics: aha.topics,
+    category: aha.category,
+    imageUrl: aha.imageUrl
   };
 }

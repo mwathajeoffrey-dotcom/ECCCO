@@ -1,8 +1,37 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, FileText, Download, ExternalLink, Filter, BookOpen, Heart, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, FileText, Download, ExternalLink, Filter, BookOpen, Heart, Globe, ChevronDown, ChevronUp, Activity, Pill, Clock, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+
+interface FlowchartStep {
+  id: string;
+  type: 'start' | 'action' | 'decision' | 'end';
+  label: string;
+  details?: string;
+  nextSteps?: string[];
+  yesPath?: string;
+  noPath?: string;
+}
+
+interface ClinicalAlgorithm {
+  steps: FlowchartStep[];
+  keyPoints: string[];
+  medications?: {
+    name: string;
+    dose: string;
+    route: string;
+    timing: string;
+  }[];
+  criticalActions: string[];
+}
+
+interface QuickReference {
+  vitalSigns?: string[];
+  drugs?: string[];
+  equipment?: string[];
+  timing?: string[];
+}
 
 interface Guideline {
   id: string;
@@ -17,6 +46,8 @@ interface Guideline {
   recommendations?: string[];
   topics: string[];
   category?: string;
+  algorithm?: ClinicalAlgorithm;
+  quickReference?: QuickReference;
 }
 
 export default function GuidelinesSearchPage() {
@@ -252,7 +283,7 @@ export default function GuidelinesSearchPage() {
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1 ${getSourceColor(guideline.source)}`}>
                         {getSourceIcon(guideline.source)}
                         {guideline.source.toUpperCase()}
@@ -265,6 +296,12 @@ export default function GuidelinesSearchPage() {
                       {guideline.evidenceLevel && (
                         <span className="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
                           Evidence: {guideline.evidenceLevel}
+                        </span>
+                      )}
+                      {guideline.pdfUrl && (
+                        <span className="px-3 py-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center gap-1 animate-pulse">
+                          <FileText className="w-3 h-3" />
+                          FLOWCHART PDF
                         </span>
                       )}
                     </div>
@@ -297,50 +334,247 @@ export default function GuidelinesSearchPage() {
                         {expandedGuideline === guideline.id ? (
                           <>
                             <ChevronUp className="w-4 h-4" />
-                            Hide Recommendations
+                            Hide Algorithm Details
                           </>
                         ) : (
                           <>
                             <ChevronDown className="w-4 h-4" />
-                            Show {guideline.recommendations.length} Recommendations
+                            Show Clinical Algorithm & Flowchart
                           </>
                         )}
                       </button>
                       
                       {expandedGuideline === guideline.id && (
-                        <ul className="mt-3 space-y-2 pl-4">
-                          {guideline.recommendations.map((rec, idx) => (
-                            <li key={idx} className="text-sm text-gray-700 flex gap-2">
-                              <span className="text-green-600 font-bold">•</span>
-                              <span>{rec}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <div className="mt-4 space-y-4">
+                          {/* Quick Reference Card */}
+                          {guideline.quickReference && (
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border-2 border-blue-200">
+                              <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+                                <Activity className="w-5 h-5" />
+                                Quick Reference Card
+                              </h4>
+                              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                                {guideline.quickReference.drugs && (
+                                  <div>
+                                    <div className="font-semibold text-blue-800 mb-1 flex items-center gap-1">
+                                      <Pill className="w-4 h-4" />
+                                      Medications
+                                    </div>
+                                    <ul className="space-y-1">
+                                      {guideline.quickReference.drugs.map((drug, idx) => (
+                                        <li key={idx} className="text-gray-700 font-mono text-xs bg-white px-2 py-1 rounded">
+                                          {drug}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                {guideline.quickReference.timing && (
+                                  <div>
+                                    <div className="font-semibold text-blue-800 mb-1 flex items-center gap-1">
+                                      <Clock className="w-4 h-4" />
+                                      Critical Timing
+                                    </div>
+                                    <ul className="space-y-1">
+                                      {guideline.quickReference.timing.map((time, idx) => (
+                                        <li key={idx} className="text-gray-700 font-mono text-xs bg-white px-2 py-1 rounded">
+                                          {time}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Visual Flowchart */}
+                          {guideline.algorithm && (
+                            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                              <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <Activity className="w-5 h-5 text-green-600" />
+                                Clinical Algorithm Flowchart
+                              </h4>
+                              <div className="space-y-3">
+                                {guideline.algorithm.steps.map((step, idx) => (
+                                  <div key={step.id} className="relative">
+                                    {/* Step Box */}
+                                    <div className={`
+                                      ${step.type === 'start' ? 'bg-green-100 border-green-500' : ''}
+                                      ${step.type === 'action' ? 'bg-blue-100 border-blue-500' : ''}
+                                      ${step.type === 'decision' ? 'bg-yellow-100 border-yellow-500' : ''}
+                                      ${step.type === 'end' ? 'bg-red-100 border-red-500' : ''}
+                                      border-2 rounded-lg p-3 relative
+                                    `}>
+                                      {/* Step Number */}
+                                      <div className="absolute -left-3 -top-3 w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                                        {idx + 1}
+                                      </div>
+                                      
+                                      {/* Step Type Badge */}
+                                      <div className="flex items-center justify-between mb-2">
+                                        <span className={`
+                                          text-xs font-bold uppercase px-2 py-1 rounded
+                                          ${step.type === 'start' ? 'bg-green-600 text-white' : ''}
+                                          ${step.type === 'action' ? 'bg-blue-600 text-white' : ''}
+                                          ${step.type === 'decision' ? 'bg-yellow-600 text-white' : ''}
+                                          ${step.type === 'end' ? 'bg-red-600 text-white' : ''}
+                                        `}>
+                                          {step.type}
+                                        </span>
+                                      </div>
+                                      
+                                      {/* Step Label */}
+                                      <h5 className="font-bold text-gray-900 mb-1">
+                                        {step.label}
+                                      </h5>
+                                      
+                                      {/* Step Details */}
+                                      {step.details && (
+                                        <p className="text-sm text-gray-700 whitespace-pre-line mt-2 bg-white p-2 rounded">
+                                          {step.details}
+                                        </p>
+                                      )}
+                                      
+                                      {/* Decision Paths */}
+                                      {step.type === 'decision' && (
+                                        <div className="mt-2 flex gap-2 text-xs">
+                                          {step.yesPath && (
+                                            <span className="bg-green-600 text-white px-2 py-1 rounded font-semibold">
+                                              YES → Next
+                                            </span>
+                                          )}
+                                          {step.noPath && (
+                                            <span className="bg-red-600 text-white px-2 py-1 rounded font-semibold">
+                                              NO → Alt Path
+                                            </span>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    {/* Arrow to next step */}
+                                    {guideline.algorithm && idx < guideline.algorithm.steps.length - 1 && (
+                                      <div className="flex justify-center py-2">
+                                        <div className="w-1 h-6 bg-gray-400"></div>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Medication Table */}
+                          {guideline.algorithm?.medications && guideline.algorithm.medications.length > 0 && (
+                            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                              <h4 className="font-bold text-purple-900 mb-3 flex items-center gap-2">
+                                <Pill className="w-5 h-5" />
+                                Medication Dosing
+                              </h4>
+                              <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                  <thead>
+                                    <tr className="border-b-2 border-purple-300">
+                                      <th className="text-left py-2 px-2 font-semibold text-purple-900">Drug</th>
+                                      <th className="text-left py-2 px-2 font-semibold text-purple-900">Dose</th>
+                                      <th className="text-left py-2 px-2 font-semibold text-purple-900">Route</th>
+                                      <th className="text-left py-2 px-2 font-semibold text-purple-900">Timing</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {guideline.algorithm.medications.map((med, idx) => (
+                                      <tr key={idx} className="border-b border-purple-200 hover:bg-purple-100">
+                                        <td className="py-2 px-2 font-semibold text-gray-900">{med.name}</td>
+                                        <td className="py-2 px-2 font-mono text-gray-700">{med.dose}</td>
+                                        <td className="py-2 px-2 text-gray-700">{med.route}</td>
+                                        <td className="py-2 px-2 text-gray-700">{med.timing}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Key Points & Critical Actions */}
+                          {guideline.algorithm && (
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {/* Key Points */}
+                              {guideline.algorithm.keyPoints.length > 0 && (
+                                <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                                  <h4 className="font-bold text-green-900 mb-2 flex items-center gap-2">
+                                    <AlertCircle className="w-5 h-5" />
+                                    Key Points
+                                  </h4>
+                                  <ul className="space-y-1 text-sm">
+                                    {guideline.algorithm.keyPoints.map((point, idx) => (
+                                      <li key={idx} className="flex gap-2 text-gray-700">
+                                        <span className="text-green-600 font-bold">✓</span>
+                                        <span>{point}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Critical Actions */}
+                              {guideline.algorithm.criticalActions.length > 0 && (
+                                <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+                                  <h4 className="font-bold text-red-900 mb-2 flex items-center gap-2">
+                                    <AlertCircle className="w-5 h-5" />
+                                    Critical Actions
+                                  </h4>
+                                  <ul className="space-y-1 text-sm">
+                                    {guideline.algorithm.criticalActions.map((action, idx) => (
+                                      <li key={idx} className="flex gap-2 text-gray-700">
+                                        <span className="text-red-600 font-bold">!</span>
+                                        <span className="font-semibold">{action}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Text Recommendations (fallback if no algorithm) */}
+                          {!guideline.algorithm && guideline.recommendations && (
+                            <ul className="mt-3 space-y-2 pl-4">
+                              {guideline.recommendations.map((rec, idx) => (
+                                <li key={idx} className="text-sm text-gray-700 flex gap-2">
+                                  <span className="text-green-600 font-bold">•</span>
+                                  <span>{rec}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
                   
-                  <div className="flex gap-3">
-                    <a
-                      href={guideline.fullTextUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center gap-2 font-medium"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View Guideline
-                    </a>
+                  <div className="flex flex-wrap gap-3">
                     {guideline.pdfUrl && (
                       <a
                         href={guideline.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm flex items-center gap-2 font-medium"
+                        className="px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg hover:from-red-700 hover:to-pink-700 text-sm flex items-center gap-2 font-bold shadow-md"
                       >
-                        <Download className="w-4 h-4" />
-                        Download PDF
+                        <FileText className="w-5 h-5" />
+                        View Algorithm PDF
                       </a>
                     )}
+                    <a
+                      href={guideline.fullTextUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center gap-2 font-medium shadow-md"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Full Guideline
+                    </a>
                   </div>
                 </div>
               </div>
