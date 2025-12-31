@@ -141,6 +141,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           icon: Search,
         },
         {
+          label: 'Guidelines Search',
+          href: '/guidelines-search',
+          icon: FileText,
+        },
+        {
           label: 'Evidence Library',
           href: '/emergency-references',
           icon: Library,
