@@ -27,8 +27,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      {/* Main Content */}
-      <div className="flex-1">
+      {/* Main Content - Add padding-top for fixed header */}
+      <div className="flex-1 pt-16">
         {children}
       </div>
     </div>

@@ -187,7 +187,7 @@ export default function RootLayout({
         </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full`}
-          style={{ WebkitOverflowScrolling: 'touch', overscrollBehaviorY: 'none' } as React.CSSProperties}
+          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
         >
           <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
             <AppLayout>
