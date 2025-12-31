@@ -37,8 +37,19 @@ export async function requireAdmin() {
 export async function getAdminStatus() {
   const { userId } = await auth();
   
+  if (!userId) {
+    return {
+      isAdmin: false,
+      userId: null,
+      user: null,
+      error: 'Not authenticated'
+    };
+  }
+
   return {
-    isAdmin: !!userId, // TODO: Add proper admin check
-    userId: userId || null
+    isAdmin: true, // TODO: Add proper admin check
+    userId: userId,
+    user: { id: userId, email: null, name: null, role: 'user' }, // TODO: Fetch from Clerk
+    error: null
   };
 }

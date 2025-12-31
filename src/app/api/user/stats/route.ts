@@ -1,40 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { getServerSession } from 'next-auth/next';
-
 import { prisma } from '@/lib/database/prisma-client';
 
 export async function GET() {
   try {
     const { userId } = await auth();
     
-    if (!session?.user?.email) {
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email: userId }
-    });
-
-    if (!user) {
-      return NextResponse.json({
-        totalAttempts: 0,
-        completedExams: 0,
-        averageScore: 0,
-        totalTimeSpent: 0,
-        recentActivity: [],
-        topicStats: [],
-        weeklyActivity: []
-      });
-    }
-
-    const userId = user.id;
-
-    // Get user exam sessions
+    // Get user exam sessions directly with Clerk userId
     const examSessions = await prisma.examSession.findMany({
       where: { userId },
       include: {

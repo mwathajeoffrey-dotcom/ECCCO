@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { getServerSession } from 'next-auth/next';
-
 import { prisma } from '@/lib/database/prisma-client';
 
 interface ExamQuestion {
@@ -25,9 +23,9 @@ interface SaveExamRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId: clerkUserId } = await auth();
     
-    if (!session?.user?.email) {
+    if (!clerkUserId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -46,22 +44,8 @@ export async function POST(request: NextRequest) {
       completed
     } = body;
 
-    // Find or create user by email
-    let user = await prisma.user.findUnique({
-      where: { email: userId }
-    });
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email: userId,
-          name: session.user.name || '',
-          image: session.user.image || null
-        }
-      });
-    }
-
-    const userId = user.id;
+    // Use Clerk userId directly - no need to find/create user in our DB
+    const userId = clerkUserId;
 
     // Create or get topic
     let topic = await prisma.topic.findFirst({

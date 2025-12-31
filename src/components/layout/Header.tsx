@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { BookOpen, User, LogIn, LogOut, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 
 interface HeaderProps {
   title?: string;
@@ -12,10 +12,10 @@ interface HeaderProps {
 }
 
 export default function Header({ title = 'ECCCO', subtitle, currentPage }: HeaderProps) {
-  const { data: session, status } = useSession();
+  const { isSignedIn, user, isLoaded } = useUser();
   const [showAuthMenu, setShowAuthMenu] = useState(false);
 
-  const isLoading = status === 'loading';
+  const isLoading = !isLoaded;
 
   const handleSignIn = (provider?: string) => {
     if (provider === 'google') {
@@ -80,7 +80,7 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
               >
                 Live Quiz
               </Link>
-              {session && (
+              {isSignedIn && (
                 <Link 
                   href="/dashboard" 
                   className={`font-medium text-sm ${
@@ -96,20 +96,20 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
             <div className="relative">
               {isLoading ? (
                 <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-              ) : session ? (
+              ) : isSignedIn ? (
                 /* Signed In User */
                 <div className="flex items-center space-x-3">
                   <div className="hidden sm:block text-right">
                     <p className="text-sm font-medium text-gray-900">
-                      {session.user?.name || 'User'}
+                      {user?.firstName || 'User'}
                     </p>
-                    <p className="text-xs text-gray-600">{session.user?.email}</p>
+                    <p className="text-xs text-gray-600">{user?.emailAddresses[0]?.emailAddress}</p>
                   </div>
                   
-                  {session.user?.image ? (
+                  {user?.imageUrl ? (
                     <img
-                      src={session.user.image}
-                      alt={session.user.name || 'User'}
+                      src={user?.imageUrl}
+                      alt={user?.firstName || 'User'}
                       className="w-8 h-8 rounded-full border-2 border-gray-200"
                     />
                   ) : (
@@ -118,13 +118,14 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                     </div>
                   )}
                   
-                  <button
-                    onClick={() => signOut()}
-                    className="text-gray-700 hover:text-red-600 transition-colors"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
+                  <SignOutButton>
+                    <button
+                      className="text-gray-700 hover:text-red-600 transition-colors"
+                      title="Sign Out"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </SignOutButton>
                 </div>
               ) : (
                 /* Not Signed In */
@@ -224,7 +225,7 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
             >
               Live Quiz
             </Link>
-            {session && (
+            {isSignedIn && (
               <Link 
                 href="/dashboard" 
                 className={`text-sm font-medium ${

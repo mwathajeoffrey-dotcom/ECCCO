@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getToken } from 'next-auth/jwt'
+// JWT authentication removed - using Clerk instead
 
 // Production-ready security utilities
 
@@ -117,21 +117,22 @@ export function validatePassword(password: string): { isValid: boolean; errors: 
   }
 }
 
-// Authentication utilities
-export async function requireAuth(req: NextApiRequest, res: NextApiResponse) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-  
-  if (!token) {
-    res.status(401).json({ error: 'Authentication required' })
-    return null
-  }
-  
-  return token
-}
+// Authentication utilities - DEPRECATED (using Clerk instead)
+// export async function requireAuth(req: NextApiRequest, res: NextApiResponse) {
+//   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+//   
+//   if (!token) {
+//     res.status(401).json({ error: 'Authentication required' })
+//     return null
+//   }
+//   
+//   return token
+// }
 
 export async function requireRole(req: NextApiRequest, res: NextApiResponse, allowedRoles: string[]) {
-  const token = await requireAuth(req, res)
-  if (!token) return null
+  // const token = await requireAuth(req, res)
+  // if (!token) return null
+  const token: any = null; // TODO: Implement with Clerk
   
   if (!allowedRoles.includes(token.role as string)) {
     res.status(403).json({ error: 'Insufficient permissions' })

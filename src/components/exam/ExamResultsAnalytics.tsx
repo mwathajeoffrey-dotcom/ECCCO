@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle, Download, BarChart3, Clock, Target, TrendingUp, Trophy, AlertTriangle } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
 interface ExamResultsAnalyticsProps {
@@ -26,7 +26,7 @@ export function ExamResultsAnalytics({
   userAnswers,
   onDownloadPDF
 }: ExamResultsAnalyticsProps) {
-  const { data: session } = useSession();
+  const { user } = useUser();
   
   const incorrect = total - correct;
   const averageTimePerQuestion = Math.round(timeSpent / total);
@@ -286,7 +286,7 @@ export function ExamResultsAnalytics({
             Take Another Exam
           </Link>
 
-          {session?.user && (
+          {user && (
             <Link
               href="/dashboard"
               className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center shadow-md"

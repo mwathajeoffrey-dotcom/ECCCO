@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
@@ -56,7 +56,7 @@ interface Topic {
 
 export default function EnhancedExamInterface() {
   // User session
-  const { data: session } = useSession();
+  const { user } = useUser();
   
   // Core state
   const [selectedTopic, setSelectedTopic] = useState<string>('');
@@ -254,7 +254,7 @@ export default function EnhancedExamInterface() {
       await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent);
       
       // Save to database if user is authenticated
-      if (session?.user?.id) {
+      if (user?.id) {
         try {
           const response = await fetch('/api/exam/save', {
             method: 'POST',
@@ -383,7 +383,7 @@ export default function EnhancedExamInterface() {
     return (
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
         {/* User Header */}
-        {session?.user && (
+        {user && (
           <div className="bg-white shadow-sm border-b mb-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
               <div className="flex items-center justify-between">
@@ -398,16 +398,16 @@ export default function EnhancedExamInterface() {
                 </Link>
                 
                 <div className="flex items-center space-x-3">
-                  {session.user.image && (
+                  {user.imageUrl && (
                     <img
-                      src={session.user.image}
-                      alt={session.user.name || 'User'}
+                      src={user.imageUrl}
+                      alt={user.firstName || 'User'}
                       className="w-8 h-8 rounded-full"
                     />
                   )}
                   <div className="text-right">
                     <p className="text-sm font-medium text-gray-900">
-                      {session.user.name}
+                      {user.firstName || user.emailAddresses[0]?.emailAddress}
                     </p>
                     <p className="text-xs text-gray-500">
                       Authenticated
@@ -421,7 +421,7 @@ export default function EnhancedExamInterface() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8">
-            {!session?.user && (
+            {!user && (
               <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 Back to Home
@@ -436,7 +436,7 @@ export default function EnhancedExamInterface() {
                 : 'Choose a topic for your 30-question timed exam'
               }
             </p>
-            {session?.user && (
+            {user && (
               <p className="text-blue-600 text-sm mt-2">
                 Your progress will be saved to your dashboard
               </p>

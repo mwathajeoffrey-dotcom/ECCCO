@@ -135,11 +135,9 @@ export async function POST(
     // Check for authenticated user
     let userId: string | null = null;
     try {
-      const { getServerSession } = await import('next-auth');
-      const { authOptions } = await import('@/lib/auth/next-auth');
-      const sessionAuth = await getServerSession(authOptions);
-      if (sessionAuth?.user?.id) {
-        userId = sessionAuth.user.id;
+      const { userId: clerkUserId } = await auth();
+      if (clerkUserId) {
+        userId = clerkUserId;
       }
     } catch {}
 

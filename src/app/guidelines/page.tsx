@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import guidelinesService, { MedicalGuideline, GuidelineCategory } from '@/lib/guidelines/service';
-import { isDeveloper } from '@/lib/auth/developer';
 
 // Force dynamic rendering - don't try to statically generate
 export const dynamic = 'force-dynamic';
@@ -521,17 +520,15 @@ export function GuidelineManagementPage() {
 
   const checkAuthentication = useCallback(async () => {
     try {
-      const isDevAuth = await isDeveloper();
-      setIsAuthenticated(isDevAuth);
-      if (isDevAuth) {
-        await loadGuidelineData();
-      }
+      // Authentication is handled by password check on this client page
+      // No need for server-side isDeveloper check
+      setIsAuthenticated(false); // Will be set to true after password entry
     } catch {
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
-  }, [loadGuidelineData]);
+  }, []);
 
   useEffect(() => {
     checkAuthentication();

@@ -80,7 +80,8 @@ async function getMonitoringOverview(timeRange: number) {
       });
       const streaks = { maxCorrectStreak: maxCorrect, maxIncorrectStreak: maxIncorrect };
       // Ranking: single user per session
-      const ranking = [{ id: session.user?.id ?? null, name: session.user?.name ?? null, score: session.score ?? 0 }];
+      // Note: user relation removed from schema, using userId field
+      const ranking = [{ id: session.userId ?? null, name: null, score: session.score ?? 0 }];
       // Learning gain: compare pre/post quiz scores if available
       let learning_gain = null;
       if (session.metadata) {

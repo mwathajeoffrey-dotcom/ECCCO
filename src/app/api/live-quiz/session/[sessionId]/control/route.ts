@@ -44,7 +44,7 @@ export async function POST(
       include: { quiz: true },
     });
 
-    if (dbSession?.quiz.userId !== session.user.id) {
+    if (dbSession?.quiz.userId !== userId) {
       return Response.json({ error: 'Unauthorized to control this session' }, { status: 403 });
     }
 

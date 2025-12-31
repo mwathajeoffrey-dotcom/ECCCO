@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useUser, SignOutButton } from '@clerk/nextjs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function SimpleLiveQuizPage() {
-  const session = useSession();
+  const { isSignedIn, user } = useUser();
   const [mounted, setMounted] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
@@ -26,15 +26,13 @@ export default function SimpleLiveQuizPage() {
   }, []);
 
   // Don't render anything until mounted to avoid hydration issues
-  if (!mounted || !session) {
+  if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
-
-  const { data: sessionData, status } = session;
 
   // Handle join quiz
   const handleJoinQuiz = () => {
@@ -60,26 +58,27 @@ export default function SimpleLiveQuizPage() {
       );
     }
 
-    if (status === 'authenticated' && sessionData?.user) {
+    if (isSignedIn && user) {
       return (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <User className="w-5 h-5 text-green-600 mr-2" />
               <div>
-                <span className="text-green-800 font-medium">Welcome, {sessionData.user.name || sessionData.user.email}!</span>
+                <span className="text-green-800 font-medium">Welcome, {user.firstName || user.emailAddresses[0]?.emailAddress}!</span>
                 <p className="text-sm text-green-600">You're signed in and ready to use live quiz features</p>
               </div>
             </div>
-            <Button
-              onClick={() => signOut()}
-              variant="outline"
-              size="sm"
-              className="text-green-700 border-green-300 hover:bg-green-100"
-            >
-              <LogOut className="w-4 h-4 mr-1" />
-              Sign Out
-            </Button>
+            <SignOutButton>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-green-700 border-green-300 hover:bg-green-100"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                Sign Out
+              </Button>
+            </SignOutButton>
           </div>
         </div>
       );
@@ -246,11 +245,11 @@ export default function SimpleLiveQuizPage() {
             <h3 className="font-semibold text-gray-900 mb-2">🔧 Debug Info</h3>
             <pre className="text-sm text-gray-700 overflow-x-auto">
               {JSON.stringify({ 
-                status, 
-                user: sessionData?.user ? {
-                  id: sessionData.user.id,
-                  email: sessionData.user.email,
-                  name: sessionData.user.name
+                isSignedIn, 
+                user: user ? {
+                  id: user.id,
+                  email: user.emailAddresses[0]?.emailAddress,
+                  name: user.firstName
                 } : null,
                 mounted 
               }, null, 2)}
