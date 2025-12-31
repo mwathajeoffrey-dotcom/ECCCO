@@ -46,11 +46,12 @@ export function generateAISummary(abstract: string, title: string, query: string
   
   if (conclusionSentence) {
     // Clean up and return
-    return conclusionSentence
+    const cleaned = conclusionSentence
       .replace(/^(in conclusion|we conclude|this study|our study|we found|we demonstrate),?\s*/i, '')
       .replace(/^(that|the)\s+/i, '')
-      .trim()
-      .charAt(0).toUpperCase() + conclusionSentence.slice(1).trim() + '.';
+      .trim();
+    
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1) + '.';
   }
   
   // Fallback: use last 1-2 sentences
