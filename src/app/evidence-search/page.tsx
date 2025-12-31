@@ -78,10 +78,10 @@ export default function EvidenceSearchPage() {
   const [dateTo, setDateTo] = useState('');
   const [openAccessOnly, setOpenAccessOnly] = useState(false);
   const [hasAbstract, setHasAbstract] = useState(false);
-  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('quality'); // Default to quality sort
+  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('relevance'); // Default to relevance
   const [showFilters, setShowFilters] = useState(false);
-  const [minQualityScore, setMinQualityScore] = useState(8.5); // Filter for high-quality only
-  const [showHighQualityOnly, setShowHighQualityOnly] = useState(true); // Default to high-quality filter
+  const [minQualityScore, setMinQualityScore] = useState(0); // Show all quality
+  const [showHighQualityOnly, setShowHighQualityOnly] = useState(false); // Disabled by default
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -390,10 +390,10 @@ export default function EvidenceSearchPage() {
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="quality">⭐ Highest Quality (8.5+)</option>
                   <option value="relevance">Relevance</option>
                   <option value="date">Newest First</option>
                   <option value="citations">Most Cited</option>
+                  <option value="quality">⭐ Best Quality First</option>
                 </select>
               </div>
 
@@ -424,7 +424,7 @@ export default function EvidenceSearchPage() {
                     onChange={(e) => setShowHighQualityOnly(e.target.checked)}
                     className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-semibold text-blue-700">⭐ High-Quality Studies Only (8.5+)</span>
+                  <span className="text-sm font-semibold text-blue-700">⭐ Filter by Quality Score</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
