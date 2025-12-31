@@ -211,6 +211,9 @@ async function searchPubMedSource(
   try {
     let searchQuery = params.query;
     
+    // Add English language filter (default)
+    searchQuery += ' AND English[Language]';
+    
     // Add type filter if specified
     if (params.filters?.articleType) {
       const typeMap: Record<string, string> = {
@@ -279,8 +282,11 @@ async function searchEuropePMCSource(
   maxResults: number
 ): Promise<{ source: string; articles: UnifiedArticle[]; total: number }> {
   try {
+    // Add English language filter to query
+    const queryWithLang = `${params.query} AND LANG:eng`;
+    
     const result = await searchEuropePMC({
-      query: params.query,
+      query: queryWithLang,
       pageSize: maxResults,
       sort: params.sort === 'date' ? 'date' : 
             params.sort === 'citations' ? 'cited' : 
