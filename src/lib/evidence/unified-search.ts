@@ -8,9 +8,9 @@
  * 3. Europe PMC - 8M+ full-text open access
  */
 
-import { searchPubMed, fetchPubMedArticles, type PubMedArticle } from './pubmed';
-import { searchCrossRef, searchJournal, type CrossRefArticle } from './crossref';
-import { searchEuropePMC, searchOpenAccessArticles, type EuropePMCArticle } from './europepmc';
+import { searchPubMed, fetchPubMedArticles, type PubMedArticle } from '../pubmed';
+import { searchCrossRef, searchJournal, type CrossRefArticle } from '../crossref';
+import { searchEuropePMC, searchOpenAccessArticles, type EuropePMCArticle } from '../europepmc';
 
 export interface UnifiedArticle {
   // Identifiers
@@ -227,7 +227,7 @@ async function searchPubMedSource(
     return {
       source: 'pubmed',
       articles: articles.map(convertPubMedArticle),
-      total: searchResult.totalCount,
+      total: searchResult.count,
     };
   } catch (error) {
     console.error('PubMed search error:', error);
@@ -300,7 +300,7 @@ function convertPubMedArticle(article: PubMedArticle): UnifiedArticle {
     title: article.title,
     authors: article.authors,
     journal: article.journal,
-    published: article.year,
+    published: article.year.toString(),
     abstract: article.abstract,
     type: 'journal-article',
     url: article.url,
