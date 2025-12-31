@@ -649,6 +649,302 @@ export default function EvidenceSearchPage() {
               )}
             </div>
           </div>
+                  {/* Header - Always Visible */}
+                  <div className="p-6">
+                    <div className="flex items-start gap-4">
+                      {/* Number Badge */}
+                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center text-sm font-bold text-blue-700">
+                        {index + 1}
+                      </div>
+
+                      <div className="flex-1">
+                        {/* Badges */}
+                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            article.source === 'pubmed' ? 'bg-purple-100 text-purple-700' :
+                            article.source === 'crossref' ? 'bg-blue-100 text-blue-700' :
+                            'bg-green-100 text-green-700'
+                          }`}>
+                            {article.source.toUpperCase()}
+                          </span>
+                          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                            {article.journal}
+                          </span>
+                          {article.isOpenAccess && (
+                            <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" />
+                              Open Access
+                            </span>
+                          )}
+                          {article.citationCount > 0 && (
+                            <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                              <Award className="w-3 h-3" />
+                              {article.citationCount} citations
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight">
+                          {article.title}
+                        </h3>
+
+                        {/* Authors & Date */}
+                        <p className="text-sm text-gray-600 mb-3">
+                          {article.authors.slice(0, 3).join(', ')}
+                          {article.authors.length > 3 && ', et al.'}
+                          {' • '}
+                          <span className="text-gray-500">{article.published}</span>
+                        </p>
+
+                        {/* AI Summary - OpenEvidence Style */}
+                        {article.aiSummary && (
+                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-600 p-4 mb-4 rounded-r-lg shadow-sm">
+                            <p className="text-base text-gray-900 leading-relaxed">
+                              {article.aiSummary}
+                            </p>
+                            {article.keyFindings && article.keyFindings.length > 1 && !isExpanded && (
+                              <div className="mt-3 flex items-center gap-2 text-sm">
+                                <Sparkles className="w-4 h-4 text-blue-600" />
+                                <span className="text-blue-700 font-medium">
+                                  +{article.keyFindings.length - 1} additional findings
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap items-center gap-3">
+                          <button
+                            onClick={() => toggleArticle(article.id)}
+                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors text-sm font-semibold"
+                          >
+                            {isExpanded ? (
+                              <>
+                                <ChevronUp className="w-4 h-4" />
+                                Hide Details
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="w-4 h-4" />
+                                Show References & Details
+                              </>
+                            )}
+                          </button>
+                          
+                          {article.doi && (
+                            <a
+                              href={`https://doi.org/${article.doi}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm font-semibold"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                              View Article
+                            </a>
+                          )}
+                          {article.fullTextUrl && (
+                            <a
+                              href={article.fullTextUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-semibold"
+                            >
+                              <FileText className="w-4 h-4" />
+                              Full Text
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded Content - Dropdown */}
+                  {isExpanded && (
+                    <div className="border-t-2 border-gray-100 bg-gray-50">
+                      <div className="p-6 space-y-6">
+                        {/* All Key Findings */}
+                        {article.keyFindings && article.keyFindings.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                              <Sparkles className="w-4 h-4 text-blue-600" />
+                              KEY FINDINGS ({article.keyFindings.length})
+                            </h4>
+                            <div className="space-y-2">
+                              {article.keyFindings.map((finding, idx) => (
+                                <div key={idx} className="bg-white border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <p className="text-sm text-gray-800 flex-1">{finding}</p>
+                                    <button
+                                      onClick={() => copyToClipboard(finding, `finding-${article.id}-${idx}`)}
+                                      className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                      title="Copy to clipboard"
+                                    >
+                                      {copiedText === `finding-${article.id}-${idx}` ? (
+                                        <Check className="w-4 h-4 text-green-600" />
+                                      ) : (
+                                        <Copy className="w-4 h-4 text-gray-400" />
+                                      )}
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Relevant Paragraphs */}
+                        {article.relevantParagraphs && article.relevantParagraphs.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                              <Quote className="w-4 h-4 text-purple-600" />
+                              RELEVANT EXCERPTS ({article.relevantParagraphs.length})
+                            </h4>
+                            <div className="space-y-3">
+                              {article.relevantParagraphs.map((para, idx) => (
+                                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                  {para.context && (
+                                    <p className="text-xs font-semibold text-gray-500 mb-2 uppercase">
+                                      {para.context}
+                                    </p>
+                                  )}
+                                  <div className="flex items-start justify-between gap-3">
+                                    <p 
+                                      className="text-sm text-gray-800 flex-1 leading-relaxed"
+                                      dangerouslySetInnerHTML={{ __html: highlightQuery(para.text) }}
+                                    />
+                                    <button
+                                      onClick={() => copyToClipboard(para.text, `para-${article.id}-${idx}`)}
+                                      className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                      title="Copy to clipboard"
+                                    >
+                                      {copiedText === `para-${article.id}-${idx}` ? (
+                                        <Check className="w-4 h-4 text-green-600" />
+                                      ) : (
+                                        <Copy className="w-4 h-4 text-gray-400" />
+                                      )}
+                                    </button>
+                                  </div>
+                                  {para.relevanceScore && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                                        <div 
+                                          className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full"
+                                          style={{ width: `${para.relevanceScore * 100}%` }}
+                                        />
+                                      </div>
+                                      <span className="text-xs text-gray-500 font-semibold">
+                                        {Math.round(para.relevanceScore * 100)}% match
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Full Abstract */}
+                        {article.abstract && (
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                              <FileText className="w-4 h-4 text-gray-600" />
+                              FULL ABSTRACT
+                            </h4>
+                            <div className="bg-white border border-gray-200 p-4 rounded-lg">
+                              <div className="flex items-start justify-between gap-3">
+                                <p 
+                                  className="text-sm text-gray-700 leading-relaxed flex-1"
+                                  dangerouslySetInnerHTML={{ __html: highlightQuery(article.abstract) }}
+                                />
+                                <button
+                                  onClick={() => copyToClipboard(article.abstract!, `abstract-${article.id}`)}
+                                  className="flex-shrink-0 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                  title="Copy to clipboard"
+                                >
+                                  {copiedText === `abstract-${article.id}` ? (
+                                    <Check className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <Copy className="w-4 h-4 text-gray-400" />
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* References */}
+                        {article.references && article.references.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                              <Link2 className="w-4 h-4 text-indigo-600" />
+                              REFERENCES ({article.references.length})
+                            </h4>
+                            <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+                              {article.references.map((ref, idx) => (
+                                <div key={idx} className="p-3 hover:bg-gray-50 transition-colors">
+                                  <div className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">
+                                      {idx + 1}
+                                    </span>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-medium text-gray-900 mb-1">
+                                        {ref.title}
+                                      </p>
+                                      <p className="text-xs text-gray-600 mb-2">
+                                        {ref.authors}
+                                      </p>
+                                      <div className="flex items-center gap-2">
+                                        {ref.url && (
+                                          <a
+                                            href={ref.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+                                          >
+                                            <ExternalLink className="w-3 h-3" />
+                                            View
+                                          </a>
+                                        )}
+                                        {ref.doi && (
+                                          <span className="text-xs text-gray-500">
+                                            DOI: {ref.doi}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Identifiers */}
+                        <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-200">
+                          {article.pmid && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold text-gray-500">PMID:</span>
+                              <code className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-mono">
+                                {article.pmid}
+                              </code>
+                            </div>
+                          )}
+                          {article.doi && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold text-gray-500">DOI:</span>
+                              <code className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono">
+                                {article.doi}
+                              </code>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
             })}
           </div>
         )}
