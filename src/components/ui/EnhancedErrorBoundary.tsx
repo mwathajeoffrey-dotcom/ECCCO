@@ -2,6 +2,7 @@
 
 import React, { Component, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Bug, ChevronDown, ChevronUp } from 'lucide-react';
+import * as Sentry from '@sentry/nextjs';
 
 interface Props {
   children: ReactNode;
@@ -20,6 +21,7 @@ interface State {
   error?: Error;
   errorInfo?: React.ErrorInfo;
   errorId?: string;
+  eventId?: string; // Sentry event ID
   retryCount: number;
   showDetails: boolean;
 }
@@ -51,6 +53,26 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       error,
       errorInfo,
     });
+
+    // Report to Sentry in production
+    if (process.env.NODE_ENV === 'production') {
+      const eventId = Sentry.captureException(error, {
+        contexts: {
+          react: {
+            componentStack: errorInfo.componentStack,
+          },
+        },
+        tags: {
+          componentName,
+          retryCount: this.state.retryCount,
+        },
+        extra: {
+          errorId: this.state.errorId,
+          props: this.props,
+        },
+      });
+      this.setState({ eventId });
+    }
 
     // Log the error to console
     console.error('Component Error:', {
@@ -150,6 +172,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
               {this.state.errorId && (
                 <p className="text-xs text-gray-500 mb-4">
                   Error ID: {this.state.errorId}
+                  {this.state.eventId && ` | Sentry ID: ${this.state.eventId}`}
                 </p>
               )}
 
@@ -159,6 +182,22 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                   <p className="text-sm text-yellow-800">
                     Retry attempt {this.state.retryCount} of {this.maxRetries}
                   </p>
+                </div>
+              )}
+
+              {/* Report to Sentry button (production only) */}
+              {process.env.NODE_ENV === 'production' && this.state.eventId && (
+                <div className="mb-4">
+                  <button
+                    onClick={() => {
+                      if (this.state.eventId) {
+                        Sentry.showReportDialog({ eventId: this.state.eventId });
+                      }
+                    }}
+                    className="text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    Report feedback to our team
+                  </button>
                 </div>
               )}
 
