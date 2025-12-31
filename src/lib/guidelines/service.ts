@@ -346,10 +346,10 @@ class GuidelinesService {
     if (query.trim()) {
       const searchTerm = query.toLowerCase();
       results = results.filter(guideline => 
-        guideline.title.toLowerCase().includes(searchTerm) ||
-        guideline.description.toLowerCase().includes(searchTerm) ||
-        guideline.organization.toLowerCase().includes(searchTerm) ||
-        guideline.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+        guideline.title?.toLowerCase().includes(searchTerm) ||
+        guideline.description?.toLowerCase().includes(searchTerm) ||
+        guideline.organization?.toLowerCase().includes(searchTerm) ||
+        guideline.tags?.some(tag => tag?.toLowerCase().includes(searchTerm))
       );
     }
 
@@ -374,7 +374,7 @@ class GuidelinesService {
       if (filters.tags && filters.tags.length > 0) {
         results = results.filter(g => 
           filters.tags!.some(tag => 
-            g.tags.some(gTag => gTag.toLowerCase().includes(tag.toLowerCase()))
+            g.tags?.some(gTag => gTag?.toLowerCase().includes(tag?.toLowerCase() || ''))
           )
         );
       }

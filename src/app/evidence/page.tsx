@@ -39,8 +39,8 @@ export default function EvidencePage() {
   const categories = ['all', ...new Set(evidence.map(item => item.category))];
 
   const filteredEvidence = evidence.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.source.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.source?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });

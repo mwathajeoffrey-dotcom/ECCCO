@@ -34,8 +34,8 @@ export default function FlowchartsPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filtered = flowcharts.filter(fc =>
-    fc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    fc.category.toLowerCase().includes(searchTerm.toLowerCase())
+    fc.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    fc.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

@@ -256,7 +256,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                   <span>{data.correct} correct out of {data.attempted} attempted</span>
                   <Link
-                    href={`/practice?topic=${data.topic.toLowerCase().replace(/\s+/g, '-')}`}
+                    href={`/practice?topic=${data.topic?.toLowerCase().replace(/\s+/g, '-') || 'general'}`}
                     className="text-blue-600 hover:text-blue-700 font-medium"
                   >
                     Practice More
