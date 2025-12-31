@@ -97,7 +97,7 @@ export default function EvidenceSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -137,9 +137,10 @@ export default function EvidenceSearchPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
         {/* Search Bar */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 mb-6">
+          {/* Search Input */}
+          <div className="w-full mb-3 sm:mb-0">
+            <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -147,19 +148,27 @@ export default function EvidenceSearchPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
+          </div>
+          
+          {/* Mobile-Friendly Button Row */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-3">
+            {/* Search Button - Full width on mobile */}
             <button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+              className="w-full sm:flex-1 px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
-              {loading ? 'Searching...' : 'Search'}
+              <Search className="w-5 h-5" />
+              {loading ? 'Searching...' : 'Search Evidence'}
             </button>
+            
+            {/* Filters Button - Full width on mobile */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="px-6 py-4 border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center justify-center gap-2 font-semibold"
             >
               <Filter className="w-5 h-5" />
               Filters
