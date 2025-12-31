@@ -102,14 +102,26 @@ export default function EvidenceSearchPage() {
         setTotalResults(data.totalResults);
         setSourceBreakdown(data.sourceBreakdown || {});
         
-        // Generate overall summary from top results (OpenEvidence-style)
+        // Generate comprehensive overall summary from top results (OpenEvidence-style)
         if (data.articles && data.articles.length > 0) {
-          const topArticles = data.articles.slice(0, 3);
-          const summaryText = topArticles
-            .map((a: Article) => a.aiSummary)
+          const topArticles = data.articles.slice(0, 5); // Use top 5 for richer summary
+          
+          // Combine summaries with paragraph breaks for readability
+          const combinedSummary = topArticles
+            .map((a: Article, idx: number) => {
+              if (!a.aiSummary) return '';
+              
+              // Add context from each paper
+              const paperContext = `**Study ${idx + 1} (${a.journal}, ${a.published}):** ${a.aiSummary}`;
+              return paperContext;
+            })
             .filter(Boolean)
-            .join(' ');
-          setOverallSummary(summaryText || 'Based on the current evidence, further research is needed to provide a comprehensive summary.');
+            .join('\n\n'); // Double newline for paragraph separation
+          
+          // Create introductory paragraph
+          const intro = `Based on analysis of ${topArticles.length} high-quality studies including research from ${topArticles.map((a: Article) => a.journal).slice(0, 3).join(', ')}, here are the key findings:\n\n`;
+          
+          setOverallSummary(intro + combinedSummary || 'Based on the current evidence, further research is needed to provide a comprehensive summary.');
         }
       }
     } catch (error) {
@@ -408,15 +420,33 @@ export default function EvidenceSearchPage() {
                     <Sparkles className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-1">Summary</h2>
-                    <p className="text-sm text-gray-500">Based on {articles.length} high-quality sources</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-1">Evidence Summary</h2>
+                    <p className="text-sm text-gray-500">Comprehensive analysis of {articles.length} peer-reviewed sources</p>
                   </div>
                 </div>
                 
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-800 leading-relaxed text-lg">
-                    {overallSummary}
-                  </p>
+                  {/* Render paragraphs with proper formatting */}
+                  {overallSummary.split('\n\n').map((paragraph, idx) => {
+                    // Check if paragraph contains markdown bold
+                    const parts = paragraph.split(/(\*\*.*?\*\*)/g);
+                    
+                    return (
+                      <p key={idx} className="text-gray-800 leading-relaxed text-base mb-4 last:mb-0">
+                        {parts.map((part, partIdx) => {
+                          if (part.startsWith('**') && part.endsWith('**')) {
+                            // Render bold text
+                            return (
+                              <strong key={partIdx} className="font-bold text-gray-900">
+                                {part.slice(2, -2)}
+                              </strong>
+                            );
+                          }
+                          return <span key={partIdx}>{part}</span>;
+                        })}
+                      </p>
+                    );
+                  })}
                 </div>
 
                 {/* Summary Actions */}

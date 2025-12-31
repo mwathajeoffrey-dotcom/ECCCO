@@ -18,45 +18,99 @@ export interface ExtractedContent {
 
 /**
  * Generate AI-style summary from abstract (OpenEvidence approach)
- * Creates a clear, direct answer to the search query
+ * Creates a comprehensive, multi-paragraph summary with rich context
  */
 export function generateAISummary(abstract: string, title: string, query: string): string {
   if (!abstract) {
-    return `This study examines ${title.toLowerCase()}.`;
+    return `This study examines ${title.toLowerCase()}. Further details are available in the full text.`;
   }
   
-  // Extract conclusion/final sentence which usually has the main finding
+  // Split abstract into sentences
   const sentences = abstract
     .split(/[.!?]+/)
     .map(s => s.trim())
-    .filter(s => s.length > 30);
+    .filter(s => s.length > 20);
   
-  // Look for conclusion keywords
+  if (sentences.length === 0) {
+    return `This study examines ${title.toLowerCase()}.`;
+  }
+  
+  // Build a comprehensive summary with multiple paragraphs
+  const summaryParts: string[] = [];
+  
+  // 1. Extract background/objective (usually first 1-2 sentences)
+  const background = sentences.slice(0, 2).join('. ');
+  if (background) {
+    summaryParts.push(background + '.');
+  }
+  
+  // 2. Extract methods/key findings (middle sentences with keywords)
+  const methodKeywords = ['patient', 'participant', 'study', 'trial', 'randomized', 'retrospective', 'prospective', 'cohort', 'analysis', 'assess', 'evaluat', 'investigat', 'compar'];
+  const resultKeywords = ['found', 'result', 'show', 'demonstrate', 'indicate', 'suggest', 'significant', 'association', 'reduction', 'improvement', 'increase', 'decrease', 'rate', 'p =', 'p<', 'ci', 'odds ratio', 'hazard ratio'];
+  
+  const methodSentences = sentences.filter(s => {
+    const lower = s.toLowerCase();
+    return methodKeywords.some(kw => lower.includes(kw)) && s.length > 30;
+  });
+  
+  const resultSentences = sentences.filter(s => {
+    const lower = s.toLowerCase();
+    return resultKeywords.some(kw => lower.includes(kw)) && s.length > 30;
+  });
+  
+  // Add 1-2 method sentences if found
+  if (methodSentences.length > 0) {
+    const methodText = methodSentences.slice(0, 2).join('. ');
+    summaryParts.push(methodText + '.');
+  }
+  
+  // Add 2-3 result sentences if found
+  if (resultSentences.length > 0) {
+    const resultText = resultSentences.slice(0, 3).join('. ');
+    summaryParts.push(resultText + '.');
+  }
+  
+  // 3. Extract conclusion (sentences with conclusion keywords)
   const conclusionSentence = sentences.find(s => {
     const lower = s.toLowerCase();
     return (
       lower.includes('conclude') ||
-      lower.includes('found that') ||
-      lower.includes('demonstrate') ||
-      lower.includes('suggest') ||
-      lower.includes('show') ||
-      lower.includes('indicate')
+      lower.includes('in conclusion') ||
+      lower.includes('our findings') ||
+      lower.includes('these findings') ||
+      lower.includes('these results') ||
+      lower.includes('therefore')
     );
   });
   
   if (conclusionSentence) {
-    // Clean up and return
     const cleaned = conclusionSentence
-      .replace(/^(in conclusion|we conclude|this study|our study|we found|we demonstrate),?\s*/i, '')
-      .replace(/^(that|the)\s+/i, '')
+      .replace(/^(in conclusion|we conclude|therefore|thus),?\s*/i, '')
       .trim();
-    
-    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1) + '.';
+    summaryParts.push(cleaned + '.');
+  } else {
+    // Use last sentence as conclusion if no explicit conclusion found
+    const lastSentence = sentences[sentences.length - 1];
+    if (lastSentence && lastSentence.length > 30) {
+      summaryParts.push(lastSentence + '.');
+    }
   }
   
-  // Fallback: use last 1-2 sentences
-  const lastSentences = sentences.slice(-2).join('. ');
-  return lastSentences + (lastSentences.endsWith('.') ? '' : '.');
+  // 4. Combine into a rich, multi-paragraph summary
+  let summary = summaryParts.join(' ');
+  
+  // Ensure proper capitalization
+  summary = summary.charAt(0).toUpperCase() + summary.slice(1);
+  
+  // Remove duplicate periods
+  summary = summary.replace(/\.{2,}/g, '.');
+  
+  // If summary is too short, include more content
+  if (summary.length < 200 && sentences.length > 3) {
+    summary = sentences.slice(0, Math.min(5, sentences.length)).join('. ') + '.';
+  }
+  
+  return summary;
 }
 
 /**
