@@ -12,6 +12,7 @@ import { calculateQualityScore, getQualityColor, type QualityScore } from '@/lib
 import { calculateReadingTime, getReadingTimeCategory } from '@/lib/reading-time/estimator';
 import { findRelatedStudies, getSimilarityColor, formatSimilarityPercentage } from '@/lib/recommendations/related-finder';
 import { detectConsensus, getConsensusColor, type ConsensusAnalysis } from '@/lib/consensus/consensus-detector';
+import { synthesizeClinicalEvidence, type ClinicalSynthesis } from '@/lib/synthesis/clinical-synthesizer';
 
 interface Article {
   id: string;
@@ -71,6 +72,7 @@ export default function EvidenceSearchPage() {
   const [overallSummary, setOverallSummary] = useState<string>('');
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [consensus, setConsensus] = useState<ConsensusAnalysis | null>(null);
+  const [clinicalSynthesis, setClinicalSynthesis] = useState<ClinicalSynthesis | null>(null);
   
   // Filters
   const [selectedSources, setSelectedSources] = useState<string[]>(['pubmed', 'crossref', 'europepmc']);
@@ -148,6 +150,19 @@ export default function EvidenceSearchPage() {
         // Detect consensus across studies (like Consensus AI)
         const consensusAnalysis = detectConsensus(filteredArticles);
         setConsensus(consensusAnalysis);
+        
+        // Generate clinical decision summary
+        const synthesis = synthesizeClinicalEvidence(
+          filteredArticles,
+          query,
+          consensusAnalysis ? {
+            percentage: consensusAnalysis.consensusPercentage,
+            level: consensusAnalysis.consensusLevel === 'Strong Consensus' ? 'strong' :
+                   consensusAnalysis.consensusLevel === 'Moderate Consensus' ? 'moderate' :
+                   consensusAnalysis.consensusLevel === 'Mixed Evidence' ? 'weak' : 'none'
+          } : undefined
+        );
+        setClinicalSynthesis(synthesis);
         
         // Generate comprehensive overall summary from top results (OpenEvidence-style)
         if (filteredArticles && filteredArticles.length > 0) {
@@ -556,6 +571,165 @@ export default function EvidenceSearchPage() {
                         </span>
                       )}
                     </div>
+                  </div>
+                )}
+
+                {/* Clinical Action Panel - Evidence-Based Recommendation */}
+                {clinicalSynthesis && (
+                  <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-xl p-6 shadow-lg">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${
+                          clinicalSynthesis.recommendationStrength === 'strong' 
+                            ? 'bg-green-100 text-green-700'
+                            : clinicalSynthesis.recommendationStrength === 'weak'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          <Sparkles className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">Clinical Recommendation</h3>
+                          <p className="text-sm text-gray-600">Evidence-based decision support</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                          clinicalSynthesis.recommendationStrength === 'strong'
+                            ? 'bg-green-200 text-green-900'
+                            : clinicalSynthesis.recommendationStrength === 'weak'
+                            ? 'bg-yellow-200 text-yellow-900'
+                            : clinicalSynthesis.recommendationStrength === 'conditional'
+                            ? 'bg-blue-200 text-blue-900'
+                            : 'bg-gray-200 text-gray-900'
+                        }`}>
+                          {clinicalSynthesis.recommendationStrength}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-600">
+                          {clinicalSynthesis.evidenceQuality} quality evidence
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Line Recommendation */}
+                    <div className="bg-white rounded-lg p-4 mb-4 border-l-4 border-blue-500">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+                        Bottom Line
+                      </div>
+                      <p className="text-lg font-semibold text-gray-900 leading-relaxed">
+                        {clinicalSynthesis.bottomLine}
+                      </p>
+                    </div>
+
+                    {/* Key Clinical Details */}
+                    {(clinicalSynthesis.keyDetails.timing || clinicalSynthesis.keyDetails.dosing || clinicalSynthesis.keyDetails.duration) && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                        {clinicalSynthesis.keyDetails.timing && (
+                          <div className="bg-white rounded-lg p-3 border border-blue-200">
+                            <div className="text-xs font-semibold text-gray-500 mb-1">Timing</div>
+                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.timing}</div>
+                          </div>
+                        )}
+                        {clinicalSynthesis.keyDetails.dosing && (
+                          <div className="bg-white rounded-lg p-3 border border-blue-200">
+                            <div className="text-xs font-semibold text-gray-500 mb-1">Dosing</div>
+                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.dosing}</div>
+                          </div>
+                        )}
+                        {clinicalSynthesis.keyDetails.duration && (
+                          <div className="bg-white rounded-lg p-3 border border-blue-200">
+                            <div className="text-xs font-semibold text-gray-500 mb-1">Duration</div>
+                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.duration}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* When to Use / When to Avoid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      {clinicalSynthesis.whenToUse.length > 0 && (
+                        <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                          <div className="flex items-center gap-2 mb-2">
+                            <CheckCircle2 className="w-4 h-4 text-green-600" />
+                            <div className="text-xs font-semibold text-green-900 uppercase tracking-wider">
+                              When to Use
+                            </div>
+                          </div>
+                          <ul className="space-y-1">
+                            {clinicalSynthesis.whenToUse.map((item, idx) => (
+                              <li key={idx} className="text-sm text-green-900 flex items-start gap-2">
+                                <span className="text-green-600 mt-0.5">•</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {clinicalSynthesis.whenToAvoid.length > 0 && (
+                        <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-red-600 text-lg font-bold">⚠</span>
+                            <div className="text-xs font-semibold text-red-900 uppercase tracking-wider">
+                              When to Avoid
+                            </div>
+                          </div>
+                          <ul className="space-y-1">
+                            {clinicalSynthesis.whenToAvoid.map((item, idx) => (
+                              <li key={idx} className="text-sm text-red-900 flex items-start gap-2">
+                                <span className="text-red-600 mt-0.5">•</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Evidence Basis */}
+                    <div className="flex items-center justify-between bg-white rounded-lg p-3 border border-blue-200">
+                      <div className="flex gap-6 text-sm">
+                        <div>
+                          <span className="text-gray-600">Evidence: </span>
+                          <span className="font-semibold text-gray-900">
+                            {clinicalSynthesis.evidenceBasis.totalStudies} studies
+                          </span>
+                        </div>
+                        {clinicalSynthesis.evidenceBasis.rcts > 0 && (
+                          <div>
+                            <span className="text-gray-600">RCTs: </span>
+                            <span className="font-semibold text-gray-900">{clinicalSynthesis.evidenceBasis.rcts}</span>
+                          </div>
+                        )}
+                        {clinicalSynthesis.evidenceBasis.metaAnalyses > 0 && (
+                          <div>
+                            <span className="text-gray-600">Meta-analyses: </span>
+                            <span className="font-semibold text-gray-900">{clinicalSynthesis.evidenceBasis.metaAnalyses}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500">Confidence</div>
+                        <div className="text-lg font-bold text-blue-600">{clinicalSynthesis.confidence}%</div>
+                      </div>
+                    </div>
+
+                    {/* Limitations */}
+                    {clinicalSynthesis.limitations.length > 0 && (
+                      <div className="mt-3 bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                        <div className="text-xs font-semibold text-yellow-900 uppercase tracking-wider mb-1">
+                          Important Limitations
+                        </div>
+                        <ul className="space-y-1">
+                          {clinicalSynthesis.limitations.map((limitation, idx) => (
+                            <li key={idx} className="text-xs text-yellow-900 flex items-start gap-2">
+                              <span className="text-yellow-600 mt-0.5">•</span>
+                              <span>{limitation}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 )}
                 
