@@ -11,6 +11,7 @@ import { exportFormats, downloadFile, type ExportFormat } from '@/lib/export/cit
 import { calculateQualityScore, getQualityColor, type QualityScore } from '@/lib/quality/evidence-scorer';
 import { calculateReadingTime, getReadingTimeCategory } from '@/lib/reading-time/estimator';
 import { findRelatedStudies, getSimilarityColor, formatSimilarityPercentage } from '@/lib/recommendations/related-finder';
+import { detectConsensus, getConsensusColor, type ConsensusAnalysis } from '@/lib/consensus/consensus-detector';
 
 interface Article {
   id: string;
@@ -69,6 +70,7 @@ export default function EvidenceSearchPage() {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [overallSummary, setOverallSummary] = useState<string>('');
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [consensus, setConsensus] = useState<ConsensusAnalysis | null>(null);
   
   // Filters
   const [selectedSources, setSelectedSources] = useState<string[]>(['pubmed', 'crossref', 'europepmc']);
@@ -78,10 +80,10 @@ export default function EvidenceSearchPage() {
   const [dateTo, setDateTo] = useState('');
   const [openAccessOnly, setOpenAccessOnly] = useState(false);
   const [hasAbstract, setHasAbstract] = useState(false);
-  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('relevance'); // Default to relevance
+  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('quality'); // Default to quality
   const [showFilters, setShowFilters] = useState(false);
-  const [minQualityScore, setMinQualityScore] = useState(0); // Show all quality
-  const [showHighQualityOnly, setShowHighQualityOnly] = useState(false); // Disabled by default
+  const [minQualityScore, setMinQualityScore] = useState(6.0); // Minimum acceptable quality
+  const [showHighQualityOnly, setShowHighQualityOnly] = useState(true); // Enable by default to filter low-quality
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -91,7 +93,7 @@ export default function EvidenceSearchPage() {
       const params = new URLSearchParams({
         q: query,
         sources: selectedSources.join(','),
-        limit: '30',
+        limit: '50', // Get more to filter from
         sort: sortBy,
       });
       
@@ -117,24 +119,35 @@ export default function EvidenceSearchPage() {
           })
         }));
         
-        // Filter by minimum quality score if enabled
-        let filteredArticles = articlesWithScores;
-        if (showHighQualityOnly) {
-          filteredArticles = articlesWithScores.filter(
+        // SMART FILTERING: Always filter low-quality studies (below 6.0)
+        // This removes case reports, editorials, and unreliable studies
+        let filteredArticles = articlesWithScores.filter(
+          (article: Article) => (article.qualityScore?.overallScore || 0) >= 6.0
+        );
+        
+        // Additional user-controlled quality filter if enabled
+        if (showHighQualityOnly && minQualityScore > 6.0) {
+          filteredArticles = filteredArticles.filter(
             (article: Article) => (article.qualityScore?.overallScore || 0) >= minQualityScore
           );
         }
         
-        // Sort by quality score if selected
-        if (sortBy === 'quality') {
-          filteredArticles.sort((a: Article, b: Article) => 
-            (b.qualityScore?.overallScore || 0) - (a.qualityScore?.overallScore || 0)
-          );
-        }
+        // Sort by quality score (best evidence first)
+        filteredArticles.sort((a: Article, b: Article) => 
+          (b.qualityScore?.overallScore || 0) - (a.qualityScore?.overallScore || 0)
+        );
+        
+        // Limit to top 15 most relevant, high-quality results
+        // (Like OpenEvidence - focused, not overwhelming)
+        filteredArticles = filteredArticles.slice(0, 15);
         
         setArticles(filteredArticles);
         setTotalResults(data.totalResults);
         setSourceBreakdown(data.sourceBreakdown || {});
+        
+        // Detect consensus across studies (like Consensus AI)
+        const consensusAnalysis = detectConsensus(filteredArticles);
+        setConsensus(consensusAnalysis);
         
         // Generate comprehensive overall summary from top results (OpenEvidence-style)
         if (filteredArticles && filteredArticles.length > 0) {
@@ -424,7 +437,7 @@ export default function EvidenceSearchPage() {
                     onChange={(e) => setShowHighQualityOnly(e.target.checked)}
                     className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-semibold text-blue-700">⭐ Filter by Quality Score</span>
+                  <span className="text-sm font-semibold text-blue-700">⭐ Enhanced Quality Filter (6.0+ minimum enforced)</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -500,11 +513,51 @@ export default function EvidenceSearchPage() {
                   <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
                     <Sparkles className="w-7 h-7 text-white" />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h2 className="text-2xl font-bold text-gray-900 mb-1">Evidence Summary</h2>
                     <p className="text-sm text-gray-500">Comprehensive analysis of {articles.length} peer-reviewed sources</p>
                   </div>
                 </div>
+
+                {/* Consensus Indicator (like Consensus AI) */}
+                {consensus && (
+                  <div className={`mb-6 p-4 rounded-lg border-2 ${getConsensusColor(consensus.consensusLevel)}`}>
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Award className="w-5 h-5" />
+                          <span className="font-bold text-lg">{consensus.consensusLevel}</span>
+                          <span className="text-2xl font-black">{consensus.consensusPercentage}%</span>
+                        </div>
+                        <p className="text-sm font-medium">{consensus.consensusStatement}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs font-semibold uppercase tracking-wider mb-1">Confidence</div>
+                        <div className="text-lg font-bold">{consensus.confidenceLevel}</div>
+                      </div>
+                    </div>
+                    
+                    {/* Study breakdown */}
+                    <div className="flex gap-4 text-sm">
+                      <span className="flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        <strong>{consensus.agreementCount}</strong> supporting
+                      </span>
+                      {consensus.disagreementCount > 0 && (
+                        <span className="flex items-center gap-1">
+                          <span className="w-4 h-4 rounded-full bg-red-500"></span>
+                          <strong>{consensus.disagreementCount}</strong> conflicting
+                        </span>
+                      )}
+                      {consensus.uncertainCount > 0 && (
+                        <span className="flex items-center gap-1">
+                          <span className="w-4 h-4 rounded-full bg-gray-400"></span>
+                          <strong>{consensus.uncertainCount}</strong> inconclusive
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="prose prose-lg max-w-none">
                   {/* Render paragraphs with proper formatting */}
