@@ -126,15 +126,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           icon: BarChart3,
         },
         {
-          label: 'My Bookmarks',
+          label: 'Saved Questions',
           href: '/bookmarks',
           icon: Bookmark,
           badge: 'New',
-        },
-        {
-          label: 'My Notes',
-          href: '/bookmarks?tab=notes',
-          icon: StickyNote,
         },
       ],
     },
@@ -307,34 +302,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
             );
           })}
-
-          {/* Bookmarks Link */}
-          <Link
-            href="/bookmarks"
-            onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/bookmarks'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            <Bookmark className="w-5 h-5 flex-shrink-0" />
-            <span>🔖 Bookmarks</span>
-          </Link>
-
-          {/* Notes Link */}
-          <Link
-            href="/notes"
-            onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/notes'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            <StickyNote className="w-5 h-5 flex-shrink-0" />
-            <span>📝 Notes</span>
-          </Link>
 
           {/* Support Link */}
           <Link
