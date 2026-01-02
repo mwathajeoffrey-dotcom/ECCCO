@@ -6,10 +6,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
-  // For local development, DATABASE_URL will use sqlite via .env
-  // For production (Vercel), DATABASE_URL will use postgres from env vars
+  // For production PostgreSQL, use:
+  // provider = "postgresql"
+  // url      = env("DATABASE_URL")
 }
 
 model Topic {
@@ -70,19 +71,19 @@ model EvidenceReference {
   year            Int
   
   // Content
-  summary         String   
-  keyRecommendations String  // JSON array of strings
-  clinicalPearls     String  // JSON array of strings
+  summary         String
+  keyRecommendations String // JSON array of strings
+  clinicalPearls     String // JSON array of strings
   
   // Evidence & Citation
   evidenceLevel   String   // e.g., "Level I Evidence (Multiple RCTs)"
-  citation        String   
+  citation        String
   
   // References (JSON array of {title, journal, doi, url})
-  references      String   
+  references      String
   
   // Additional Metadata
-  topics          String?   // JSON array of topic strings
+  topics          String?  // JSON array of topic strings
   journal         String?
   doi             String?
   pmid            String?  // PubMed ID for future integration
@@ -107,10 +108,7 @@ model EvidenceReference {
   @@index([referenceId])
 }
 
-// ============================================
 // User Feedback & Support
-// ============================================
-
 model Feedback {
   id              String   @id @default(cuid())
   
@@ -123,7 +121,7 @@ model Feedback {
   type            String   // "bug", "feature", "question", "complaint", "praise"
   category        String?  // "technical", "content", "ux", "other"
   subject         String   // Brief subject line
-  message         String    // Detailed message
+  message         String   // Detailed message
   
   // Context
   pageUrl         String?  // Where the feedback was submitted from
@@ -133,7 +131,7 @@ model Feedback {
   status          String   @default("new") // "new", "in-progress", "resolved", "closed"
   priority        String   @default("medium") // "low", "medium", "high", "urgent"
   assignedTo      String?  // Admin user ID assigned to handle this
-  resolution      String?   // Admin response/resolution
+  resolution      String?  // Admin response/resolution
   resolvedAt      DateTime? // When it was resolved
   
   // Metadata
@@ -144,6 +142,52 @@ model Feedback {
   @@index([type])
   @@index([priority])
   @@index([userEmail])
+  @@index([createdAt])
+}
+
+// User Bookmarks - Save questions for later review
+model Bookmark {
+  id          String   @id @default(cuid())
+  
+  // User & Question
+  userId      String   // Clerk user ID
+  questionId  String   // Question being bookmarked
+  category    String   // ACLS, PALS, etc.
+  
+  // Personal Notes
+  notes       String?  // User's personal study notes
+  
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, questionId]) // User can only bookmark a question once
+  @@index([userId])
+  @@index([category])
+  @@index([createdAt])
+}
+
+// Question Ratings - User feedback on question quality
+model QuestionRating {
+  id          String   @id @default(cuid())
+  
+  // User & Question
+  userId      String   // Clerk user ID
+  questionId  String   // Question being rated
+  
+  // Rating Details
+  stars       Int      // 1-5 star rating
+  helpful     Boolean? // Thumbs up/down (true = helpful, false = not helpful)
+  feedback    String?  // Optional text feedback
+  
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, questionId]) // User can only rate a question once
+  @@index([userId])
+  @@index([questionId])
+  @@index([stars])
   @@index([createdAt])
 }
 

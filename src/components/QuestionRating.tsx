@@ -33,13 +33,26 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
 
     setLoading(true);
     try {
-      // In a real implementation, this would call an API endpoint
-      console.log('📊 Submitting rating:', { questionId, rating, feedback });
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setSubmitted(true);
-      
-      // Reset submitted state after 3 seconds to allow re-rating
-      setTimeout(() => setSubmitted(false), 3000);
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          questionId,
+          stars: rating,
+          feedback: feedback || null
+        })
+      });
+
+      if (response.ok) {
+        console.log('📊 Rating submitted successfully');
+        setSubmitted(true);
+        
+        // Reset submitted state after 3 seconds to allow re-rating
+        setTimeout(() => setSubmitted(false), 3000);
+      } else {
+        throw new Error('Failed to submit rating');
+      }
     } catch (error) {
       console.error('Error submitting rating:', error);
       alert('Failed to submit rating');
@@ -51,13 +64,24 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
   const handleQuickFeedback = async (helpful: boolean) => {
     setLoading(true);
     try {
-      // In a real implementation, this would call an API endpoint
-      console.log('👍 Quick feedback:', { questionId, helpful });
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setSubmitted(true);
-      
-      // Reset submitted state after 3 seconds to allow re-rating
-      setTimeout(() => setSubmitted(false), 3000);
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          questionId,
+          stars: helpful ? 5 : 2, // Quick feedback: helpful = 5 stars, not helpful = 2 stars
+          helpful
+        })
+      });
+
+      if (response.ok) {
+        console.log('👍 Quick feedback submitted');
+        setSubmitted(true);
+        
+        // Reset submitted state after 3 seconds
+        setTimeout(() => setSubmitted(false), 3000);
+      }
     } catch (error) {
       console.error('Error submitting feedback:', error);
     } finally {

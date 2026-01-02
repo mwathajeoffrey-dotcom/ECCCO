@@ -1,23 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/database/prisma';
 
-// In-memory storage for bookmarks (will persist during server runtime)
-// TODO: Replace with database storage (Prisma/PostgreSQL)
-interface Bookmark {
-  questionId: string;
-  userId: string;
-  category: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const bookmarksStore = new Map<string, Bookmark>();
-
-// Helper to generate unique key
-function getBookmarkKey(userId: string, questionId: string): string {
-  return `${userId}-${questionId}`;
-}
-
+// GET - Fetch all bookmarks for a user
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -31,17 +15,18 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Filter bookmarks for this user
-    const userBookmarks = Array.from(bookmarksStore.values())
-      .filter(bookmark => bookmark.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    // Fetch bookmarks from database
+    const bookmarks = await prisma.bookmark.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' }
+    });
 
-    console.log('📚 Fetching bookmarks for user:', userId, '- Found:', userBookmarks.length);
+    console.log('📚 Fetching bookmarks for user:', userId, '- Found:', bookmarks.length);
 
     return NextResponse.json({
       success: true,
-      bookmarks: userBookmarks,
-      count: userBookmarks.length
+      bookmarks,
+      count: bookmarks.length
     });
   } catch (error) {
     console.error('Error fetching bookmarks:', error);
@@ -53,10 +38,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// POST - Create a new bookmark
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, questionId, category } = body;
+    const { userId, questionId, category, notes } = body;
 
     if (!userId || !questionId) {
       return NextResponse.json(
@@ -65,22 +51,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const key = getBookmarkKey(userId, questionId);
-    const now = new Date().toISOString();
-    
-    const bookmark: Bookmark = {
-      userId,
-      questionId,
-      category: category || 'Unknown',
-      notes: body.notes || '',
-      createdAt: now,
-      updatedAt: now,
-    };
+    // Create or update bookmark
+    const bookmark = await prisma.bookmark.upsert({
+      where: {
+        userId_questionId: {
+          userId,
+          questionId
+        }
+      },
+      update: {
+        notes: notes || '',
+        category: category || 'Unknown',
+        updatedAt: new Date()
+      },
+      create: {
+        userId,
+        questionId,
+        category: category || 'Unknown',
+        notes: notes || ''
+      }
+    });
 
-    bookmarksStore.set(key, bookmark);
-    
-    console.log('📚 Creating bookmark:', bookmark);
-    console.log('📊 Total bookmarks in store:', bookmarksStore.size);
+    console.log('� Created/Updated bookmark:', bookmark);
 
     return NextResponse.json({
       success: true,
@@ -96,6 +88,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PATCH - Update bookmark notes
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
@@ -108,30 +101,26 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const key = getBookmarkKey(userId, questionId);
-    const existing = bookmarksStore.get(key);
+    // Update bookmark notes
+    const bookmark = await prisma.bookmark.update({
+      where: {
+        userId_questionId: {
+          userId,
+          questionId
+        }
+      },
+      data: {
+        notes: notes || '',
+        updatedAt: new Date()
+      }
+    });
 
-    if (!existing) {
-      return NextResponse.json(
-        { success: false, message: 'Bookmark not found' },
-        { status: 404 }
-      );
-    }
-
-    const updated: Bookmark = {
-      ...existing,
-      notes: notes || '',
-      updatedAt: new Date().toISOString(),
-    };
-
-    bookmarksStore.set(key, updated);
-    
-    console.log('📝 Updating bookmark notes:', updated);
+    console.log('📝 Updated bookmark notes:', bookmark);
 
     return NextResponse.json({
       success: true,
       message: 'Notes updated',
-      data: updated
+      data: bookmark
     });
   } catch (error) {
     console.error('Error updating notes:', error);
@@ -142,6 +131,7 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
+// DELETE - Remove a bookmark
 export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
@@ -154,21 +144,33 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const key = getBookmarkKey(userId, questionId);
-    const existed = bookmarksStore.has(key);
-    
-    if (existed) {
-      bookmarksStore.delete(key);
-      console.log('🗑️ Deleted bookmark:', { userId, questionId });
-      console.log('📊 Remaining bookmarks:', bookmarksStore.size);
-    }
+    // Delete bookmark
+    await prisma.bookmark.delete({
+      where: {
+        userId_questionId: {
+          userId,
+          questionId
+        }
+      }
+    });
+
+    console.log('🗑️ Deleted bookmark:', { userId, questionId });
 
     return NextResponse.json({
       success: true,
-      message: existed ? 'Bookmark deleted' : 'Bookmark not found'
+      message: 'Bookmark deleted'
     });
   } catch (error) {
     console.error('Error deleting bookmark:', error);
+    
+    // If bookmark doesn't exist, still return success
+    if (error instanceof Error && error.message.includes('Record to delete does not exist')) {
+      return NextResponse.json({
+        success: true,
+        message: 'Bookmark not found'
+      });
+    }
+
     return NextResponse.json(
       { success: false, message: 'Failed to delete bookmark' },
       { status: 500 }
