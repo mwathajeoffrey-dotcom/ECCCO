@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { analytics } from '@/lib/analytics/service';
+import BookmarkButton from '@/components/BookmarkButton';
+import QuestionRating from '@/components/QuestionRating';
 
 interface Question {
   id: string;
@@ -904,7 +906,7 @@ export default function ExamInterface() {
               )}
 
               {/* Navigation */}
-              <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center justify-between flex-wrap gap-2 mb-6">
                 <button
                   onClick={() => handleQuestionNavigation('prev')}
                   disabled={currentQuestionIndex === 0}
@@ -938,6 +940,28 @@ export default function ExamInterface() {
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </button>
               </div>
+
+              {/* Bookmark, Notes, and Rating Section */}
+              {currentQuestion && (
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="text-base font-semibold text-gray-900 mb-4">Study Tools</h3>
+                  
+                  {/* Bookmark and Notes */}
+                  <div className="mb-4">
+                    <BookmarkButton
+                      questionId={currentQuestion.id}
+                      category={selectedTopic}
+                      initialBookmarked={false}
+                      initialNotes=""
+                    />
+                  </div>
+
+                  {/* Question Rating */}
+                  <div>
+                    <QuestionRating questionId={currentQuestion.id} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

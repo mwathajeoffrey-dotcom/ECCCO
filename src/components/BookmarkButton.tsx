@@ -24,9 +24,19 @@ export default function BookmarkButton({
   const [loading, setLoading] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
 
-  if (!isSignedIn || !user) return null;
-
   const apiBase = process.env.NEXT_PUBLIC_USE_MOCK_DB === 'true' ? '/api/bookmarks-mock' : '/api/bookmarks';
+
+  // Show sign-in prompt if not authenticated
+  if (!isSignedIn || !user) {
+    return (
+      <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <Star className="w-5 h-5 text-blue-600" />
+        <p className="text-sm text-blue-900">
+          <a href="/sign-in" className="font-medium underline hover:text-blue-700">Sign in</a> to bookmark questions and add personal notes
+        </p>
+      </div>
+    );
+  }
 
   const handleBookmark = async () => {
     setLoading(true);

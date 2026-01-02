@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
@@ -17,32 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eccco.app'),
-  title: {
-    default: "ECCCO - Emergency & Critical Care Comprehensive Online",
-    template: "%s | ECCCO"
-  },
-  description: "Master critical care medicine with evidence-based learning. Access 5,000+ exam questions, 170M+ research articles, and 1,500+ clinical guidelines for ACLS, PALS, ATLS, and more.",
+  title: "ECCCO - Emergency & Critical Care Comprehensive Online",
+  description: "Comprehensive medical exam platform for emergency and critical care training with 5000+ evidence-based questions",
   manifest: "/manifest.json",
-  keywords: [
-    "emergency medicine",
-    "critical care",
-    "medical education",
-    "online exam",
-    "ECCCO",
-    "medical training",
-    "healthcare",
-    "ACLS",
-    "PALS",
-    "ATLS",
-    "evidence-based medicine",
-    "clinical guidelines",
-    "PubMed",
-    "medical research",
-    "physician training",
-    "nurse training",
-    "paramedic training"
-  ],
+  keywords: ["emergency medicine", "critical care", "medical education", "online exam", "ECCCO", "medical training", "healthcare"],
   authors: [{ name: "ECCCO Medical Team" }],
   creator: "ECCCO",
   publisher: "ECCCO Medical Education",
@@ -52,47 +30,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  
-  // Open Graph
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://eccco.app',
-    siteName: 'ECCCO',
-    title: 'ECCCO - Evidence-Based Critical Care Education',
-    description: 'Master critical care medicine with evidence-based learning. Access 5,000+ exam questions, 170M+ research articles, and 1,500+ clinical guidelines.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'ECCCO - Evidence-Based Critical Care Education',
-      },
-    ],
-  },
-  
-  // Twitter
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ECCCO - Evidence-Based Critical Care Education',
-    description: 'Master critical care medicine with evidence-based learning. Access 5,000+ exam questions, 170M+ research articles, and 1,500+ clinical guidelines.',
-    images: ['/og-image.png'],
-    creator: '@eccco_app', // Update with your actual Twitter handle
-  },
-  
-  // Robots
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -143,60 +80,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'EducationalOrganization',
-    name: 'ECCCO',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://eccco.app',
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://eccco.app'}/logo.png`,
-    description: 'Evidence-based critical care and emergency medicine education platform',
-    address: {
-      '@type': 'PostalAddress',
-      addressCountry: 'US',
-    },
-    sameAs: [
-      // Add your social media links here when available
-    ],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://eccco.app'}/evidence-search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
-  };
-
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full">
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-          <link rel="manifest" href="/manifest.json" />
-          <meta name="theme-color" content="#3B82F6" />
-          <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-          <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
-          
-          {/* Structured Data */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-          />
-        </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full`}
-          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
-        >
+    <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3B82F6" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ClerkProvider>
           <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
             <AppLayout>
               {children}
             </AppLayout>
           </ErrorBoundary>
           <PWAInstallPrompt />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

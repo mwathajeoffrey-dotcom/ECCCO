@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useUser, SignOutButton } from '@clerk/nextjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuestionSearch from './QuestionSearch';
 import {
@@ -28,9 +27,7 @@ import {
   Bookmark,
   StickyNote,
   LogIn,
-  LogOut,
   User,
-  Search,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -54,7 +51,6 @@ interface NavSection {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
-  const { isSignedIn, user } = useUser();
   const [expandedSections, setExpandedSections] = useState<string[]>([
     'Practice',
     'Study Tools',
@@ -129,22 +125,23 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           href: '/learning-analytics',
           icon: BarChart3,
         },
+        {
+          label: 'My Bookmarks',
+          href: '/bookmarks',
+          icon: Bookmark,
+          badge: 'New',
+        },
+        {
+          label: 'My Notes',
+          href: '/bookmarks?tab=notes',
+          icon: StickyNote,
+        },
       ],
     },
     {
       title: 'Resources',
       icon: Library,
       items: [
-        {
-          label: 'Evidence Search',
-          href: '/evidence-search',
-          icon: Search,
-        },
-        {
-          label: 'Guidelines Search',
-          href: '/guidelines-search',
-          icon: FileText,
-        },
         {
           label: 'Evidence Library',
           href: '/emergency-references',
@@ -370,61 +367,19 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Divider */}
           <div className="border-t border-gray-200 my-2" />
 
-          {/* User Menu - Sign In or User Profile */}
-          {isSignedIn ? (
-            <div className="space-y-2">
-              {/* User Profile */}
-              <div className="flex items-center gap-3 px-4 py-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                  {user?.firstName?.[0] || user?.emailAddresses[0]?.emailAddress[0] || 'U'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 truncate">
-                    {user?.firstName || 'User'}
-                  </p>
-                  <p className="text-xs text-gray-600 truncate">
-                    {user?.emailAddresses[0]?.emailAddress}
-                  </p>
-                </div>
-              </div>
-
-              {/* Dashboard Link */}
-              <Link
-                href="/dashboard"
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  pathname === '/dashboard'
-                    ? 'bg-blue-100 text-blue-700 font-medium'
-                    : 'hover:bg-gray-100 text-gray-700'
-                }`}
-              >
-                <BarChart3 className="w-5 h-5 flex-shrink-0" />
-                <span>My Dashboard</span>
-              </Link>
-
-              {/* Sign Out Button */}
-              <SignOutButton>
-                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 hover:bg-red-50 text-red-600 hover:text-red-700">
-                  <LogOut className="w-5 h-5 flex-shrink-0" />
-                  <span>Sign Out</span>
-                </button>
-              </SignOutButton>
-            </div>
-          ) : (
-            /* Sign In Link */
-            <Link
-              href="/auth/signin"
-              onClick={onClose}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
-                pathname === '/auth/signin'
-                  ? 'ring-2 ring-blue-300'
-                  : ''
-              }`}
-            >
-              <LogIn className="w-5 h-5 flex-shrink-0" />
-              <span>🔐 Sign In</span>
-            </Link>
-          )}
+          {/* Sign In Link - December 19th working auth */}
+          <Link
+            href="/auth/signin"
+            onClick={onClose}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
+              pathname === '/auth/signin'
+                ? 'ring-2 ring-blue-300'
+                : ''
+            }`}
+          >
+            <LogIn className="w-5 h-5 flex-shrink-0" />
+            <span>🔐 Sign In</span>
+          </Link>
         </nav>
 
         {/* Footer */}
