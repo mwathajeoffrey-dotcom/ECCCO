@@ -1,10 +1,15 @@
-// Simple admin helper for Clerk authentication
+// Admin authorization helper with proper security checks
 import { auth } from '@clerk/nextjs/server';
 
 /**
- * Check if the current user is authenticated
- * In production, you would check against a list of admin user IDs or roles
- * For now, any authenticated user is considered "authorized" for admin routes
+ * Admin Authorization Helper
+ * 
+ * SECURITY: Only users with Clerk user IDs listed in ADMIN_USER_IDS environment 
+ * variable are granted admin access. Add your admin user IDs to .env.local:
+ * 
+ * ADMIN_USER_IDS=user_xxxxx,user_yyyyy,user_zzzzz
+ * 
+ * Get user IDs from: Clerk Dashboard > Users > click on user > copy User ID
  */
 export async function requireAdmin() {
   const { userId } = await auth();
@@ -17,12 +22,19 @@ export async function requireAdmin() {
     };
   }
 
-  // TODO: In production, add proper admin role checking here
-  // For example, check if userId is in an admin list or has admin role in Clerk
-  // const adminUserIds = process.env.ADMIN_USER_IDS?.split(',') || [];
-  // if (!adminUserIds.includes(userId)) {
-  //   return { authorized: false, error: 'Insufficient permissions', user: null };
-  // }
+  // Get admin user IDs from environment variable
+  const adminUserIds = process.env.ADMIN_USER_IDS?.split(',').map(id => id.trim()) || [];
+  
+  // SECURITY FIX: Actually check if user is in admin list
+  const isAdmin = adminUserIds.includes(userId);
+  
+  if (!isAdmin) {
+    return {
+      authorized: false,
+      error: 'Forbidden - Admin access required',
+      user: null
+    };
+  }
 
   return {
     authorized: true,
@@ -46,10 +58,22 @@ export async function getAdminStatus() {
     };
   }
 
+  // Get admin user IDs from environment variable
+  const adminUserIds = process.env.ADMIN_USER_IDS?.split(',').map(id => id.trim()) || [];
+  const isAdmin = adminUserIds.includes(userId);
+
   return {
-    isAdmin: true, // TODO: Add proper admin check
+    isAdmin: isAdmin,
     userId: userId,
-    user: { id: userId, email: null, name: null, role: 'user' }, // TODO: Fetch from Clerk
+    user: { id: userId, email: null, name: null, role: isAdmin ? 'admin' : 'user' },
     error: null
   };
+}
+
+/**
+ * Check if a specific user ID is an admin (without requiring authentication context)
+ */
+export function isUserAdmin(userId: string): boolean {
+  const adminUserIds = process.env.ADMIN_USER_IDS?.split(',').map(id => id.trim()) || [];
+  return adminUserIds.includes(userId);
 }

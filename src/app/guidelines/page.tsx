@@ -23,6 +23,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
 import guidelinesService, { MedicalGuideline, GuidelineCategory } from '@/lib/guidelines/service';
 
 // Force dynamic rendering - don't try to statically generate
@@ -520,9 +521,15 @@ export function GuidelineManagementPage() {
 
   const checkAuthentication = useCallback(async () => {
     try {
-      // Authentication is handled by password check on this client page
-      // No need for server-side isDeveloper check
-      setIsAuthenticated(false); // Will be set to true after password entry
+      // Check if user has developer access via server-side API
+      const response = await fetch('/api/auth/check-developer');
+      const data = await response.json();
+      
+      setIsAuthenticated(data.isDeveloper);
+      
+      if (data.isDeveloper) {
+        await loadGuidelineData();
+      }
     } catch {
       setIsAuthenticated(false);
     } finally {
@@ -536,18 +543,8 @@ export function GuidelineManagementPage() {
 
   const handleAuthentication = async () => {
     setAuthError('');
-    try {
-      const devCodes = ['Gm@12345'];
-      
-      if (devCodes.includes(authPassword)) {
-        setIsAuthenticated(true);
-        await loadGuidelineData();
-      } else {
-        setAuthError('Invalid access code');
-      }
-    } catch {
-      setAuthError('Authentication failed');
-    }
+    // Removed hardcoded password - now uses proper role-based authentication
+    setAuthError('Please sign in with a developer account to access this page');
   };
 
   const refreshGuidelines = async () => {

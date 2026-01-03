@@ -1,9 +1,15 @@
-// Developer check helper for Clerk authentication
+// Developer authorization helper with proper security checks
 import { auth } from '@clerk/nextjs/server';
 
 /**
- * Check if the current user is a developer
- * In production, check against a list of developer user IDs or use Clerk roles
+ * Developer Authorization Helper
+ * 
+ * SECURITY: Only users with Clerk user IDs listed in DEVELOPER_USER_IDS environment 
+ * variable are granted developer access. Add your developer user IDs to .env.local:
+ * 
+ * DEVELOPER_USER_IDS=user_xxxxx,user_yyyyy,user_zzzzz
+ * 
+ * Get user IDs from: Clerk Dashboard > Users > click on user > copy User ID
  */
 export async function isDeveloper(): Promise<boolean> {
   const { userId } = await auth();
@@ -12,11 +18,49 @@ export async function isDeveloper(): Promise<boolean> {
     return false;
   }
 
-  // TODO: In production, add proper developer role checking
-  // For example:
-  // const devUserIds = process.env.DEVELOPER_USER_IDS?.split(',') || [];
-  // return devUserIds.includes(userId);
+  // Get developer user IDs from environment variable
+  const devUserIds = process.env.DEVELOPER_USER_IDS?.split(',').map(id => id.trim()) || [];
   
-  // For now, any authenticated user has developer access
-  return true;
+  // SECURITY FIX: Actually check if user is in developer list
+  return devUserIds.includes(userId);
+}
+
+/**
+ * Check if a specific user ID is a developer (without requiring authentication context)
+ */
+export function isUserDeveloper(userId: string): boolean {
+  const devUserIds = process.env.DEVELOPER_USER_IDS?.split(',').map(id => id.trim()) || [];
+  return devUserIds.includes(userId);
+}
+
+/**
+ * Require developer access (throws error if not authorized)
+ */
+export async function requireDeveloper() {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return {
+      authorized: false,
+      error: 'Unauthorized - Please sign in',
+      user: null
+    };
+  }
+
+  const devUserIds = process.env.DEVELOPER_USER_IDS?.split(',').map(id => id.trim()) || [];
+  const isDev = devUserIds.includes(userId);
+  
+  if (!isDev) {
+    return {
+      authorized: false,
+      error: 'Forbidden - Developer access required',
+      user: null
+    };
+  }
+
+  return {
+    authorized: true,
+    error: null,
+    user: { id: userId }
+  };
 }

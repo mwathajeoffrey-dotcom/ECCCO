@@ -1,0 +1,24 @@
+import { NextResponse } from 'next/server';
+import { getAdminStatus } from '@/lib/auth/admin';
+
+/**
+ * API route to check if the current user has admin access
+ * Used by admin pages to determine access
+ */
+export async function GET() {
+  try {
+    const status = await getAdminStatus();
+    
+    return NextResponse.json({ 
+      isAdmin: status.isAdmin,
+      userId: status.userId,
+      error: status.error
+    });
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    return NextResponse.json({ 
+      isAdmin: false,
+      error: 'Failed to check admin status'
+    }, { status: 500 });
+  }
+}
