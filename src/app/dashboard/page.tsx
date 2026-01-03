@@ -342,50 +342,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Performance by Topic */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Performance by Topic</h3>
-          <div className="space-y-4">
-            {performanceData.map((data, index) => (
-              <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-semibold text-gray-900">{data.topic}</h4>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    data.percentage >= 80 
-                      ? 'bg-green-100 text-green-800'
-                      : data.percentage >= 60
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {data.percentage}%
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                  <span>{data.correct} correct out of {data.attempted} attempted</span>
-                  <Link
-                    href={`/practice?topic=${data.topic?.toLowerCase().replace(/\s+/g, '-') || 'general'}`}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    Practice More
-                  </Link>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full ${
-                      data.percentage >= 80 
-                        ? 'bg-green-600'
-                        : data.percentage >= 60
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500'
-                    }`}
-                    style={{ width: `${data.percentage}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Recommendations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-md p-6">
@@ -398,7 +354,7 @@ export default function DashboardPage() {
                 <div className="ml-3">
                   <h4 className="font-semibold text-gray-900">Focus on Weak Areas</h4>
                   <p className="text-gray-600 text-sm">
-                    Your weakest topic is <strong>{overallStats.weakestTopic.topic}</strong>. 
+                    Your weakest topic is <strong>{overallStats.weakestTopic.topicName}</strong>. 
                     Consider spending more time on practice questions in this area.
                   </p>
                 </div>
@@ -437,7 +393,7 @@ export default function DashboardPage() {
                 <h4 className="font-semibold text-blue-900 mb-2">This Week&apos;s Goals</h4>
                 <ul className="text-blue-800 text-sm space-y-1">
                   <li>• Complete 100 practice questions</li>
-                  <li>• Focus on {overallStats.weakestTopic.topic}</li>
+                  <li>• Focus on {overallStats.weakestTopic.topicName}</li>
                   <li>• Take 2 full-length timed exams</li>
                   <li>• Review incorrect answers</li>
                 </ul>
