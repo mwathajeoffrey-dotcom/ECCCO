@@ -13,6 +13,140 @@ datasource db {
   // url      = env("DATABASE_URL")
 }
 
+// User Model - Core user data synced from Clerk
+model User {
+  id              String   @id @default(cuid())
+  clerkUserId     String   @unique // Clerk user ID
+  email           String?  @unique
+  
+  // Profile & Preferences
+  profile         UserProfile?
+  
+  // Activity & Progress
+  quizAttempts    QuizAttempt[]
+  examAttempts    ExamAttempt[]
+  questionAttempts QuestionAttempt[]
+  bookmarks       Bookmark[]
+  questionRatings QuestionRating[]
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([clerkUserId])
+  @@index([email])
+  @@index([createdAt])
+}
+
+// User Profile - Extended user preferences and settings
+model UserProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Professional Information
+  specialty       String?  // "ACLS", "PALS", "Both", "Other"
+  experienceLevel String?  // "Student", "Resident", "Attending", "Nurse", "Paramedic", "Other"
+  organization    String?  // Hospital/institution name
+  role            String?  // Job title
+  
+  // Learning Preferences
+  focusAreas      String?  // JSON array of focus topics
+  difficultyPreference String @default("medium") // "easy", "medium", "hard", "mixed"
+  studyGoals      String?  // User's learning objectives
+  
+  // Personalization
+  preferredMode   String   @default("practice") // "practice", "exam", "mixed"
+  dailyGoal       Int      @default(10) // Questions per day goal
+  
+  // Notifications & Settings
+  emailNotifications Boolean @default(true)
+  weeklyDigest    Boolean  @default(true)
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([specialty])
+  @@index([experienceLevel])
+}
+
+// Quiz Attempt - Track practice quiz sessions
+model QuizAttempt {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Quiz Details
+  mode            String   // "practice", "timed", "exam"
+  topicId         String?  // Optional topic filter
+  difficulty      String?  // Optional difficulty filter
+  
+  // Results
+  score           Int
+  totalQuestions  Int
+  timeSpent       Int?     // Seconds
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([mode])
+  @@index([createdAt])
+}
+
+// Exam Attempt - Track certification exam attempts
+model ExamAttempt {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Exam Details
+  examType        String   // "ACLS", "PALS", "BLS"
+  
+  // Results
+  score           Int
+  totalQuestions  Int
+  passed          Boolean
+  timeSpent       Int?     // Seconds
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([examType])
+  @@index([passed])
+  @@index([createdAt])
+}
+
+// Question Attempt - Individual question performance tracking
+model QuestionAttempt {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Question Details
+  questionId      String
+  topicId         String?
+  
+  // Attempt Details
+  selectedAnswer  Int      // Index of selected answer
+  isCorrect       Boolean
+  timeSpent       Int?     // Seconds spent on this question
+  
+  // Context
+  attemptMode     String   // "practice", "exam", "review"
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([questionId])
+  @@index([isCorrect])
+  @@index([createdAt])
+}
+
 model Topic {
   id          String     @id @default(cuid())
   name        String     @unique
@@ -150,7 +284,8 @@ model Bookmark {
   id          String   @id @default(cuid())
   
   // User & Question
-  userId      String   // Clerk user ID
+  userId      String   // Clerk user ID or User model id
+  user        User?    @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   questionId  String   // Question being bookmarked
   category    String   // ACLS, PALS, etc.
   
@@ -173,6 +308,7 @@ model QuestionRating {
   
   // User & Question
   userId      String   // Clerk user ID
+  user        User?    @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   questionId  String   // Question being rated
   
   // Rating Details
