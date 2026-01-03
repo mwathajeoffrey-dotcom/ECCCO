@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/prisma';
 
+// Force dynamic rendering - this route needs database access
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 /**
  * GET /api/admin/users
  * Fetch all users with their statistics and activity
@@ -16,6 +20,14 @@ export async function GET() {
       return NextResponse.json(
         { error: adminCheck.error },
         { status: 401 }
+      );
+    }
+
+    // Check if prisma client is available
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database not available' },
+        { status: 503 }
       );
     }
 

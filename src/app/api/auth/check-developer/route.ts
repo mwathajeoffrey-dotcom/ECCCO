@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { isDeveloper } from '@/lib/auth/developer';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 /**
  * API route to check if the current user has developer access
  * Used by the guidelines page to determine access

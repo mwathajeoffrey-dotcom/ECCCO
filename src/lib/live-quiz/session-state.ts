@@ -436,6 +436,11 @@ export class LiveQuizSessionState {
   // Cleanup expired sessions and cache
   static async cleanup(): Promise<void> {
     try {
+      // Skip cleanup during build time
+      if (!prisma || process.env.NEXT_PHASE === 'phase-production-build') {
+        return;
+      }
+
       const expiredSessions = await prisma.liveQuizSession.findMany({
         where: {
           status: {

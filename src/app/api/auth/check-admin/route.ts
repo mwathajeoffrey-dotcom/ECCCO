@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getAdminStatus } from '@/lib/auth/admin';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 /**
  * API route to check if the current user has admin access
  * Used by admin pages to determine access
