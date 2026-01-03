@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +28,8 @@ import {
   StickyNote,
   LogIn,
   User,
+  Shield,
+  UserCog,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -56,6 +58,34 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     'Study Tools',
     'Resources',
   ]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isDeveloper, setIsDeveloper] = useState(false);
+
+  // Check admin/developer status
+  useEffect(() => {
+    const checkRoles = async () => {
+      try {
+        const [adminRes, devRes] = await Promise.all([
+          fetch('/api/auth/check-admin'),
+          fetch('/api/auth/check-developer'),
+        ]);
+        
+        if (adminRes.ok) {
+          const adminData = await adminRes.json();
+          setIsAdmin(adminData.isAdmin);
+        }
+        
+        if (devRes.ok) {
+          const devData = await devRes.json();
+          setIsDeveloper(devData.isDeveloper);
+        }
+      } catch (error) {
+        console.error('Error checking roles:', error);
+      }
+    };
+
+    checkRoles();
+  }, []);
 
   const toggleSection = (sectionTitle: string) => {
     setExpandedSections((prev) =>
@@ -227,6 +257,55 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <Trophy className="w-5 h-5 flex-shrink-0" />
             <span>🏆 Dashboard</span>
           </Link>
+
+          {/* Profile Link */}
+          <Link
+            href="/profile"
+            onClick={onClose}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              pathname === '/profile'
+                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
+                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+            }`}
+          >
+            <User className="w-5 h-5 flex-shrink-0" />
+            <span>👤 My Profile</span>
+          </Link>
+
+          {/* Admin Section - Only visible to admins */}
+          {isAdmin && (
+            <>
+              <div className="border-t border-gray-200 my-2" />
+              
+              <Link
+                href="/admin/dashboard"
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  pathname === '/admin/dashboard'
+                    ? 'bg-purple-50 text-purple-700 font-semibold shadow-sm'
+                    : 'text-purple-700 hover:bg-purple-50 hover:text-purple-900'
+                }`}
+              >
+                <Shield className="w-5 h-5 flex-shrink-0" />
+                <span>🛡️ Admin Dashboard</span>
+              </Link>
+
+              <Link
+                href="/admin/users"
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  pathname === '/admin/users'
+                    ? 'bg-purple-50 text-purple-700 font-semibold shadow-sm'
+                    : 'text-purple-700 hover:bg-purple-50 hover:text-purple-900'
+                }`}
+              >
+                <UserCog className="w-5 h-5 flex-shrink-0" />
+                <span>👥 User Management</span>
+              </Link>
+              
+              <div className="border-t border-gray-200 my-2" />
+            </>
+          )}
 
           {/* Collapsible Sections */}
           {navigationSections.map((section) => {
