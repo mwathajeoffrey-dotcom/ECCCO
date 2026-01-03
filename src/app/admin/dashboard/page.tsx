@@ -121,6 +121,12 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <Link
+                href="/admin/users"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Users ({stats.totalUsers})
+              </Link>
+              <Link
                 href="/admin/evidence"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
