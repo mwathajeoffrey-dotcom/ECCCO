@@ -1,63 +1,96 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Library, FileText, ExternalLink } from 'lucide-react';
+import { BookOpen, TrendingUp, Target, Clock, Award, BarChart3, Library, FileText, ExternalLink, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
 
-interface Topic {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface PerformanceData {
-  topic: string;
-  attempted: number;
-  correct: number;
-  percentage: number;
+interface UserStats {
+  stats: {
+    examSessions: {
+      total: number;
+      completed: number;
+      averageScore: number;
+      bestScore: number;
+      totalTimeSpent: number;
+      currentStreak: number;
+    };
+    questions: {
+      total: number;
+      correct: number;
+      accuracy: number;
+    };
+    overall: {
+      studyHours: number;
+      totalAttempts: number;
+    };
+  };
+  topicPerformance: Array<{
+    topicName: string;
+    attempted: number;
+    correct: number;
+    percentage: number;
+  }>;
 }
 
 export default function DashboardPage() {
-  const [, setTopics] = useState<Topic[]>([]);
-  const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
+  const { user, isLoaded } = useUser();
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTopics = async () => {
+    const fetchUserStats = async () => {
+      if (!isLoaded) return;
+      
       try {
-        const response = await fetch('/api/topics');
-        const data = await response.json();
-        setTopics(data);
+        setLoading(true);
+        const response = await fetch('/api/user/stats');
         
-        // Mock performance data - in real app this would come from user progress
-        const mockPerformance = data.map((topic: Topic) => ({
-          topic: topic.name,
-          attempted: Math.floor(Math.random() * 100) + 20,
-          correct: Math.floor(Math.random() * 80) + 10,
-          percentage: Math.floor(Math.random() * 40) + 60
-        }));
-        setPerformanceData(mockPerformance);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user statistics');
+        }
+        
+        const data = await response.json();
+        setUserStats(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching user stats:', error);
+        setError('Unable to load your statistics. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchTopics();
-  }, []);
+    fetchUserStats();
+  }, [isLoaded]);
 
-  const overallStats = {
-    totalQuestions: performanceData.reduce((sum, data) => sum + data.attempted, 0),
-    totalCorrect: performanceData.reduce((sum, data) => sum + data.correct, 0),
-    averageScore: performanceData.length > 0 
-      ? Math.round(performanceData.reduce((sum, data) => sum + data.percentage, 0) / performanceData.length)
-      : 0,
-    strongestTopic: performanceData.reduce((max, current) => 
-      current.percentage > max.percentage ? current : max, 
-      { topic: 'N/A', percentage: 0 }
-    ),
-    weakestTopic: performanceData.reduce((min, current) => 
-      current.percentage < min.percentage ? current : min, 
-      { topic: 'N/A', percentage: 100 }
-    )
+  // Calculate overall stats
+  const overallStats = userStats ? {
+    totalQuestions: userStats.stats.questions.total,
+    totalCorrect: userStats.stats.questions.correct,
+    averageScore: userStats.stats.examSessions.averageScore || 0,
+    bestScore: userStats.stats.examSessions.bestScore || 0,
+    studyHours: userStats.stats.overall.studyHours || 0,
+    currentStreak: userStats.stats.examSessions.currentStreak || 0,
+    strongestTopic: userStats.topicPerformance.length > 0
+      ? userStats.topicPerformance.reduce((max, current) => 
+          current.percentage > max.percentage ? current : max
+        )
+      : { topicName: 'N/A', percentage: 0 },
+    weakestTopic: userStats.topicPerformance.length > 0
+      ? userStats.topicPerformance.reduce((min, current) => 
+          current.percentage < min.percentage ? current : min
+        )
+      : { topicName: 'N/A', percentage: 0 }
+  } : {
+    totalQuestions: 0,
+    totalCorrect: 0,
+    averageScore: 0,
+    bestScore: 0,
+    studyHours: 0,
+    currentStreak: 0,
+    strongestTopic: { topicName: 'N/A', percentage: 0 },
+    weakestTopic: { topicName: 'N/A', percentage: 0 }
   };
 
   return (
@@ -82,23 +115,43 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Dashboard Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Learning Progress</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {user ? `Welcome back, ${user.firstName || 'Learner'}!` : 'Your Learning Progress'}
+          </h2>
           <p className="text-gray-600">Track your performance and identify areas for improvement</p>
         </div>
 
-        {/* Overall Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Questions Attempted</p>
-                <p className="text-2xl font-bold text-gray-900">{overallStats.totalQuestions}</p>
-              </div>
-            </div>
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            <span className="ml-3 text-gray-600">Loading your statistics...</span>
           </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-8">
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
+
+        {/* Stats Display */}
+        {!loading && !error && (
+          <>
+            {/* Overall Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Target className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Questions Attempted</p>
+                    <p className="text-2xl font-bold text-gray-900">{overallStats.totalQuestions}</p>
+                  </div>
+                </div>
+              </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="flex items-center">
@@ -118,8 +171,8 @@ export default function DashboardPage() {
                 <TrendingUp className="w-6 h-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Strongest Topic</p>
-                <p className="text-lg font-bold text-gray-900 truncate">{overallStats.strongestTopic.topic}</p>
+                <p className="text-sm font-medium text-gray-600">Study Streak</p>
+                <p className="text-2xl font-bold text-gray-900">{overallStats.currentStreak} days</p>
               </div>
             </div>
           </div>
@@ -127,15 +180,69 @@ export default function DashboardPage() {
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-orange-600" />
+                <Clock className="w-6 h-6 text-orange-600" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Study Time</p>
-                <p className="text-2xl font-bold text-gray-900">24h</p>
+                <p className="text-2xl font-bold text-gray-900">{overallStats.studyHours}h</p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Performance by Topic */}
+        {userStats && userStats.topicPerformance.length > 0 && (
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <BarChart3 className="w-6 h-6 mr-2 text-blue-600" />
+              Performance by Topic
+            </h3>
+            <div className="space-y-4">
+              {userStats.topicPerformance.map((topic, index) => (
+                <div key={index}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-700">{topic.topicName}</span>
+                    <span className="text-sm text-gray-600">
+                      {topic.correct}/{topic.attempted} ({topic.percentage}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full ${
+                        topic.percentage >= 80
+                          ? 'bg-green-500'
+                          : topic.percentage >= 60
+                          ? 'bg-blue-500'
+                          : topic.percentage >= 40
+                          ? 'bg-yellow-500'
+                          : 'bg-red-500'
+                      }`}
+                      style={{ width: `${topic.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* No Data State */}
+        {!loading && !error && overallStats.totalQuestions === 0 && (
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-8 mb-8 text-center">
+            <Target className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Start Your Learning Journey!</h3>
+            <p className="text-gray-600 mb-6">
+              You haven't attempted any questions yet. Begin practicing to see your progress here.
+            </p>
+            <Link
+              href="/practice"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FileText className="w-5 h-5" />
+              Start Practicing
+            </Link>
+          </div>
+        )}
 
         {/* Evidence Library - Quick Access */}
         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-md p-8 mb-8 border-2 border-indigo-200">
@@ -356,6 +463,8 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
     </div>
   );
