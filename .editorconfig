@@ -1,0 +1,30 @@
+# Editor Configuration
+# Help prevent file corruption and maintain consistency
+
+# Top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Code files
+[*.{js,jsx,ts,tsx,json,css,scss}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# Package files
+[{package.json,*.yml,*.yaml}]
+indent_style = space
+indent_size = 2
+
+# Prevent common corruption
+[*.{ts,tsx,js,jsx}]
+max_line_length = 120
