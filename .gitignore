@@ -38,3 +38,8 @@ prisma/dev.db-journal
 # Ignore outreach documentation
 docs/outreach/
 
+
+# Ignore development notes and outreach docs
+docs/development-notes/
+docs/outreach/
+
