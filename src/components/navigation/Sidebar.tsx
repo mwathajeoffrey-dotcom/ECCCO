@@ -1,4 +1,4 @@
-'use client';
+3 months ago i couldn't write a single line of code. until i started using GitHub copilot,.i have ever since developed https://eccco.vercel.app/. it might not perfect yet but am living the dream of what copilot can help achieve,,,it is still work in progress but having done everything from scratch as an amateur developer is a story am sharing and looking for partners going forward and help make my dream come true'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -143,8 +143,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           icon: Library,
         },
         {
+          label: 'Evidence Search',
+          href: '/evidence-search',
+          icon: FileText,
+        },
+        {
           label: 'Clinical Guidelines',
           href: '/guidelines',
+          icon: BookOpen,
+        },
+        {
+          label: 'Guidelines Search',
+          href: '/guidelines-search',
           icon: BookOpen,
         },
         {
