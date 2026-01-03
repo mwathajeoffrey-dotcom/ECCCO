@@ -33,7 +33,7 @@ interface Profile {
 }
 
 export default function ProfilePage() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
@@ -55,8 +55,11 @@ export default function ProfilePage() {
   useEffect(() => {
     if (isLoaded && user) {
       loadProfile();
+    } else if (isLoaded && !isSignedIn) {
+      // User is not signed in, stop loading
+      setLoading(false);
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, isSignedIn]);
 
   const loadProfile = async () => {
     try {
@@ -117,11 +120,20 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) {
+  if (!isSignedIn || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">Please sign in to view your profile</p>
+        <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
+          <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h2>
+          <p className="text-gray-600 mb-6">Please sign in to view and edit your profile.</p>
+          <Link
+            href="/auth/signin"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <UserIcon className="w-5 h-5" />
+            Sign In
+          </Link>
         </div>
       </div>
     );

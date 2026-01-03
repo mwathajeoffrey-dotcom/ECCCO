@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuestionSearch from './QuestionSearch';
 import {
@@ -53,6 +54,7 @@ interface NavSection {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
   const [expandedSections, setExpandedSections] = useState<string[]>([
     'Practice',
     'Study Tools',
@@ -60,10 +62,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   ]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
+  const [rolesLoading, setRolesLoading] = useState(true);
 
   // Check admin/developer status
   useEffect(() => {
     const checkRoles = async () => {
+      if (!isSignedIn) {
+        setRolesLoading(false);
+        return;
+      }
+
       try {
         const [adminRes, devRes] = await Promise.all([
           fetch('/api/auth/check-admin'),
@@ -81,11 +89,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         }
       } catch (error) {
         console.error('Error checking roles:', error);
+      } finally {
+        setRolesLoading(false);
       }
     };
 
     checkRoles();
-  }, []);
+  }, [isSignedIn]);
 
   const toggleSection = (sectionTitle: string) => {
     setExpandedSections((prev) =>
@@ -244,36 +254,40 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <span>Home</span>
           </Link>
 
-          {/* Dashboard Link */}
-          <Link
-            href="/dashboard"
-            onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/dashboard'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            <Trophy className="w-5 h-5 flex-shrink-0" />
-            <span>🏆 Dashboard</span>
-          </Link>
+          {/* Dashboard Link - Only for signed-in users */}
+          {isSignedIn && (
+            <Link
+              href="/dashboard"
+              onClick={onClose}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                pathname === '/dashboard'
+                  ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <Trophy className="w-5 h-5 flex-shrink-0" />
+              <span>🏆 Dashboard</span>
+            </Link>
+          )}
 
-          {/* Profile Link */}
-          <Link
-            href="/profile"
-            onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/profile'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            <User className="w-5 h-5 flex-shrink-0" />
-            <span>👤 My Profile</span>
-          </Link>
+          {/* Profile Link - Only for signed-in users */}
+          {isSignedIn && (
+            <Link
+              href="/profile"
+              onClick={onClose}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                pathname === '/profile'
+                  ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <User className="w-5 h-5 flex-shrink-0" />
+              <span>👤 My Profile</span>
+            </Link>
+          )}
 
           {/* Admin Section - Only visible to admins */}
-          {isAdmin && (
+          {!rolesLoading && isAdmin && (
             <>
               <div className="border-t border-gray-200 my-2" />
               
