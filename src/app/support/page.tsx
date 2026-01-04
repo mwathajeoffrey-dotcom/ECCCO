@@ -42,6 +42,8 @@ export default function SupportPage() {
     setError('');
 
     try {
+      console.log('[Support Form] Submitting feedback...');
+      
       const response = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,10 +54,16 @@ export default function SupportPage() {
         }),
       });
 
+      console.log('[Support Form] Response status:', response.status);
+
+      const data = await response.json();
+      console.log('[Support Form] Response data:', data);
+
       if (!response.ok) {
-        throw new Error('Failed to submit feedback');
+        throw new Error(data.error || data.details || 'Failed to submit feedback');
       }
 
+      console.log('[Support Form] Feedback submitted successfully!');
       setSubmitted(true);
       setFormData({
         userName: '',
@@ -66,7 +74,9 @@ export default function SupportPage() {
         message: '',
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to submit feedback');
+      console.error('[Support Form] Submission error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit feedback. Please try again.';
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }

@@ -9,7 +9,11 @@ const prisma = new PrismaClient();
  */
 export async function POST(request: NextRequest) {
   try {
+    console.log('[Feedback API] Received submission request');
+    
     const body = await request.json();
+    console.log('[Feedback API] Request body:', { ...body, message: body.message?.substring(0, 50) + '...' });
+    
     const {
       userName,
       userEmail,
@@ -23,6 +27,7 @@ export async function POST(request: NextRequest) {
 
     // Validation
     if (!userEmail || !subject || !message) {
+      console.log('[Feedback API] Validation failed - missing required fields');
       return NextResponse.json(
         { error: 'Email, subject, and message are required' },
         { status: 400 }
@@ -32,14 +37,17 @@ export async function POST(request: NextRequest) {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userEmail)) {
+      console.log('[Feedback API] Validation failed - invalid email format:', userEmail);
       return NextResponse.json(
         { error: 'Invalid email address' },
         { status: 400 }
       );
     }
 
+    console.log('[Feedback API] Validation passed, creating feedback entry...');
+
     // Create feedback entry
-    const feedback = await (prisma as any).feedback.create({
+    const feedback = await prisma.feedback.create({
       data: {
         userName: userName || null,
         userEmail,
@@ -54,6 +62,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('[Feedback API] Feedback created successfully with ID:', feedback.id);
+
     // TODO: Send email notification to admin
     // await sendAdminNotification(feedback);
 
@@ -63,9 +73,18 @@ export async function POST(request: NextRequest) {
       id: feedback.id,
     });
   } catch (error) {
-    console.error('Error submitting feedback:', error);
+    console.error('[Feedback API] Error submitting feedback:', error);
+    console.error('[Feedback API] Error details:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    
     return NextResponse.json(
-      { error: 'Failed to submit feedback' },
+      { 
+        error: 'Failed to submit feedback',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
