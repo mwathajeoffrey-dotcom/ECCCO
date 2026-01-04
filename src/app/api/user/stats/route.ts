@@ -20,7 +20,7 @@ export async function GET() {
     });
 
     // Get all unique topic IDs
-    const topicIds = [...new Set(examSessions.map(session => session.topicId))];
+    const topicIds = [...new Set(examSessions.map((session: any) => session.topicId))];
     
     // Fetch topics to get their names
     const topics = await prisma.topic.findMany({
@@ -30,17 +30,17 @@ export async function GET() {
     });
     
     // Create topic ID to name mapping
-    const topicMap = new Map(topics.map(t => [t.id, t.name]));
+    const topicMap = new Map(topics.map((t: any) => [t.id, t.name]));
 
     // Calculate overall statistics
     const totalExams = examSessions.length;
-    const completedExams = examSessions.filter(session => session.completed);
+    const completedExams = examSessions.filter((session: any) => session.completed);
     
     // Calculate total questions by parsing the questions JSON
     let totalQuestions = 0;
     let totalCorrect = 0;
     
-    examSessions.forEach(session => {
+    examSessions.forEach((session: any) => {
       try {
         const questions = JSON.parse(session.questions);
         const questionCount = questions.length;
@@ -64,15 +64,15 @@ export async function GET() {
     });
     
     const averageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-    const totalTimeSpent = examSessions.reduce((sum, session) => 
+    const totalTimeSpent = examSessions.reduce((sum: number, session: any) => 
       sum + (session.totalTime || 0), 0
     );
-    const bestScore = Math.max(...completedExams.map(session => session.score || 0), 0);
+    const bestScore = Math.max(...completedExams.map((session: any) => session.score || 0), 0);
 
     // Calculate current streak
     const sortedSessions = examSessions
-      .filter(session => session.completed)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .filter((session: any) => session.completed)
+      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     let currentStreak = 0;
     if (sortedSessions.length > 0) {
@@ -95,7 +95,7 @@ export async function GET() {
     // Calculate performance by topic
     const topicPerformance = new Map();
     
-    examSessions.forEach(session => {
+    examSessions.forEach((session: any) => {
       const topicName = topicMap.get(session.topicId) || 'Unknown Topic';
       
       if (!topicPerformance.has(topicName)) {
@@ -132,7 +132,7 @@ export async function GET() {
       }
     });
 
-    const performanceByTopic = Array.from(topicPerformance.values()).map(topic => ({
+    const performanceByTopic = Array.from(topicPerformance.values()).map((topic: any) => ({
       topicName: topic.topicName,
       attempted: topic.totalQuestions,
       correct: topic.correctAnswers,
