@@ -19,15 +19,43 @@ export async function GET() {
       orderBy: { createdAt: 'desc' }
     });
 
+    // If no exam sessions, return empty stats
+    if (examSessions.length === 0) {
+      return NextResponse.json({
+        stats: {
+          examSessions: {
+            total: 0,
+            completed: 0,
+            averageScore: 0,
+            bestScore: 0,
+            totalTimeSpent: 0,
+            currentStreak: 0,
+          },
+          questions: {
+            total: 0,
+            correct: 0,
+            accuracy: 0,
+          },
+          overall: {
+            studyHours: 0,
+            totalAttempts: 0,
+          },
+        },
+        topicPerformance: [],
+      });
+    }
+
     // Get all unique topic IDs
     const topicIds = [...new Set(examSessions.map((session: any) => session.topicId))];
     
-    // Fetch topics to get their names
-    const topics = await prisma.topic.findMany({
-      where: {
-        id: { in: topicIds }
-      }
-    });
+    // Fetch topics to get their names (only if we have topic IDs)
+    const topics = topicIds.length > 0 
+      ? await prisma.topic.findMany({
+          where: {
+            id: { in: topicIds }
+          }
+        })
+      : [];
     
     // Create topic ID to name mapping
     const topicMap = new Map(topics.map((t: any) => [t.id, t.name]));
@@ -167,8 +195,14 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching user stats:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { 
+        error: 'Internal server error', 
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
