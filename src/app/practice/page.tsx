@@ -65,7 +65,7 @@ export default function PracticePage() {
             <h3 className="text-base font-semibold text-gray-900 mb-1">Quick Practice</h3>
             <p className="text-gray-600 text-xs mb-3">10 random questions from all topics</p>
             <Link
-              href="/exam"
+              href="/exam?count=10&mode=quick"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors inline-block"
             >
               Start Now
@@ -79,7 +79,7 @@ export default function PracticePage() {
             <h3 className="text-base font-semibold text-gray-900 mb-1">Mixed Review</h3>
             <p className="text-gray-600 text-xs mb-3">30 questions across multiple topics</p>
             <Link
-              href="/exam"
+              href="/exam?count=30&topics=mixed"
               className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors inline-block"
             >
               Start Review
@@ -107,7 +107,7 @@ export default function PracticePage() {
             <h3 className="text-base font-semibold text-gray-900 mb-1">Study Mode</h3>
             <p className="text-gray-600 text-xs mb-3">Questions with immediate explanations</p>
             <Link
-              href="/exam"
+              href="/exam?mode=study&explanations=immediate"
               className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors inline-block"
             >
               Study Now

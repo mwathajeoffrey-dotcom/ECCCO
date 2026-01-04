@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
+import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -100,6 +101,7 @@ export default function RootLayout({
             </AppLayout>
           </ErrorBoundary>
           <PWAInstallPrompt />
+          <FloatingPracticeButton />
         </ClerkProvider>
       </body>
     </html>

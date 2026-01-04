@@ -114,6 +114,13 @@ export default function Home() {
               Go to Dashboard →
             </Link>
             <Link
+              href="/exam?count=10&mode=quick"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+            >
+              <Zap className="w-5 h-5" />
+              Quick Practice (10 Questions)
+            </Link>
+            <Link
               href="/emergency-references"
               className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
             >
@@ -332,9 +339,8 @@ export default function Home() {
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li><Link href="/support" className="hover:text-white transition-colors">Contact Support</Link></li>
                 <li><Link href="/support" className="hover:text-white transition-colors">Send Feedback</Link></li>
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
