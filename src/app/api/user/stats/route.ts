@@ -13,11 +13,20 @@ export async function GET() {
       );
     }
 
+    console.log('[Dashboard API] Fetching exam sessions for user:', userId);
+
     // Get user exam sessions directly with Clerk userId
-    const examSessions = await prisma.examSession.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' }
-    });
+    let examSessions;
+    try {
+      examSessions = await prisma.examSession.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' }
+      });
+      console.log('[Dashboard API] Found', examSessions.length, 'exam sessions');
+    } catch (dbError) {
+      console.error('[Dashboard API] Database error fetching exam sessions:', dbError);
+      throw new Error(`Database error: ${dbError instanceof Error ? dbError.message : 'Unknown DB error'}`);
+    }
 
     // If no exam sessions, return empty stats
     if (examSessions.length === 0) {
@@ -47,15 +56,23 @@ export async function GET() {
 
     // Get all unique topic IDs
     const topicIds = [...new Set(examSessions.map((session: any) => session.topicId))];
+    console.log('[Dashboard API] Found', topicIds.length, 'unique topics');
     
     // Fetch topics to get their names (only if we have topic IDs)
-    const topics = topicIds.length > 0 
-      ? await prisma.topic.findMany({
-          where: {
-            id: { in: topicIds }
-          }
-        })
-      : [];
+    let topics;
+    try {
+      topics = topicIds.length > 0 
+        ? await prisma.topic.findMany({
+            where: {
+              id: { in: topicIds }
+            }
+          })
+        : [];
+      console.log('[Dashboard API] Fetched', topics.length, 'topic records');
+    } catch (dbError) {
+      console.error('[Dashboard API] Database error fetching topics:', dbError);
+      throw new Error(`Database error fetching topics: ${dbError instanceof Error ? dbError.message : 'Unknown DB error'}`);
+    }
     
     // Create topic ID to name mapping
     const topicMap = new Map(topics.map((t: any) => [t.id, t.name]));
