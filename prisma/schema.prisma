@@ -6,11 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  // For production PostgreSQL, use:
-  // provider = "postgresql"
-  // url      = env("DATABASE_URL")
 }
 
 // User Model - Core user data synced from Clerk
