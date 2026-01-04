@@ -43,19 +43,34 @@ export default function DashboardPage() {
     const fetchUserStats = async () => {
       if (!isLoaded) return;
       
+      // Check if user is signed in
+      if (!user) {
+        setError('Please sign in to view your dashboard.');
+        setLoading(false);
+        return;
+      }
+      
       try {
         setLoading(true);
+        setError(null);
+        
+        console.log('Fetching user stats...');
         const response = await fetch('/api/user/stats');
         
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch user statistics');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('API Error:', errorData);
+          throw new Error(errorData.error || 'Failed to fetch user statistics');
         }
         
         const data = await response.json();
+        console.log('Received stats:', data);
         setUserStats(data);
       } catch (error) {
         console.error('Error fetching user stats:', error);
-        setError('Unable to load your statistics. Please try again later.');
+        setError(error instanceof Error ? error.message : 'Unable to load your statistics. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -132,7 +147,20 @@ export default function DashboardPage() {
         {/* Error State */}
         {error && (
           <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-8">
-            <p className="text-red-800">{error}</p>
+            <div className="flex items-start gap-3">
+              <div className="flex-1">
+                <p className="text-red-800 font-medium mb-2">Error Loading Dashboard</p>
+                <p className="text-red-700">{error}</p>
+                {error.includes('sign in') && (
+                  <Link
+                    href="/auth/signin"
+                    className="inline-block mt-4 px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
