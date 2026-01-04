@@ -96,19 +96,35 @@ export async function GET() {
 
     const performanceByTopic = Array.from(topicPerformance.values()).map(topic => ({
       topicName: topic.topicName,
-      attemptCount: topic.attemptCount,
-      averageScore: topic.totalQuestions > 0 ? Math.round((topic.correctAnswers / topic.totalQuestions) * 100) : 0,
-      lastAttempted: topic.lastAttempted.toLocaleDateString()
+      attempted: topic.totalQuestions,
+      correct: topic.correctAnswers,
+      percentage: topic.totalQuestions > 0 ? Math.round((topic.correctAnswers / topic.totalQuestions) * 100) : 0,
     }));
 
+    // Calculate study hours from time spent (convert to hours)
+    const studyHours = Math.round(totalTimeSpent / 3600);
+
     return NextResponse.json({
-      totalExams,
-      averageScore,
-      totalTimeSpent,
-      bestScore,
-      currentStreak,
-      recentActivity,
-      performanceByTopic
+      stats: {
+        examSessions: {
+          total: totalExams,
+          completed: completedExams.length,
+          averageScore,
+          bestScore,
+          totalTimeSpent,
+          currentStreak,
+        },
+        questions: {
+          total: totalQuestions,
+          correct: totalCorrect,
+          accuracy: averageScore,
+        },
+        overall: {
+          studyHours,
+          totalAttempts: totalExams,
+        },
+      },
+      topicPerformance: performanceByTopic,
     });
 
   } catch (error) {
