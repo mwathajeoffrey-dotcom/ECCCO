@@ -16,31 +16,63 @@ export async function GET() {
     // Get user exam sessions directly with Clerk userId
     const examSessions = await prisma.examSession.findMany({
       where: { userId },
-      include: {
-        topic: true
-      },
       orderBy: { createdAt: 'desc' }
     });
 
+    // Get all unique topic IDs
+    const topicIds = [...new Set(examSessions.map(session => session.topicId))];
+    
+    // Fetch topics to get their names
+    const topics = await prisma.topic.findMany({
+      where: {
+        id: { in: topicIds }
+      }
+    });
+    
+    // Create topic ID to name mapping
+    const topicMap = new Map(topics.map(t => [t.id, t.name]));
+
     // Calculate overall statistics
     const totalExams = examSessions.length;
-    const completedExams = examSessions.filter((session: any) => session.completed);
-    const totalQuestions = examSessions.reduce((sum: number, session: any) => 
-      sum + (session.totalQuestions || 0), 0
-    );
-    const totalCorrect = examSessions.reduce((sum: number, session: any) => 
-      sum + (session.correctAnswers || 0), 0
-    );
+    const completedExams = examSessions.filter(session => session.completed);
+    
+    // Calculate total questions by parsing the questions JSON
+    let totalQuestions = 0;
+    let totalCorrect = 0;
+    
+    examSessions.forEach(session => {
+      try {
+        const questions = JSON.parse(session.questions);
+        const questionCount = questions.length;
+        totalQuestions += questionCount;
+        
+        // Calculate correct answers based on score
+        // Score is typically stored as percentage or actual score
+        if (session.score !== null) {
+          // If score is 0-100, calculate correct answers
+          if (session.score <= 100) {
+            totalCorrect += Math.round((session.score / 100) * questionCount);
+          } else {
+            // If score is actual number correct
+            totalCorrect += session.score;
+          }
+        }
+      } catch (e) {
+        // If JSON parsing fails, skip this session
+        console.error('Failed to parse session questions:', e);
+      }
+    });
+    
     const averageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-    const totalTimeSpent = examSessions.reduce((sum: number, session: any) => 
-      sum + (session.timeSpent || session.totalTime || 0), 0
+    const totalTimeSpent = examSessions.reduce((sum, session) => 
+      sum + (session.totalTime || 0), 0
     );
-    const bestScore = Math.max(...completedExams.map((session: any) => session.score || 0), 0);
+    const bestScore = Math.max(...completedExams.map(session => session.score || 0), 0);
 
     // Calculate current streak
     const sortedSessions = examSessions
-      .filter((session: any) => session.completed)
-      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .filter(session => session.completed)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     let currentStreak = 0;
     if (sortedSessions.length > 0) {
@@ -60,19 +92,11 @@ export async function GET() {
       }
     }
 
-    // Get recent activity (last 10 sessions)
-    const recentActivity = examSessions.slice(0, 10).map((session: any) => ({
-      date: session.createdAt.toLocaleDateString(),
-      topicName: session.topic?.name || session.topicName || 'Mixed Topics',
-      score: session.score || 0,
-      timeSpent: session.timeSpent || session.totalTime || 0
-    }));
-
     // Calculate performance by topic
     const topicPerformance = new Map();
     
-    examSessions.forEach((session: any) => {
-      const topicName = session.topic?.name || session.topicName || 'Unknown';
+    examSessions.forEach(session => {
+      const topicName = topicMap.get(session.topicId) || 'Unknown Topic';
       
       if (!topicPerformance.has(topicName)) {
         topicPerformance.set(topicName, {
@@ -86,8 +110,22 @@ export async function GET() {
       
       const topic = topicPerformance.get(topicName);
       topic.attemptCount++;
-      topic.totalQuestions += (session.totalQuestions || 0);
-      topic.correctAnswers += (session.correctAnswers || 0);
+      
+      try {
+        const questions = JSON.parse(session.questions);
+        const questionCount = questions.length;
+        topic.totalQuestions += questionCount;
+        
+        if (session.score !== null) {
+          if (session.score <= 100) {
+            topic.correctAnswers += Math.round((session.score / 100) * questionCount);
+          } else {
+            topic.correctAnswers += session.score;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse session questions for topic:', e);
+      }
       
       if (session.createdAt > topic.lastAttempted) {
         topic.lastAttempted = session.createdAt;
@@ -130,7 +168,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching user stats:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
