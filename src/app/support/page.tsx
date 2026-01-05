@@ -44,6 +44,11 @@ export default function SupportPage() {
     try {
       console.log('[Support Form] Submitting feedback...');
       
+      // Check if online before attempting submission
+      if (!navigator.onLine) {
+        throw new Error('You appear to be offline. Please check your internet connection and try again.');
+      }
+      
       const response = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,7 +80,16 @@ export default function SupportPage() {
       });
     } catch (err) {
       console.error('[Support Form] Submission error:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to submit feedback. Please try again.';
+      
+      // Provide user-friendly error messages
+      let errorMessage = 'Failed to submit feedback. Please try again.';
+      
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
     } finally {
       setSubmitting(false);
