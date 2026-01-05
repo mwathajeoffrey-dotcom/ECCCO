@@ -76,11 +76,14 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date()
       },
       create: {
+        id: `rating_${userId}_${questionId}_${Date.now()}`,
         userId,
         questionId,
         stars,
         helpful: helpful ?? null,
-        feedback: feedback || null
+        feedback: feedback || null,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     });
 
