@@ -40,7 +40,7 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
         // Include related data
-        quizAttempts: {
+        QuizAttempt: {
           select: {
             id: true,
             score: true,
@@ -53,7 +53,7 @@ export async function GET() {
           },
           take: 5 // Last 5 attempts
         },
-        examAttempts: {
+        ExamAttempt: {
           select: {
             id: true,
             score: true,
@@ -66,7 +66,7 @@ export async function GET() {
           },
           take: 5
         },
-        questionAttempts: {
+        QuestionAttempt: {
           select: {
             id: true,
             isCorrect: true,
@@ -85,16 +85,16 @@ export async function GET() {
 
     // Calculate statistics for each user
     const usersWithStats = users.map(user => {
-      const totalQuizzes = user.quizAttempts.length;
-      const totalExams = user.examAttempts.length;
-      const totalQuestions = user.questionAttempts.length;
+      const totalQuizzes = user.QuizAttempt.length;
+      const totalExams = user.ExamAttempt.length;
+      const totalQuestions = user.QuestionAttempt.length;
       
-      const correctAnswers = user.questionAttempts.filter(qa => qa.isCorrect).length;
+      const correctAnswers = user.QuestionAttempt.filter(qa => qa.isCorrect).length;
       const accuracy = totalQuestions > 0 
         ? Math.round((correctAnswers / totalQuestions) * 100) 
         : 0;
 
-      const passedExams = user.examAttempts.filter(ea => ea.passed).length;
+      const passedExams = user.ExamAttempt.filter(ea => ea.passed).length;
       const examPassRate = totalExams > 0
         ? Math.round((passedExams / totalExams) * 100)
         : 0;
@@ -104,9 +104,9 @@ export async function GET() {
       lastWeek.setDate(lastWeek.getDate() - 7);
       
       const recentActivity = [
-        ...user.quizAttempts.map(qa => qa.createdAt),
-        ...user.examAttempts.map(ea => ea.createdAt),
-        ...user.questionAttempts.map(qa => qa.createdAt)
+        ...user.QuizAttempt.map(qa => qa.createdAt),
+        ...user.ExamAttempt.map(ea => ea.createdAt),
+        ...user.QuestionAttempt.map(qa => qa.createdAt)
       ].filter(date => new Date(date) > lastWeek);
 
       const isActive = recentActivity.length > 0;
@@ -129,16 +129,16 @@ export async function GET() {
           passedExams,
           examPassRate
         },
-        recentQuizzes: user.quizAttempts.slice(0, 3),
-        recentExams: user.examAttempts.slice(0, 3)
+        recentQuizzes: user.QuizAttempt.slice(0, 3),
+        recentExams: user.ExamAttempt.slice(0, 3)
       };
     });
 
     // Calculate global statistics
     const totalUsers = users.length;
     const activeUsers = usersWithStats.filter(u => u.isActive).length;
-    const totalQuizAttempts = users.reduce((sum, u) => sum + u.quizAttempts.length, 0);
-    const totalExamAttempts = users.reduce((sum, u) => sum + u.examAttempts.length, 0);
+    const totalQuizAttempts = users.reduce((sum, u) => sum + u.QuizAttempt.length, 0);
+    const totalExamAttempts = users.reduce((sum, u) => sum + u.ExamAttempt.length, 0);
 
     return NextResponse.json({
       success: true,
