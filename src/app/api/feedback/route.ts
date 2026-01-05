@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     // Create feedback entry
     const feedback = await prisma.feedback.create({
       data: {
+        id: `feedback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         userName: userName || null,
         userEmail,
         type: type || 'question',
@@ -58,6 +59,8 @@ export async function POST(request: NextRequest) {
         userAgent: userAgent || null,
         status: 'new',
         priority: determinePriority(type),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
 

@@ -65,10 +65,13 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date()
       },
       create: {
+        id: `${userId}_${questionId}_${Date.now()}`,
         userId,
         questionId,
         category: category || 'Unknown',
-        notes: notes || ''
+        notes: notes || '',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     });
 
