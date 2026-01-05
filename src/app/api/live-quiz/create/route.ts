@@ -109,8 +109,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the live quiz session
+    const now = new Date();
+    const sessionId = `session_${Date.now()}_${accessCode.toLowerCase()}`;
+    
     const liveQuizSession = await prisma.liveQuizSession.create({
       data: {
+        id: sessionId,
         title,
         description,
         accessCode,
@@ -119,14 +123,15 @@ export async function POST(request: NextRequest) {
         questionIds: JSON.stringify(questionIds),
         settings: JSON.stringify(settings),
         status: 'WAITING',
+        createdAt: now,
+        updatedAt: now,
       },
-      include: {
-        topic: {
-          include: {
-            module: true,
-          },
-        },
-      },
+    });
+
+    // Get topic information for response
+    const topic = await prisma.topic.findUnique({
+      where: { id: finalTopicId },
+      select: { name: true },
     });
 
     return NextResponse.json({
@@ -135,7 +140,7 @@ export async function POST(request: NextRequest) {
       description: liveQuizSession.description,
       accessCode: liveQuizSession.accessCode,
       status: liveQuizSession.status,
-      topicName: liveQuizSession.topic?.name,
+      topicName: topic?.name,
       questionCount: questionIds.length,
     });
   } catch (error) {

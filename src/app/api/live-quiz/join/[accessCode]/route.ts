@@ -142,8 +142,10 @@ export async function POST(
     } catch {}
 
     // Create participant
+    const participantId = `participant_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     const participant = await prisma.liveQuizParticipant.create({
       data: {
+        id: participantId,
         sessionId: session.id,
         nickname: nickname.trim(),
         score: 0,

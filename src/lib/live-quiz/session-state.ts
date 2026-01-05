@@ -322,17 +322,24 @@ export class LiveQuizSessionState {
       }
 
       // Save answer to database
+      const answerId = `answer_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+      const answerSubmittedAt = new Date(submittedAt);
+      const questionIndex = sessionState?.currentQuestionIndex ?? 0;
+      const timeToAnswerMs = sessionState?.questionStartTime 
+        ? submittedAt - sessionState.questionStartTime 
+        : null;
+      
       await prisma.liveQuizAnswer.create({
         data: {
+          id: answerId,
+          sessionId,
           participantId,
           questionId,
-          answer,
+          questionIndex,
+          selectedAnswer: answer,
           isCorrect,
-          points,
-          submittedAt: new Date(submittedAt),
-          timeToAnswer: sessionState?.questionStartTime 
-            ? submittedAt - sessionState.questionStartTime 
-            : 0,
+          timeToAnswer: timeToAnswerMs,
+          answeredAt: answerSubmittedAt,
         },
       });
 
