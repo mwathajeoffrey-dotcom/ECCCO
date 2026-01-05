@@ -656,8 +656,8 @@ export function GuidelineManagementPage() {
           </div>
           
           {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
-              <strong>Dev Mode:</strong> Access code: Gm@12345
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+              <strong>Dev Mode:</strong> Sign in with a developer account to access this page.
             </div>
           )}
         </div>
