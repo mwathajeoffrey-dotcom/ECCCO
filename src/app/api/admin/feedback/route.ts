@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 /**
  * GET /api/admin/feedback
@@ -19,7 +17,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const feedback = await (prisma as any).feedback.findMany({
+    const feedback = await prisma.feedback.findMany({
       orderBy: [
         { status: 'asc' }, // new first
         { createdAt: 'desc' },

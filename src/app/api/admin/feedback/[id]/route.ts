@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { requireAdmin } from '@/lib/auth/admin';
-import { prisma } from '@/lib/database/prisma-client';
+import { prisma } from '@/lib/prisma';
 
 /**
  * PATCH /api/admin/feedback/[id]
@@ -25,7 +25,7 @@ export async function PATCH(
     const body = await request.json();
     const { status, resolution } = body;
 
-    const updateData: any = {};
+    const updateData: any = { updatedAt: new Date() };
     if (status) updateData.status = status;
     if (resolution) updateData.resolution = resolution;
     
@@ -34,7 +34,7 @@ export async function PATCH(
       updateData.resolvedAt = new Date();
     }
 
-    const feedback = await (prisma as any).feedback.update({
+    const feedback = await prisma.feedback.update({
       where: { id },
       data: updateData,
     });
@@ -68,7 +68,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await (prisma as any).feedback.delete({
+    await prisma.feedback.delete({
       where: { id },
     });
 
