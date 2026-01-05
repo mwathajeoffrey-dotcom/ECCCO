@@ -34,25 +34,20 @@ export async function POST(request: NextRequest) {
     await prisma.examSession.create({
       data: {
         id: sessionData.id,
+        userId: sessionData.userId || null,
         sessionId: sessionData.sessionId,
         topicId: sessionData.topicId,
-        topicName: sessionData.topicName,
-        questions: JSON.stringify(sessionData.questions.map(q => q.id)), // Legacy field - store question IDs
-        questionsData: JSON.stringify(sessionData.questions), // New field - store full question data
-        answers: JSON.stringify(sessionData.answers), // Legacy field
-        answersData: JSON.stringify(sessionData.answers), // New field for consistency
+        questions: JSON.stringify(sessionData.questions.map((q: any) => q.id)), // Store question IDs as JSON
+        answers: JSON.stringify(sessionData.answers), // Store answers as JSON
         score: sessionData.score,
-        totalQuestions: sessionData.totalQuestions,
-        correctAnswers: sessionData.correctAnswers,
-        totalTime: sessionData.timeSpent, // Legacy field
-        timeSpent: sessionData.timeSpent, // New field
-        completedAt: sessionData.completedAt,
+        totalTime: sessionData.timeSpent,
         completed: true, // Mark as completed
-        metadata: JSON.stringify(sessionData.metadata || {})
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     });
 
-    console.log(`[Analytics API] Session recorded: ${sessionData.topicName} - ${sessionData.score}%`);
+    console.log(`[Analytics API] Session recorded: ${sessionData.topicId} - ${sessionData.score}%`);
 
     return NextResponse.json({
       success: true,

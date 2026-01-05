@@ -58,7 +58,8 @@ export async function POST(request: NextRequest) {
           id: topicId,
           name: topicName,
           description: `Exam topic for ${topicName}`,
-          category: 'Emergency Medicine'
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       });
     }
@@ -66,11 +67,14 @@ export async function POST(request: NextRequest) {
     // Create exam session
     const examSession = await prisma.examSession.create({
       data: {
+        id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         userId,
+        sessionId: `${userId}_${Date.now()}`,
         topicId: topic.id,
-        finalScore,
-        totalTimeSpent,
-        isStudyMode,
+        questions: JSON.stringify(questions.map(q => q.id)),
+        answers: JSON.stringify(userAnswers),
+        score: finalScore,
+        totalTime: totalTimeSpent,
         completed,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -92,26 +96,29 @@ export async function POST(request: NextRequest) {
           data: {
             id: question.id,
             question: question.question,
-            options: question.options,
+            options: JSON.stringify(question.options),
             correctIndex: question.correctIndex,
             explanation: question.explanation,
-            difficulty: 'Medium', // Default difficulty
+            references: JSON.stringify([]),
+            difficulty: 'medium',
             topicId: topic.id,
-            references: [],
             createdAt: new Date(),
             updatedAt: new Date()
           }
         });
       }
 
-      // Save the exam question (user's answer to this question in this exam)
-      await prisma.examQuestion.create({
+      // Save the question attempt
+      await prisma.questionAttempt.create({
         data: {
-          examSessionId: examSession.id,
+          id: `attempt_${Date.now()}_${i}_${Math.random().toString(36).substr(2, 9)}`,
+          userId,
           questionId: dbQuestion.id,
-          userAnswer: userAnswer ?? null,
+          topicId: topic.id,
+          selectedAnswer: userAnswer ?? 0,
           isCorrect: userAnswer === question.correctIndex,
-          timeSpent: totalTimeSpent / questions.length, // Approximate time per question
+          timeSpent: Math.floor(totalTimeSpent / questions.length),
+          attemptMode: isStudyMode ? 'study' : 'exam',
           createdAt: new Date()
         }
       });
