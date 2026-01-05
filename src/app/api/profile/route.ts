@@ -24,51 +24,60 @@ export async function GET() {
     // Find or create user
     let user = await prisma.user.findUnique({
       where: { clerkUserId: userId },
-      include: { profile: true }
+      include: { UserProfile: true }
     });
 
     if (!user) {
       // Create user if doesn't exist (first time login)
       user = await prisma.user.create({
         data: {
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: userId,
-          profile: {
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          UserProfile: {
             create: {
+              id: `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               // Default preferences
               difficultyPreference: 'medium',
               preferredMode: 'practice',
               dailyGoal: 10,
               emailNotifications: true,
-              weeklyDigest: true
+              weeklyDigest: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
             }
           }
         },
-        include: { profile: true }
+        include: { UserProfile: true }
       });
-    } else if (!user.profile) {
+    } else if (!user.UserProfile) {
       // Create profile if user exists but profile doesn't
       await prisma.userProfile.create({
         data: {
+          id: `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           userId: user.id,
           difficultyPreference: 'medium',
           preferredMode: 'practice',
           dailyGoal: 10,
           emailNotifications: true,
-          weeklyDigest: true
+          weeklyDigest: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       });
       
       // Refetch user with profile
       user = await prisma.user.findUnique({
         where: { clerkUserId: userId },
-        include: { profile: true }
+        include: { UserProfile: true }
       });
     }
 
     return NextResponse.json({
       success: true,
       user,
-      profile: user?.profile
+      profile: user?.UserProfile
     });
 
   } catch (error) {
@@ -104,7 +113,12 @@ export async function PUT(request: Request) {
 
     if (!user) {
       user = await prisma.user.create({
-        data: { clerkUserId: userId }
+        data: { 
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          clerkUserId: userId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
       });
     }
 
@@ -112,7 +126,10 @@ export async function PUT(request: Request) {
     if (data.email && data.email !== user.email) {
       await prisma.user.update({
         where: { id: user.id },
-        data: { email: data.email }
+        data: { 
+          email: data.email,
+          updatedAt: new Date()
+        }
       });
     }
 
@@ -134,10 +151,16 @@ export async function PUT(request: Request) {
     const profile = await prisma.userProfile.upsert({
       where: { userId: user.id },
       create: {
+        id: `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         userId: user.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         ...profileData
       },
-      update: profileData
+      update: {
+        ...profileData,
+        updatedAt: new Date()
+      }
     });
 
     return NextResponse.json({
