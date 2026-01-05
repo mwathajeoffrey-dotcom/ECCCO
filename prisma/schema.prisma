@@ -1,6 +1,3 @@
-// ECCCO Platform Prisma Schema
-// Production-ready database schema with PostgreSQL support
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,318 +7,233 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User Model - Core user data synced from Clerk
-model User {
-  id              String   @id @default(cuid())
-  clerkUserId     String   @unique // Clerk user ID
-  email           String?  @unique
-  
-  // Profile & Preferences
-  profile         UserProfile?
-  
-  // Activity & Progress
-  quizAttempts    QuizAttempt[]
-  examAttempts    ExamAttempt[]
-  questionAttempts QuestionAttempt[]
-  bookmarks       Bookmark[]
-  questionRatings QuestionRating[]
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  @@index([clerkUserId])
-  @@index([email])
+model Bookmark {
+  id         String   @id
+  userId     String
+  questionId String
+  category   String
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  User       User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@index([category])
   @@index([createdAt])
-}
-
-// User Profile - Extended user preferences and settings
-model UserProfile {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Professional Information
-  specialty       String?  // "ACLS", "PALS", "Both", "Other"
-  experienceLevel String?  // "Student", "Resident", "Attending", "Nurse", "Paramedic", "Other"
-  organization    String?  // Hospital/institution name
-  role            String?  // Job title
-  
-  // Learning Preferences
-  focusAreas      String?  // JSON array of focus topics
-  difficultyPreference String @default("medium") // "easy", "medium", "hard", "mixed"
-  studyGoals      String?  // User's learning objectives
-  
-  // Personalization
-  preferredMode   String   @default("practice") // "practice", "exam", "mixed"
-  dailyGoal       Int      @default(10) // Questions per day goal
-  
-  // Notifications & Settings
-  emailNotifications Boolean @default(true)
-  weeklyDigest    Boolean  @default(true)
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
   @@index([userId])
-  @@index([specialty])
-  @@index([experienceLevel])
 }
 
-// Quiz Attempt - Track practice quiz sessions
-model QuizAttempt {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Quiz Details
-  mode            String   // "practice", "timed", "exam"
-  topicId         String?  // Optional topic filter
-  difficulty      String?  // Optional difficulty filter
-  
-  // Results
-  score           Int
-  totalQuestions  Int
-  timeSpent       Int?     // Seconds
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  
-  @@index([userId])
-  @@index([mode])
-  @@index([createdAt])
+model EvidenceReference {
+  id                 String   @id
+  referenceId        String   @unique
+  category           String
+  name               String
+  organization       String?
+  year               Int
+  summary            String
+  keyRecommendations String
+  clinicalPearls     String
+  evidenceLevel      String
+  citation           String
+  references         String
+  topics             String?
+  journal            String?
+  doi                String?
+  pmid               String?
+  published          Boolean  @default(true)
+  featured           Boolean  @default(false)
+  displayOrder       Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime
+  createdBy          String?
+  updatedBy          String?
+
+  @@index([category])
+  @@index([displayOrder])
+  @@index([featured])
+  @@index([published])
+  @@index([referenceId])
+  @@index([year])
 }
 
-// Exam Attempt - Track certification exam attempts
 model ExamAttempt {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Exam Details
-  examType        String   // "ACLS", "PALS", "BLS"
-  
-  // Results
-  score           Int
-  totalQuestions  Int
-  passed          Boolean
-  timeSpent       Int?     // Seconds
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  
-  @@index([userId])
+  id             String   @id
+  userId         String
+  examType       String
+  score          Int
+  totalQuestions Int
+  passed         Boolean
+  timeSpent      Int?
+  createdAt      DateTime @default(now())
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
   @@index([examType])
   @@index([passed])
-  @@index([createdAt])
-}
-
-// Question Attempt - Individual question performance tracking
-model QuestionAttempt {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Question Details
-  questionId      String
-  topicId         String?
-  
-  // Attempt Details
-  selectedAnswer  Int      // Index of selected answer
-  isCorrect       Boolean
-  timeSpent       Int?     // Seconds spent on this question
-  
-  // Context
-  attemptMode     String   // "practice", "exam", "review"
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  
   @@index([userId])
-  @@index([questionId])
-  @@index([isCorrect])
-  @@index([createdAt])
-}
-
-model Topic {
-  id          String     @id @default(cuid())
-  name        String     @unique
-  description String?
-  questions   Question[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
-model Question {
-  id           String   @id @default(cuid())
-  question     String
-  options      String   // JSON string of options array
-  correctIndex Int      // Index of correct answer (0-based)
-  explanation  String
-  references   String   // JSON string of references array
-  difficulty   String   @default("medium") // easy, medium, hard
-  topicId      String
-  topic        Topic    @relation(fields: [topicId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@index([topicId])
-  @@index([difficulty])
 }
 
 model ExamSession {
-  id          String   @id @default(cuid())
-  userId      String?  // Optional user ID for tracking
-  sessionId   String   @unique // Browser session identifier
-  topicId     String
-  questions   String   // JSON string of question IDs array
-  answers     String   // JSON string of user answers array
-  score       Int?
-  totalTime   Int?     // Time taken in seconds
-  completed   Boolean  @default(false)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id
+  userId    String?
+  sessionId String   @unique
+  topicId   String
+  questions String
+  answers   String
+  score     Int?
+  totalTime Int?
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
 
-  @@index([userId])
-  @@index([topicId])
-  @@index([sessionId])
   @@index([createdAt])
+  @@index([sessionId])
+  @@index([topicId])
+  @@index([userId])
 }
 
-// Evidence Library - Medical References, Guidelines, and Trials
-model EvidenceReference {
-  id              String   @id @default(cuid())
-  referenceId     String   @unique // e.g., "acls-2020", "clovers-trial-2023"
-  
-  // Basic Information
-  category        String   // e.g., "Cardiac Arrest & Resuscitation"
-  name            String   // e.g., "2020 AHA Guidelines for CPR"
-  organization    String?  // e.g., "American Heart Association"
-  year            Int
-  
-  // Content
-  summary         String
-  keyRecommendations String // JSON array of strings
-  clinicalPearls     String // JSON array of strings
-  
-  // Evidence & Citation
-  evidenceLevel   String   // e.g., "Level I Evidence (Multiple RCTs)"
-  citation        String
-  
-  // References (JSON array of {title, journal, doi, url})
-  references      String
-  
-  // Additional Metadata
-  topics          String?  // JSON array of topic strings
-  journal         String?
-  doi             String?
-  pmid            String?  // PubMed ID for future integration
-  
-  
-  // Publishing & Display
-  published       Boolean  @default(true)
-  featured        Boolean  @default(false)
-  displayOrder    Int      @default(0)
-  
-  // Audit Fields
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  createdBy       String?  // User ID who created
-  updatedBy       String?  // User ID who last updated
-  
-  @@index([category])
-  @@index([year])
-  @@index([published])
-  @@index([featured])
-  @@index([displayOrder])
-  @@index([referenceId])
-}
-
-// User Feedback & Support
 model Feedback {
-  id              String   @id @default(cuid())
-  
-  // User Information
-  userId          String?  // Optional - for logged-in users
-  userName        String?  // Name provided by user
-  userEmail       String   // Email for response
-  
-  // Feedback Details
-  type            String   // "bug", "feature", "question", "complaint", "praise"
-  category        String?  // "technical", "content", "ux", "other"
-  subject         String   // Brief subject line
-  message         String   // Detailed message
-  
-  // Context
-  pageUrl         String?  // Where the feedback was submitted from
-  userAgent       String?  // Browser/device info
-  
-  // Status & Resolution
-  status          String   @default("new") // "new", "in-progress", "resolved", "closed"
-  priority        String   @default("medium") // "low", "medium", "high", "urgent"
-  assignedTo      String?  // Admin user ID assigned to handle this
-  resolution      String?  // Admin response/resolution
-  resolvedAt      DateTime? // When it was resolved
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  id         String    @id
+  userId     String?
+  userName   String?
+  userEmail  String
+  type       String
+  category   String?
+  subject    String
+  message    String
+  pageUrl    String?
+  userAgent  String?
+  status     String    @default("new")
+  priority   String    @default("medium")
+  assignedTo String?
+  resolution String?
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+
+  @@index([createdAt])
+  @@index([priority])
   @@index([status])
   @@index([type])
-  @@index([priority])
   @@index([userEmail])
-  @@index([createdAt])
 }
 
-// User Bookmarks - Save questions for later review
-model Bookmark {
-  id          String   @id @default(cuid())
-  
-  // User & Question
-  userId      String   // Clerk user ID or User model id
-  user        User?    @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  questionId  String   // Question being bookmarked
-  category    String   // ACLS, PALS, etc.
-  
-  // Personal Notes
-  notes       String?  // User's personal study notes
-  
-  // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@unique([userId, questionId]) // User can only bookmark a question once
+model Question {
+  id           String   @id
+  question     String
+  options      String
+  correctIndex Int
+  explanation  String
+  references   String
+  difficulty   String   @default("medium")
+  topicId      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  Topic        Topic    @relation(fields: [topicId], references: [id])
+
+  @@index([difficulty])
+  @@index([topicId])
+}
+
+model QuestionAttempt {
+  id             String   @id
+  userId         String
+  questionId     String
+  topicId        String?
+  selectedAnswer Int
+  isCorrect      Boolean
+  timeSpent      Int?
+  attemptMode    String
+  createdAt      DateTime @default(now())
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([isCorrect])
+  @@index([questionId])
   @@index([userId])
-  @@index([category])
-  @@index([createdAt])
 }
 
-// Question Ratings - User feedback on question quality
 model QuestionRating {
-  id          String   @id @default(cuid())
-  
-  // User & Question
-  userId      String   // Clerk user ID
-  user        User?    @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  questionId  String   // Question being rated
-  
-  // Rating Details
-  stars       Int      // 1-5 star rating
-  helpful     Boolean? // Thumbs up/down (true = helpful, false = not helpful)
-  feedback    String?  // Optional text feedback
-  
-  // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@unique([userId, questionId]) // User can only rate a question once
-  @@index([userId])
+  id         String   @id
+  userId     String
+  questionId String
+  stars      Int
+  helpful    Boolean?
+  feedback   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  User       User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@index([createdAt])
   @@index([questionId])
   @@index([stars])
-  @@index([createdAt])
+  @@index([userId])
 }
 
+model QuizAttempt {
+  id             String   @id
+  userId         String
+  mode           String
+  topicId        String?
+  difficulty     String?
+  score          Int
+  totalQuestions Int
+  timeSpent      Int?
+  createdAt      DateTime @default(now())
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([createdAt])
+  @@index([mode])
+  @@index([userId])
+}
+
+model Topic {
+  id          String     @id
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  Question    Question[]
+}
+
+model User {
+  id              String            @id
+  clerkUserId     String            @unique
+  email           String?           @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  Bookmark        Bookmark[]
+  ExamAttempt     ExamAttempt[]
+  QuestionAttempt QuestionAttempt[]
+  QuestionRating  QuestionRating[]
+  QuizAttempt     QuizAttempt[]
+  UserProfile     UserProfile?
+
+  @@index([clerkUserId])
+  @@index([createdAt])
+  @@index([email])
+}
+
+model UserProfile {
+  id                   String   @id
+  userId               String   @unique
+  specialty            String?
+  experienceLevel      String?
+  organization         String?
+  role                 String?
+  focusAreas           String?
+  difficultyPreference String   @default("medium")
+  studyGoals           String?
+  preferredMode        String   @default("practice")
+  dailyGoal            Int      @default(10)
+  emailNotifications   Boolean  @default(true)
+  weeklyDigest         Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime
+  User                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([experienceLevel])
+  @@index([specialty])
+  @@index([userId])
+}
