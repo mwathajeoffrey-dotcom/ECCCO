@@ -15,6 +15,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required session data" }, { status: 400 });
     }
 
+    // Validate questions array
+    if (!sessionData.questions || !Array.isArray(sessionData.questions)) {
+      return NextResponse.json({ error: "Invalid questions data" }, { status: 400 });
+    }
+
     // Check if we have a database connection
     const isDatabaseAvailable = await checkDatabaseConnection();
 

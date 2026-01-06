@@ -93,18 +93,18 @@ export default function DashboardPage() {
   // Calculate overall stats
   const overallStats = userStats
     ? {
-        totalQuestions: userStats.stats.questions.total,
-        totalCorrect: userStats.stats.questions.correct,
-        averageScore: userStats.stats.examSessions.averageScore || 0,
-        bestScore: userStats.stats.examSessions.bestScore || 0,
-        studyHours: userStats.stats.overall.studyHours || 0,
-        currentStreak: userStats.stats.examSessions.currentStreak || 0,
+        totalQuestions: userStats.stats?.questions?.total || 0,
+        totalCorrect: userStats.stats?.questions?.correct || 0,
+        averageScore: userStats.stats?.examSessions?.averageScore || 0,
+        bestScore: userStats.stats?.examSessions?.bestScore || 0,
+        studyHours: userStats.stats?.overall?.studyHours || 0,
+        currentStreak: userStats.stats?.examSessions?.currentStreak || 0,
         strongestTopic:
-          userStats.topicPerformance.length > 0
+          userStats.topicPerformance?.length > 0
             ? userStats.topicPerformance.reduce((max, current) => (current.percentage > max.percentage ? current : max))
             : { topicName: "N/A", percentage: 0 },
         weakestTopic:
-          userStats.topicPerformance.length > 0
+          userStats.topicPerformance?.length > 0
             ? userStats.topicPerformance.reduce((min, current) => (current.percentage < min.percentage ? current : min))
             : { topicName: "N/A", percentage: 0 },
       }

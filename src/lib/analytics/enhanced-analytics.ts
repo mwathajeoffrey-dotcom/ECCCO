@@ -114,6 +114,11 @@ class EnhancedAnalyticsService {
     }>();
 
     sessions.forEach(session => {
+      // Safety check: ensure questions array exists
+      if (!session.questions || !Array.isArray(session.questions)) {
+        return;
+      }
+
       session.questions.forEach((question, index) => {
         const difficulty = question.difficulty || 'medium';
         const isCorrect = session.answers[index] === question.correctIndex;
@@ -162,6 +167,11 @@ class EnhancedAnalyticsService {
     }>();
 
     sessions.forEach(session => {
+      // Safety check: ensure questions array exists
+      if (!session.questions || !Array.isArray(session.questions)) {
+        return;
+      }
+
       session.questions.forEach((question, index) => {
         const topicId = question.topicId;
         const isCorrect = session.answers[index] === question.correctIndex;
@@ -304,6 +314,7 @@ class EnhancedAnalyticsService {
     timeSpent: number;
   }> {
     return sessions
+      .filter(session => session.questions && Array.isArray(session.questions)) // Safety check
       .sort((a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime())
       .map(session => {
         const avgDifficulty = this.calculateAverageDifficulty(session.questions);
@@ -473,6 +484,11 @@ class EnhancedAnalyticsService {
     const topicSet = new Set<string>();
 
     sessions.forEach(session => {
+      // Safety check: ensure questions array exists
+      if (!session.questions || !Array.isArray(session.questions)) {
+        return;
+      }
+
       session.questions.forEach((question, index) => {
         if (question.difficulty === 'hard') {
           hardQuestions++;
