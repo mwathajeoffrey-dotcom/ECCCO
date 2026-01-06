@@ -48,9 +48,12 @@ interface QuizSession {
   status: 'WAITING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'PAUSED';
   currentQuestionIndex: number;
   questionTimeLimit: number;
+  timePerQuestion: number;
   questionIds: string[];
   questions: Question[];
   participants: Participant[];
+  pointsPerQuestion?: number;
+  showCorrectAnswers?: boolean;
 }
 
 export default function HostQuizPage({ params }: { params: Promise<{ sessionId: string }> }) {
@@ -464,23 +467,95 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {/* Quiz Progress */}
-            <Card className="bg-white shadow-lg mb-6">
-              <CardHeader>
-                <div className="flex items-center justify-between">
+            {/* Quiz Progress & Timer */}
+            {quizSession.status === 'IN_PROGRESS' && currentQuestion && (
+              <Card className="bg-white shadow-lg mb-6">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>
+                      Question {quizSession.currentQuestionIndex + 1} of {quizSession.questions.length}
+                    </CardTitle>
+                    
+                    {/* Enhanced Visual Timer */}
+                    <div className="flex items-center gap-4">
+                      {/* Circular Progress Timer */}
+                      <div className="relative w-24 h-24">
+                        <svg className="transform -rotate-90 w-24 h-24">
+                          {/* Background circle */}
+                          <circle
+                            cx="48"
+                            cy="48"
+                            r="40"
+                            stroke="#e5e7eb"
+                            strokeWidth="6"
+                            fill="none"
+                          />
+                          {/* Progress circle */}
+                          <circle
+                            cx="48"
+                            cy="48"
+                            r="40"
+                            stroke={
+                              timeRemaining <= 10 ? '#ef4444' :
+                              timeRemaining <= 20 ? '#f59e0b' : '#10b981'
+                            }
+                            strokeWidth="6"
+                            fill="none"
+                            strokeDasharray={`${2 * Math.PI * 40}`}
+                            strokeDashoffset={`${2 * Math.PI * 40 * (1 - timeRemaining / (quizSession.timePerQuestion || 30))}`}
+                            className="transition-all duration-1000 ease-linear"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        {/* Timer text */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className={`text-2xl font-bold ${
+                              timeRemaining <= 10 ? 'text-red-500 animate-pulse' :
+                              timeRemaining <= 20 ? 'text-yellow-600' : 'text-green-600'
+                            }`}>
+                              {timeRemaining}
+                            </div>
+                            <div className="text-xs text-gray-500">sec</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Timer status badge */}
+                      <div className="flex flex-col items-start">
+                        <Badge 
+                          variant="outline" 
+                          className={`${
+                            timeRemaining <= 10 ? 'border-red-500 text-red-700 bg-red-50' :
+                            timeRemaining <= 20 ? 'border-yellow-500 text-yellow-700 bg-yellow-50' :
+                            'border-green-500 text-green-700 bg-green-50'
+                          }`}
+                        >
+                          {timeRemaining <= 10 ? '⚠️ Hurry!' :
+                           timeRemaining <= 20 ? '⏰ Running out' : '✓ Time remaining'}
+                        </Badge>
+                        {isTimerActive && (
+                          <span className="text-xs text-gray-500 mt-1">Timer active</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <Progress value={getProgressPercentage()} className="mt-3" />
+                </CardHeader>
+              </Card>
+            )}
+
+            {/* Progress bar for non-active states */}
+            {(quizSession.status === 'WAITING' || quizSession.status === 'PAUSED') && (
+              <Card className="bg-white shadow-lg mb-6">
+                <CardHeader>
                   <CardTitle>
                     Question {quizSession.currentQuestionIndex + 1} of {quizSession.questions.length}
                   </CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Timer className={`w-5 h-5 ${timeRemaining <= 10 ? 'text-red-500' : 'text-blue-500'}`} />
-                    <span className={`font-mono text-lg ${timeRemaining <= 10 ? 'text-red-500' : 'text-gray-700'}`}>
-                      {formatTime(timeRemaining)}
-                    </span>
-                  </div>
-                </div>
-                <Progress value={getProgressPercentage()} className="mt-2" />
-              </CardHeader>
-            </Card>
+                  <Progress value={getProgressPercentage()} className="mt-2" />
+                </CardHeader>
+              </Card>
+            )}
 
             {/* Current Question */}
             {currentQuestion ? (
@@ -624,7 +699,83 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
           </div>
 
           {/* Participants Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
+            {/* Real-Time Leaderboard (Kahoot Style) */}
+            {(quizSession.status === 'IN_PROGRESS' || quizSession.status === 'PAUSED' || quizSession.status === 'COMPLETED') && quizSession.participants.length > 0 && (
+              <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 shadow-lg border-2 border-yellow-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-yellow-600" />
+                    <span className="bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
+                      Live Leaderboard
+                    </span>
+                  </CardTitle>
+                  <p className="text-xs text-gray-600">Top performers right now</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {[...quizSession.participants]
+                      .sort((a, b) => b.score - a.score)
+                      .slice(0, 10)
+                      .map((participant, index) => (
+                        <div
+                          key={participant.id}
+                          className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                            index === 0 
+                              ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white shadow-md scale-105'
+                              : index === 1
+                              ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900'
+                              : index === 2
+                              ? 'bg-gradient-to-r from-orange-300 to-orange-400 text-gray-900'
+                              : 'bg-white border border-gray-200'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                              index === 0 ? 'bg-yellow-600 text-white' :
+                              index === 1 ? 'bg-gray-600 text-white' :
+                              index === 2 ? 'bg-orange-600 text-white' :
+                              'bg-gray-100 text-gray-600'
+                            }`}>
+                              {index + 1}
+                            </div>
+                            <div>
+                              <p className={`font-semibold ${
+                                index <= 2 ? (index === 0 ? 'text-white' : 'text-gray-900') : 'text-gray-800'
+                              }`}>
+                                {participant.nickname}
+                              </p>
+                              {index === 0 && (
+                                <p className="text-xs text-yellow-100">👑 Leader</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className={`font-bold text-lg ${
+                              index <= 2 ? (index === 0 ? 'text-white' : 'text-gray-900') : 'text-gray-800'
+                            }`}>
+                              {participant.score}
+                            </p>
+                            <p className={`text-xs ${
+                              index <= 2 ? (index === 0 ? 'text-yellow-100' : 'text-gray-700') : 'text-gray-500'
+                            }`}>
+                              points
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                  
+                  {quizSession.participants.length > 10 && (
+                    <p className="text-xs text-center text-gray-500 mt-3">
+                      +{quizSession.participants.length - 10} more participants
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Participants List */}
             <Card className="bg-white shadow-lg">
               <CardHeader>
                 <div className="flex items-center justify-between">
