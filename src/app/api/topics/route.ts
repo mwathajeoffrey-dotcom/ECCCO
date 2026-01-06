@@ -6,26 +6,28 @@ export async function GET() {
     // Fetch topics from database with question counts
     const topics = await prisma.topic.findMany({
       include: {
-        module: {
-          select: {
-            id: true,
-            name: true,
-            ageGroup: true,
-          },
-        },
         _count: {
           select: {
-            questions: true,
+            Question: true,
           },
         },
       },
-      orderBy: [
-        { module: { name: 'asc' } },
-        { name: 'asc' },
-      ],
+      orderBy: {
+        name: 'asc',
+      },
     });
 
-    return NextResponse.json(topics);
+    // Transform to match expected format
+    const formattedTopics = topics.map(topic => ({
+      id: topic.id,
+      name: topic.name,
+      description: topic.description,
+      _count: {
+        questions: topic._count.Question
+      }
+    }));
+
+    return NextResponse.json(formattedTopics);
   } catch (error) {
     console.error('Error fetching topics:', error);
     

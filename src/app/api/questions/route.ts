@@ -23,24 +23,34 @@ export async function GET(request: NextRequest) {
     const questions = await prisma.question.findMany({
       where,
       include: {
-        topic: {
+        Topic: {
           select: {
             id: true,
             name: true,
-            module: {
-              select: {
-                name: true,
-              },
-            },
           },
         },
       },
       take: limit,
     });
 
-    console.log(`✅ Found ${questions.length} questions`);
+    // Format to match expected structure
+    const formattedQuestions = questions.map(q => ({
+      id: q.id,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      explanation: q.explanation,
+      difficulty: q.difficulty,
+      topicId: q.topicId,
+      topic: {
+        id: q.Topic.id,
+        name: q.Topic.name
+      }
+    }));
 
-    return NextResponse.json(questions);
+    console.log(`✅ Found ${formattedQuestions.length} questions`);
+
+    return NextResponse.json(formattedQuestions);
   } catch (error) {
     console.error('❌ Error fetching questions:', error);
     return NextResponse.json(
