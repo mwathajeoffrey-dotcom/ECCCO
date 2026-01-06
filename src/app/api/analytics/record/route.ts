@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
-import { ExamSession } from '@/lib/analytics/analytics-v2';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma-client";
+import { ExamSession } from "@/lib/analytics/analytics-v2";
 
 /**
  * POST /api/analytics/record
@@ -12,21 +12,18 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!sessionData.sessionId || !sessionData.topicId || !sessionData.topicName) {
-      return NextResponse.json(
-        { error: 'Missing required session data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required session data" }, { status: 400 });
     }
 
     // Check if we have a database connection
     const isDatabaseAvailable = await checkDatabaseConnection();
 
     if (!isDatabaseAvailable) {
-      console.log('[Analytics API] Database unavailable, accepting session locally');
+      console.log("[Analytics API] Database unavailable, accepting session locally");
       return NextResponse.json({
         success: true,
-        message: 'Session recorded locally',
-        storageMode: 'local'
+        message: "Session recorded locally",
+        storageMode: "local",
       });
     }
 
@@ -43,27 +40,29 @@ export async function POST(request: NextRequest) {
         totalTime: sessionData.timeSpent,
         completed: true, // Mark as completed
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
 
     console.log(`[Analytics API] Session recorded: ${sessionData.topicId} - ${sessionData.score}%`);
 
     return NextResponse.json({
       success: true,
-      message: 'Session recorded successfully',
-      storageMode: 'database'
+      message: "Session recorded successfully",
+      storageMode: "database",
     });
-
   } catch (error) {
-    console.error('[Analytics API] Error recording session:', error);
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Session recorded locally due to server error',
-      storageMode: 'local',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 200 }); // Return 200 so client doesn't think it failed
+    console.error("[Analytics API] Error recording session:", error);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Session recorded locally due to server error",
+        storageMode: "local",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 200 }
+    ); // Return 200 so client doesn't think it failed
   }
 }
 
@@ -73,7 +72,10 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    console.log('[Analytics API] Database connection failed:', error instanceof Error ? error.message : 'Unknown error');
+    console.log(
+      "[Analytics API] Database connection failed:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     return false;
   } finally {
     await prisma.$disconnect();

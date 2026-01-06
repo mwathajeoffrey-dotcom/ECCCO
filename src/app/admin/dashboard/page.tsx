@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Users,
@@ -19,7 +19,7 @@ import {
   FileText,
   Mail,
   ChevronLeft,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface DashboardStats {
   totalUsers: number;
@@ -28,7 +28,7 @@ interface DashboardStats {
   totalReferences: number;
   quizzesCompleted: number;
   feedbackMessages: number;
-  systemHealth: 'healthy' | 'warning' | 'error';
+  systemHealth: "healthy" | "warning" | "error";
 }
 
 export default function AdminDashboard() {
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     totalReferences: 30,
     quizzesCompleted: 0,
     feedbackMessages: 0,
-    systemHealth: 'healthy',
+    systemHealth: "healthy",
   });
 
   useEffect(() => {
@@ -50,19 +50,19 @@ export default function AdminDashboard() {
 
   const checkAdminStatus = async () => {
     try {
-      const response = await fetch('/api/admin/check');
+      const response = await fetch("/api/admin/check");
       const data = await response.json();
-      
+
       if (!data.isAdmin) {
-        window.location.href = '/?error=unauthorized';
+        window.location.href = "/?error=unauthorized";
         return;
       }
-      
+
       setIsAdmin(true);
       await fetchDashboardStats();
     } catch (err) {
-      console.error('Admin check failed:', err);
-      window.location.href = '/login?redirect=/admin/dashboard';
+      console.error("Admin check failed:", err);
+      window.location.href = "/login?redirect=/admin/dashboard";
     } finally {
       setLoading(false);
     }
@@ -79,10 +79,10 @@ export default function AdminDashboard() {
         totalReferences: 30,
         quizzesCompleted: 1203,
         feedbackMessages: 12,
-        systemHealth: 'healthy',
+        systemHealth: "healthy",
       });
     } catch (err) {
-      console.error('Failed to fetch stats:', err);
+      console.error("Failed to fetch stats:", err);
     }
   };
 
@@ -108,10 +108,7 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link
-                href="/"
-                className="text-gray-500 hover:text-gray-700 transition-colors"
-              >
+              <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors">
                 <ChevronLeft className="w-6 h-6" />
               </Link>
               <div>
@@ -120,22 +117,13 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Link
-                href="/admin/users"
-                className="text-gray-700 hover:text-blue-600 font-medium"
-              >
+              <Link href="/admin/users" className="text-gray-700 hover:text-blue-600 font-medium">
                 Users ({stats.totalUsers})
               </Link>
-              <Link
-                href="/admin/evidence"
-                className="text-gray-700 hover:text-blue-600 font-medium"
-              >
+              <Link href="/admin/evidence" className="text-gray-700 hover:text-blue-600 font-medium">
                 Manage Evidence
               </Link>
-              <Link
-                href="/admin/feedback"
-                className="text-gray-700 hover:text-blue-600 font-medium"
-              >
+              <Link href="/admin/feedback" className="text-gray-700 hover:text-blue-600 font-medium">
                 Feedback ({stats.feedbackMessages})
               </Link>
             </div>
@@ -145,32 +133,44 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* System Health Banner */}
-        <div className={`rounded-lg p-4 mb-8 ${
-          stats.systemHealth === 'healthy' ? 'bg-green-50 border border-green-200' :
-          stats.systemHealth === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
-          'bg-red-50 border border-red-200'
-        }`}>
+        <div
+          className={`rounded-lg p-4 mb-8 ${
+            stats.systemHealth === "healthy"
+              ? "bg-green-50 border border-green-200"
+              : stats.systemHealth === "warning"
+              ? "bg-yellow-50 border border-yellow-200"
+              : "bg-red-50 border border-red-200"
+          }`}
+        >
           <div className="flex items-center">
-            {stats.systemHealth === 'healthy' ? (
+            {stats.systemHealth === "healthy" ? (
               <CheckCircle className="w-6 h-6 text-green-600 mr-3" />
-            ) : stats.systemHealth === 'warning' ? (
+            ) : stats.systemHealth === "warning" ? (
               <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
             ) : (
               <AlertCircle className="w-6 h-6 text-red-600 mr-3" />
             )}
             <div>
-              <p className={`font-semibold ${
-                stats.systemHealth === 'healthy' ? 'text-green-900' :
-                stats.systemHealth === 'warning' ? 'text-yellow-900' :
-                'text-red-900'
-              }`}>
-                System Status: {stats.systemHealth === 'healthy' ? 'All Systems Operational' : 'Attention Required'}
+              <p
+                className={`font-semibold ${
+                  stats.systemHealth === "healthy"
+                    ? "text-green-900"
+                    : stats.systemHealth === "warning"
+                    ? "text-yellow-900"
+                    : "text-red-900"
+                }`}
+              >
+                System Status: {stats.systemHealth === "healthy" ? "All Systems Operational" : "Attention Required"}
               </p>
-              <p className={`text-sm ${
-                stats.systemHealth === 'healthy' ? 'text-green-700' :
-                stats.systemHealth === 'warning' ? 'text-yellow-700' :
-                'text-red-700'
-              }`}>
+              <p
+                className={`text-sm ${
+                  stats.systemHealth === "healthy"
+                    ? "text-green-700"
+                    : stats.systemHealth === "warning"
+                    ? "text-yellow-700"
+                    : "text-red-700"
+                }`}
+              >
                 Last checked: {new Date().toLocaleTimeString()}
               </p>
             </div>
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
                 <span className="text-sm font-medium">View Feedback</span>
               </Link>
               <button
-                onClick={() => window.location.href = '/api/admin/export'}
+                onClick={() => (window.location.href = "/api/admin/export")}
                 className="flex items-center justify-center space-x-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-3 rounded-lg transition-colors"
               >
                 <Database className="w-4 h-4" />

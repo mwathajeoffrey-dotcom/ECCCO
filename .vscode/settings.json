@@ -2,19 +2,19 @@
   // Prevent accidental file corruption
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
-  
+
   // Ensure consistent line endings
   "files.eol": "\n",
-  
+
   // Remove trailing whitespace
   "files.trimTrailingWhitespace": true,
-  
+
   // Add final newline
   "files.insertFinalNewline": true,
-  
+
   // Format on save
   "editor.formatOnSave": true,
-  
+
   // TypeScript/JavaScript formatting
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[typescript]": {
@@ -23,18 +23,18 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  
+
   // Prevent paste overwriting files
   "editor.pasteAs.enabled": false,
-  
+
   // Show whitespace to catch issues
   "editor.renderWhitespace": "boundary",
-  
+
   // Git protections
   "git.confirmSync": true,
   "git.enableSmartCommit": false,
   "git.confirmEmptyCommits": true,
-  
+
   // File exclusions (don't show in editor)
   "files.exclude": {
     "**/.git": true,
@@ -46,7 +46,7 @@
     "**/docs/outreach": true,
     "**/docs/development-notes": true
   },
-  
+
   // Search exclusions
   "search.exclude": {
     "**/node_modules": true,

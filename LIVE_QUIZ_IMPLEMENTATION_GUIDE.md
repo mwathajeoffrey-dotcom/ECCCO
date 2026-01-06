@@ -1,7 +1,7 @@
 # 🎯 ECCCO Live Quiz - Complete Implementation Guide
 
-**Date:** January 5, 2026  
-**Status:** 🟡 Partially Implemented - Schema Added, Database Migration Pending  
+**Date:** January 5, 2026
+**Status:** 🟡 Partially Implemented - Schema Added, Database Migration Pending
 **Priority:** HIGH - Core Feature
 
 ---
@@ -23,6 +23,7 @@
 **ECCCO Live** is a real-time, multiplayer quiz system that allows instructors to host live medical training sessions with multiple participants answering questions simultaneously.
 
 ### **Key Features:**
+
 - ✅ Real-time WebSocket communication
 - ✅ Access code-based joining (6-character codes)
 - ✅ Host dashboard with live participant tracking
@@ -32,6 +33,7 @@
 - ✅ Mobile-responsive interface
 
 ### **Use Cases:**
+
 1. **Medical School Lectures** - Professor hosts quiz, students join via code
 2. **Grand Rounds** - Attending physician quizzes residents in real-time
 3. **Study Groups** - Peer-led practice sessions
@@ -42,6 +44,7 @@
 ## 📊 Current Status
 
 ### **✅ Completed:**
+
 1. ✅ Frontend UI (create, join, host pages)
 2. ✅ WebSocket infrastructure (`src/lib/live-quiz/websocket-manager.ts`)
 3. ✅ API routes structure (`src/app/api/live-quiz/`)
@@ -50,11 +53,13 @@
 6. ✅ **Database schema added** (Commit 9b74113)
 
 ### **🟡 In Progress:**
+
 1. 🟡 Database migration to Supabase (schema ready, push pending)
 2. 🟡 API route updates to match new schema
 3. 🟡 Error handling improvements
 
 ### **❌ Not Started:**
+
 1. ❌ Session cleanup/expiry logic
 2. ❌ Debug log removal from production
 3. ❌ Comprehensive testing
@@ -66,6 +71,7 @@
 ## 🏗️ Architecture
 
 ### **Tech Stack:**
+
 - **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS
 - **Backend:** Next.js API Routes, Prisma ORM
 - **Database:** PostgreSQL (Supabase)
@@ -129,19 +135,19 @@
 ```typescript
 // Server → Client
 interface ServerEvents {
-  'session:update': { session: LiveQuizSession }
-  'participants:update': { participants: LiveQuizParticipant[] }
-  'question:new': { question: Question, questionIndex: number }
-  'question:results': { results: QuestionResults }
-  'quiz:end': { finalResults: FinalResults }
-  'error': { message: string }
+  "session:update": { session: LiveQuizSession };
+  "participants:update": { participants: LiveQuizParticipant[] };
+  "question:new": { question: Question; questionIndex: number };
+  "question:results": { results: QuestionResults };
+  "quiz:end": { finalResults: FinalResults };
+  error: { message: string };
 }
 
 // Client → Server
 interface ClientEvents {
-  'join': { accessCode: string, nickname: string }
-  'answer': { questionIndex: number, selectedAnswer: number }
-  'leave': {}
+  join: { accessCode: string; nickname: string };
+  answer: { questionIndex: number; selectedAnswer: number };
+  leave: {};
 }
 ```
 
@@ -180,6 +186,7 @@ model LiveQuizSession {
 ```
 
 **Example Record:**
+
 ```json
 {
   "id": "session_1704484800000_abc123",
@@ -221,6 +228,7 @@ model LiveQuizParticipant {
 ```
 
 **Example Record:**
+
 ```json
 {
   "id": "participant_1704484900000_xyz789",
@@ -258,6 +266,7 @@ model LiveQuizAnswer {
 ```
 
 **Example Record:**
+
 ```json
 {
   "id": "answer_1704485000000_answer1",
@@ -279,6 +288,7 @@ model LiveQuizAnswer {
 ### **Phase 1: Database Migration** (CURRENT)
 
 **Task 1.1: Push Schema to Supabase**
+
 ```bash
 # Get correct Supabase connection URL
 # Use Direct Connection (port 5432) for migrations
@@ -288,9 +298,10 @@ npx prisma generate
 ```
 
 **Task 1.2: Verify Tables Created**
+
 ```sql
 -- Check in Supabase dashboard or via psql:
-SELECT tablename FROM pg_tables WHERE schemaname = 'public' 
+SELECT tablename FROM pg_tables WHERE schemaname = 'public'
 AND tablename LIKE 'Live%';
 
 -- Expected output:
@@ -300,43 +311,44 @@ AND tablename LIKE 'Live%';
 ```
 
 **Task 1.3: Test CRUD Operations**
+
 ```typescript
 // Test create session
 const session = await prisma.liveQuizSession.create({
   data: {
-    id: 'test_session_1',
-    title: 'Test Quiz',
-    accessCode: 'TEST01',
-    hostId: 'test_host',
-    topicId: 'test_topic',
-    questionIds: JSON.stringify(['q1', 'q2']),
+    id: "test_session_1",
+    title: "Test Quiz",
+    accessCode: "TEST01",
+    hostId: "test_host",
+    topicId: "test_topic",
+    questionIds: JSON.stringify(["q1", "q2"]),
     createdAt: new Date(),
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  },
 });
 
 // Test create participant
 const participant = await prisma.liveQuizParticipant.create({
   data: {
-    id: 'test_participant_1',
-    sessionId: 'test_session_1',
-    nickname: 'Test User',
-    createdAt: new Date()
-  }
+    id: "test_participant_1",
+    sessionId: "test_session_1",
+    nickname: "Test User",
+    createdAt: new Date(),
+  },
 });
 
 // Test create answer
 const answer = await prisma.liveQuizAnswer.create({
   data: {
-    id: 'test_answer_1',
-    sessionId: 'test_session_1',
-    participantId: 'test_participant_1',
-    questionId: 'q1',
+    id: "test_answer_1",
+    sessionId: "test_session_1",
+    participantId: "test_participant_1",
+    questionId: "q1",
     questionIndex: 0,
     selectedAnswer: 1,
     isCorrect: true,
-    answeredAt: new Date()
-  }
+    answeredAt: new Date(),
+  },
 });
 ```
 
@@ -347,6 +359,7 @@ const answer = await prisma.liveQuizAnswer.create({
 **Files to Update:**
 
 **2.1: `/api/live-quiz/create/route.ts`**
+
 ```typescript
 // Add required fields: id, createdAt, updatedAt
 const session = await prisma.liveQuizSession.create({
@@ -359,12 +372,13 @@ const session = await prisma.liveQuizSession.create({
     topicId,
     questionIds: JSON.stringify(questionIds),
     createdAt: new Date(),
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  },
 });
 ```
 
 **2.2: `/api/live-quiz/join/[accessCode]/route.ts`**
+
 ```typescript
 // Add id field
 const participant = await prisma.liveQuizParticipant.create({
@@ -373,12 +387,13 @@ const participant = await prisma.liveQuizParticipant.create({
     sessionId: session.id,
     userId: userId || null,
     nickname,
-    createdAt: new Date()
-  }
+    createdAt: new Date(),
+  },
 });
 ```
 
 **2.3: `/api/live-quiz/session/[sessionId]/participant/[participantId]/answer/route.ts`**
+
 ```typescript
 // Add id field
 const answer = await prisma.liveQuizAnswer.create({
@@ -391,8 +406,8 @@ const answer = await prisma.liveQuizAnswer.create({
     selectedAnswer,
     isCorrect,
     timeToAnswer,
-    answeredAt: new Date()
-  }
+    answeredAt: new Date(),
+  },
 });
 ```
 
@@ -401,44 +416,46 @@ const answer = await prisma.liveQuizAnswer.create({
 ### **Phase 3: Clean Up & Optimization**
 
 **3.1: Remove Debug Logging**
+
 ```typescript
 // File: src/lib/live-quiz/performance-manager.ts
 // BEFORE:
-logger.debug('Connection added to pool', { poolId, connectionCount });
+logger.debug("Connection added to pool", { poolId, connectionCount });
 
 // AFTER:
 // Remove all logger.debug() calls in production
-if (process.env.NODE_ENV === 'development') {
-  logger.debug('Connection added to pool', { poolId, connectionCount });
+if (process.env.NODE_ENV === "development") {
+  logger.debug("Connection added to pool", { poolId, connectionCount });
 }
 ```
 
 **3.2: Add Session Cleanup**
+
 ```typescript
 // File: src/lib/live-quiz/session-cleanup.ts (NEW)
 export async function cleanupOldSessions() {
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  
+
   // Auto-end sessions older than 24 hours
   await prisma.liveQuizSession.updateMany({
     where: {
-      status: { in: ['WAITING', 'IN_PROGRESS'] },
-      createdAt: { lt: twentyFourHoursAgo }
+      status: { in: ["WAITING", "IN_PROGRESS"] },
+      createdAt: { lt: twentyFourHoursAgo },
     },
     data: {
-      status: 'CANCELLED',
+      status: "CANCELLED",
       endedAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
-  
+
   // Delete completed sessions older than 7 days
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   await prisma.liveQuizSession.deleteMany({
     where: {
-      status: { in: ['COMPLETED', 'CANCELLED'] },
-      endedAt: { lt: sevenDaysAgo }
-    }
+      status: { in: ["COMPLETED", "CANCELLED"] },
+      endedAt: { lt: sevenDaysAgo },
+    },
   });
 }
 
@@ -447,19 +464,20 @@ export async function cleanupOldSessions() {
 ```
 
 **3.3: Add Session Expiry Middleware**
+
 ```typescript
 // Before returning session, check if expired
-if (session.status === 'IN_PROGRESS') {
+if (session.status === "IN_PROGRESS") {
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
   if (session.startedAt && session.startedAt < twoHoursAgo) {
     // Auto-end stale sessions
     await prisma.liveQuizSession.update({
       where: { id: session.id },
       data: {
-        status: 'COMPLETED',
+        status: "COMPLETED",
         endedAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
   }
 }
@@ -470,6 +488,7 @@ if (session.status === 'IN_PROGRESS') {
 ### **Phase 4: Testing**
 
 **4.1: Create Quiz Flow**
+
 1. Sign in as instructor
 2. Go to `/live-quiz`
 3. Click "Create New Quiz"
@@ -478,6 +497,7 @@ if (session.status === 'IN_PROGRESS') {
 6. Verify session created in database
 
 **4.2: Join Quiz Flow**
+
 1. Open incognito window
 2. Go to `/live-quiz`
 3. Enter access code from Step 1
@@ -486,6 +506,7 @@ if (session.status === 'IN_PROGRESS') {
 6. Verify participant created in database
 
 **4.3: Host Dashboard Flow**
+
 1. As host, click "Host Quiz" for created session
 2. Should see list of participants
 3. Click "Start Quiz"
@@ -493,6 +514,7 @@ if (session.status === 'IN_PROGRESS') {
 5. Verify status changed to IN_PROGRESS
 
 **4.4: Answer Flow**
+
 1. As participant, select an answer
 2. Submit answer
 3. Should see "Answer submitted" confirmation
@@ -500,12 +522,14 @@ if (session.status === 'IN_PROGRESS') {
 5. Check score updated
 
 **4.5: Leaderboard Flow**
+
 1. After all participants answer
 2. Host clicks "Next Question"
 3. Should show results and leaderboard
 4. Verify scores calculated correctly
 
 **4.6: End Quiz Flow**
+
 1. After last question
 2. Host clicks "End Quiz"
 3. Should show final results
@@ -517,7 +541,9 @@ if (session.status === 'IN_PROGRESS') {
 ## 🐛 Troubleshooting
 
 ### **Issue: Sessions not appearing in database**
+
 **Solution:**
+
 ```bash
 # Check if tables exist
 npx prisma studio
@@ -528,7 +554,9 @@ npx prisma db push
 ```
 
 ### **Issue: WebSocket connection fails**
+
 **Solution:**
+
 ```typescript
 // Check WebSocket manager initialization
 // File: src/lib/live-quiz/websocket-manager.ts
@@ -536,15 +564,17 @@ npx prisma db push
 ```
 
 ### **Issue: Participants can't join**
+
 **Solution:**
+
 ```typescript
 // Check access code generation
 // Should be 6 uppercase alphanumeric characters
 // No ambiguous characters (0, O, I, 1)
 
 function generateAccessCode(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = '';
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
   for (let i = 0; i < 6; i++) {
     code += chars[Math.floor(Math.random() * chars.length)];
   }
@@ -553,14 +583,16 @@ function generateAccessCode(): string {
 ```
 
 ### **Issue: Answers not saving**
+
 **Solution:**
+
 ```sql
 -- Check unique constraint
 -- Each participant can only answer each question once
 -- Verify questionIndex matches
-SELECT * FROM "LiveQuizAnswer" 
-WHERE "sessionId" = 'xxx' 
-AND "participantId" = 'yyy' 
+SELECT * FROM "LiveQuizAnswer"
+WHERE "sessionId" = 'xxx'
+AND "participantId" = 'yyy'
 AND "questionIndex" = 0;
 ```
 
@@ -582,12 +614,14 @@ AND "questionIndex" = 0;
 ## 📚 Related Files
 
 **Frontend:**
+
 - `src/app/live-quiz/page.tsx` - Main landing page
 - `src/app/live-quiz/create/page.tsx` - Create quiz form
 - `src/app/live-quiz/join/[accessCode]/page.tsx` - Join quiz page
 - `src/app/live-quiz/host/[sessionId]/page.tsx` - Host dashboard
 
 **API Routes:**
+
 - `src/app/api/live-quiz/create/route.ts` - Create session
 - `src/app/api/live-quiz/join/[accessCode]/route.ts` - Join session
 - `src/app/api/live-quiz/session/[sessionId]/route.ts` - Get session
@@ -597,6 +631,7 @@ AND "questionIndex" = 0;
 - `src/app/api/live-quiz/session/[sessionId]/participant/[participantId]/answer/route.ts` - Submit answer
 
 **Libraries:**
+
 - `src/lib/live-quiz/websocket-manager.ts` - WebSocket handling
 - `src/lib/live-quiz/performance-manager.ts` - Performance monitoring
 - `src/lib/live-quiz/security-manager.ts` - Security checks
@@ -604,6 +639,7 @@ AND "questionIndex" = 0;
 - `src/lib/live-quiz/error-handler.ts` - Error handling
 
 **Database:**
+
 - `prisma/schema.prisma` - Schema definition
 
 ---

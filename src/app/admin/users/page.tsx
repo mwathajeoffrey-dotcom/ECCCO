@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   ChevronLeft,
   Users,
@@ -20,8 +20,8 @@ import {
   UserX,
   Shield,
   Code,
-  ExternalLink
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
 
 interface UserStats {
   totalQuizzes: number;
@@ -57,11 +57,11 @@ export default function UserManagement() {
     totalUsers: 0,
     activeUsers: 0,
     totalQuizAttempts: 0,
-    totalExamAttempts: 0
+    totalExamAttempts: 0,
   });
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
-  const [sortBy, setSortBy] = useState<'recent' | 'name' | 'activity'>('recent');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterActive, setFilterActive] = useState<"all" | "active" | "inactive">("all");
+  const [sortBy, setSortBy] = useState<"recent" | "name" | "activity">("recent");
 
   useEffect(() => {
     checkAdminAndLoadUsers();
@@ -70,64 +70,63 @@ export default function UserManagement() {
   const checkAdminAndLoadUsers = async () => {
     try {
       // Check admin status
-      const response = await fetch('/api/admin/check');
+      const response = await fetch("/api/admin/check");
       const data = await response.json();
-      
+
       if (!data.isAdmin) {
-        window.location.href = '/?error=unauthorized';
+        window.location.href = "/?error=unauthorized";
         return;
       }
-      
+
       setIsAdmin(true);
       await loadUsers();
     } catch (err) {
-      console.error('Admin check failed:', err);
-      window.location.href = '/login?redirect=/admin/users';
+      console.error("Admin check failed:", err);
+      window.location.href = "/login?redirect=/admin/users";
     }
   };
 
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/users');
+      const response = await fetch("/api/admin/users");
       const data = await response.json();
-      
+
       if (data.success) {
         setUsers(data.users);
         setSummary(data.summary);
       }
     } catch (err) {
-      console.error('Failed to load users:', err);
+      console.error("Failed to load users:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const filteredUsers = users
-    .filter(user => {
+    .filter((user) => {
       // Filter by search query
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        return user.email.toLowerCase().includes(query) || 
-               user.clerkUserId.toLowerCase().includes(query);
+        return user.email.toLowerCase().includes(query) || user.clerkUserId.toLowerCase().includes(query);
       }
       return true;
     })
-    .filter(user => {
+    .filter((user) => {
       // Filter by activity status
-      if (filterActive === 'active') return user.isActive;
-      if (filterActive === 'inactive') return !user.isActive;
+      if (filterActive === "active") return user.isActive;
+      if (filterActive === "inactive") return !user.isActive;
       return true;
     })
     .sort((a, b) => {
       // Sort users
-      if (sortBy === 'recent') {
+      if (sortBy === "recent") {
         return new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime();
       }
-      if (sortBy === 'name') {
+      if (sortBy === "name") {
         return a.email.localeCompare(b.email);
       }
-      if (sortBy === 'activity') {
+      if (sortBy === "activity") {
         return b.stats.totalQuestions - a.stats.totalQuestions;
       }
       return 0;
@@ -135,8 +134,17 @@ export default function UserManagement() {
 
   const exportUsers = () => {
     const csvContent = [
-      ['Email', 'User ID', 'Created', 'Last Active', 'Total Quizzes', 'Total Questions', 'Accuracy %', 'Exam Pass Rate %'],
-      ...filteredUsers.map(user => [
+      [
+        "Email",
+        "User ID",
+        "Created",
+        "Last Active",
+        "Total Quizzes",
+        "Total Questions",
+        "Accuracy %",
+        "Exam Pass Rate %",
+      ],
+      ...filteredUsers.map((user) => [
         user.email,
         user.clerkUserId,
         new Date(user.createdAt).toLocaleDateString(),
@@ -144,15 +152,17 @@ export default function UserManagement() {
         user.stats.totalQuizzes.toString(),
         user.stats.totalQuestions.toString(),
         user.stats.accuracy.toString(),
-        user.stats.examPassRate.toString()
-      ])
-    ].map(row => row.join(',')).join('\n');
+        user.stats.examPassRate.toString(),
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `eccco-users-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `eccco-users-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -166,7 +176,7 @@ export default function UserManagement() {
         </span>
       );
     }
-    
+
     if (user.stats.totalQuestions > 100) {
       return (
         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full flex items-center">
@@ -175,7 +185,7 @@ export default function UserManagement() {
         </span>
       );
     }
-    
+
     return (
       <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full flex items-center">
         <UserCheck className="w-3 h-3 mr-1" />
@@ -206,10 +216,7 @@ export default function UserManagement() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link
-                href="/admin/dashboard"
-                className="text-gray-500 hover:text-gray-700 transition-colors"
-              >
+              <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-700 transition-colors">
                 <ChevronLeft className="w-6 h-6" />
               </Link>
               <div>
@@ -356,50 +363,31 @@ export default function UserManagement() {
                         </div>
                       </div>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{getActivityBadge(user)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {getActivityBadge(user)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {user.stats.totalQuestions} questions
-                      </div>
+                      <div className="text-sm text-gray-900">{user.stats.totalQuestions} questions</div>
                       <div className="text-xs text-gray-500">
                         {user.stats.totalQuizzes} quizzes, {user.stats.totalExams} exams
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {user.stats.accuracy}% accuracy
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {user.stats.examPassRate}% exam pass rate
-                      </div>
+                      <div className="text-sm text-gray-900">{user.stats.accuracy}% accuracy</div>
+                      <div className="text-xs text-gray-500">{user.stats.examPassRate}% exam pass rate</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </div>
+                      <div className="text-sm text-gray-900">{new Date(user.createdAt).toLocaleDateString()}</div>
                       <div className="text-xs text-gray-500">
                         Last active: {new Date(user.lastActive).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                        title="View details"
-                      >
+                      <button className="text-blue-600 hover:text-blue-900 mr-3" title="View details">
                         <ExternalLink className="w-4 h-4" />
                       </button>
-                      <button
-                        className="text-purple-600 hover:text-purple-900 mr-3"
-                        title="Make admin"
-                      >
+                      <button className="text-purple-600 hover:text-purple-900 mr-3" title="Make admin">
                         <Shield className="w-4 h-4" />
                       </button>
-                      <button
-                        className="text-green-600 hover:text-green-900"
-                        title="Make developer"
-                      >
+                      <button className="text-green-600 hover:text-green-900" title="Make developer">
                         <Code className="w-4 h-4" />
                       </button>
                     </td>

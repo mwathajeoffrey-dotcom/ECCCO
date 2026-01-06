@@ -1,6 +1,7 @@
 # 🔐 Security Enhancements - January 3, 2026
 
 ## Overview
+
 Enhanced security measures for admin features, user profiles, and navigation to ensure unauthorized users cannot access protected features.
 
 ---
@@ -8,9 +9,11 @@ Enhanced security measures for admin features, user profiles, and navigation to 
 ## 🛡️ Security Layers Added
 
 ### 1. **Profile Page Protection**
+
 **File:** `src/app/profile/page.tsx`
 
 **Enhancements:**
+
 - ✅ Added `isSignedIn` check from Clerk
 - ✅ Enhanced loading states (differentiate between loading vs not signed in)
 - ✅ Professional "Sign In Required" message with styled UI
@@ -18,6 +21,7 @@ Enhanced security measures for admin features, user profiles, and navigation to 
 - ✅ Prevents profile data loading if user not authenticated
 
 **Security Flow:**
+
 ```
 User visits /profile
   → Check if Clerk auth loaded
@@ -27,15 +31,22 @@ User visits /profile
 ```
 
 **Code Added:**
+
 ```typescript
 if (!isSignedIn || !user) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
         <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h2>
-        <p className="text-gray-600 mb-6">Please sign in to view and edit your profile.</p>
-        <Link href="/auth/signin" className="...">Sign In</Link>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Sign In Required
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Please sign in to view and edit your profile.
+        </p>
+        <Link href="/auth/signin" className="...">
+          Sign In
+        </Link>
       </div>
     </div>
   );
@@ -45,9 +56,11 @@ if (!isSignedIn || !user) {
 ---
 
 ### 2. **Sidebar Navigation Protection**
+
 **File:** `src/components/navigation/Sidebar.tsx`
 
 **Enhancements:**
+
 - ✅ Imported `useUser` from Clerk for authentication state
 - ✅ Added `isSignedIn` check before showing Dashboard/Profile links
 - ✅ Added `rolesLoading` state to prevent flash of admin links
@@ -55,6 +68,7 @@ if (!isSignedIn || !user) {
 - ✅ Admin links hidden until role check completes
 
 **Security Flow:**
+
 ```
 Sidebar loads
   → Check if user signed in (Clerk)
@@ -70,6 +84,7 @@ Sidebar loads
 ```
 
 **Code Added:**
+
 ```typescript
 const { isSignedIn } = useUser();
 const [rolesLoading, setRolesLoading] = useState(true);
@@ -83,51 +98,57 @@ useEffect(() => {
 }, [isSignedIn]);
 
 // Dashboard & Profile - Only for signed-in users
-{isSignedIn && (
-  <Link href="/dashboard">Dashboard</Link>
-)}
+{
+  isSignedIn && <Link href="/dashboard">Dashboard</Link>;
+}
 
 // Admin - Only for admins AND after loading
-{!rolesLoading && isAdmin && (
-  <Link href="/admin/dashboard">Admin Dashboard</Link>
-)}
+{
+  !rolesLoading && isAdmin && (
+    <Link href="/admin/dashboard">Admin Dashboard</Link>
+  );
+}
 ```
 
 ---
 
 ## 🔒 Complete Security Matrix
 
-| Feature | Anonymous Users | Signed-In Users | Admin Users |
-|---------|----------------|-----------------|-------------|
-| **Sidebar - Dashboard Link** | ❌ Hidden | ✅ Visible | ✅ Visible |
-| **Sidebar - Profile Link** | ❌ Hidden | ✅ Visible | ✅ Visible |
-| **Sidebar - Admin Links** | ❌ Hidden | ❌ Hidden | ✅ Visible (after role check) |
-| **Access `/profile`** | ❌ Sign-in required message | ✅ Full access | ✅ Full access |
-| **Access `/dashboard`** | ❌ Clerk redirect to sign-in | ✅ Full access | ✅ Full access |
-| **Access `/admin/dashboard`** | ❌ "Unauthorized" error | ❌ "Unauthorized" error | ✅ Full access |
-| **Access `/admin/users`** | ❌ "Unauthorized" error | ❌ "Unauthorized" error | ✅ Full access |
-| **Access `/guidelines`** | ❌ "Unauthorized" error | ❌ "Unauthorized" error | ✅ Full access (developer) |
+| Feature                       | Anonymous Users              | Signed-In Users         | Admin Users                   |
+| ----------------------------- | ---------------------------- | ----------------------- | ----------------------------- |
+| **Sidebar - Dashboard Link**  | ❌ Hidden                    | ✅ Visible              | ✅ Visible                    |
+| **Sidebar - Profile Link**    | ❌ Hidden                    | ✅ Visible              | ✅ Visible                    |
+| **Sidebar - Admin Links**     | ❌ Hidden                    | ❌ Hidden               | ✅ Visible (after role check) |
+| **Access `/profile`**         | ❌ Sign-in required message  | ✅ Full access          | ✅ Full access                |
+| **Access `/dashboard`**       | ❌ Clerk redirect to sign-in | ✅ Full access          | ✅ Full access                |
+| **Access `/admin/dashboard`** | ❌ "Unauthorized" error      | ❌ "Unauthorized" error | ✅ Full access                |
+| **Access `/admin/users`**     | ❌ "Unauthorized" error      | ❌ "Unauthorized" error | ✅ Full access                |
+| **Access `/guidelines`**      | ❌ "Unauthorized" error      | ❌ "Unauthorized" error | ✅ Full access (developer)    |
 
 ---
 
 ## 🎯 Security Principles Applied
 
 ### 1. **Defense in Depth**
+
 - **Client-side:** Hide links from unauthorized users (UX)
 - **API-level:** Check roles before returning data (security)
 - **Server-side:** Protect page routes with Clerk middleware (security)
 
 ### 2. **Fail-Safe Defaults**
+
 - Default to `isAdmin = false`
 - Default to `rolesLoading = true` (prevents flash of admin links)
 - Show sign-in required instead of exposing unauthorized pages
 
 ### 3. **Least Privilege**
+
 - Users only see what they have access to
 - Role checks happen on every request (not cached long-term)
 - Admin features completely hidden from non-admins
 
 ### 4. **Graceful Degradation**
+
 - If role check fails → default to non-admin
 - If authentication fails → redirect to sign-in
 - If API errors → log but don't expose to user
@@ -137,6 +158,7 @@ useEffect(() => {
 ## 🚨 Remaining Security Considerations
 
 ### Already Implemented:
+
 - ✅ Environment variables for admin IDs (not in code)
 - ✅ `.env.local` in `.gitignore`
 - ✅ Server-side authorization checks in admin pages
@@ -144,6 +166,7 @@ useEffect(() => {
 - ✅ Clerk middleware protecting authenticated routes
 
 ### Future Enhancements (Optional):
+
 - ⏳ Rate limiting on admin API routes
 - ⏳ Audit logging for admin actions
 - ⏳ Two-factor authentication for admin accounts
@@ -155,6 +178,7 @@ useEffect(() => {
 ## ✅ Testing Checklist
 
 ### Anonymous User Testing:
+
 - [ ] Visit `/profile` → Should see "Sign In Required"
 - [ ] Visit `/admin/dashboard` → Should see "Unauthorized"
 - [ ] Visit `/admin/users` → Should see "Unauthorized"
@@ -162,6 +186,7 @@ useEffect(() => {
 - [ ] Open sidebar → Should see Practice, Study Tools, Resources, Sign In
 
 ### Signed-In User (Non-Admin) Testing:
+
 - [ ] Visit `/profile` → Should load profile page
 - [ ] Visit `/dashboard` → Should load dashboard
 - [ ] Visit `/admin/dashboard` → Should see "Unauthorized"
@@ -169,6 +194,7 @@ useEffect(() => {
 - [ ] Open sidebar → Should NOT see Admin links
 
 ### Admin User Testing (You):
+
 - [ ] Visit `/profile` → Should load profile page
 - [ ] Visit `/dashboard` → Should load dashboard
 - [ ] Visit `/admin/dashboard` → Should load admin dashboard
@@ -181,7 +207,9 @@ useEffect(() => {
 ## 🔍 Code Review Summary
 
 ### Files Modified:
+
 1. **`src/app/profile/page.tsx`**
+
    - Added enhanced sign-in checks
    - Improved unauthorized user messaging
    - Better loading state handling
@@ -193,6 +221,7 @@ useEffect(() => {
    - Prevents premature display of admin links
 
 ### Security Impact:
+
 - **Before:** Profile link visible to all, admin links checked async (brief flash)
 - **After:** Profile/Dashboard hidden from anonymous, admin links only after role verification
 
@@ -201,6 +230,7 @@ useEffect(() => {
 ## 📊 Performance Impact
 
 **Minimal:**
+
 - Role checks: ~100-200ms (cached in state)
 - Clerk auth check: Already loaded by middleware (0ms overhead)
 - Loading states prevent UI flash (better UX)
@@ -210,6 +240,7 @@ useEffect(() => {
 ## 🎓 Developer Notes
 
 ### When adding new protected features:
+
 1. Add to sidebar with conditional: `{isSignedIn && <Link>...}`
 2. For admin features: `{!rolesLoading && isAdmin && <Link>...}`
 3. Add server-side protection in page component
@@ -217,6 +248,7 @@ useEffect(() => {
 5. Update this security documentation
 
 ### Common Pitfalls to Avoid:
+
 - ❌ Don't expose admin links before role check completes
 - ❌ Don't rely on client-side checks alone (add server protection)
 - ❌ Don't cache admin status indefinitely (recheck on navigation)
@@ -225,6 +257,6 @@ useEffect(() => {
 
 ---
 
-**Last Updated:** January 3, 2026  
-**Status:** Security Enhanced ✅  
+**Last Updated:** January 3, 2026
+**Status:** Security Enhanced ✅
 **Next Review:** Before adding new admin features

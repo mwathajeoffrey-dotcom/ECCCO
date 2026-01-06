@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { BookOpen, Users, Target, TrendingUp } from 'lucide-react';
-import Link from 'next/link';
-import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
+import { useState, useEffect } from "react";
+import { BookOpen, Users, Target, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { EnhancedErrorBoundary } from "@/components/ui/EnhancedErrorBoundary";
 
 interface Topic {
   id: string;
@@ -17,11 +17,11 @@ export default function PracticePage() {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const response = await fetch('/api/topics');
+        const response = await fetch("/api/topics");
         const data = await response.json();
         setTopics(data);
       } catch (error) {
-        console.error('Error fetching topics:', error);
+        console.error("Error fetching topics:", error);
       }
     };
 
@@ -52,7 +52,8 @@ export default function PracticePage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Practice Questions</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose from our comprehensive topic library to practice specific areas or take mixed questions to test your overall knowledge.
+            Choose from our comprehensive topic library to practice specific areas or take mixed questions to test your
+            overall knowledge.
           </p>
         </div>
 
@@ -146,20 +147,24 @@ export default function PracticePage() {
         {/* Topic Selection - Compact cards */}
         <div className="mb-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Practice by Topic</h3>
-          <EnhancedErrorBoundary fallback={
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-              <p className="text-red-800 mb-4">Unable to load practice topics. Please refresh the page or try again later.</p>
-              <Link href="/exam" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                Go to Full Exam
-              </Link>
-            </div>
-          }>
+          <EnhancedErrorBoundary
+            fallback={
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <p className="text-red-800 mb-4">
+                  Unable to load practice topics. Please refresh the page or try again later.
+                </p>
+                <Link
+                  href="/exam"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Go to Full Exam
+                </Link>
+              </div>
+            }
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {topics.map((topic) => (
-                <div
-                  key={topic.id}
-                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                >
+                <div key={topic.id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                   <div className="flex items-center mb-2">
                     <BookOpen className="w-4 h-4 text-blue-600 mr-2" />
                     <h4 className="text-base font-semibold text-gray-900">{topic.name}</h4>

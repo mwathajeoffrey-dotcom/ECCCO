@@ -1,19 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma";
 
 // GET - Fetch rating for a specific question by a user
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const questionId = searchParams.get('questionId');
+    const userId = searchParams.get("userId");
+    const questionId = searchParams.get("questionId");
 
     if (!userId || !questionId) {
-      return NextResponse.json({
-        success: false,
-        message: 'User ID and Question ID required',
-        rating: null
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User ID and Question ID required",
+          rating: null,
+        },
+        { status: 400 }
+      );
     }
 
     // Fetch rating from database
@@ -21,22 +24,25 @@ export async function GET(request: NextRequest) {
       where: {
         userId_questionId: {
           userId,
-          questionId
-        }
-      }
+          questionId,
+        },
+      },
     });
 
     return NextResponse.json({
       success: true,
-      rating
+      rating,
     });
   } catch (error) {
-    console.error('Error fetching rating:', error);
-    return NextResponse.json({
-      success: false,
-      message: 'Failed to fetch rating',
-      rating: null
-    }, { status: 500 });
+    console.error("Error fetching rating:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to fetch rating",
+        rating: null,
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -48,17 +54,14 @@ export async function POST(request: NextRequest) {
 
     if (!userId || !questionId || stars === undefined) {
       return NextResponse.json(
-        { success: false, message: 'User ID, Question ID, and stars rating required' },
+        { success: false, message: "User ID, Question ID, and stars rating required" },
         { status: 400 }
       );
     }
 
     // Validate stars is between 1-5
     if (stars < 1 || stars > 5) {
-      return NextResponse.json(
-        { success: false, message: 'Stars must be between 1 and 5' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Stars must be between 1 and 5" }, { status: 400 });
     }
 
     // Create or update rating
@@ -66,14 +69,14 @@ export async function POST(request: NextRequest) {
       where: {
         userId_questionId: {
           userId,
-          questionId
-        }
+          questionId,
+        },
       },
       update: {
         stars,
         helpful: helpful ?? null,
         feedback: feedback || null,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       create: {
         id: `rating_${userId}_${questionId}_${Date.now()}`,
@@ -83,23 +86,20 @@ export async function POST(request: NextRequest) {
         helpful: helpful ?? null,
         feedback: feedback || null,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
 
-    console.log('⭐ Created/Updated rating:', rating);
+    console.log("⭐ Created/Updated rating:", rating);
 
     return NextResponse.json({
       success: true,
-      message: 'Rating saved',
-      data: rating
+      message: "Rating saved",
+      data: rating,
     });
   } catch (error) {
-    console.error('Error saving rating:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to save rating' },
-      { status: 500 }
-    );
+    console.error("Error saving rating:", error);
+    return NextResponse.json({ success: false, message: "Failed to save rating" }, { status: 500 });
   }
 }
 
@@ -110,10 +110,7 @@ export async function DELETE(request: NextRequest) {
     const { userId, questionId } = body;
 
     if (!userId || !questionId) {
-      return NextResponse.json(
-        { success: false, message: 'User ID and Question ID required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "User ID and Question ID required" }, { status: 400 });
     }
 
     // Delete rating
@@ -121,31 +118,28 @@ export async function DELETE(request: NextRequest) {
       where: {
         userId_questionId: {
           userId,
-          questionId
-        }
-      }
+          questionId,
+        },
+      },
     });
 
-    console.log('🗑️ Deleted rating:', { userId, questionId });
+    console.log("🗑️ Deleted rating:", { userId, questionId });
 
     return NextResponse.json({
       success: true,
-      message: 'Rating deleted'
+      message: "Rating deleted",
     });
   } catch (error) {
-    console.error('Error deleting rating:', error);
-    
+    console.error("Error deleting rating:", error);
+
     // If rating doesn't exist, still return success
-    if (error instanceof Error && error.message.includes('Record to delete does not exist')) {
+    if (error instanceof Error && error.message.includes("Record to delete does not exist")) {
       return NextResponse.json({
         success: true,
-        message: 'Rating not found'
+        message: "Rating not found",
       });
     }
 
-    return NextResponse.json(
-      { success: false, message: 'Failed to delete rating' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: "Failed to delete rating" }, { status: 500 });
   }
 }

@@ -5,11 +5,13 @@
 Add these **TWO** environment variables to your Vercel project:
 
 ### 1. ADMIN_USER_IDS
+
 ```
 user_371H3N8bQ5kWMu1ExtSo5nf48AV
 ```
 
-### 2. DEVELOPER_USER_IDS  
+### 2. DEVELOPER_USER_IDS
+
 ```
 user_371H3N8bQ5kWMu1ExtSo5nf48AV
 ```
@@ -21,14 +23,17 @@ user_371H3N8bQ5kWMu1ExtSo5nf48AV
 ### Step-by-Step Instructions:
 
 1. **Go to Vercel Dashboard:**
+
    - Visit: https://vercel.com
    - Select your **ECCCO** project
 
 2. **Navigate to Settings:**
+
    - Click **Settings** tab
    - Click **Environment Variables** in the left sidebar
 
 3. **Add First Variable:**
+
    - Click **Add New** button
    - **Name:** `ADMIN_USER_IDS`
    - **Value:** `user_371H3N8bQ5kWMu1ExtSo5nf48AV`
@@ -36,6 +41,7 @@ user_371H3N8bQ5kWMu1ExtSo5nf48AV
    - Click **Save**
 
 4. **Add Second Variable:**
+
    - Click **Add New** button again
    - **Name:** `DEVELOPER_USER_IDS`
    - **Value:** `user_371H3N8bQ5kWMu1ExtSo5nf48AV`
@@ -55,22 +61,30 @@ user_371H3N8bQ5kWMu1ExtSo5nf48AV
 Your `.env.local` file has been updated! Test your access:
 
 ### 1. Visit Admin Dashboard:
+
 **http://localhost:3000/admin/dashboard**
+
 - ✅ You should now have access
 - ✅ You should see the admin panel
 
 ### 2. Visit User Management:
+
 **http://localhost:3000/admin/users**
+
 - ✅ You should see all users
 - ✅ You can export user data
 
 ### 3. Visit Guidelines Editor:
+
 **http://localhost:3000/guidelines**
+
 - ✅ You should have developer access
 - ✅ No password prompt anymore
 
 ### 4. Visit Your Profile:
+
 **http://localhost:3000/profile**
+
 - ✅ Personalize your learning experience
 - ✅ Set your specialty and preferences
 
@@ -89,7 +103,7 @@ Before deploying to Vercel, verify locally:
 After deploying to Vercel, verify production:
 
 - [ ] Can access production `/admin/dashboard`
-- [ ] Can access production `/admin/users`  
+- [ ] Can access production `/admin/users`
 - [ ] Can access production `/guidelines`
 - [ ] Can access production `/profile`
 
@@ -98,11 +112,13 @@ After deploying to Vercel, verify production:
 ## 🎯 Current Setup Status
 
 ✅ **Local Environment:**
+
 - User ID: `user_371H3N8bQ5kWMu1ExtSo5nf48AV`
 - `.env.local` updated with your user ID
 - Dev server restarted with new variables
 
 ⏳ **Production Environment:**
+
 - Waiting for you to add variables to Vercel
 - Follow steps above to complete setup
 
@@ -111,11 +127,13 @@ After deploying to Vercel, verify production:
 ## 📝 Quick Reference
 
 **Your Clerk User ID:**
+
 ```
 user_371H3N8bQ5kWMu1ExtSo5nf48AV
 ```
 
 **Copy-paste for Vercel:**
+
 ```
 ADMIN_USER_IDS=user_371H3N8bQ5kWMu1ExtSo5nf48AV
 DEVELOPER_USER_IDS=user_371H3N8bQ5kWMu1ExtSo5nf48AV
@@ -132,5 +150,5 @@ DEVELOPER_USER_IDS=user_371H3N8bQ5kWMu1ExtSo5nf48AV
 
 ---
 
-**Last Updated:** January 3, 2026  
+**Last Updated:** January 3, 2026
 **Status:** Ready for Vercel deployment

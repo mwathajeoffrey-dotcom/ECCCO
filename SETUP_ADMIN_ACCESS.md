@@ -37,7 +37,7 @@ npm run dev
 Once restarted, try accessing these pages:
 
 - ✅ http://localhost:3000/admin/dashboard - Admin panel
-- ✅ http://localhost:3000/admin/users - User management  
+- ✅ http://localhost:3000/admin/users - User management
 - ✅ http://localhost:3000/guidelines - Guidelines editor
 - ✅ http://localhost:3000/profile - Your profile page
 
@@ -53,9 +53,9 @@ If the environment variables are set correctly, you should have full access!
 2. Click **Settings** → **Environment Variables**
 3. Add these two variables:
 
-| Name | Value |
-|------|-------|
-| `ADMIN_USER_IDS` | `your_user_id_from_step_1` |
+| Name                 | Value                      |
+| -------------------- | -------------------------- |
+| `ADMIN_USER_IDS`     | `your_user_id_from_step_1` |
 | `DEVELOPER_USER_IDS` | `your_user_id_from_step_1` |
 
 4. Click **Save**
@@ -68,6 +68,7 @@ If the environment variables are set correctly, you should have full access!
 ## What You Get
 
 ### ✅ Admin Access
+
 - View all users and their statistics
 - Export user data to CSV
 - See platform analytics
@@ -75,6 +76,7 @@ If the environment variables are set correctly, you should have full access!
 - View feedback submissions
 
 ### ✅ Developer Access
+
 - Edit medical guidelines
 - Modify clinical content
 - Update algorithm PDFs
@@ -100,6 +102,7 @@ If the environment variables are set correctly, you should have full access!
 **Cause:** Environment variables not set or dev server not restarted
 
 **Fix:**
+
 1. Check `.env.local` has your actual user ID (not the placeholder)
 2. Restart dev server (`npm run dev`)
 3. Sign out and sign back in
@@ -115,6 +118,7 @@ If the environment variables are set correctly, you should have full access!
 **Cause:** Environment variables not added to Vercel or deployment not restarted
 
 **Fix:**
+
 1. Verify variables are in Vercel Settings → Environment Variables
 2. Redeploy the application
 3. Clear your browser cache
@@ -123,15 +127,15 @@ If the environment variables are set correctly, you should have full access!
 
 ## Current Status
 
-✅ **Security fixes deployed** (commit: fc07f00)  
-✅ **Admin dashboard created** (commit: 3b36265)  
-✅ **User profiles implemented** (commit: 05e16ef)  
-✅ **Build errors fixed** (commit: 6442030)  
-✅ **User ID helper tool added** (commit: abc9f3b)  
+✅ **Security fixes deployed** (commit: fc07f00)
+✅ **Admin dashboard created** (commit: 3b36265)
+✅ **User profiles implemented** (commit: 05e16ef)
+✅ **Build errors fixed** (commit: 6442030)
+✅ **User ID helper tool added** (commit: abc9f3b)
 
 **Next:** Set up your user ID and test the features!
 
 ---
 
-**Need Help?**  
+**Need Help?**
 The `/get-user-id` page has detailed step-by-step instructions with copy-paste ready commands!

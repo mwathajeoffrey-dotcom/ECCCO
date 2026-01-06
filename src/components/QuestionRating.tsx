@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
-import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface QuestionRatingProps {
   questionId: string;
@@ -12,7 +12,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
   const { user, isSignedIn } = useUser();
   const [rating, setRating] = useState<number | null>(null);
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,10 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
       <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
         <Star className="w-5 h-5 text-amber-600" />
         <p className="text-sm text-amber-900">
-          <a href="/sign-in" className="font-medium underline hover:text-amber-700">Sign in</a> to rate questions and provide feedback
+          <a href="/sign-in" className="font-medium underline hover:text-amber-700">
+            Sign in
+          </a>{" "}
+          to rate questions and provide feedback
         </p>
       </div>
     );
@@ -33,29 +36,29 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/ratings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/ratings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
           questionId,
           stars: rating,
-          feedback: feedback || null
-        })
+          feedback: feedback || null,
+        }),
       });
 
       if (response.ok) {
-        console.log('📊 Rating submitted successfully');
+        console.log("📊 Rating submitted successfully");
         setSubmitted(true);
-        
+
         // Reset submitted state after 3 seconds to allow re-rating
         setTimeout(() => setSubmitted(false), 3000);
       } else {
-        throw new Error('Failed to submit rating');
+        throw new Error("Failed to submit rating");
       }
     } catch (error) {
-      console.error('Error submitting rating:', error);
-      alert('Failed to submit rating');
+      console.error("Error submitting rating:", error);
+      alert("Failed to submit rating");
     } finally {
       setLoading(false);
     }
@@ -64,26 +67,26 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
   const handleQuickFeedback = async (helpful: boolean) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/ratings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/ratings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
           questionId,
           stars: helpful ? 5 : 2, // Quick feedback: helpful = 5 stars, not helpful = 2 stars
-          helpful
-        })
+          helpful,
+        }),
       });
 
       if (response.ok) {
-        console.log('👍 Quick feedback submitted');
+        console.log("👍 Quick feedback submitted");
         setSubmitted(true);
-        
+
         // Reset submitted state after 3 seconds
         setTimeout(() => setSubmitted(false), 3000);
       }
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      console.error("Error submitting feedback:", error);
     } finally {
       setLoading(false);
     }
@@ -93,11 +96,9 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
-          <p className="text-green-800 text-sm font-medium">
-            ✓ Thank you for your feedback!
-          </p>
+          <p className="text-green-800 text-sm font-medium">✓ Thank you for your feedback!</p>
         </div>
-        
+
         {/* Show the rating again */}
         <div className="opacity-60">
           <h4 className="text-sm font-semibold text-gray-900 mb-3">Your Rating</h4>
@@ -107,17 +108,21 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className={`w-5 h-5 ${
-                    star <= (rating || 0)
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300'
-                  }`}
+                  className={`w-5 h-5 ${star <= (rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                 />
               ))}
             </div>
             {rating && (
               <span className="text-xs text-gray-600 ml-2">
-                {rating === 5 ? 'Excellent' : rating === 4 ? 'Good' : rating === 3 ? 'Fair' : rating === 2 ? 'Poor' : 'Very Poor'}
+                {rating === 5
+                  ? "Excellent"
+                  : rating === 4
+                  ? "Good"
+                  : rating === 3
+                  ? "Fair"
+                  : rating === 2
+                  ? "Poor"
+                  : "Very Poor"}
               </span>
             )}
           </div>
@@ -129,7 +134,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
       <h4 className="text-sm font-semibold text-gray-900 mb-3">Rate this Question</h4>
-      
+
       {/* Star Rating */}
       <div className="flex items-center gap-2 mb-3">
         <span className="text-xs text-gray-600">Quality:</span>
@@ -145,9 +150,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
             >
               <Star
                 className={`w-5 h-5 ${
-                  star <= (hoveredRating || rating || 0)
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-300'
+                  star <= (hoveredRating || rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
                 }`}
               />
             </button>
@@ -155,7 +158,15 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
         </div>
         {rating && (
           <span className="text-xs text-gray-600 ml-2">
-            {rating === 5 ? 'Excellent' : rating === 4 ? 'Good' : rating === 3 ? 'Fair' : rating === 2 ? 'Poor' : 'Very Poor'}
+            {rating === 5
+              ? "Excellent"
+              : rating === 4
+              ? "Good"
+              : rating === 3
+              ? "Fair"
+              : rating === 2
+              ? "Poor"
+              : "Very Poor"}
           </span>
         )}
       </div>
@@ -202,7 +213,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
           disabled={loading}
           className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Submitting...' : 'Submit Rating'}
+          {loading ? "Submitting..." : "Submit Rating"}
         </button>
       )}
     </div>

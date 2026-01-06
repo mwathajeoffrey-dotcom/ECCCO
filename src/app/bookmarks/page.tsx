@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useUser } from '@clerk/nextjs';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import {
   Bookmark,
   FileText,
@@ -14,7 +14,7 @@ import {
   StickyNote,
   BookmarkCheck,
   Loader2,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface BookmarkData {
   questionId: string;
@@ -25,10 +25,10 @@ interface BookmarkData {
 
 export default function BookmarksPage() {
   const { isSignedIn, user } = useUser();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [bookmarks, setBookmarks] = useState<BookmarkData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'with-notes' | 'no-notes'>('all');
+  const [filter, setFilter] = useState<"all" | "with-notes" | "no-notes">("all");
 
   // Fetch bookmarks on component mount
   useEffect(() => {
@@ -44,44 +44,44 @@ export default function BookmarksPage() {
       setLoading(true);
       const response = await fetch(`/api/bookmarks?userId=${user?.id}`);
       const data = await response.json();
-      console.log('📚 Fetched bookmarks:', data);
+      console.log("📚 Fetched bookmarks:", data);
       if (data.success && data.bookmarks) {
         setBookmarks(data.bookmarks);
       }
     } catch (error) {
-      console.error('Failed to fetch bookmarks:', error);
+      console.error("Failed to fetch bookmarks:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (questionId: string) => {
-    if (!confirm('Are you sure you want to remove this bookmark?')) return;
+    if (!confirm("Are you sure you want to remove this bookmark?")) return;
 
     try {
-      const response = await fetch('/api/bookmarks', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/bookmarks", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ questionId, userId: user?.id }),
       });
 
       if (response.ok) {
-        setBookmarks(bookmarks.filter(b => b.questionId !== questionId));
+        setBookmarks(bookmarks.filter((b) => b.questionId !== questionId));
       }
     } catch (error) {
-      console.error('Failed to delete bookmark:', error);
+      console.error("Failed to delete bookmark:", error);
     }
   };
 
   // Filter bookmarks
-  const filteredBookmarks = bookmarks.filter(bookmark => {
-    const matchesSearch = bookmark.questionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         bookmark.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         bookmark.notes?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesFilter = filter === 'all' || 
-                         (filter === 'with-notes' && bookmark.notes) ||
-                         (filter === 'no-notes' && !bookmark.notes);
+  const filteredBookmarks = bookmarks.filter((bookmark) => {
+    const matchesSearch =
+      bookmark.questionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      bookmark.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      bookmark.notes?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesFilter =
+      filter === "all" || (filter === "with-notes" && bookmark.notes) || (filter === "no-notes" && !bookmark.notes);
 
     return matchesSearch && matchesFilter;
   });
@@ -95,9 +95,7 @@ export default function BookmarksPage() {
             <Bookmark className="w-10 h-10 text-blue-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h2>
-          <p className="text-gray-600 mb-6">
-            Please sign in to view your bookmarked questions and notes.
-          </p>
+          <p className="text-gray-600 mb-6">Please sign in to view your bookmarked questions and notes.</p>
           <Link
             href="/sign-in"
             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -115,16 +113,13 @@ export default function BookmarksPage() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-4">
-            <Link
-              href="/dashboard"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
+            <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-900">My Bookmarks</h1>
               <p className="text-gray-600 mt-1">
-                {bookmarks.length} saved {bookmarks.length === 1 ? 'question' : 'questions'}
+                {bookmarks.length} saved {bookmarks.length === 1 ? "question" : "questions"}
               </p>
             </div>
           </div>
@@ -147,34 +142,28 @@ export default function BookmarksPage() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setFilter('all')}
+                onClick={() => setFilter("all")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === 'all'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filter === "all" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 All ({bookmarks.length})
               </button>
               <button
-                onClick={() => setFilter('with-notes')}
+                onClick={() => setFilter("with-notes")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === 'with-notes'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filter === "with-notes" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                With Notes ({bookmarks.filter(b => b.notes).length})
+                With Notes ({bookmarks.filter((b) => b.notes).length})
               </button>
               <button
-                onClick={() => setFilter('no-notes')}
+                onClick={() => setFilter("no-notes")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === 'no-notes'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filter === "no-notes" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                No Notes ({bookmarks.filter(b => !b.notes).length})
+                No Notes ({bookmarks.filter((b) => !b.notes).length})
               </button>
             </div>
           </div>
@@ -199,14 +188,12 @@ export default function BookmarksPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <BookmarkCheck className="w-5 h-5 text-blue-600" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Question ID: {bookmark.questionId}
-                      </h3>
+                      <h3 className="text-lg font-semibold text-gray-900">Question ID: {bookmark.questionId}</h3>
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
                         {bookmark.category}
                       </span>
                     </div>
-                    
+
                     {bookmark.notes && (
                       <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                         <div className="flex items-center gap-2 mb-2">
@@ -255,7 +242,8 @@ export default function BookmarksPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">No Bookmarks Yet</h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Start bookmarking questions while practicing to save them for later review. You can also add personal notes to each bookmark!
+              Start bookmarking questions while practicing to save them for later review. You can also add personal
+              notes to each bookmark!
             </p>
             <Link
               href="/practice"
@@ -274,13 +262,11 @@ export default function BookmarksPage() {
               <Search className="w-10 h-10 text-gray-400" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">No Matching Bookmarks</h2>
-            <p className="text-gray-600 mb-4">
-              Try adjusting your search or filter settings
-            </p>
+            <p className="text-gray-600 mb-4">Try adjusting your search or filter settings</p>
             <button
               onClick={() => {
-                setSearchQuery('');
-                setFilter('all');
+                setSearchQuery("");
+                setFilter("all");
               }}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >

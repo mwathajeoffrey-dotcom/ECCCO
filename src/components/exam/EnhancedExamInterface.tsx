@@ -251,7 +251,7 @@ export default function EnhancedExamInterface() {
       const topicName = topics.find(t => t.id === selectedTopic)?.name || 'Unknown Topic';
       
       // Save to analytics (for anonymous and authenticated users)
-      await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent);
+      await analyticsV2.recordExamCompletion(selectedTopic, topicName, questions, selectedAnswers, timeSpent, user?.id);
       
       // Save to database if user is authenticated
       if (user?.id) {

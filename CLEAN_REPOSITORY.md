@@ -1,6 +1,6 @@
 # ✅ ECCCO - Clean Repository
 
-**Last Updated:** January 3, 2026  
+**Last Updated:** January 3, 2026
 **Status:** Production Ready 🚀
 
 ---
@@ -30,6 +30,7 @@ ECCCO/
 ## 🗑️ What Was Removed (Cleanup)
 
 ### Deleted 68,440+ lines of old code:
+
 - ❌ 46 old development markdown files (moved to `docs/`)
 - ❌ 9 test script files (`test-*.js`)
 - ❌ 4 backup files (`*.backup`, `*.bak`)
@@ -42,6 +43,7 @@ ECCCO/
 ## ✅ What's Left (Production Code Only)
 
 ### Core Files:
+
 - `package.json` - Dependencies
 - `tsconfig.json` - TypeScript config
 - `next.config.ts` - Next.js config
@@ -52,6 +54,7 @@ ECCCO/
 - `CHANGELOG.md` - Version history
 
 ### Source Code (`src/`):
+
 - **All working features** ✅
 - **No backup files** ✅
 - **No test files** ✅
@@ -61,26 +64,28 @@ ECCCO/
 
 ## 🚀 Deployment Status
 
-**Localhost:** http://localhost:3000  
-**Production:** https://eccco.vercel.app  
+**Localhost:** http://localhost:3000
+**Production:** https://eccco.vercel.app
 **Status:** ✅ **SYNCED** - Both run the same code
 
 ### Features Working:
-✅ Evidence Search  
-✅ Guidelines Search  
-✅ Bookmarks (Saved Questions)  
-✅ Question Ratings  
-✅ Sign-in (Clerk Auth)  
-✅ ACLS Practice  
-✅ PALS Practice  
-✅ Live Quiz  
-✅ Learning Analytics  
+
+✅ Evidence Search
+✅ Guidelines Search
+✅ Bookmarks (Saved Questions)
+✅ Question Ratings
+✅ Sign-in (Clerk Auth)
+✅ ACLS Practice
+✅ PALS Practice
+✅ Live Quiz
+✅ Learning Analytics
 
 ---
 
 ## 📝 Working on New Features
 
 ### Before Making Changes:
+
 ```bash
 # 1. Make sure you're on main branch
 git status
@@ -93,6 +98,7 @@ git checkout -b feature/your-feature-name
 ```
 
 ### After Making Changes:
+
 ```bash
 # 1. Test locally
 npm run dev
@@ -116,6 +122,7 @@ git push origin main
 ## 🛡️ Rules to Keep Repository Clean
 
 ### ✅ DO:
+
 - Write code in `src/` folder
 - Add images/PDFs to `public/`
 - Write notes in `docs/` folder
@@ -123,6 +130,7 @@ git push origin main
 - Use clear commit messages
 
 ### ❌ DON'T:
+
 - Create backup files (`.bak`, `.backup`, `.old`)
 - Add test files to root directory
 - Put emails/docs in root
@@ -133,16 +141,16 @@ git push origin main
 
 ## 📂 Where to Put Things
 
-| What | Where | Example |
-|------|-------|---------|
-| **New feature** | `src/app/` or `src/components/` | `src/app/new-feature/page.tsx` |
-| **API endpoint** | `src/app/api/` | `src/app/api/users/route.ts` |
-| **Utility function** | `src/lib/` | `src/lib/helpers/format.ts` |
-| **Images** | `public/images/` | `public/images/logo.png` |
-| **PDFs** | `public/algorithms/` | `public/algorithms/acls.pdf` |
-| **Development notes** | `docs/development-notes/` | Not in git! |
-| **Emails/outreach** | `docs/outreach/` | Not in git! |
-| **Test scripts** | `scripts/` | Only if needed for production |
+| What                  | Where                           | Example                        |
+| --------------------- | ------------------------------- | ------------------------------ |
+| **New feature**       | `src/app/` or `src/components/` | `src/app/new-feature/page.tsx` |
+| **API endpoint**      | `src/app/api/`                  | `src/app/api/users/route.ts`   |
+| **Utility function**  | `src/lib/`                      | `src/lib/helpers/format.ts`    |
+| **Images**            | `public/images/`                | `public/images/logo.png`       |
+| **PDFs**              | `public/algorithms/`            | `public/algorithms/acls.pdf`   |
+| **Development notes** | `docs/development-notes/`       | Not in git!                    |
+| **Emails/outreach**   | `docs/outreach/`                | Not in git!                    |
+| **Test scripts**      | `scripts/`                      | Only if needed for production  |
 
 ---
 
@@ -181,6 +189,7 @@ git reset --hard <commit-hash>
 ## 🎉 Final State
 
 **This is your SINGLE SOURCE OF TRUTH:**
+
 - ✅ Localhost matches production
 - ✅ No duplicate files
 - ✅ No backup clutter
@@ -189,6 +198,7 @@ git reset --hard <commit-hash>
 - ✅ Easy to maintain
 
 **From now on:**
+
 1. All changes go through git
 2. Test locally first
 3. Deploy to production
@@ -196,6 +206,6 @@ git reset --hard <commit-hash>
 
 ---
 
-**Date of Cleanup:** January 3, 2026  
-**Commits:** d8b2a75 (latest)  
+**Date of Cleanup:** January 3, 2026
+**Commits:** d8b2a75 (latest)
 **Status:** 🟢 Production Ready

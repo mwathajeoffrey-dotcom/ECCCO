@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 import {
   MessageSquare,
   Send,
@@ -13,45 +13,45 @@ import {
   ThumbsUp,
   Mail,
   ChevronLeft,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function SupportPage() {
   const [formData, setFormData] = useState({
-    userName: '',
-    userEmail: '',
-    type: 'question',
-    category: 'general',
-    subject: '',
-    message: '',
+    userName: "",
+    userEmail: "",
+    type: "question",
+    category: "general",
+    subject: "",
+    message: "",
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const feedbackTypes = [
-    { value: 'question', label: 'Question', icon: HelpCircle, color: 'blue' },
-    { value: 'bug', label: 'Bug Report', icon: Bug, color: 'red' },
-    { value: 'feature', label: 'Feature Request', icon: Lightbulb, color: 'purple' },
-    { value: 'praise', label: 'Praise', icon: ThumbsUp, color: 'green' },
+    { value: "question", label: "Question", icon: HelpCircle, color: "blue" },
+    { value: "bug", label: "Bug Report", icon: Bug, color: "red" },
+    { value: "feature", label: "Feature Request", icon: Lightbulb, color: "purple" },
+    { value: "praise", label: "Praise", icon: ThumbsUp, color: "green" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    setError('');
+    setError("");
 
     try {
-      console.log('[Support Form] Submitting feedback...');
-      
+      console.log("[Support Form] Submitting feedback...");
+
       // Check if online before attempting submission
       if (!navigator.onLine) {
-        throw new Error('You appear to be offline. Please check your internet connection and try again.');
+        throw new Error("You appear to be offline. Please check your internet connection and try again.");
       }
-      
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           pageUrl: window.location.href,
@@ -59,37 +59,38 @@ export default function SupportPage() {
         }),
       });
 
-      console.log('[Support Form] Response status:', response.status);
+      console.log("[Support Form] Response status:", response.status);
 
       const data = await response.json();
-      console.log('[Support Form] Response data:', data);
+      console.log("[Support Form] Response data:", data);
 
       if (!response.ok) {
-        throw new Error(data.error || data.details || 'Failed to submit feedback');
+        throw new Error(data.error || data.details || "Failed to submit feedback");
       }
 
-      console.log('[Support Form] Feedback submitted successfully!');
+      console.log("[Support Form] Feedback submitted successfully!");
       setSubmitted(true);
       setFormData({
-        userName: '',
-        userEmail: '',
-        type: 'question',
-        category: 'general',
-        subject: '',
-        message: '',
+        userName: "",
+        userEmail: "",
+        type: "question",
+        category: "general",
+        subject: "",
+        message: "",
       });
     } catch (err) {
-      console.error('[Support Form] Submission error:', err);
-      
+      console.error("[Support Form] Submission error:", err);
+
       // Provide user-friendly error messages
-      let errorMessage = 'Failed to submit feedback. Please try again.';
-      
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
+      let errorMessage = "Failed to submit feedback. Please try again.";
+
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        errorMessage =
+          "Network error: Unable to connect to the server. Please check your internet connection and try again.";
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
     } finally {
       setSubmitting(false);
@@ -132,10 +133,7 @@ export default function SupportPage() {
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center space-x-4">
-            <Link
-              href="/"
-              className="text-gray-500 hover:text-gray-700 transition-colors"
-            >
+            <Link href="/" className="text-gray-500 hover:text-gray-700 transition-colors">
               <ChevronLeft className="w-6 h-6" />
             </Link>
             <div>
@@ -154,9 +152,7 @@ export default function SupportPage() {
               <MessageSquare className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">How can we help?</h2>
-            <p className="text-blue-100">
-              Send us your feedback, questions, or report any issues you're experiencing
-            </p>
+            <p className="text-blue-100">Send us your feedback, questions, or report any issues you're experiencing</p>
           </div>
 
           {/* Form */}
@@ -170,9 +166,7 @@ export default function SupportPage() {
 
             {/* Feedback Type Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                What would you like to share?
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">What would you like to share?</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {feedbackTypes.map((type) => {
                   const Icon = type.icon;
@@ -185,15 +179,15 @@ export default function SupportPage() {
                       className={`p-4 rounded-xl border-2 transition-all text-center ${
                         isSelected
                           ? `border-${type.color}-500 bg-${type.color}-50`
-                          : 'border-gray-200 hover:border-gray-300'
+                          : "border-gray-200 hover:border-gray-300"
                       }`}
                     >
-                      <Icon className={`w-6 h-6 mx-auto mb-2 ${
-                        isSelected ? `text-${type.color}-600` : 'text-gray-400'
-                      }`} />
-                      <span className={`text-sm font-medium ${
-                        isSelected ? `text-${type.color}-700` : 'text-gray-600'
-                      }`}>
+                      <Icon
+                        className={`w-6 h-6 mx-auto mb-2 ${isSelected ? `text-${type.color}-600` : "text-gray-400"}`}
+                      />
+                      <span
+                        className={`text-sm font-medium ${isSelected ? `text-${type.color}-700` : "text-gray-600"}`}
+                      >
                         {type.label}
                       </span>
                     </button>
@@ -292,7 +286,7 @@ export default function SupportPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Direct Email</h3>
                 <p className="text-sm text-gray-600">
-                  You can also reach us directly at{' '}
+                  You can also reach us directly at{" "}
                   <a href="mailto:support@eccco.com" className="text-blue-600 hover:underline">
                     support@eccco.com
                   </a>
@@ -305,10 +299,7 @@ export default function SupportPage() {
         {/* FAQ Links */}
         <div className="mt-8 text-center">
           <p className="text-gray-600 mb-4">Looking for quick answers?</p>
-          <Link
-            href="/dashboard"
-            className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
-          >
+          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 font-medium hover:underline">
             Visit our Help Center →
           </Link>
         </div>

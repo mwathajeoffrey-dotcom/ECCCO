@@ -1,7 +1,7 @@
 // Session state persistence and recovery for live quiz sessions
-import { prisma } from '@/lib/database/prisma-client';
-import { logger } from '@/lib/logger';
-import { Redis } from 'ioredis';
+import { prisma } from "@/lib/database/prisma-client";
+import { logger } from "@/lib/logger";
+import { Redis } from "ioredis";
 
 // Redis client for session state caching
 let redis: Redis | null = null;
@@ -12,18 +12,18 @@ try {
       maxRetriesPerRequest: 3,
       lazyConnect: true,
     });
-    
-    redis.on('error', (error) => {
-      logger.error('Redis connection error', error);
+
+    redis.on("error", (error) => {
+      logger.error("Redis connection error", error);
     });
   }
 } catch (error) {
-  logger.warn('Redis not available, using database-only persistence', error as Error);
+  logger.warn("Redis not available, using database-only persistence", error as Error);
 }
 
 export interface SessionState {
   sessionId: string;
-  status: 'WAITING' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED';
+  status: "WAITING" | "ACTIVE" | "PAUSED" | "COMPLETED" | "CANCELLED";
   currentQuestionIndex: number;
   currentQuestionId?: string;
   questionStartTime?: number;
@@ -72,8 +72,8 @@ export interface SessionMetadata {
 
 export class LiveQuizSessionState {
   private static readonly CACHE_TTL = 24 * 60 * 60; // 24 hours
-  private static readonly CACHE_PREFIX = 'live_quiz_session:';
-  private static readonly PARTICIPANT_PREFIX = 'participant:';
+  private static readonly CACHE_PREFIX = "live_quiz_session:";
+  private static readonly PARTICIPANT_PREFIX = "participant:";
 
   // Get session state with caching
   static async getSessionState(sessionId: string): Promise<SessionState | null> {
@@ -96,14 +96,14 @@ export class LiveQuizSessionState {
                 include: {
                   question: true,
                 },
-                orderBy: { submittedAt: 'asc' },
+                orderBy: { submittedAt: "asc" },
               },
             },
           },
           quiz: {
             include: {
               questions: {
-                orderBy: { order: 'asc' },
+                orderBy: { order: "asc" },
               },
             },
           },
@@ -120,12 +120,12 @@ export class LiveQuizSessionState {
         currentQuestionId: session.currentQuestionId || undefined,
         questionStartTime: session.questionStartTime?.getTime(),
         questionTimeLimit: session.questionTimeLimit || undefined,
-  participants: session.participants.map((participant: any) => ({
+        participants: session.participants.map((participant: any) => ({
           id: participant.id,
           nickname: participant.nickname,
           isOnline: false, // Will be updated by WebSocket manager
           score: participant.score,
-           answers: participant.answers.map((answer: any) => ({
+          answers: participant.answers.map((answer: any) => ({
             questionId: answer.questionId,
             answer: answer.answer,
             submittedAt: answer.submittedAt.getTime(),
@@ -155,17 +155,12 @@ export class LiveQuizSessionState {
 
       // Cache the result
       if (redis) {
-        await redis.setex(
-          `${this.CACHE_PREFIX}${sessionId}`,
-          this.CACHE_TTL,
-          JSON.stringify(sessionState)
-        );
+        await redis.setex(`${this.CACHE_PREFIX}${sessionId}`, this.CACHE_TTL, JSON.stringify(sessionState));
       }
 
       return sessionState;
-
     } catch (error) {
-      logger.error('Failed to get session state', error as Error, { sessionId });
+      logger.error("Failed to get session state", error as Error, { sessionId });
       return null;
     }
   }
@@ -180,13 +175,9 @@ export class LiveQuizSessionState {
           status: sessionState.status,
           currentQuestionIndex: sessionState.currentQuestionIndex,
           currentQuestionId: sessionState.currentQuestionId,
-          questionStartTime: sessionState.questionStartTime 
-            ? new Date(sessionState.questionStartTime) 
-            : null,
+          questionStartTime: sessionState.questionStartTime ? new Date(sessionState.questionStartTime) : null,
           questionTimeLimit: sessionState.questionTimeLimit,
-          startedAt: sessionState.metadata.startedAt 
-            ? new Date(sessionState.metadata.startedAt) 
-            : undefined,
+          startedAt: sessionState.metadata.startedAt ? new Date(sessionState.metadata.startedAt) : undefined,
         },
       });
 
@@ -205,7 +196,7 @@ export class LiveQuizSessionState {
       if (redis) {
         sessionState.metadata.version += 1;
         sessionState.metadata.lastActivity = Date.now();
-        
+
         await redis.setex(
           `${this.CACHE_PREFIX}${sessionState.sessionId}`,
           this.CACHE_TTL,
@@ -213,17 +204,16 @@ export class LiveQuizSessionState {
         );
       }
 
-      logger.info('Session state updated', { 
+      logger.info("Session state updated", {
         sessionId: sessionState.sessionId,
         status: sessionState.status,
         participants: sessionState.participants.length,
       });
 
       return true;
-
     } catch (error) {
-      logger.error('Failed to update session state', error as Error, { 
-        sessionId: sessionState.sessionId 
+      logger.error("Failed to update session state", error as Error, {
+        sessionId: sessionState.sessionId,
       });
       return false;
     }
@@ -231,8 +221,8 @@ export class LiveQuizSessionState {
 
   // Update participant online status
   static async updateParticipantStatus(
-    sessionId: string, 
-    participantId: string, 
+    sessionId: string,
+    participantId: string,
     isOnline: boolean,
     connectionId?: string
   ): Promise<boolean> {
@@ -241,9 +231,9 @@ export class LiveQuizSessionState {
       if (redis) {
         const participantKey = `${this.PARTICIPANT_PREFIX}${sessionId}:${participantId}`;
         await redis.hset(participantKey, {
-          isOnline: isOnline ? '1' : '0',
+          isOnline: isOnline ? "1" : "0",
           lastActivity: Date.now().toString(),
-          connectionId: connectionId || '',
+          connectionId: connectionId || "",
         });
         await redis.expire(participantKey, this.CACHE_TTL);
 
@@ -252,12 +242,12 @@ export class LiveQuizSessionState {
         const sessionData = await redis.get(sessionKey);
         if (sessionData) {
           const sessionState: SessionState = JSON.parse(sessionData);
-          const participant = sessionState.participants.find(p => p.id === participantId);
+          const participant = sessionState.participants.find((p) => p.id === participantId);
           if (participant) {
             participant.isOnline = isOnline;
             participant.lastActivity = Date.now();
             participant.connectionId = connectionId;
-            
+
             await redis.setex(sessionKey, this.CACHE_TTL, JSON.stringify(sessionState));
           }
         }
@@ -272,12 +262,11 @@ export class LiveQuizSessionState {
       });
 
       return true;
-
     } catch (error) {
-      logger.error('Failed to update participant status', error as Error, { 
-        sessionId, 
-        participantId, 
-        isOnline 
+      logger.error("Failed to update participant status", error as Error, {
+        sessionId,
+        participantId,
+        isOnline,
       });
       return false;
     }
@@ -303,14 +292,14 @@ export class LiveQuizSessionState {
 
       // Check if answer is correct
       const isCorrect = this.checkAnswer(question.correctAnswer, answer);
-      
+
       // Calculate points (with time bonus if applicable)
       const sessionState = await this.getSessionState(sessionId);
       let points = 0;
-      
+
       if (isCorrect && sessionState) {
         points = sessionState.settings.pointsPerCorrectAnswer;
-        
+
         // Time bonus calculation
         if (sessionState.settings.timeBonus && sessionState.questionStartTime) {
           const timeToAnswer = submittedAt - sessionState.questionStartTime;
@@ -325,10 +314,8 @@ export class LiveQuizSessionState {
       const answerId = `answer_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       const answerSubmittedAt = new Date(submittedAt);
       const questionIndex = sessionState?.currentQuestionIndex ?? 0;
-      const timeToAnswerMs = sessionState?.questionStartTime 
-        ? submittedAt - sessionState.questionStartTime 
-        : null;
-      
+      const timeToAnswerMs = sessionState?.questionStartTime ? submittedAt - sessionState.questionStartTime : null;
+
       await prisma.liveQuizAnswer.create({
         data: {
           id: answerId,
@@ -359,7 +346,7 @@ export class LiveQuizSessionState {
         await redis.del(`${this.CACHE_PREFIX}${sessionId}`);
       }
 
-      logger.info('Answer submitted', {
+      logger.info("Answer submitted", {
         sessionId,
         participantId,
         questionId,
@@ -368,9 +355,8 @@ export class LiveQuizSessionState {
       });
 
       return { success: true, isCorrect, points };
-
     } catch (error) {
-      logger.error('Failed to submit answer', error as Error, {
+      logger.error("Failed to submit answer", error as Error, {
         sessionId,
         participantId,
         questionId,
@@ -385,16 +371,15 @@ export class LiveQuizSessionState {
       const sessions = await prisma.liveQuizSession.findMany({
         where: {
           status: {
-            in: ['WAITING', 'ACTIVE', 'PAUSED'],
+            in: ["WAITING", "ACTIVE", "PAUSED"],
           },
         },
         select: { id: true },
       });
 
-  return sessions.map((session: any) => session.id);
-
+      return sessions.map((session: any) => session.id);
     } catch (error) {
-      logger.error('Failed to get active sessions', error as Error);
+      logger.error("Failed to get active sessions", error as Error);
       return [];
     }
   }
@@ -409,23 +394,23 @@ export class LiveQuizSessionState {
 
       // Get fresh session state
       const sessionState = await this.getSessionState(sessionId);
-      
+
       if (!sessionState) {
-        logger.warn('Session not found during restoration', { sessionId });
+        logger.warn("Session not found during restoration", { sessionId });
         return false;
       }
 
       // Mark all participants as offline (will be updated as they reconnect)
-      sessionState.participants.forEach(participant => {
+      sessionState.participants.forEach((participant) => {
         participant.isOnline = false;
         participant.connectionId = undefined;
       });
 
       // Update session state
       const updated = await this.updateSessionState(sessionState);
-      
+
       if (updated) {
-        logger.info('Session restored successfully', { 
+        logger.info("Session restored successfully", {
           sessionId,
           status: sessionState.status,
           participants: sessionState.participants.length,
@@ -433,9 +418,8 @@ export class LiveQuizSessionState {
       }
 
       return updated;
-
     } catch (error) {
-      logger.error('Failed to restore session', error as Error, { sessionId });
+      logger.error("Failed to restore session", error as Error, { sessionId });
       return false;
     }
   }
@@ -444,14 +428,14 @@ export class LiveQuizSessionState {
   static async cleanup(): Promise<void> {
     try {
       // Skip cleanup during build time
-      if (!prisma || process.env.NEXT_PHASE === 'phase-production-build') {
+      if (!prisma || process.env.NEXT_PHASE === "phase-production-build") {
         return;
       }
 
       const expiredSessions = await prisma.liveQuizSession.findMany({
         where: {
           status: {
-            in: ['WAITING', 'ACTIVE', 'PAUSED'],
+            in: ["WAITING", "ACTIVE", "PAUSED"],
           },
           createdAt: {
             lt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24 hours ago
@@ -463,7 +447,7 @@ export class LiveQuizSessionState {
         // Mark as cancelled
         await prisma.liveQuizSession.update({
           where: { id: session.id },
-          data: { status: 'CANCELLED' },
+          data: { status: "CANCELLED" },
         });
 
         // Clear cache
@@ -471,11 +455,10 @@ export class LiveQuizSessionState {
           await redis.del(`${this.CACHE_PREFIX}${session.id}`);
         }
 
-        logger.info('Expired session cleaned up', { sessionId: session.id });
+        logger.info("Expired session cleaned up", { sessionId: session.id });
       }
-
     } catch (error) {
-      logger.error('Failed to cleanup sessions', error as Error);
+      logger.error("Failed to cleanup sessions", error as Error);
     }
   }
 
@@ -483,7 +466,7 @@ export class LiveQuizSessionState {
   private static checkAnswer(correctAnswer: any, submittedAnswer: any): boolean {
     try {
       // Handle different answer types
-      if (typeof correctAnswer === 'string' && typeof submittedAnswer === 'string') {
+      if (typeof correctAnswer === "string" && typeof submittedAnswer === "string") {
         return correctAnswer.toLowerCase().trim() === submittedAnswer.toLowerCase().trim();
       }
 
@@ -492,25 +475,24 @@ export class LiveQuizSessionState {
       }
 
       return JSON.stringify(correctAnswer) === JSON.stringify(submittedAnswer);
-
     } catch (error) {
-      logger.error('Error checking answer', error as Error);
+      logger.error("Error checking answer", error as Error);
       return false;
     }
   }
 }
 
 // Auto-cleanup on startup and periodic intervals
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   // Initial cleanup
-  LiveQuizSessionState.cleanup().catch(error => {
-    logger.error('Initial session cleanup failed', error);
+  LiveQuizSessionState.cleanup().catch((error) => {
+    logger.error("Initial session cleanup failed", error);
   });
 
   // Periodic cleanup (every hour)
   setInterval(() => {
-    LiveQuizSessionState.cleanup().catch(error => {
-      logger.error('Periodic session cleanup failed', error);
+    LiveQuizSessionState.cleanup().catch((error) => {
+      logger.error("Periodic session cleanup failed", error);
     });
   }, 60 * 60 * 1000);
 }

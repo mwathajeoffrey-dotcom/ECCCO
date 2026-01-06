@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/database/prisma-client";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ accessCode: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ accessCode: string }> }) {
   try {
     const { accessCode: paramAccessCode } = await params;
     const accessCode = paramAccessCode.toUpperCase();
@@ -22,7 +19,7 @@ export async function GET(
         },
         participants: {
           where: { isActive: true },
-          orderBy: { joinedAt: 'asc' },
+          orderBy: { joinedAt: "asc" },
         },
         _count: {
           select: {
@@ -33,11 +30,11 @@ export async function GET(
     });
 
     if (!session) {
-      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
+      return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
     }
 
     // Get question count
-    const questionIds = JSON.parse(session.questionIds || '[]');
+    const questionIds = JSON.parse(session.questionIds || "[]");
 
     const response = {
       session: {
@@ -60,18 +57,12 @@ export async function GET(
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching quiz session for join:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error fetching quiz session for join:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ accessCode: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ accessCode: string }> }) {
   try {
     const { accessCode: paramAccessCode } = await params;
     const accessCode = paramAccessCode.toUpperCase();
@@ -79,10 +70,7 @@ export async function POST(
     const { nickname } = body;
 
     if (!nickname || !nickname.trim()) {
-      return NextResponse.json(
-        { error: 'Nickname is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nickname is required" }, { status: 400 });
     }
 
     const session = await prisma.liveQuizSession.findUnique({
@@ -99,21 +87,15 @@ export async function POST(
     });
 
     if (!session) {
-      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
+      return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
     }
 
-    if (session.status === 'COMPLETED' || session.status === 'CANCELLED') {
-      return NextResponse.json(
-        { error: 'Quiz has ended' },
-        { status: 400 }
-      );
+    if (session.status === "COMPLETED" || session.status === "CANCELLED") {
+      return NextResponse.json({ error: "Quiz has ended" }, { status: 400 });
     }
 
     if (session.maxParticipants && session._count.participants >= session.maxParticipants) {
-      return NextResponse.json(
-        { error: 'Quiz is full' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Quiz is full" }, { status: 400 });
     }
 
     // Check if nickname is already taken
@@ -126,10 +108,7 @@ export async function POST(
     });
 
     if (existingParticipant) {
-      return NextResponse.json(
-        { error: 'Nickname is already taken' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Nickname is already taken" }, { status: 400 });
     }
 
     // Check for authenticated user
@@ -159,13 +138,10 @@ export async function POST(
       participantId: participant.id,
       nickname: participant.nickname,
       userId: userId ?? null,
-      message: 'Successfully joined the quiz',
+      message: "Successfully joined the quiz",
     });
   } catch (error) {
-    console.error('Error joining quiz:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error joining quiz:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

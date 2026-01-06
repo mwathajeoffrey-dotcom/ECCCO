@@ -7,7 +7,9 @@
 ## ✅ Protections Added
 
 ### 1. **VS Code Settings** (`.vscode/settings.json`)
+
 Automatically:
+
 - ✅ Auto-saves files (prevents loss)
 - ✅ Removes trailing whitespace
 - ✅ Ensures consistent line endings
@@ -16,14 +18,18 @@ Automatically:
 - ✅ Confirms git operations
 
 ### 2. **Git Pre-Commit Hook** (`.git/hooks/pre-commit`)
+
 Blocks commits with:
+
 - ❌ Corrupted file patterns (like "months ago i couldn't")
 - ❌ Empty code files
 - ❌ Text accidentally pasted at start of files
 - ❌ Multiple imports on one line
 
 ### 3. **EditorConfig** (`.editorconfig`)
+
 Enforces:
+
 - ✅ UTF-8 encoding
 - ✅ Unix line endings (LF)
 - ✅ Consistent indentation (2 spaces)
@@ -35,6 +41,7 @@ Enforces:
 ## 🚫 Common Corruption Causes (Now Prevented!)
 
 ### **What Happened Before:**
+
 1. Accidentally pasted LinkedIn text into Sidebar.tsx
 2. File started with: `"3 months ago i couldn't write..."`
 3. Corrupted the file syntax
@@ -42,6 +49,7 @@ Enforces:
 5. Deployment failed
 
 ### **What Happens Now:**
+
 1. If you accidentally paste text → **Pre-commit hook catches it** ❌
 2. Commit is **blocked** with clear error message
 3. You fix the file **before** it gets committed
@@ -52,6 +60,7 @@ Enforces:
 ## 📝 Safe Workflow (Best Practices)
 
 ### **When Writing Notes/Emails:**
+
 ```bash
 # ✅ DO THIS: Write in docs folder
 code docs/outreach/my-notes.md
@@ -61,6 +70,7 @@ code docs/outreach/my-notes.md
 ```
 
 ### **When Editing Code:**
+
 ```bash
 # 1. Open the correct file
 code src/components/MyComponent.tsx
@@ -83,6 +93,7 @@ git commit -m "fix: update component"
 ## 🔍 How to Check Files Before Committing
 
 ### **Quick Check:**
+
 ```bash
 # See what you're about to commit
 git diff --cached
@@ -94,6 +105,7 @@ git diff --cached
 ```
 
 ### **Build Check:**
+
 ```bash
 # Always test build before committing
 npm run build
@@ -107,6 +119,7 @@ npm run build
 ## 🚨 If Pre-Commit Hook Blocks You
 
 ### **What You'll See:**
+
 ```
 ❌ ERROR: Detected potential file corruption pattern: 'months ago i couldn't'
    Please check your staged files for accidental text insertion.
@@ -115,6 +128,7 @@ npm run build
 ```
 
 ### **What to Do:**
+
 ```bash
 # 1. See what files are staged
 git status
@@ -155,6 +169,7 @@ grep -r "'use client';'use client'" src/
 ## 💡 Prevention Tips
 
 ### ✅ **DO:**
+
 - Edit code in VS Code (auto-formats)
 - Write notes in `docs/` folder
 - Test build before committing
@@ -162,6 +177,7 @@ grep -r "'use client';'use client'" src/
 - Let pre-commit hook run (don't skip)
 
 ### ❌ **DON'T:**
+
 - Paste LinkedIn/email text into code files
 - Edit files on GitHub web interface
 - Use `git commit --no-verify` (skips protection)
@@ -216,11 +232,13 @@ mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
 ## 🎯 Summary
 
 **3 Layers of Protection:**
+
 1. **VS Code** auto-formats and prevents common issues
 2. **EditorConfig** enforces consistency
 3. **Git hook** blocks corrupted commits
 
 **Result:**
+
 - ✅ Clean code always
 - ✅ No corrupted files in git
 - ✅ Deployments succeed

@@ -44,6 +44,7 @@
 ```
 
 ### **Issues with Current Structure:**
+
 - ❌ "Saved Questions" buried in Study Tools
 - ❌ Evidence Library + Evidence Search are separate
 - ❌ Guidelines + Guidelines Search are separate
@@ -136,12 +137,14 @@
 **Tap Each Tab to Reveal:**
 
 #### **🏠 Home Tab:**
+
 - Hero with stats
 - Quick Actions cards
 - Evidence showcase
 - Featured content
 
 #### **📝 Practice Tab:**
+
 - Continue current quiz
 - Start new practice
 - By specialty (ACLS, PALS, BLS)
@@ -149,6 +152,7 @@
 - Recent history
 
 #### **📚 Library Tab:**
+
 - Evidence library (trials)
 - Clinical guidelines
 - Flowcharts
@@ -156,6 +160,7 @@
 - Bookmarked items
 
 #### **📊 Stats Tab:**
+
 - Dashboard overview
 - Study streaks 🔥
 - Performance charts
@@ -163,6 +168,7 @@
 - Weekly progress
 
 #### **👤 Me Tab:**
+
 - Profile
 - Saved questions ⭐
 - My notes 📝
@@ -174,6 +180,7 @@
 ## 🎨 VISUAL IMPROVEMENTS
 
 ### **Current Dashboard:**
+
 ```
 ┌────────────────────────────────┐
 │   Your Learning Progress       │
@@ -188,6 +195,7 @@
 ```
 
 ### **Proposed Enhanced Dashboard:**
+
 ```
 ┌─────────────────────────────────────────┐
 │ 👋 Welcome back, Sarah!                 │
@@ -236,6 +244,7 @@
 ## 🔍 SEARCH COMPARISON
 
 ### **Current Search:**
+
 ```
 Located: Inside "Practice" section only
 Access: Must expand Practice section
@@ -243,6 +252,7 @@ Scope: Questions only
 ```
 
 ### **Proposed Global Search:**
+
 ```
 ┌──────────────────────────────────────────────┐
 │ 🔍 Search questions, trials, guidelines...  │⌘K│
@@ -271,6 +281,7 @@ Scope: Questions only
 ## 🎯 USER JOURNEY COMPARISON
 
 ### **Current Journey (New User):**
+
 ```
 1. Land on homepage
 2. See features
@@ -283,6 +294,7 @@ Scope: Questions only
 ```
 
 ### **Proposed Journey (New User):**
+
 ```
 1. Land on homepage
 2. See features
@@ -300,7 +312,8 @@ Scope: Questions only
 8. Clear CTAs: "Continue Learning" or "Explore Library"
 ```
 
-**Result:** 
+**Result:**
+
 - ✅ User knows exactly what to do
 - ✅ Feels guided and supported
 - ✅ Higher completion rate
@@ -311,6 +324,7 @@ Scope: Questions only
 ## 📱 MOBILE NAVIGATION COMPARISON
 
 ### **Current Mobile:**
+
 ```
 ┌──────────────────────────┐
 │  [☰] ECCCO    [Profile]  │ ← Header
@@ -344,6 +358,7 @@ Tap [☰] →
 ```
 
 ### **Proposed Mobile:**
+
 ```
 ┌──────────────────────────┐
 │  🔍 Search     [Profile]  │ ← Header
@@ -373,6 +388,7 @@ Tap [☰] →
 ## 🎨 KEY VISUAL ELEMENTS TO ADD
 
 ### **1. Progress Indicators**
+
 ```
 Current Quiz Progress:
 [████████████░░░░░░░░] 60%
@@ -380,6 +396,7 @@ Question 12 of 20
 ```
 
 ### **2. Streak Visualization**
+
 ```
 🔥 Current Streak: 7 days
 
@@ -388,6 +405,7 @@ M  T  W  T  F  S  S
 ```
 
 ### **3. Achievement Cards**
+
 ```
 ┌──────────────────┐
 │       🏆         │
@@ -401,6 +419,7 @@ M  T  W  T  F  S  S
 ```
 
 ### **4. Recommendation Cards**
+
 ```
 ┌────────────────────────────┐
 │ 🎯 RECOMMENDED FOR YOU     │
@@ -417,18 +436,18 @@ M  T  W  T  F  S  S
 
 ## 📊 COMPARISON SUMMARY TABLE
 
-| Feature | Current | Proposed | Priority |
-|---------|---------|----------|----------|
-| **Global Search** | Hidden in sidebar | Top of every page + ⌘K | High |
-| **Continue Learning** | ❌ None | ✅ Prominent on dashboard | Critical |
-| **Study Streaks** | ❌ None | ✅ Visual calendar + badges | High |
-| **Achievements** | ❌ None | ✅ 15+ badges with progress | High |
-| **Recommendations** | ❌ None | ✅ AI-powered suggestions | Very High |
-| **Mobile Nav** | Sidebar only | Bottom tabs + sidebar | Critical |
-| **Saved Questions** | Buried in menu | Prominent in "My Learning" | Medium |
-| **Onboarding** | ❌ None | ✅ 3-step wizard | Critical |
-| **Empty States** | Generic "No data" | Helpful + CTAs | Low |
-| **Dark Mode** | ⚠️ Partial | ✅ Complete | Medium |
+| Feature               | Current           | Proposed                    | Priority  |
+| --------------------- | ----------------- | --------------------------- | --------- |
+| **Global Search**     | Hidden in sidebar | Top of every page + ⌘K      | High      |
+| **Continue Learning** | ❌ None           | ✅ Prominent on dashboard   | Critical  |
+| **Study Streaks**     | ❌ None           | ✅ Visual calendar + badges | High      |
+| **Achievements**      | ❌ None           | ✅ 15+ badges with progress | High      |
+| **Recommendations**   | ❌ None           | ✅ AI-powered suggestions   | Very High |
+| **Mobile Nav**        | Sidebar only      | Bottom tabs + sidebar       | Critical  |
+| **Saved Questions**   | Buried in menu    | Prominent in "My Learning"  | Medium    |
+| **Onboarding**        | ❌ None           | ✅ 3-step wizard            | Critical  |
+| **Empty States**      | Generic "No data" | Helpful + CTAs              | Low       |
+| **Dark Mode**         | ⚠️ Partial        | ✅ Complete                 | Medium    |
 
 ---
 
@@ -480,6 +499,7 @@ M  T  W  T  F  S  S
 3. Review **UX_SUMMARY.md** for priorities
 
 **Questions about navigation?**
+
 - This document shows before/after
 - Roadmap explains the "why"
 - Implementation guide shows the "how"
@@ -487,4 +507,3 @@ M  T  W  T  F  S  S
 ---
 
 **Let's transform ECCCO into the most user-friendly medical education platform! 🎯**
-

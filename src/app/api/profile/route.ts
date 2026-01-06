@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
 
 // Force dynamic rendering - this route needs database access
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * GET /api/profile
@@ -13,18 +13,15 @@ export const runtime = 'nodejs';
 export async function GET() {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Find or create user
     let user = await prisma.user.findUnique({
       where: { clerkUserId: userId },
-      include: { UserProfile: true }
+      include: { UserProfile: true },
     });
 
     if (!user) {
@@ -39,17 +36,17 @@ export async function GET() {
             create: {
               id: `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               // Default preferences
-              difficultyPreference: 'medium',
-              preferredMode: 'practice',
+              difficultyPreference: "medium",
+              preferredMode: "practice",
               dailyGoal: 10,
               emailNotifications: true,
               weeklyDigest: true,
               createdAt: new Date(),
               updatedAt: new Date(),
-            }
-          }
+            },
+          },
         },
-        include: { UserProfile: true }
+        include: { UserProfile: true },
       });
     } else if (!user.UserProfile) {
       // Create profile if user exists but profile doesn't
@@ -57,35 +54,31 @@ export async function GET() {
         data: {
           id: `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           userId: user.id,
-          difficultyPreference: 'medium',
-          preferredMode: 'practice',
+          difficultyPreference: "medium",
+          preferredMode: "practice",
           dailyGoal: 10,
           emailNotifications: true,
           weeklyDigest: true,
           createdAt: new Date(),
           updatedAt: new Date(),
-        }
+        },
       });
-      
+
       // Refetch user with profile
       user = await prisma.user.findUnique({
         where: { clerkUserId: userId },
-        include: { UserProfile: true }
+        include: { UserProfile: true },
       });
     }
 
     return NextResponse.json({
       success: true,
       user,
-      profile: user?.UserProfile
+      profile: user?.UserProfile,
     });
-
   } catch (error) {
-    console.error('Error fetching profile:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch profile' },
-      { status: 500 }
-    );
+    console.error("Error fetching profile:", error);
+    return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
 }
 
@@ -96,29 +89,26 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const data = await request.json();
-    
+
     // Find or create user
     let user = await prisma.user.findUnique({
-      where: { clerkUserId: userId }
+      where: { clerkUserId: userId },
     });
 
     if (!user) {
       user = await prisma.user.create({
-        data: { 
+        data: {
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: userId,
           createdAt: new Date(),
           updatedAt: new Date(),
-        }
+        },
       });
     }
 
@@ -126,10 +116,10 @@ export async function PUT(request: Request) {
     if (data.email && data.email !== user.email) {
       await prisma.user.update({
         where: { id: user.id },
-        data: { 
+        data: {
           email: data.email,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       });
     }
 
@@ -140,12 +130,12 @@ export async function PUT(request: Request) {
       organization: data.organization,
       role: data.role,
       focusAreas: data.focusAreas ? JSON.stringify(data.focusAreas) : null,
-      difficultyPreference: data.difficultyPreference || 'medium',
+      difficultyPreference: data.difficultyPreference || "medium",
       studyGoals: data.studyGoals,
-      preferredMode: data.preferredMode || 'practice',
+      preferredMode: data.preferredMode || "practice",
       dailyGoal: data.dailyGoal || 10,
       emailNotifications: data.emailNotifications ?? true,
-      weeklyDigest: data.weeklyDigest ?? true
+      weeklyDigest: data.weeklyDigest ?? true,
     };
 
     const profile = await prisma.userProfile.upsert({
@@ -155,24 +145,20 @@ export async function PUT(request: Request) {
         userId: user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
-        ...profileData
+        ...profileData,
       },
       update: {
         ...profileData,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
 
     return NextResponse.json({
       success: true,
-      profile
+      profile,
     });
-
   } catch (error) {
-    console.error('Error updating profile:', error);
-    return NextResponse.json(
-      { error: 'Failed to update profile' },
-      { status: 500 }
-    );
+    console.error("Error updating profile:", error);
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }

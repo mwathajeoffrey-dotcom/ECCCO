@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { getAdminStatus } from '@/lib/auth/admin';
+import { NextResponse } from "next/server";
+import { getAdminStatus } from "@/lib/auth/admin";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 /**
  * API route to check if the current user has admin access
@@ -11,17 +11,20 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const status = await getAdminStatus();
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       isAdmin: status.isAdmin,
       userId: status.userId,
-      error: status.error
+      error: status.error,
     });
   } catch (error) {
-    console.error('Error checking admin status:', error);
-    return NextResponse.json({ 
-      isAdmin: false,
-      error: 'Failed to check admin status'
-    }, { status: 500 });
+    console.error("Error checking admin status:", error);
+    return NextResponse.json(
+      {
+        isAdmin: false,
+        error: "Failed to check admin status",
+      },
+      { status: 500 }
+    );
   }
 }

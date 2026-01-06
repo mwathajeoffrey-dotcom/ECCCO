@@ -19,9 +19,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ECCCO - Emergency & Critical Care Comprehensive Online",
-  description: "Comprehensive medical exam platform for emergency and critical care training with 5000+ evidence-based questions",
+  description:
+    "Comprehensive medical exam platform for emergency and critical care training with 5000+ evidence-based questions",
   manifest: "/manifest.json",
-  keywords: ["emergency medicine", "critical care", "medical education", "online exam", "ECCCO", "medical training", "healthcare"],
+  keywords: [
+    "emergency medicine",
+    "critical care",
+    "medical education",
+    "online exam",
+    "ECCCO",
+    "medical training",
+    "healthcare",
+  ],
   authors: [{ name: "ECCCO Medical Team" }],
   creator: "ECCCO",
   publisher: "ECCCO Medical Education",
@@ -39,9 +48,7 @@ export const metadata: Metadata = {
       { url: "/icons/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
       { url: "/icons/icon-512x512.svg", sizes: "512x512", type: "image/svg+xml" },
     ],
-    apple: [
-      { url: "/icons/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" },
-    ],
+    apple: [{ url: "/icons/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
   },
   appleWebApp: {
@@ -91,14 +98,10 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClerkProvider>
-          <ErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
-            <AppLayout>
-              {children}
-            </AppLayout>
+          <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+            <AppLayout>{children}</AppLayout>
           </ErrorBoundary>
           <PWAInstallPrompt />
           <FloatingPracticeButton />

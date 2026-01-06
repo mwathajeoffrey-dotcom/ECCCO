@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/database/prisma-client";
 
 // Generate a unique 6-character access code
 function generateAccessCode(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
   for (let i = 0; i < 6; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -16,20 +16,20 @@ function generateAccessCode(): string {
 async function generateUniqueAccessCode(): Promise<string> {
   let attempts = 0;
   const maxAttempts = 10;
-  
+
   while (attempts < maxAttempts) {
     const code = generateAccessCode();
     const existing = await prisma.liveQuizSession.findUnique({
       where: { accessCode: code },
     });
-    
+
     if (!existing) {
       return code;
     }
-    
+
     attempts++;
   }
-  
+
   // If we can't generate a unique code, add timestamp
   return generateAccessCode() + Date.now().toString().slice(-2);
 }
@@ -37,27 +37,17 @@ async function generateUniqueAccessCode(): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
-    const {
-      title,
-      description,
-      topicId,
-      questionIds,
-      questionTimeLimit = 30,
-      maxParticipants = 100,
-    } = body;
+    const { title, description, topicId, questionIds, questionTimeLimit = 30, maxParticipants = 100 } = body;
 
     // Validate required fields
     if (!title || !questionIds || !Array.isArray(questionIds) || questionIds.length === 0) {
-      return NextResponse.json(
-        { error: 'Title and questions are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Title and questions are required" }, { status: 400 });
     }
 
     // Validate questions exist
@@ -70,10 +60,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (questions.length !== questionIds.length) {
-      return NextResponse.json(
-        { error: 'Some questions were not found' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Some questions were not found" }, { status: 400 });
     }
 
     // Generate unique access code
@@ -100,10 +87,7 @@ export async function POST(request: NextRequest) {
       // Get any topic as fallback
       const defaultTopic = await prisma.topic.findFirst();
       if (!defaultTopic) {
-        return NextResponse.json(
-          { error: 'No topics available in the system' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "No topics available in the system" }, { status: 400 });
       }
       finalTopicId = defaultTopic.id;
     }
@@ -111,7 +95,7 @@ export async function POST(request: NextRequest) {
     // Create the live quiz session
     const now = new Date();
     const sessionId = `session_${Date.now()}_${accessCode.toLowerCase()}`;
-    
+
     const liveQuizSession = await prisma.liveQuizSession.create({
       data: {
         id: sessionId,
@@ -122,7 +106,7 @@ export async function POST(request: NextRequest) {
         topicId: finalTopicId,
         questionIds: JSON.stringify(questionIds),
         settings: JSON.stringify(settings),
-        status: 'WAITING',
+        status: "WAITING",
         createdAt: now,
         updatedAt: now,
       },
@@ -144,10 +128,7 @@ export async function POST(request: NextRequest) {
       questionCount: questionIds.length,
     });
   } catch (error) {
-    console.error('Error creating live quiz session:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error creating live quiz session:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS "LiveQuizParticipant" (
   "joinedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "leftAt" TIMESTAMP WITH TIME ZONE,
   "isActive" BOOLEAN DEFAULT TRUE NOT NULL,
-  CONSTRAINT "LiveQuizParticipant_sessionId_fkey" 
-    FOREIGN KEY ("sessionId") 
-    REFERENCES "LiveQuizSession"("id") 
-    ON DELETE CASCADE 
+  CONSTRAINT "LiveQuizParticipant_sessionId_fkey"
+    FOREIGN KEY ("sessionId")
+    REFERENCES "LiveQuizSession"("id")
+    ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
@@ -59,17 +59,17 @@ CREATE TABLE IF NOT EXISTS "LiveQuizAnswer" (
   "isCorrect" BOOLEAN NOT NULL,
   "timeToAnswer" INTEGER,
   "answeredAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-  CONSTRAINT "LiveQuizAnswer_sessionId_fkey" 
-    FOREIGN KEY ("sessionId") 
-    REFERENCES "LiveQuizSession"("id") 
-    ON DELETE CASCADE 
+  CONSTRAINT "LiveQuizAnswer_sessionId_fkey"
+    FOREIGN KEY ("sessionId")
+    REFERENCES "LiveQuizSession"("id")
+    ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT "LiveQuizAnswer_participantId_fkey" 
-    FOREIGN KEY ("participantId") 
-    REFERENCES "LiveQuizParticipant"("id") 
-    ON DELETE CASCADE 
+  CONSTRAINT "LiveQuizAnswer_participantId_fkey"
+    FOREIGN KEY ("participantId")
+    REFERENCES "LiveQuizParticipant"("id")
+    ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT "LiveQuizAnswer_sessionId_participantId_questionIndex_key" 
+  CONSTRAINT "LiveQuizAnswer_sessionId_participantId_questionIndex_key"
     UNIQUE ("sessionId", "participantId", "questionIndex")
 );
 
@@ -79,10 +79,10 @@ CREATE INDEX IF NOT EXISTS "LiveQuizAnswer_participantId_idx" ON "LiveQuizAnswer
 CREATE INDEX IF NOT EXISTS "LiveQuizAnswer_questionId_idx" ON "LiveQuizAnswer"("questionId");
 
 -- Verify tables created
-SELECT 
-  tablename, 
-  schemaname 
-FROM pg_tables 
-WHERE schemaname = 'public' 
+SELECT
+  tablename,
+  schemaname
+FROM pg_tables
+WHERE schemaname = 'public'
 AND tablename LIKE 'Live%'
 ORDER BY tablename;

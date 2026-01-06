@@ -1,14 +1,30 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useUser, SignOutButton } from '@clerk/nextjs';
-import Sidebar from '@/components/navigation/Sidebar';
-import { 
-  BookOpen, Clock, Trophy, BarChart3, FileText, Users, 
-  Brain, HeartPulse, Activity, FlaskConical, Zap,
-  BookMarked, Sparkles, Target, MessageSquare, Calendar, Menu, LogOut, User
-} from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { useUser, SignOutButton } from "@clerk/nextjs";
+import Sidebar from "@/components/navigation/Sidebar";
+import {
+  BookOpen,
+  Clock,
+  Trophy,
+  BarChart3,
+  FileText,
+  Users,
+  Brain,
+  HeartPulse,
+  Activity,
+  FlaskConical,
+  Zap,
+  BookMarked,
+  Sparkles,
+  Target,
+  MessageSquare,
+  Calendar,
+  Menu,
+  LogOut,
+  User,
+} from "lucide-react";
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,10 +33,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Sidebar */}
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-      />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Header - Scrolls with page */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm">
@@ -44,7 +57,9 @@ export default function Home() {
                 </div>
                 <div>
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ECCCO</h1>
-                  <p className="text-xs text-gray-600 hidden sm:block">Emergency & Critical Care Comprehensive Online</p>
+                  <p className="text-xs text-gray-600 hidden sm:block">
+                    Emergency & Critical Care Comprehensive Online
+                  </p>
                 </div>
               </Link>
             </div>
@@ -58,12 +73,10 @@ export default function Home() {
                   className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all"
                 >
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                    {user?.firstName?.[0] || user?.emailAddresses[0]?.emailAddress[0] || 'U'}
+                    {user?.firstName?.[0] || user?.emailAddresses[0]?.emailAddress[0] || "U"}
                   </div>
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-semibold text-gray-900">
-                      {user?.firstName || 'User'}
-                    </p>
+                    <p className="text-sm font-semibold text-gray-900">{user?.firstName || "User"}</p>
                     <p className="text-xs text-gray-600">Dashboard</p>
                   </div>
                 </Link>
@@ -103,8 +116,8 @@ export default function Home() {
             </span>
           </h2>
           <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Complete evidence-based learning platform with 5,000+ questions, real-time quizzes, 
-            comprehensive guidelines, and AI-powered analytics to help you excel.
+            Complete evidence-based learning platform with 5,000+ questions, real-time quizzes, comprehensive
+            guidelines, and AI-powered analytics to help you excel.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -127,7 +140,7 @@ export default function Home() {
               Browse Evidence Library
             </Link>
           </div>
-          
+
           {/* Stats */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl shadow-sm">
@@ -156,10 +169,13 @@ export default function Home() {
           <h3 className="text-4xl font-bold text-gray-900 mb-4">Everything You Need to Excel</h3>
           <p className="text-xl text-gray-600">Comprehensive tools for emergency and critical care mastery</p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Mode */}
-          <Link href="/practice" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/practice"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BookOpen className="w-7 h-7 text-white" />
             </div>
@@ -171,7 +187,10 @@ export default function Home() {
           </Link>
 
           {/* Live Quiz */}
-          <Link href="/live-quiz" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/live-quiz"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Zap className="w-7 h-7 text-white" />
             </div>
@@ -183,7 +202,10 @@ export default function Home() {
           </Link>
 
           {/* Evidence Library */}
-          <Link href="/emergency-references" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/emergency-references"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BookMarked className="w-7 h-7 text-white" />
             </div>
@@ -195,7 +217,10 @@ export default function Home() {
           </Link>
 
           {/* AI Analytics */}
-          <Link href="/learning-analytics" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/learning-analytics"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Brain className="w-7 h-7 text-white" />
             </div>
@@ -207,19 +232,23 @@ export default function Home() {
           </Link>
 
           {/* Timed Exams */}
-          <Link href="/exam" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/exam"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Clock className="w-7 h-7 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Timed Exams</h3>
-            <p className="text-gray-600 mb-4">
-              Simulate real exam conditions with full-length timed assessments.
-            </p>
+            <p className="text-gray-600 mb-4">Simulate real exam conditions with full-length timed assessments.</p>
             <span className="text-orange-600 font-semibold group-hover:underline">Take Exam →</span>
           </Link>
 
           {/* Performance Tracking */}
-          <Link href="/dashboard" className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <Link
+            href="/dashboard"
+            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
             <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-7 h-7 text-white" />
             </div>
@@ -235,33 +264,34 @@ export default function Home() {
       {/* Topics Overview */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-4xl font-bold text-center text-white mb-4">
-            Comprehensive Topic Coverage
-          </h3>
+          <h3 className="text-4xl font-bold text-center text-white mb-4">Comprehensive Topic Coverage</h3>
           <p className="text-center text-blue-100 text-lg mb-12 max-w-2xl mx-auto">
             Master all critical domains of emergency and critical care medicine
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
-              { name: 'Airway Management', icon: Activity },
-              { name: 'Mechanical Ventilation', icon: Activity },
-              { name: 'Sepsis & Shock', icon: HeartPulse },
-              { name: 'Cardiac Emergencies', icon: HeartPulse },
-              { name: 'Neurological Care', icon: Brain },
-              { name: 'Trauma Management', icon: Activity },
-              { name: 'Toxicology', icon: FlaskConical },
-              { name: 'Critical Pharmacology', icon: FlaskConical },
-              { name: 'Procedures', icon: Target },
-              { name: 'Respiratory Emergencies', icon: Activity },
-              { name: 'Renal Emergencies', icon: Activity },
-              { name: 'Endocrine Emergencies', icon: Activity },
-              { name: 'Infection Control', icon: Activity },
-              { name: 'Ethical & Legal', icon: BookMarked },
-              { name: 'Evidence-Based Care', icon: BookMarked }
+              { name: "Airway Management", icon: Activity },
+              { name: "Mechanical Ventilation", icon: Activity },
+              { name: "Sepsis & Shock", icon: HeartPulse },
+              { name: "Cardiac Emergencies", icon: HeartPulse },
+              { name: "Neurological Care", icon: Brain },
+              { name: "Trauma Management", icon: Activity },
+              { name: "Toxicology", icon: FlaskConical },
+              { name: "Critical Pharmacology", icon: FlaskConical },
+              { name: "Procedures", icon: Target },
+              { name: "Respiratory Emergencies", icon: Activity },
+              { name: "Renal Emergencies", icon: Activity },
+              { name: "Endocrine Emergencies", icon: Activity },
+              { name: "Infection Control", icon: Activity },
+              { name: "Ethical & Legal", icon: BookMarked },
+              { name: "Evidence-Based Care", icon: BookMarked },
             ].map((topic) => {
               const Icon = topic.icon;
               return (
-                <div key={topic.name} className="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-xl text-center hover:bg-white/20 transition-all">
+                <div
+                  key={topic.name}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-xl text-center hover:bg-white/20 transition-all"
+                >
                   <Icon className="w-6 h-6 text-white mx-auto mb-2" />
                   <span className="text-sm font-medium text-white">{topic.name}</span>
                 </div>
@@ -275,11 +305,10 @@ export default function Home() {
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 text-center shadow-2xl">
-            <h3 className="text-4xl font-bold text-white mb-4">
-              Ready to Excel in Emergency & Critical Care?
-            </h3>
+            <h3 className="text-4xl font-bold text-white mb-4">Ready to Excel in Emergency & Critical Care?</h3>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of healthcare professionals improving their knowledge and clinical skills with our comprehensive platform.
+              Join thousands of healthcare professionals improving their knowledge and clinical skills with our
+              comprehensive platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -318,29 +347,81 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Features</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><Link href="/practice" className="hover:text-white transition-colors">Practice Questions</Link></li>
-                <li><Link href="/live-quiz" className="hover:text-white transition-colors">Live Quiz Mode</Link></li>
-                <li><Link href="/learning-analytics" className="hover:text-white transition-colors">AI Analytics</Link></li>
-                <li><Link href="/emergency-references" className="hover:text-white transition-colors">Evidence Library</Link></li>
-                <li><Link href="/exam" className="hover:text-white transition-colors">Timed Exams</Link></li>
+                <li>
+                  <Link href="/practice" className="hover:text-white transition-colors">
+                    Practice Questions
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/live-quiz" className="hover:text-white transition-colors">
+                    Live Quiz Mode
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/learning-analytics" className="hover:text-white transition-colors">
+                    AI Analytics
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/emergency-references" className="hover:text-white transition-colors">
+                    Evidence Library
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/exam" className="hover:text-white transition-colors">
+                    Timed Exams
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
-                <li><Link href="/emergency-references" className="hover:text-white transition-colors">Clinical Guidelines</Link></li>
-                <li><Link href="/learning-analytics" className="hover:text-white transition-colors">Performance Analytics</Link></li>
-                <li><Link href="/support" className="hover:text-white transition-colors">Help Center</Link></li>
+                <li>
+                  <Link href="/dashboard" className="hover:text-white transition-colors">
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/emergency-references" className="hover:text-white transition-colors">
+                    Clinical Guidelines
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/learning-analytics" className="hover:text-white transition-colors">
+                    Performance Analytics
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/support" className="hover:text-white transition-colors">
+                    Help Center
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><Link href="/support" className="hover:text-white transition-colors">Contact Support</Link></li>
-                <li><Link href="/support" className="hover:text-white transition-colors">Send Feedback</Link></li>
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li>
+                  <Link href="/support" className="hover:text-white transition-colors">
+                    Contact Support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/support" className="hover:text-white transition-colors">
+                    Send Feedback
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="hover:text-white transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

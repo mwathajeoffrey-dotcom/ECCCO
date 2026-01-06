@@ -11,6 +11,7 @@
 
 export interface ExamSession {
   id: string;
+  userId?: string | null;
   sessionId: string;
   topicId: string;
   topicName: string;
@@ -100,7 +101,8 @@ class ECCCOAnalyticsV2 {
     topicName: string,
     questions: any[],
     answers: Record<number, number>,
-    timeSpent: number
+    timeSpent: number,
+    userId?: string | null
   ): Promise<void> {
     try {
       const correctAnswers = this.calculateCorrectAnswers(questions, answers);
@@ -108,6 +110,7 @@ class ECCCOAnalyticsV2 {
 
       const session: ExamSession = {
         id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        userId: userId || null,
         sessionId: this.sessionId,
         topicId,
         topicName,

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
-import { motion, AnimatePresence } from 'framer-motion';
-import QuestionSearch from './QuestionSearch';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { motion, AnimatePresence } from "framer-motion";
+import QuestionSearch from "./QuestionSearch";
 import {
   Home,
   Trophy,
@@ -31,7 +31,7 @@ import {
   User,
   Shield,
   UserCog,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -55,11 +55,7 @@ interface NavSection {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { isSignedIn } = useUser();
-  const [expandedSections, setExpandedSections] = useState<string[]>([
-    'Practice',
-    'Study Tools',
-    'Resources',
-  ]);
+  const [expandedSections, setExpandedSections] = useState<string[]>(["Practice", "Study Tools", "Resources"]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
   const [rolesLoading, setRolesLoading] = useState(true);
@@ -74,21 +70,21 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       try {
         const [adminRes, devRes] = await Promise.all([
-          fetch('/api/auth/check-admin'),
-          fetch('/api/auth/check-developer'),
+          fetch("/api/auth/check-admin"),
+          fetch("/api/auth/check-developer"),
         ]);
-        
+
         if (adminRes.ok) {
           const adminData = await adminRes.json();
           setIsAdmin(adminData.isAdmin);
         }
-        
+
         if (devRes.ok) {
           const devData = await devRes.json();
           setIsDeveloper(devData.isDeveloper);
         }
       } catch (error) {
-        console.error('Error checking roles:', error);
+        console.error("Error checking roles:", error);
       } finally {
         setRolesLoading(false);
       }
@@ -99,107 +95,105 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const toggleSection = (sectionTitle: string) => {
     setExpandedSections((prev) =>
-      prev.includes(sectionTitle)
-        ? prev.filter((title) => title !== sectionTitle)
-        : [...prev, sectionTitle]
+      prev.includes(sectionTitle) ? prev.filter((title) => title !== sectionTitle) : [...prev, sectionTitle]
     );
   };
 
   // Lock body scroll when mouse is over sidebar
   const handleMouseEnter = () => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleMouseLeave = () => {
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const navigationSections: NavSection[] = [
     {
-      title: 'Practice',
+      title: "Practice",
       icon: FileText,
       items: [
         {
-          label: 'All Questions',
-          href: '/practice',
+          label: "All Questions",
+          href: "/practice",
           icon: FileText,
         },
         {
-          label: 'Random Practice',
-          href: '/practice?mode=random',
+          label: "Random Practice",
+          href: "/practice?mode=random",
           icon: Zap,
         },
         {
-          label: 'ACLS Practice',
-          href: '/practice/acls',
+          label: "ACLS Practice",
+          href: "/practice/acls",
           icon: Activity,
         },
         {
-          label: 'PALS Practice',
-          href: '/practice/pals',
+          label: "PALS Practice",
+          href: "/practice/pals",
           icon: Heart,
         },
       ],
     },
     {
-      title: 'Study Tools',
+      title: "Study Tools",
       icon: Brain,
       items: [
         {
-          label: 'Full Timed Exam',
-          href: '/exam',
+          label: "Full Timed Exam",
+          href: "/exam",
           icon: Clock,
         },
         {
-          label: 'Custom Exam',
-          href: '/exam?mode=custom',
+          label: "Custom Exam",
+          href: "/exam?mode=custom",
           icon: Target,
         },
         {
-          label: 'Live Quiz',
-          href: '/live-quiz',
+          label: "Live Quiz",
+          href: "/live-quiz",
           icon: Users,
         },
         {
-          label: 'Learning Analytics',
-          href: '/learning-analytics',
+          label: "Learning Analytics",
+          href: "/learning-analytics",
           icon: BarChart3,
         },
         {
-          label: 'Saved Questions',
-          href: '/bookmarks',
+          label: "Saved Questions",
+          href: "/bookmarks",
           icon: Bookmark,
-          badge: 'New',
+          badge: "New",
         },
       ],
     },
     {
-      title: 'Resources',
+      title: "Resources",
       icon: Library,
       items: [
         {
-          label: 'Evidence Library',
-          href: '/emergency-references',
+          label: "Evidence Library",
+          href: "/emergency-references",
           icon: Library,
         },
         {
-          label: 'Evidence Search',
-          href: '/evidence-search',
+          label: "Evidence Search",
+          href: "/evidence-search",
           icon: FileText,
         },
         {
-          label: 'Clinical Guidelines',
-          href: '/guidelines',
+          label: "Clinical Guidelines",
+          href: "/guidelines",
           icon: BookOpen,
         },
         {
-          label: 'Guidelines Search',
-          href: '/guidelines-search',
+          label: "Guidelines Search",
+          href: "/guidelines-search",
           icon: BookOpen,
         },
         {
-          label: 'Flowcharts',
-          href: '/flowcharts',
+          label: "Flowcharts",
+          href: "/flowcharts",
           icon: GitBranch,
         },
       ],
@@ -207,7 +201,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   ];
 
   const isActiveLink = (href: string) => {
-    if (href === '/') return pathname === '/';
+    if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
 
@@ -230,7 +224,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <motion.aside
         initial={{ x: -300 }}
         animate={{ x: isOpen ? 0 : -300 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
         className="fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-gray-200 z-40 overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container lg:translate-x-0"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -245,9 +239,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             href="/"
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              pathname === "/"
+                ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
             <Home className="w-5 h-5 flex-shrink-0" />
@@ -260,9 +254,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               href="/dashboard"
               onClick={onClose}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                pathname === '/dashboard'
-                  ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                pathname === "/dashboard"
+                  ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               <Trophy className="w-5 h-5 flex-shrink-0" />
@@ -276,9 +270,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               href="/profile"
               onClick={onClose}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                pathname === '/profile'
-                  ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                pathname === "/profile"
+                  ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               <User className="w-5 h-5 flex-shrink-0" />
@@ -290,14 +284,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {!rolesLoading && isAdmin && (
             <>
               <div className="border-t border-gray-200 my-2" />
-              
+
               <Link
                 href="/admin/dashboard"
                 onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  pathname === '/admin/dashboard'
-                    ? 'bg-purple-50 text-purple-700 font-semibold shadow-sm'
-                    : 'text-purple-700 hover:bg-purple-50 hover:text-purple-900'
+                  pathname === "/admin/dashboard"
+                    ? "bg-purple-50 text-purple-700 font-semibold shadow-sm"
+                    : "text-purple-700 hover:bg-purple-50 hover:text-purple-900"
                 }`}
               >
                 <Shield className="w-5 h-5 flex-shrink-0" />
@@ -308,15 +302,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href="/admin/users"
                 onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  pathname === '/admin/users'
-                    ? 'bg-purple-50 text-purple-700 font-semibold shadow-sm'
-                    : 'text-purple-700 hover:bg-purple-50 hover:text-purple-900'
+                  pathname === "/admin/users"
+                    ? "bg-purple-50 text-purple-700 font-semibold shadow-sm"
+                    : "text-purple-700 hover:bg-purple-50 hover:text-purple-900"
                 }`}
               >
                 <UserCog className="w-5 h-5 flex-shrink-0" />
                 <span>👥 User Management</span>
               </Link>
-              
+
               <div className="border-t border-gray-200 my-2" />
             </>
           )}
@@ -336,11 +330,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <div className="flex items-center gap-3">
                     <SectionIcon className="w-5 h-5 flex-shrink-0 text-gray-500 group-hover:text-gray-700" />
                     <span className="font-semibold">
-                      {section.title === 'Practice' && '📝 '}
-                      {section.title === 'Study Tools' && '🧠 '}
-                      {section.title === 'Resources' && '📚 '}
+                      {section.title === "Practice" && "📝 "}
+                      {section.title === "Study Tools" && "🧠 "}
+                      {section.title === "Resources" && "📚 "}
                       {section.title}
-                      {section.title === 'Resources' && (
+                      {section.title === "Resources" && (
                         <span className="ml-2 px-2 py-0.5 text-xs font-bold text-blue-600 bg-blue-100 rounded-full">
                           New
                         </span>
@@ -359,19 +353,19 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {isExpanded && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
+                      animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
                       <div className="pl-4 space-y-1 py-1">
                         {/* Question Search - Only in Practice Section */}
-                        {section.title === 'Practice' && (
+                        {section.title === "Practice" && (
                           <div className="px-4 pb-3 pt-1">
                             <QuestionSearch onSelect={onClose} />
                           </div>
                         )}
-                        
+
                         {section.items.map((item) => {
                           const ItemIcon = item.icon;
                           const isActive = isActiveLink(item.href);
@@ -383,8 +377,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                               onClick={onClose}
                               className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 text-sm ${
                                 isActive
-                                  ? 'bg-blue-50 text-blue-700 font-medium shadow-sm'
-                                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                  ? "bg-blue-50 text-blue-700 font-medium shadow-sm"
+                                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                               }`}
                             >
                               <div className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
@@ -411,9 +405,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             href="/support"
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/support'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              pathname === "/support"
+                ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
             <HelpCircle className="w-5 h-5 flex-shrink-0" />
@@ -425,9 +419,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             href="/settings"
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              pathname === '/settings'
-                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              pathname === "/settings"
+                ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
             <Settings className="w-5 h-5 flex-shrink-0" />
@@ -442,9 +436,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             href="/auth/signin"
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
-              pathname === '/auth/signin'
-                ? 'ring-2 ring-blue-300'
-                : ''
+              pathname === "/auth/signin" ? "ring-2 ring-blue-300" : ""
             }`}
           >
             <LogIn className="w-5 h-5 flex-shrink-0" />
