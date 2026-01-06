@@ -247,10 +247,19 @@ model LiveQuizSession {
   topicId              String
   questionIds          String // JSON array of question IDs
   currentQuestionIndex Int                    @default(0)
-  status               String                 @default("WAITING") // WAITING, IN_PROGRESS, COMPLETED, CANCELLED
-  settings             String? // JSON string for quiz settings
+  status               String                 @default("WAITING") // WAITING, IN_PROGRESS, COMPLETED, CANCELLED, PAUSED
+  
+  // Quiz Settings
+  pointsPerQuestion    Int                    @default(1000)
+  timePerQuestion      Int                    @default(30) // seconds
+  showCorrectAnswers   Boolean                @default(true)
+  playSound            Boolean                @default(false)
+  allowJoinAfterStart  Boolean                @default(false)
+  
+  settings             String? // JSON string for additional quiz settings
   startedAt            DateTime?
   endedAt              DateTime?
+  pausedAt             DateTime?
   createdAt            DateTime               @default(now())
   updatedAt            DateTime
   LiveQuizParticipant  LiveQuizParticipant[]
@@ -297,4 +306,29 @@ model LiveQuizAnswer {
   @@index([sessionId])
   @@index([participantId])
   @@index([questionId])
+}
+
+model QuizTemplate {
+  id                  String   @id
+  name                String
+  description         String?
+  createdBy           String   // User ID who created the template
+  topicId             String?
+  questionIds         String   // JSON array of question IDs
+  
+  // Template Settings
+  pointsPerQuestion   Int      @default(1000)
+  timePerQuestion     Int      @default(30)
+  showCorrectAnswers  Boolean  @default(true)
+  playSound           Boolean  @default(false)
+  
+  isPublic            Boolean  @default(false) // Can other users use this template
+  usageCount          Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime
+
+  @@index([createdBy])
+  @@index([topicId])
+  @@index([isPublic])
+  @@index([createdAt])
 }

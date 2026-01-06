@@ -354,10 +354,10 @@ export default function CreateLiveQuizPage() {
                 <div>
                   <Label htmlFor="topic">Topic (Optional)</Label>
                   <Select value={selectedTopicId} onValueChange={setSelectedTopicId}>
-                    <SelectTrigger className="mt-1">
+                    <SelectTrigger className="mt-1" id="topic">
                       <SelectValue placeholder="Select a topic" />
                     </SelectTrigger>
-                                        <SelectContent className="max-h-80">
+                    <SelectContent className="max-h-[300px] overflow-y-auto">
                       <SelectItem value="">
                         <div className="flex justify-between items-center w-full">
                           <span className="font-medium text-purple-700">Browse All Questions</span>
@@ -534,7 +534,7 @@ export default function CreateLiveQuizPage() {
                         </Label>
                       </div>
                       <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className="w-40" id="difficulty-filter">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
