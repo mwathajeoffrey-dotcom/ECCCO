@@ -23,12 +23,13 @@ import {
 interface Topic {
   id: string;
   name: string;
-  moduleId: string;
-  module: {
+  description?: string;
+  moduleId?: string;
+  module?: {
     name: string;
-    ageGroup: string;
+    ageGroup?: string;
   };
-  _count: {
+  _count?: {
     questions: number;
   };
 }
@@ -262,7 +263,7 @@ export default function CreateLiveQuizPage() {
                       <span className="text-sm font-medium text-blue-800">ECCCO Platform Content</span>
                     </div>
                     <div className="text-xs text-blue-600">
-                      {topics.filter(t => t._count.questions > 0).length} topics • {topics.reduce((sum, t) => sum + t._count.questions, 0)} questions available
+                      {topics.filter(t => (t._count?.questions || 0) > 0).length} topics • {topics.reduce((sum, t) => sum + (t._count?.questions || 0), 0)} questions available
                     </div>
                   </div>
                 )}
@@ -278,18 +279,18 @@ export default function CreateLiveQuizPage() {
                         <div className="flex justify-between items-center w-full">
                           <span className="font-medium text-purple-700">Browse All Questions</span>
                           <div className="ml-2 text-xs text-purple-600">
-                            {topics.reduce((sum, t) => sum + t._count.questions, 0)} questions • All Topics
+                            {topics.reduce((sum, t) => sum + (t._count?.questions || 0), 0)} questions • All Topics
                           </div>
                         </div>
                       </SelectItem>
                       {topics
-                        .filter(topic => topic._count.questions > 0) // Only show topics with questions
+                        .filter(topic => (topic._count?.questions || 0) > 0) // Only show topics with questions
                         .map((topic) => (
                         <SelectItem key={topic.id} value={topic.id}>
                           <div className="flex justify-between items-center w-full">
                             <span>{topic.name}</span>
                             <div className="ml-2 text-xs text-gray-500">
-                              {topic._count.questions} questions • {topic.module.name}
+                              {topic._count?.questions || 0} questions • {topic.module?.name || 'N/A'}
                             </div>
                           </div>
                         </SelectItem>
