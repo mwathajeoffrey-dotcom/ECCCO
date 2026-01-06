@@ -371,31 +371,32 @@ export default function CreateLiveQuizPage() {
                   <Label htmlFor="topic">Topic (Optional)</Label>
                   <Select value={selectedTopicId} onValueChange={setSelectedTopicId}>
                     <SelectTrigger className="mt-1" id="topic">
-                      <SelectValue placeholder="Select a topic" />
+                      <SelectValue placeholder="Select a topic">
+                        {selectedTopicId === '' ? (
+                          <span className="text-purple-700">Browse All Questions</span>
+                        ) : (
+                          <span>{topics.find(t => t.id === selectedTopicId)?.name || 'Select a topic'}</span>
+                        )}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px] overflow-y-auto">
                       <SelectItem value="">
-                        <div className="flex justify-between items-center w-full">
-                          <span className="font-medium text-purple-700">Browse All Questions</span>
-                          <div className="ml-2 text-xs text-purple-600">
-                            {topics.reduce((sum, t) => sum + (t._count?.questions || 0), 0)} questions • All Topics
-                          </div>
-                        </div>
+                        Browse All Questions
                       </SelectItem>
                       {topics
                         .filter(topic => (topic._count?.questions || 0) > 0) // Only show topics with questions
                         .map((topic) => (
                         <SelectItem key={topic.id} value={topic.id}>
-                          <div className="flex justify-between items-center w-full">
-                            <span>{topic.name}</span>
-                            <div className="ml-2 text-xs text-gray-500">
-                              {topic._count?.questions || 0} questions • {topic.module?.name || 'N/A'}
-                            </div>
-                          </div>
+                          {topic.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {selectedTopicId && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {topics.find(t => t.id === selectedTopicId)?._count?.questions || 0} questions available
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -449,7 +450,12 @@ export default function CreateLiveQuizPage() {
                         onValueChange={(v) => setPointsPerQuestion(Number(v))}
                       >
                         <SelectTrigger className="mt-1" id="pointsPerQuestion">
-                          <SelectValue />
+                          <SelectValue>
+                            {pointsPerQuestion === 500 ? '500 points' :
+                             pointsPerQuestion === 1000 ? '1,000 points (default)' :
+                             pointsPerQuestion === 2000 ? '2,000 points' :
+                             pointsPerQuestion === 5000 ? '5,000 points' : '1,000 points (default)'}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="500">500 points</SelectItem>
@@ -638,7 +644,12 @@ export default function CreateLiveQuizPage() {
                       </div>
                       <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
                         <SelectTrigger className="w-40" id="difficulty-filter">
-                          <SelectValue />
+                          <SelectValue>
+                            {difficultyFilter === 'all' ? 'All Difficulties' :
+                             difficultyFilter === 'easy' ? 'Easy' :
+                             difficultyFilter === 'medium' ? 'Medium' :
+                             difficultyFilter === 'hard' ? 'Hard' : 'All Difficulties'}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">All Difficulties</SelectItem>
