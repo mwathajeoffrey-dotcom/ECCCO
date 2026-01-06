@@ -16,7 +16,12 @@ import {
   Trophy,
   Eye,
   BarChart3,
-  RefreshCw
+  RefreshCw,
+  Copy,
+  Share2,
+  QrCode,
+  Link as LinkIcon,
+  Check
 } from 'lucide-react';
 
 interface Question {
@@ -40,7 +45,7 @@ interface QuizSession {
   title: string;
   description?: string;
   accessCode: string;
-  status: 'WAITING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  status: 'WAITING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'PAUSED';
   currentQuestionIndex: number;
   questionTimeLimit: number;
   questionIds: string[];
@@ -59,6 +64,8 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sessionId, setSessionId] = useState('');
+  const [toast, setToast] = useState<{ message: string; show: boolean }>({ message: '', show: false });
+  const [copied, setCopied] = useState(false);
   
   // Refs
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -222,6 +229,67 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
     }
   };
 
+  const handlePauseQuiz = async () => {
+    try {
+      const response = await fetch(`/api/live-quiz/session/${sessionId}/pause`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setQuizSession(data.session || data);
+        setIsTimerActive(false);
+        showToast('Quiz paused');
+      }
+    } catch (error) {
+      console.error('Failed to pause quiz:', error);
+      showToast('Failed to pause quiz');
+    }
+  };
+
+  const handleResumeQuiz = async () => {
+    try {
+      const response = await fetch(`/api/live-quiz/session/${sessionId}/resume`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setQuizSession(data.session || data);
+        setIsTimerActive(true);
+        showToast('Quiz resumed');
+      }
+    } catch (error) {
+      console.error('Failed to resume quiz:', error);
+      showToast('Failed to resume quiz');
+    }
+  };
+
+  const handleSkipQuestion = async () => {
+    if (!quizSession) return;
+    
+    const confirmSkip = window.confirm('Skip this question? Participants will not receive points.');
+    if (!confirmSkip) return;
+
+    try {
+      const response = await fetch(`/api/live-quiz/session/${sessionId}/skip`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setQuizSession(data.session || data);
+        setTimeRemaining(data.session?.timePerQuestion || 30);
+        setShowResults(false);
+        setResponses({});
+        showToast('Question skipped');
+      }
+    } catch (error) {
+      console.error('Failed to skip question:', error);
+      showToast('Failed to skip question');
+    }
+  };
+
   const getCurrentQuestion = (): Question | null => {
     if (!quizSession || !quizSession.questions) return null;
     return quizSession.questions[quizSession.currentQuestionIndex] || null;
@@ -236,6 +304,60 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const showToast = (message: string) => {
+    setToast({ message, show: true });
+    setTimeout(() => {
+      setToast({ message: '', show: false });
+    }, 3000);
+  };
+
+  const handleCopyAccessCode = async () => {
+    if (!quizSession) return;
+    
+    try {
+      await navigator.clipboard.writeText(quizSession.accessCode);
+      setCopied(true);
+      showToast('Access code copied!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      showToast('Failed to copy');
+    }
+  };
+
+  const handleCopyLink = async () => {
+    if (!quizSession) return;
+    
+    const joinUrl = `${window.location.origin}/live-quiz/join?code=${quizSession.accessCode}`;
+    try {
+      await navigator.clipboard.writeText(joinUrl);
+      showToast('Join link copied!');
+    } catch (error) {
+      showToast('Failed to copy link');
+    }
+  };
+
+  const handleShareLink = async () => {
+    if (!quizSession) return;
+    
+    const joinUrl = `${window.location.origin}/live-quiz/join?code=${quizSession.accessCode}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: quizSession.title,
+          text: `Join my live quiz: ${quizSession.title}`,
+          url: joinUrl,
+        });
+      } catch (error) {
+        // User cancelled or share failed
+        handleCopyLink(); // Fallback to copy
+      }
+    } else {
+      // Fallback for browsers without Web Share API
+      handleCopyLink();
+    }
   };
 
   if (status === 'loading' || loading) {
@@ -280,17 +402,61 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-800">{quizSession.title}</h1>
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-3 mt-2 flex-wrap">
               <Badge 
                 variant={quizSession.status === 'WAITING' ? 'secondary' : 
                         quizSession.status === 'IN_PROGRESS' ? 'default' : 'outline'}
               >
                 {quizSession.status.replace('_', ' ')}
               </Badge>
-              <span className="text-gray-600">Access Code: </span>
-              <Badge variant="outline" className="font-mono text-lg px-3 py-1">
-                {quizSession.accessCode}
-              </Badge>
+              
+              {/* Access Code with Copy Button */}
+              <div className="flex items-center gap-2">
+                <span className="text-gray-600 text-sm">Access Code:</span>
+                <Badge variant="outline" className="font-mono text-xl px-4 py-2 bg-gradient-to-r from-purple-50 to-blue-50">
+                  {quizSession.accessCode}
+                </Badge>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCopyAccessCode}
+                  className={`${copied ? 'bg-green-50 border-green-500 text-green-700' : ''}`}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-1" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-1" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Share Buttons */}
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCopyLink}
+                  className="bg-blue-50 hover:bg-blue-100"
+                >
+                  <LinkIcon className="w-4 h-4 mr-1" />
+                  Copy Link
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleShareLink}
+                  className="bg-green-50 hover:bg-green-100"
+                >
+                  <Share2 className="w-4 h-4 mr-1" />
+                  Share
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -378,7 +544,10 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
             {/* Host Controls */}
             <Card className="bg-white shadow-lg">
               <CardHeader>
-                <CardTitle>Host Controls</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5" />
+                  Host Controls
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex gap-3 flex-wrap">
@@ -389,26 +558,63 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
                     </Button>
                   )}
                   
-                  {quizSession.status === 'IN_PROGRESS' && currentQuestion && (
+                  {(quizSession.status === 'IN_PROGRESS' || quizSession.status === 'PAUSED') && currentQuestion && (
                     <>
+                      {quizSession.status === 'IN_PROGRESS' ? (
+                        <Button 
+                          onClick={handlePauseQuiz}
+                          variant="outline"
+                          className="border-orange-500 text-orange-700 hover:bg-orange-50"
+                        >
+                          <Pause className="w-4 h-4 mr-2" />
+                          Pause Quiz
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={handleResumeQuiz}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          Resume Quiz
+                        </Button>
+                      )}
+                      
                       <Button 
                         onClick={() => setShowResults(!showResults)}
                         variant="outline"
+                        className="border-blue-500 text-blue-700 hover:bg-blue-50"
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         {showResults ? 'Hide' : 'Show'} Results
                       </Button>
                       
-                      <Button onClick={handleNextQuestion}>
-                        <SkipForward className="w-4 h-4 mr-2" />
-                        Next Question
-                      </Button>
+                      {quizSession.status === 'IN_PROGRESS' && (
+                        <>
+                          <Button 
+                            onClick={handleSkipQuestion}
+                            variant="outline"
+                            className="border-yellow-500 text-yellow-700 hover:bg-yellow-50"
+                          >
+                            <SkipForward className="w-4 h-4 mr-2" />
+                            Skip Question
+                          </Button>
+                          
+                          <Button 
+                            onClick={handleNextQuestion}
+                            className="bg-purple-600 hover:bg-purple-700"
+                          >
+                            <SkipForward className="w-4 h-4 mr-2" />
+                            Next Question
+                          </Button>
+                        </>
+                      )}
                     </>
                   )}
                   
                   <Button 
                     onClick={handleEndQuiz}
                     variant="outline"
+                    className="border-red-500 text-red-700 hover:bg-red-50"
                   >
                     End Quiz
                   </Button>
@@ -466,6 +672,16 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
             </Card>
           </div>
         </div>
+
+        {/* Toast Notification */}
+        {toast.show && (
+          <div className="fixed bottom-8 right-8 z-50 animate-in slide-in-from-bottom-5">
+            <div className="bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>{toast.message}</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
