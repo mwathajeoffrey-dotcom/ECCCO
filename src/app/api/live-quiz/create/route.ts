@@ -43,7 +43,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, topicId, questionIds, questionTimeLimit = 30, maxParticipants = 100 } = body;
+    const { 
+      title, 
+      description, 
+      topicId, 
+      questionIds, 
+      timePerQuestion = 30, 
+      maxParticipants = 100,
+      pointsPerQuestion = 1000,
+      showCorrectAnswers = true,
+      playSound = false,
+      allowJoinAfterStart = false
+    } = body;
 
     // Validate required fields
     if (!title || !questionIds || !Array.isArray(questionIds) || questionIds.length === 0) {
@@ -65,12 +76,6 @@ export async function POST(request: NextRequest) {
 
     // Generate unique access code
     const accessCode = await generateUniqueAccessCode();
-
-    // Prepare settings object
-    const settings = {
-      questionTimeLimit: questionTimeLimit || 30,
-      maxParticipants: maxParticipants || 100,
-    };
 
     // If no topicId provided, use the first topic from the questions
     let finalTopicId = topicId;
@@ -105,7 +110,15 @@ export async function POST(request: NextRequest) {
         hostId: userId,
         topicId: finalTopicId,
         questionIds: JSON.stringify(questionIds),
-        settings: JSON.stringify(settings),
+        // Enhanced quiz settings
+        pointsPerQuestion,
+        timePerQuestion,
+        showCorrectAnswers,
+        playSound,
+        allowJoinAfterStart,
+        settings: JSON.stringify({
+          maxParticipants
+        }),
         status: "WAITING",
         createdAt: now,
         updatedAt: now,
@@ -126,6 +139,14 @@ export async function POST(request: NextRequest) {
       status: liveQuizSession.status,
       topicName: topic?.name,
       questionCount: questionIds.length,
+      // Return settings for confirmation
+      settings: {
+        pointsPerQuestion: liveQuizSession.pointsPerQuestion,
+        timePerQuestion: liveQuizSession.timePerQuestion,
+        showCorrectAnswers: liveQuizSession.showCorrectAnswers,
+        playSound: liveQuizSession.playSound,
+        allowJoinAfterStart: liveQuizSession.allowJoinAfterStart,
+      }
     });
   } catch (error) {
     console.error("Error creating live quiz session:", error);

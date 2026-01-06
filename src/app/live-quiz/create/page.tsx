@@ -19,7 +19,12 @@ import {
   Circle,
   Play,
   Shuffle,
-  Filter
+  Filter,
+  Trophy,
+  Volume2,
+  Eye,
+  UserPlus,
+  Settings
 } from 'lucide-react';
 
 interface Topic {
@@ -60,6 +65,12 @@ export default function CreateLiveQuizPage() {
   const [selectedTopicId, setSelectedTopicId] = useState('');
   const [questionTimeLimit, setQuestionTimeLimit] = useState(30);
   const [maxParticipants, setMaxParticipants] = useState(100);
+  
+  // Enhanced Quiz Settings
+  const [pointsPerQuestion, setPointsPerQuestion] = useState(1000);
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState(true);
+  const [playSound, setPlaySound] = useState(false);
+  const [allowJoinAfterStart, setAllowJoinAfterStart] = useState(false);
   
   // Data state
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -140,17 +151,13 @@ export default function CreateLiveQuizPage() {
   };
 
   const handleQuickStart = (count: number) => {
-    // Auto-generate title if empty
-    if (!title.trim()) {
-      const selectedTopic = topics.find(t => t.id === selectedTopicId);
-      const topicName = selectedTopic?.name || 'ECCCO';
-      setTitle(`${topicName} Quiz - ${new Date().toLocaleDateString()}`);
-    }
+    // Auto-generate title based on topic and count
+    const selectedTopic = topics.find(t => t.id === selectedTopicId);
+    const topicName = selectedTopic?.name || 'ECCCO';
+    setTitle(`${topicName} - ${count}Q Quiz`);
 
-    // Auto-generate description if empty
-    if (!description.trim()) {
-      setDescription(`Quick quiz with ${count} randomly selected questions`);
-    }
+    // Auto-generate description
+    setDescription(`Quick practice session with ${count} randomly selected questions from ${topicName}`);
 
     // Select random questions
     const filteredQuestions = getFilteredQuestions();
@@ -178,7 +185,11 @@ export default function CreateLiveQuizPage() {
       selectedTopicId,
       selectedQuestions: selectedQuestions.length,
       questionTimeLimit,
-      maxParticipants
+      maxParticipants,
+      pointsPerQuestion,
+      showCorrectAnswers,
+      playSound,
+      allowJoinAfterStart
     });
 
     setCreating(true);
@@ -194,8 +205,13 @@ export default function CreateLiveQuizPage() {
           // send topicId only when chosen, server will resolve fallback when null/undefined
           topicId: selectedTopicId || undefined,
           questionIds: selectedQuestions,
-          questionTimeLimit,
+          timePerQuestion: questionTimeLimit,
           maxParticipants,
+          // Enhanced settings
+          pointsPerQuestion,
+          showCorrectAnswers,
+          playSound,
+          allowJoinAfterStart,
         }),
       });
 
@@ -412,6 +428,93 @@ export default function CreateLiveQuizPage() {
                     onChange={(e) => setMaxParticipants(Number(e.target.value))}
                     className="mt-1"
                   />
+                </div>
+
+                {/* Enhanced Quiz Settings - Kahoot Style */}
+                <div className="pt-4 border-t">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Settings className="w-5 h-5 text-purple-600" />
+                    <h3 className="text-lg font-semibold text-gray-800">Quiz Settings (Kahoot Style)</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {/* Points Per Question */}
+                    <div>
+                      <Label htmlFor="pointsPerQuestion" className="flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-yellow-600" />
+                        Points Per Question
+                      </Label>
+                      <Select 
+                        value={pointsPerQuestion.toString()} 
+                        onValueChange={(v) => setPointsPerQuestion(Number(v))}
+                      >
+                        <SelectTrigger className="mt-1" id="pointsPerQuestion">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="500">500 points</SelectItem>
+                          <SelectItem value="1000">1,000 points (default)</SelectItem>
+                          <SelectItem value="2000">2,000 points</SelectItem>
+                          <SelectItem value="5000">5,000 points</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-gray-500 mt-1">Base points awarded for correct answers</p>
+                    </div>
+
+                    {/* Toggles */}
+                    <div className="space-y-3 bg-purple-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-4 h-4 text-blue-600" />
+                          <Label htmlFor="showCorrectAnswers" className="cursor-pointer">
+                            Show Correct Answers
+                          </Label>
+                        </div>
+                        <Checkbox
+                          id="showCorrectAnswers"
+                          checked={showCorrectAnswers}
+                          onChange={(e) => setShowCorrectAnswers(e.target.checked)}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 ml-6">
+                        Display correct answer and explanation after each question
+                      </p>
+
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-center gap-2">
+                          <Volume2 className="w-4 h-4 text-green-600" />
+                          <Label htmlFor="playSound" className="cursor-pointer">
+                            Sound Effects
+                          </Label>
+                        </div>
+                        <Checkbox
+                          id="playSound"
+                          checked={playSound}
+                          onChange={(e) => setPlaySound(e.target.checked)}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 ml-6">
+                        Play sounds for countdown, correct/wrong answers
+                      </p>
+
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-center gap-2">
+                          <UserPlus className="w-4 h-4 text-orange-600" />
+                          <Label htmlFor="allowJoinAfterStart" className="cursor-pointer">
+                            Allow Late Join
+                          </Label>
+                        </div>
+                        <Checkbox
+                          id="allowJoinAfterStart"
+                          checked={allowJoinAfterStart}
+                          onChange={(e) => setAllowJoinAfterStart(e.target.checked)}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 ml-6">
+                        Let participants join after quiz has started
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
