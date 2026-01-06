@@ -18,7 +18,7 @@ export async function GET() {
     });
 
     // Transform to match expected format
-    const formattedTopics = topics.map(topic => ({
+    const formattedTopics = topics.map((topic: any) => ({
       id: topic.id,
       name: topic.name,
       description: topic.description,

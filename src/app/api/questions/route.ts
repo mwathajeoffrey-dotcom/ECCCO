@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Format to match expected structure
-    const formattedQuestions = questions.map(q => ({
+    const formattedQuestions = questions.map((q: any) => ({
       id: q.id,
       question: q.question,
       options: q.options,
