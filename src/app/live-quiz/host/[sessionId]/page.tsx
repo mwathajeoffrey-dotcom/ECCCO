@@ -92,6 +92,24 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
     };
   }, [sessionId]);
 
+  // Auto-refresh participants in WAITING status (Kahoot-style)
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+    
+    if (quizSession?.status === 'WAITING') {
+      // Refresh every 3 seconds to show new participants joining
+      intervalId = setInterval(() => {
+        fetchQuizSession();
+      }, 3000);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [quizSession?.status, sessionId]);
+
   useEffect(() => {
     if (isTimerActive && timeRemaining > 0) {
       timerRef.current = setInterval(() => {
@@ -403,10 +421,18 @@ export default function HostQuizPage({ params }: { params: Promise<{ sessionId: 
           <div className="lg:col-span-1">
             <Card className="bg-white shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Participants ({quizSession.participants.length})
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Participants ({quizSession.participants.length})
+                  </CardTitle>
+                  {quizSession.status === 'WAITING' && (
+                    <div className="flex items-center gap-2 text-xs text-green-600">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span>Live</span>
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 max-h-96 overflow-y-auto">

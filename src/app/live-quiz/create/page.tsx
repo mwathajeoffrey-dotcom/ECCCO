@@ -17,7 +17,9 @@ import {
   BookOpen,
   CheckCircle,
   Circle,
-  Play
+  Play,
+  Shuffle,
+  Filter
 } from 'lucide-react';
 
 interface Topic {
@@ -63,6 +65,8 @@ export default function CreateLiveQuizPage() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
+  const [randomCount, setRandomCount] = useState<number>(10);
   
   // UI state
   const [loading, setLoading] = useState(true);
@@ -120,11 +124,46 @@ export default function CreateLiveQuizPage() {
   };
 
   const handleSelectAll = () => {
-    if (selectedQuestions.length === questions.length) {
+    const filteredQuestions = getFilteredQuestions();
+    if (selectedQuestions.length === filteredQuestions.length && filteredQuestions.length > 0) {
       setSelectedQuestions([]);
     } else {
-      setSelectedQuestions(questions.map(q => q.id));
+      setSelectedQuestions(filteredQuestions.map(q => q.id));
     }
+  };
+
+  const handleSelectRandom = () => {
+    const filteredQuestions = getFilteredQuestions();
+    const count = Math.min(randomCount, filteredQuestions.length);
+    const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5);
+    setSelectedQuestions(shuffled.slice(0, count).map(q => q.id));
+  };
+
+  const handleQuickStart = (count: number) => {
+    // Auto-generate title if empty
+    if (!title.trim()) {
+      const selectedTopic = topics.find(t => t.id === selectedTopicId);
+      const topicName = selectedTopic?.name || 'ECCCO';
+      setTitle(`${topicName} Quiz - ${new Date().toLocaleDateString()}`);
+    }
+
+    // Auto-generate description if empty
+    if (!description.trim()) {
+      setDescription(`Quick quiz with ${count} randomly selected questions`);
+    }
+
+    // Select random questions
+    const filteredQuestions = getFilteredQuestions();
+    const actualCount = Math.min(count, filteredQuestions.length);
+    const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5);
+    setSelectedQuestions(shuffled.slice(0, actualCount).map(q => q.id));
+  };
+
+  const getFilteredQuestions = () => {
+    if (difficultyFilter === 'all') {
+      return questions;
+    }
+    return questions.filter(q => q.difficulty.toLowerCase() === difficultyFilter.toLowerCase());
   };
 
   const handleCreateQuiz = async () => {
@@ -222,6 +261,50 @@ export default function CreateLiveQuizPage() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
+          {/* Quick Start Banner - Kahoot Style */}
+          {selectedTopicId && questions.length > 0 && (
+            <div className="lg:col-span-3 mb-4">
+              <Card className="bg-gradient-to-r from-green-500 to-teal-500 border-0 shadow-xl">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="text-white">
+                      <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+                        <Shuffle className="w-5 h-5" />
+                        Quick Start (Kahoot Style)
+                      </h3>
+                      <p className="text-green-50 text-sm">
+                        One-click quiz creation! Auto-fill title, description, and select random questions.
+                      </p>
+                    </div>
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => handleQuickStart(10)}
+                        className="bg-white text-green-700 hover:bg-green-50 font-semibold"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Quick Start (10Q)
+                      </Button>
+                      <Button
+                        onClick={() => handleQuickStart(20)}
+                        className="bg-white text-teal-700 hover:bg-teal-50 font-semibold"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Quick Start (20Q)
+                      </Button>
+                      <Button
+                        onClick={() => handleQuickStart(30)}
+                        className="bg-white text-blue-700 hover:bg-blue-50 font-semibold"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Quick Start (30Q)
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {/* Quiz Settings */}
           <div className="lg:col-span-1">
             <Card className="bg-white shadow-lg">
@@ -343,15 +426,6 @@ export default function CreateLiveQuizPage() {
                     <CheckCircle className="w-5 h-5" />
                     Select Questions ({selectedQuestions.length} selected)
                   </CardTitle>
-                  {questions.length > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleSelectAll}
-                    >
-                      {selectedQuestions.length === questions.length ? 'Deselect All' : 'Select All'}
-                    </Button>
-                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -369,8 +443,128 @@ export default function CreateLiveQuizPage() {
                 )}
 
                 {questions.length > 0 && (
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {questions.map((question, index) => {
+                  <div className="space-y-4">
+                    {/* Quick Selection Tools - Kahoot Style */}
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg p-4">
+                      <h3 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                        <Shuffle className="w-4 h-4" />
+                        Quick Select (Kahoot Style)
+                      </h3>
+                      
+                      <div className="grid md:grid-cols-3 gap-3 mb-3">
+                        {/* Preset Random Buttons */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const filteredQuestions = getFilteredQuestions();
+                            const count = Math.min(10, filteredQuestions.length);
+                            const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5);
+                            setSelectedQuestions(shuffled.slice(0, count).map(q => q.id));
+                          }}
+                          className="bg-white hover:bg-purple-100 border-purple-300"
+                        >
+                          <Shuffle className="w-3 h-3 mr-2" />
+                          10 Random
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const filteredQuestions = getFilteredQuestions();
+                            const count = Math.min(20, filteredQuestions.length);
+                            const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5);
+                            setSelectedQuestions(shuffled.slice(0, count).map(q => q.id));
+                          }}
+                          className="bg-white hover:bg-purple-100 border-purple-300"
+                        >
+                          <Shuffle className="w-3 h-3 mr-2" />
+                          20 Random
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const filteredQuestions = getFilteredQuestions();
+                            const count = Math.min(30, filteredQuestions.length);
+                            const shuffled = [...filteredQuestions].sort(() => Math.random() - 0.5);
+                            setSelectedQuestions(shuffled.slice(0, count).map(q => q.id));
+                          }}
+                          className="bg-white hover:bg-purple-100 border-purple-300"
+                        >
+                          <Shuffle className="w-3 h-3 mr-2" />
+                          30 Random
+                        </Button>
+                      </div>
+
+                      {/* Custom Random Selection */}
+                      <div className="flex gap-2 items-end">
+                        <div className="flex-1">
+                          <Label htmlFor="randomCount" className="text-sm text-purple-800">
+                            Custom Random Count
+                          </Label>
+                          <Input
+                            id="randomCount"
+                            type="number"
+                            min="1"
+                            max={getFilteredQuestions().length}
+                            value={randomCount}
+                            onChange={(e) => setRandomCount(Number(e.target.value))}
+                            className="mt-1"
+                            placeholder="e.g., 15"
+                          />
+                        </div>
+                        <Button
+                          onClick={handleSelectRandom}
+                          variant="default"
+                          className="bg-purple-600 hover:bg-purple-700"
+                        >
+                          <Shuffle className="w-4 h-4 mr-2" />
+                          Select {randomCount} Random
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Filters and Manual Selection */}
+                    <div className="flex gap-3 flex-wrap items-center bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <Filter className="w-4 h-4 text-gray-600" />
+                        <Label htmlFor="difficulty-filter" className="text-sm font-medium">
+                          Filter by Difficulty:
+                        </Label>
+                      </div>
+                      <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
+                        <SelectTrigger className="w-40">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Difficulties</SelectItem>
+                          <SelectItem value="easy">Easy</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="hard">Hard</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      
+                      <div className="flex-1"></div>
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                      >
+                        {selectedQuestions.length === getFilteredQuestions().length && getFilteredQuestions().length > 0
+                          ? 'Deselect All'
+                          : 'Select All'}
+                      </Button>
+                      
+                      <Badge variant="secondary" className="px-3 py-1">
+                        {getFilteredQuestions().length} available
+                      </Badge>
+                    </div>
+
+                    {/* Question List */}
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {getFilteredQuestions().map((question, index) => {
                       const options = parseOptions(question.options);
                       const isSelected = selectedQuestions.includes(question.id);
                       
@@ -417,6 +611,7 @@ export default function CreateLiveQuizPage() {
                         </div>
                       );
                     })}
+                    </div>
                   </div>
                 )}
               </CardContent>

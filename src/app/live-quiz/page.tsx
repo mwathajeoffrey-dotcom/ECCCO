@@ -88,15 +88,29 @@ export default function LiveQuizPage() {
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             🎯 ECCCO Live
           </h1>
-          <p className="text-gray-600 text-lg">
-            Interactive Medical Training Quizzes
+          <p className="text-gray-600 text-lg mb-3">
+            Interactive Medical Training Quizzes - Kahoot Style!
           </p>
+          <div className="flex justify-center gap-4 text-sm text-gray-500">
+            <span className="flex items-center gap-1">
+              <Users className="w-4 h-4" />
+              Real-time Multiplayer
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              Timed Questions
+            </span>
+            <span className="flex items-center gap-1">
+              <Trophy className="w-4 h-4" />
+              Live Leaderboard
+            </span>
+          </div>
         </div>
 
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           {/* Join Quiz */}
-          <Card className="bg-white shadow-lg border-0">
+          <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow">
             <CardHeader className="text-center bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-t-lg">
               <CardTitle className="flex items-center justify-center gap-2 text-xl">
                 <Users className="w-6 h-6" />
@@ -104,23 +118,27 @@ export default function LiveQuizPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <p className="text-gray-600 mb-4 text-center">
-                Enter the code provided by your instructor
+              <p className="text-gray-600 mb-1 text-center font-medium">
+                Got a quiz code?
+              </p>
+              <p className="text-gray-500 mb-4 text-center text-sm">
+                Enter the 6-character code from your instructor
               </p>
               <div className="space-y-4">
                 <Input
                   type="text"
-                  placeholder="Enter quiz code (e.g., ABC123)"
+                  placeholder="ABC123"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  className="text-center text-lg font-mono tracking-wider"
+                  className="text-center text-2xl font-mono tracking-widest font-bold"
                   maxLength={6}
                 />
                 <Button 
                   onClick={handleJoinQuiz}
-                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-lg py-6"
                   disabled={!joinCode.trim()}
                 >
+                  <Users className="w-5 h-5 mr-2" />
                   Join Quiz
                 </Button>
               </div>
@@ -128,24 +146,32 @@ export default function LiveQuizPage() {
           </Card>
 
           {/* Host Quiz */}
-          <Card className="bg-white shadow-lg border-0">
+          <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow">
             <CardHeader className="text-center bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-t-lg">
               <CardTitle className="flex items-center justify-center gap-2 text-xl">
                 <Play className="w-6 h-6" />
-                Host a Quiz
+                Create a Quiz
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <p className="text-gray-600 mb-4 text-center">
-                Create and manage live quiz sessions
+              <p className="text-gray-600 mb-1 text-center font-medium">
+                Ready to host?
+              </p>
+              <p className="text-gray-500 mb-4 text-center text-sm">
+                Create a new quiz session with Quick Start
               </p>
               <Button 
                 onClick={handleCreateQuiz}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-lg py-6"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-5 h-5 mr-2" />
                 Create New Quiz
               </Button>
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-400">
+                  ✨ Use Quick Start buttons to create a quiz in seconds!
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
