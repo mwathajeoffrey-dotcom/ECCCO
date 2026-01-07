@@ -49,6 +49,150 @@ export interface EvidenceSearchResult {
   source: 'pubmed' | 'crossref' | 'europepmc';
 }
 
+// ============================================================================
+// Topic Types
+// ============================================================================
+
+export interface Topic {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  _count?: {
+    questions: number;
+  };
+}
+
+// ============================================================================
+// Question Types
+// ============================================================================
+
+export interface Question {
+  id: string;
+  questionText: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  topicId: string;
+  topic?: Topic;
+  references?: string[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+// ============================================================================
+// User & Stats Types
+// ============================================================================
+
+export interface UserStats {
+  stats: {
+    questions: {
+      total: number;
+      correct: number;
+      incorrect: number;
+    };
+    examSessions: {
+      total: number;
+      averageScore: number;
+      bestScore: number;
+      currentStreak: number;
+    };
+    overall: {
+      studyHours: number;
+      lastActive: Date | string;
+    };
+  };
+  topicPerformance: Array<{
+    topicId: string;
+    topicName: string;
+    questionsAnswered: number;
+    correctAnswers: number;
+    percentage: number;
+  }>;
+  recentSessions?: Array<{
+    id: string;
+    topicName: string;
+    score: number;
+    date: Date | string;
+  }>;
+}
+
+// ============================================================================
+// Quiz Arena Types
+// ============================================================================
+
+export interface QuizSession {
+  id: string;
+  title: string;
+  description: string | null;
+  accessCode: string;
+  status: 'waiting' | 'active' | 'paused' | 'completed';
+  hostId: string;
+  currentQuestionIndex: number;
+  timePerQuestion: number;
+  pointsPerQuestion: number;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  questions?: Question[];
+  participants?: QuizParticipant[];
+  settings?: QuizSettings;
+}
+
+export interface QuizParticipant {
+  id: string;
+  sessionId: string;
+  playerName: string;
+  score: number;
+  correctAnswers: number;
+  joinedAt: Date | string;
+}
+
+export interface QuizSettings {
+  playMusic?: boolean;
+  playSound?: boolean;
+  showAnswerAfter?: boolean;
+  randomizeQuestions?: boolean;
+  randomizeOptions?: boolean;
+}
+
+export interface CreateQuizRequest {
+  title: string;
+  description?: string;
+  timePerQuestion: number;
+  pointsPerQuestion: number;
+  questionIds: string[];
+  settings?: QuizSettings;
+}
+
+export interface CreateQuizResponse {
+  session: QuizSession;
+  accessCode: string;
+  message?: string;
+}
+
+// ============================================================================
+// Feedback Types
+// ============================================================================
+
+export interface FeedbackSubmission {
+  userName?: string;
+  userEmail: string;
+  type: 'bug' | 'feature' | 'question' | 'complaint';
+  category?: string;
+  subject: string;
+  message: string;
+  pageUrl?: string;
+  userAgent?: string;
+}
+
+export interface FeedbackResponse {
+  success: boolean;
+  message: string;
+  id: string;
+}
+
 export interface GuidelineSearchResult {
   id: string;
   source: 'nice' | 'who' | 'aha';

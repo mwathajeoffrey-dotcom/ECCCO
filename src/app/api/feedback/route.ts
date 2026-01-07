@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
+import { z } from "zod";
+
+// Validation schema using Zod for better error messages
+const FeedbackSchema = z.object({
+  userName: z.string().min(1).max(100).optional(),
+  userEmail: z.string().email("Invalid email address"),
+  type: z.enum(["bug", "feature", "question", "complaint"]).default("question"),
+  category: z.string().default("general"),
+  subject: z.string().min(3, "Subject must be at least 3 characters").max(200),
+  message: z.string().min(10, "Message must be at least 10 characters").max(5000),
+  pageUrl: z.string().url().optional().nullable(),
+  userAgent: z.string().optional().nullable(),
+});
 
 /**
  * POST /api/feedback
@@ -7,71 +22,83 @@ import { prisma } from "@/lib/prisma";
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log("[Feedback API] Received submission request");
-    console.log("[Feedback API] Environment check - DATABASE_URL exists:", !!process.env.DATABASE_URL);
-
     const body = await request.json();
-    console.log("[Feedback API] Request body:", { ...body, message: body.message?.substring(0, 50) + "..." });
-
-    const { userName, userEmail, type, category = "general", subject, message, pageUrl, userAgent } = body;
-
-    // Validation
-    if (!userEmail || !subject || !message) {
-      console.log("[Feedback API] Validation failed - missing required fields");
-      return NextResponse.json({ error: "Email, subject, and message are required" }, { status: 400 });
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(userEmail)) {
-      console.log("[Feedback API] Validation failed - invalid email format:", userEmail);
-      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
-    }
-
-    console.log("[Feedback API] Validation passed, creating feedback entry...");
-
+    
+    // Validate with Zod (provides specific error messages)
+    const validatedData = FeedbackSchema.parse(body);
+    
     // Create feedback entry
     const feedback = await prisma.feedback.create({
       data: {
         id: `feedback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        userName: userName || null,
-        userEmail,
-        type: type || "question",
-        category,
-        subject,
-        message,
-        pageUrl: pageUrl || null,
-        userAgent: userAgent || null,
+        userName: validatedData.userName || null,
+        userEmail: validatedData.userEmail,
+        type: validatedData.type,
+        category: validatedData.category,
+        subject: validatedData.subject,
+        message: validatedData.message,
+        pageUrl: validatedData.pageUrl || null,
+        userAgent: validatedData.userAgent || null,
         status: "new",
-        priority: determinePriority(type),
+        priority: determinePriority(validatedData.type),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     });
 
-    console.log("[Feedback API] Feedback created successfully with ID:", feedback.id);
-
-    // TODO: Send email notification to admin
-    // await sendAdminNotification(feedback);
+    // Send admin notification (async, don't block response)
+    sendAdminNotification(feedback).catch(err => 
+      logger.error('Failed to send admin notification', err instanceof Error ? err : undefined, {
+        feedbackId: feedback.id
+      })
+    );
 
     return NextResponse.json({
       success: true,
       message: "Feedback submitted successfully",
       id: feedback.id,
     });
+    
   } catch (error) {
-    console.error("[Feedback API] Error submitting feedback:", error);
-    console.error("[Feedback API] Error details:", {
-      name: error instanceof Error ? error.name : "Unknown",
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
+    // Zod validation errors
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation failed",
+          details: error.errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+          }))
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Prisma errors
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return NextResponse.json(
+          { error: "Duplicate feedback submission detected" },
+          { status: 409 }
+        );
+      }
+    }
+    
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      logger.error('Database connection failed in feedback API', error);
+      return NextResponse.json(
+        { error: "Database temporarily unavailable. Please try again." },
+        { status: 503 }
+      );
+    }
+    
+    // Unknown errors
+    logger.error('Feedback submission failed', error instanceof Error ? error : undefined, {
+      timestamp: new Date().toISOString()
     });
-
+    
     return NextResponse.json(
-      {
-        error: "Failed to submit feedback",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "An unexpected error occurred. Please try again." },
       { status: 500 }
     );
   }
@@ -94,7 +121,8 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("[Feedback API] Health check failed:", error);
+    logger.error('Feedback API health check failed', error instanceof Error ? error : undefined);
+    
     return NextResponse.json(
       {
         status: "error",
@@ -124,4 +152,35 @@ function determinePriority(type: string): string {
     default:
       return "medium";
   }
+}
+
+/**
+ * Send admin notification about new feedback
+ * TODO: Implement email service integration (SendGrid, AWS SES, or Resend)
+ */
+async function sendAdminNotification(feedback: {
+  id: string;
+  userEmail: string;
+  type: string;
+  subject: string;
+  message: string;
+}) {
+  // For now, just log that notification would be sent
+  logger.info('Admin notification triggered', {
+    feedbackId: feedback.id,
+    type: feedback.type,
+    subject: feedback.subject,
+    userEmail: feedback.userEmail
+  });
+  
+  // Example implementation when ready:
+  // const response = await fetch('/api/send-email', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({
+  //     to: process.env.ADMIN_EMAIL,
+  //     subject: `New ${feedback.type}: ${feedback.subject}`,
+  //     body: `From: ${feedback.userEmail}\n\n${feedback.message}\n\nFeedback ID: ${feedback.id}`
+  //   })
+  // });
 }

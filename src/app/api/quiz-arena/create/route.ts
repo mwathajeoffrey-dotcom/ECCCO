@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/database/prisma-client';
+import { logger } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 // Generate random 6-digit access code
 function generateAccessCode(): string {
@@ -104,7 +106,33 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error creating quiz session:', error);
+    // Check for specific database errors
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        // Unique constraint violation (duplicate access code)
+        return NextResponse.json(
+          { error: 'Failed to generate unique access code. Please try again.' },
+          { status: 409 }
+        );
+      }
+      if (error.code === 'P2003') {
+        // Foreign key constraint
+        return NextResponse.json(
+          { error: 'One or more questions not found' },
+          { status: 400 }
+        );
+      }
+    }
+    
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      logger.error('Database connection failed in quiz-arena create', error);
+      return NextResponse.json(
+        { error: 'Database temporarily unavailable. Please try again.' },
+        { status: 503 }
+      );
+    }
+    
+    logger.error('Failed to create quiz session', error instanceof Error ? error : undefined);
     return NextResponse.json(
       { error: 'Failed to create quiz session' },
       { status: 500 }

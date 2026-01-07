@@ -1,0 +1,159 @@
+🚀 Starting comprehensive question seed...
+
+📂 Loading: acls-cardiac-arrest-questions
+  ✅ Found 14 questions in aclscardiacarrestQuestions
+  ✅ Found 14 questions in default
+📂 Loading: acls
+  ✅ Found 30 questions in aclsQuestions
+📂 Loading: adult-oncology-batch-1
+  ✅ Found 30 questions in adultOncologyBatch1Questions
+  ✅ Found 30 questions in default
+📂 Loading: advanced-ecg-interpretation
+  ✅ Found 30 questions in advancedEcgInterpretationQuestions
+📂 Loading: airway-management
+  ✅ Found 30 questions in airwayManagementQuestions
+📂 Loading: algorithm-questions-combined
+  ✅ Found 73 questions in algorithmQuestions
+  ✅ Found 73 questions in default
+📂 Loading: algorithm-questions-generated
+  ✅ Found 48 questions in algorithmGeneratedQuestions
+  ✅ Found 48 questions in default
+📂 Loading: anaphylaxis-management-questions
+  ✅ Found 5 questions in anaphylaxismanagementQuestions
+  ✅ Found 5 questions in default
+📂 Loading: atls-primary-survey-questions
+  ✅ Found 7 questions in atlsprimarysurveyQuestions
+  ✅ Found 7 questions in default
+📂 Loading: atls
+  ✅ Found 30 questions in atlsQuestions
+📂 Loading: blood-gas-analysis
+  ✅ Found 30 questions in bloodGasAnalysisQuestions
+📂 Loading: bls
+  ✅ Found 30 questions in blsQuestions
+📂 Loading: cardiac-emergencies
+  ✅ Found 30 questions in cardiacEmergenciesQuestions
+📂 Loading: chest-xray-interpretation
+  ✅ Found 30 questions in chestXrayInterpretationQuestions
+📂 Loading: critical-care-emergencies
+  ✅ Found 30 questions in criticalCareEmergenciesQuestions
+📂 Loading: diabetic-ketoacidosis-questions
+  ✅ Found 6 questions in default
+  ✅ Found 6 questions in diabeticketoacidosisQuestions
+📂 Loading: ecg-emergencies
+  ✅ Found 30 questions in ecgEmergenciesQuestions
+📂 Loading: ecg-rhythm-identification
+  ✅ Found 30 questions in ecgRhythmIdentificationQuestions
+📂 Loading: electrolyte-emergencies
+  ✅ Found 30 questions in electrolyteEmergenciesQuestions
+📂 Loading: endocrine-emergencies
+  ✅ Found 30 questions in endocrineEmergenciesQuestions
+📂 Loading: enhanced-algorithm-questions
+  ✅ Found 336 questions in default
+  ✅ Found 336 questions in enhancedAlgorithmQuestions
+📂 Loading: enhanced-pals-questions
+  ✅ Found 8 questions in default
+  ✅ Found 8 questions in enhancedPalsQuestions
+📂 Loading: environmental-emergencies
+  ✅ Found 30 questions in environmentalEmergenciesQuestions
+📂 Loading: geriatric-emergencies
+  ✅ Found 30 questions in geriatricEmergenciesQuestions
+📂 Loading: hematologic-emergencies
+  ✅ Found 30 questions in hematologicEmergenciesQuestions
+📂 Loading: infectious-disease-emergencies
+  ✅ Found 30 questions in infectiousDiseaseEmergenciesQuestions
+📂 Loading: massive-transfusion-questions
+  ✅ Found 5 questions in default
+  ✅ Found 5 questions in massivetransfusionQuestions
+📂 Loading: mechanical-ventilation
+  ✅ Found 30 questions in mechanicalVentilationQuestions
+📂 Loading: neurological-emergencies
+  ✅ Found 30 questions in neurologicalEmergenciesQuestions
+📂 Loading: obgyn/cardiac-disease-pregnancy
+  ✅ Found 30 questions in cardiacDiseasePregnancyQuestions
+  ✅ Found 30 questions in default
+📂 Loading: obgyn/diabetes-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in diabetesPregnancyQuestions
+📂 Loading: obgyn/general-obgyn-emergencies
+  ✅ Found 30 questions in generalObgynEmergenciesQuestions
+📂 Loading: obgyn/gyn-pain-bleeding
+  ✅ Found 30 questions in gynPainBleedingQuestions
+📂 Loading: obgyn/hematologic-disorders-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in hematologicDisordersPregnancyQuestions
+📂 Loading: obgyn/hypertensive-disorders
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in hypertensiveDisordersQuestions
+📂 Loading: obgyn/infectious-disease-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in infectiousDiseasePregnancyQuestions
+📂 Loading: obgyn/obstetric-emergencies
+  ✅ Found 30 questions in obEmergenciesQuestions
+📂 Loading: obgyn/placenta-previa
+  ✅ Found 30 questions in placentaPreviaQuestions
+📂 Loading: obgyn/placental-abruption
+  ✅ Found 30 questions in placentalAbruptionQuestions
+📂 Loading: obgyn/preeclampsia
+  ✅ Found 30 questions in preeclampsiaQuestions
+📂 Loading: obgyn/preterm-labour
+  ✅ Found 30 questions in pretermLabourQuestions
+📂 Loading: obgyn/renal-disease-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in renalDiseasePregnancyQuestions
+📂 Loading: obgyn/thromboembolism-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in thromboembolismPregnancyQuestions
+📂 Loading: obgyn/thyroid-disorders-pregnancy
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in thyroidDisordersPregnancyQuestions
+📂 Loading: obgyn/vasa-previa-rupture
+  ✅ Found 30 questions in vasaRuptureQuestions
+📂 Loading: pals
+  ✅ Found 30 questions in palsQuestions
+📂 Loading: pediatric-cardiac-arrest-questions
+  ✅ Found 6 questions in default
+  ✅ Found 6 questions in pediatriccardiacarrestQuestions
+📂 Loading: pediatric-emergencies
+  ✅ Found 30 questions in pediatricEmergenciesQuestions
+📂 Loading: pediatric-oncology-batch-1
+  ✅ Found 30 questions in default
+  ✅ Found 30 questions in pediatricOncologyBatch1Questions
+📂 Loading: pharmacology-emergencies
+  ✅ Found 30 questions in pharmacologyEmergenciesQuestions
+📂 Loading: point-of-care-ultrasound
+  ✅ Found 30 questions in pointOfCareUltrasoundQuestions
+📂 Loading: procedures
+  ✅ Found 30 questions in proceduresQuestions
+📂 Loading: psychiatric-emergencies
+  ✅ Found 30 questions in psychiatricEmergenciesQuestions
+📂 Loading: renal-emergencies
+  ✅ Found 30 questions in renalEmergenciesQuestions
+📂 Loading: respiratory-emergencies
+  ✅ Found 30 questions in respiratoryEmergenciesQuestions
+📂 Loading: sepsis-hour-1-bundle-questions
+  ✅ Found 15 questions in default
+  ✅ Found 15 questions in sepsishour1bundleQuestions
+📂 Loading: sepsis-management
+  ✅ Found 30 questions in sepsisManagementQuestions
+📂 Loading: stroke-acute-management-questions
+  ✅ Found 11 questions in default
+  ✅ Found 11 questions in strokeacutemanagementQuestions
+📂 Loading: toxicology-overdose-questions
+  ✅ Found 4 questions in default
+  ✅ Found 4 questions in toxicologyoverdoseQuestions
+📂 Loading: toxicology
+  ✅ Found 30 questions in toxicologyQuestions
+📂 Loading: trauma-management
+  ✅ Found 30 questions in traumaManagementQuestions
+
+📊 Total questions found: 2816
+📊 Total topics found: 46
+
+🏷️  Creating topics...
+  ✅ Topic: Cardiac Emergencies
+  ✅ Topic: Acls
+  ✅ Topic: Advanced Ecg Interpretation
+  ✅ Topic: Airway Management
+  ✅ Topic: Sepsis Management
+  ✅ Topic: Trauma Management
+  ✅ Topic: Neurological Emergencies

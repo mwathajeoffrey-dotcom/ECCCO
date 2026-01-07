@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma-client';
+import { logger } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 export async function GET() {
   try {
@@ -29,9 +31,18 @@ export async function GET() {
 
     return NextResponse.json(formattedTopics);
   } catch (error) {
-    console.error('Error fetching topics:', error);
+    // Check for specific database errors
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      logger.error('Database connection failed in topics API', error);
+      return NextResponse.json(
+        { error: 'Database temporarily unavailable' },
+        { status: 503 }
+      );
+    }
     
-    // Return empty array if database fails
+    logger.error('Failed to fetch topics', error instanceof Error ? error : undefined);
+    
+    // Return empty array as fallback for backwards compatibility
     return NextResponse.json([]);
   }
 }

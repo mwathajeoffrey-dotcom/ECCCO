@@ -7,7 +7,18 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.development.local' });
 dotenv.config({ path: '.env' });
 
-const prisma = new PrismaClient();
+// Use DATABASE_URL from environment or fall back to SQLite
+const databaseUrl = process.env.DATABASE_URL || 'file:./prisma/prisma/dev.db';
+
+// For PostgreSQL pooled connections (pgbouncer), add parameter
+const finalDatabaseUrl = databaseUrl.includes('pooler.supabase.com') 
+  ? `${databaseUrl}${databaseUrl.includes('?') ? '&' : '?'}pgbouncer=true&connect_timeout=30&pool_timeout=30&statement_cache_size=0`
+  : databaseUrl;
+
+const prisma = new PrismaClient({
+  datasourceUrl: finalDatabaseUrl,
+  log: ['query', 'error', 'warn'],
+});
 
 async function main() {
   console.log('🚀 Starting comprehensive question seed...\n');
@@ -65,32 +76,41 @@ async function main() {
   console.log('\n🏷️  Creating topics...');
   const topicMap = new Map<string, string>();
   
-  for (const topicId of Array.from(allTopics)) {
-    const topicName = topicId
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+  // Create topics in batches
+  const topicArray = Array.from(allTopics);
+  console.log(`  📦 Processing ${topicArray.length} topics in batches of 10...`);
+  
+  for (let i = 0; i < topicArray.length; i += 10) {
+    const batch = topicArray.slice(i, i + 10);
     
-    try {
-      const topic = await prisma.topic.upsert({
-        where: { id: topicId },
-        update: { name: topicName },
-        create: {
-          id: topicId,
-          name: topicName,
-          description: `Questions related to ${topicName}`,
-          icon: '📚',
-          difficulty: 'medium',
-          estimatedTime: 30,
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
-      topicMap.set(topicId, topic.id);
-      console.log(`  ✅ Topic: ${topicName}`);
-    } catch (error: any) {
-      console.log(`  ⚠️  Error creating topic ${topicId}:`, error?.message || error);
+    for (const topicId of batch) {
+      const topicName = topicId
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      try {
+        const topic = await prisma.topic.upsert({
+          where: { id: topicId },
+          update: { name: topicName },
+          create: {
+            id: topicId,
+            name: topicName,
+            description: `Questions related to ${topicName}`,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        });
+        topicMap.set(topicId, topic.id);
+        console.log(`  ✅ Topic ${i + batch.indexOf(topicId) + 1}/${topicArray.length}: ${topicName}`);
+      } catch (error: any) {
+        console.log(`  ⚠️  Error creating topic ${topicId}:`, error?.message || error);
+      }
+    }
+    
+    // Small delay between batches to avoid overwhelming the connection
+    if (i + 10 < topicArray.length) {
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 

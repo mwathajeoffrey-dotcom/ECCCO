@@ -13,25 +13,13 @@ import {
   Clock,
   Trophy,
   Music,
-  Volume2
+  Volume2,
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
-
-interface Question {
-  id: string;
-  questionText: string;
-  options: string[];
-  correctAnswer: number;
-  topic?: string;
-  difficulty?: string;
-}
-
-interface Topic {
-  id: string;
-  name: string;
-  _count?: {
-    questions: number;
-  };
-}
+import { api, ApiError } from '@/lib/api-client';
+import { logger } from '@/lib/logger';
+import type { Topic, Question, CreateQuizRequest } from '@/types/api';
 
 export default function CreateQuizPage() {
   const router = useRouter();
@@ -54,6 +42,11 @@ export default function CreateQuizPage() {
   const [availableQuestions, setAvailableQuestions] = useState<Question[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  
+  // Loading and error states
+  const [loadingTopics, setLoadingTopics] = useState(false);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load topics
   useEffect(() => {
@@ -69,21 +62,41 @@ export default function CreateQuizPage() {
 
   const fetchTopics = async () => {
     try {
-      const response = await fetch('/api/topics');
-      const data = await response.json();
+      setLoadingTopics(true);
+      setError(null);
+      
+      const data = await api.topics.getAll();
       setTopics(data);
+      
     } catch (error) {
-      console.error('Error fetching topics:', error);
+      const errorMessage = error instanceof ApiError 
+        ? error.message 
+        : 'Failed to load topics. Please try again.';
+      setError(errorMessage);
+      
+      logger.error('Failed to fetch topics', error instanceof Error ? error : undefined);
+    } finally {
+      setLoadingTopics(false);
     }
   };
 
   const fetchQuestions = async (topicId: string) => {
     try {
-      const response = await fetch(`/api/questions?topicId=${topicId}&limit=50`);
-      const data = await response.json();
+      setLoadingQuestions(true);
+      setError(null);
+      
+      const data = await api.questions.getByTopic(topicId, 50);
       setAvailableQuestions(data.questions || []);
+      
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      const errorMessage = error instanceof ApiError 
+        ? error.message 
+        : 'Failed to load questions. Please try again.';
+      setError(errorMessage);
+      
+      logger.error('Failed to fetch questions', error instanceof Error ? error : undefined, { topicId });
+    } finally {
+      setLoadingQuestions(false);
     }
   };
 
@@ -97,41 +110,80 @@ export default function CreateQuizPage() {
     setSelectedQuestions(selectedQuestions.filter(q => q.id !== questionId));
   };
 
+  const validateQuiz = (): string | null => {
+    if (!title.trim()) {
+      return 'Quiz title is required';
+    }
+    if (title.length < 3) {
+      return 'Title must be at least 3 characters';
+    }
+    if (selectedQuestions.length === 0) {
+      return 'Please select at least one question';
+    }
+    if (selectedQuestions.length > 50) {
+      return 'Maximum 50 questions allowed';
+    }
+    if (timePerQuestion < 5) {
+      return 'Minimum 5 seconds per question';
+    }
+    if (timePerQuestion > 300) {
+      return 'Maximum 5 minutes per question';
+    }
+    return null;
+  };
+
   const handleCreateQuiz = async () => {
-    if (!title || selectedQuestions.length === 0) {
-      alert('Please add a title and at least one question');
+    // Validate before creating
+    const validationError = validateQuiz();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     setIsCreating(true);
+    setError(null);
 
     try {
-      const response = await fetch('/api/quiz-arena/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          description,
-          timePerQuestion,
-          pointsPerQuestion,
+      const quizData: CreateQuizRequest = {
+        title: title.trim(),
+        description: description.trim() || undefined,
+        timePerQuestion,
+        pointsPerQuestion,
+        questionIds: selectedQuestions.map(q => q.id),
+        settings: {
           playMusic,
           playSound,
           showAnswerAfter,
-          questions: selectedQuestions,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push(`/quiz-arena/host/${data.id}`);
-      } else {
-        alert('Error creating quiz: ' + data.error);
-        setIsCreating(false);
-      }
+        },
+      };
+      
+      const result = await api.quiz.create(quizData);
+      
+      // Success! Navigate to host page
+      router.push(`/quiz-arena/host/${result.session.id}`);
+      
     } catch (error) {
-      console.error('Error creating quiz:', error);
-      alert('Failed to create quiz');
+      let errorMessage = 'Failed to create quiz';
+      
+      if (error instanceof ApiError) {
+        if (error.status === 400) {
+          errorMessage = 'Invalid quiz configuration. Please check your settings.';
+        } else if (error.status === 500) {
+          errorMessage = 'Server error. Please try again in a moment.';
+        } else {
+          errorMessage = error.message;
+        }
+      } else {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
+      setError(errorMessage);
+      
+      logger.error('Quiz creation failed', error instanceof Error ? error : undefined, {
+        quizTitle: title,
+        questionCount: selectedQuestions.length
+      });
+    } finally {
       setIsCreating(false);
     }
   };

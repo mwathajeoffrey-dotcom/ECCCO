@@ -155,11 +155,23 @@ export default function ExamInterface() {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/questions?topicId=${topicId}&limit=30`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to fetch questions (${response.status})`);
+      }
+      
       const data = await response.json();
 
       // API returns {success, count, total, questions: [...]}
       // We need to extract the questions array
-      setQuestions(data.questions || []);
+      const questionsArray = data.questions || [];
+      
+      if (questionsArray.length === 0) {
+        throw new Error('No questions available for this topic');
+      }
+      
+      setQuestions(questionsArray);
       setCurrentQuestionIndex(0);
       setSelectedAnswers({});
       setFlaggedQuestions(new Set());
@@ -172,6 +184,7 @@ export default function ExamInterface() {
       analytics.trackExamStart(topicId, topic?.name || "Unknown Topic");
     } catch (error) {
       console.error("Error fetching questions:", error);
+      alert(error instanceof Error ? error.message : 'Failed to load questions. Please try again.');
     } finally {
       setIsLoading(false);
     }

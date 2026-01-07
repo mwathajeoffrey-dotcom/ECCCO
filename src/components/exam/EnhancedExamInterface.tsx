@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { generateExamPDF } from '@/lib/pdf/generator';
 import { EnhancedErrorBoundary } from '@/components/ui/EnhancedErrorBoundary';
 import { analyticsV2 } from '@/lib/analytics/analytics-v2';
+import { logger } from '@/lib/logger';
 
 // Import our enhanced components
 import { ExamPerformanceStats } from './ExamPerformanceStats';
@@ -97,9 +98,9 @@ export default function EnhancedExamInterface() {
         setTopics(data);
         
         await analyticsV2.initialize();
-        console.log('✅ Analytics V2 initialized in exam interface');
+        logger.info('Analytics V2 initialized in exam interface');
       } catch (error) {
-        console.error('Error fetching topics:', error);
+        logger.error('Failed to fetch topics in exam interface', error instanceof Error ? error : undefined);
       } finally {
         setLoadingTopics(false);
       }
@@ -154,9 +155,17 @@ export default function EnhancedExamInterface() {
       setCurrentQuestionStartTime(Date.now());
       
       const topic = topics.find(t => t.id === topicId);
-      console.log(`📋 Exam started: ${topic?.name || 'Unknown Topic'} (${isStudyMode ? 'Study Mode' : 'Exam Mode'})`);
+      logger.info('Exam started', {
+        topic: topic?.name || 'Unknown Topic',
+        mode: isStudyMode ? 'Study Mode' : 'Exam Mode',
+        questionCount: data.length,
+        userId: user?.id
+      });
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      logger.error('Failed to fetch questions for exam', error instanceof Error ? error : undefined, {
+        topicId,
+        userId: user?.id
+      });
     } finally {
       setIsLoading(false);
     }
@@ -181,7 +190,13 @@ export default function EnhancedExamInterface() {
       
       setCurrentQuestionAnswered(true);
       
-      console.log(`💭 Question answered: ${currentQuestion.id}, correct: ${isCorrect}, time: ${timeSpent}s`);
+      logger.debug('Question answered', {
+        questionId: currentQuestion.id,
+        isCorrect,
+        timeSpent,
+        questionIndex: currentQuestionIndex,
+        userId: user?.id
+      });
     }
   };
 
@@ -280,18 +295,37 @@ export default function EnhancedExamInterface() {
           });
           
           if (response.ok) {
-            console.log('✅ Exam results saved to database');
+            logger.info('Exam results saved to database', {
+              topicId: selectedTopic,
+              score,
+              userId: user.id
+            });
           } else {
-            console.warn('⚠️ Failed to save exam results to database');
+            logger.warn('Failed to save exam results to database', {
+              status: response.status,
+              userId: user.id
+            });
           }
         } catch (error) {
-          console.error('❌ Error saving exam results to database:', error);
+          logger.error('Error saving exam results to database', error instanceof Error ? error : undefined, {
+            topicId: selectedTopic,
+            userId: user.id
+          });
         }
       }
       
-      console.log('✅ Exam session data saved successfully');
+      logger.info('Exam session completed', {
+        topicId: selectedTopic,
+        score,
+        timeSpent,
+        questionCount: questions.length,
+        userId: user?.id
+      });
     } catch (error) {
-      console.error('❌ Failed to save exam session data:', error);
+      logger.error('Failed to save exam session data', error instanceof Error ? error : undefined, {
+        topicId: selectedTopic,
+        userId: user?.id
+      });
     }
   };
 
@@ -349,7 +383,11 @@ export default function EnhancedExamInterface() {
       
       generateExamPDF(examResults);
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      logger.error('Failed to generate exam PDF', error instanceof Error ? error : undefined, {
+        topicId: selectedTopic,
+        questionCount: questions.length,
+        userId: user?.id
+      });
       alert('Sorry, there was an error generating the PDF. Please try again.');
     }
   };
@@ -460,7 +498,11 @@ export default function EnhancedExamInterface() {
                 className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer touch-manipulation hover:scale-105"
                 onClick={() => {
                   setSelectedTopic(topic.id);
-                  console.log(`📚 Topic selected: ${topic.name} (${isStudyMode ? 'Study Mode' : 'Exam Mode'})`);
+                  logger.info('Topic selected for exam', {
+                    topic: topic.name,
+                    mode: isStudyMode ? 'Study Mode' : 'Exam Mode',
+                    userId: user?.id
+                  });
                   fetchQuestions(topic.id);
                 }}
               >

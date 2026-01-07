@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma-client';
+import { logger } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 export async function GET(request: NextRequest) {
+  // Extract params outside try block for error logging
+  const { searchParams } = new URL(request.url);
+  const topicId = searchParams.get('topicId');
+  const difficulty = searchParams.get('difficulty');
+  const limit = parseInt(searchParams.get('limit') || '100');
+  
   try {
-    const { searchParams } = new URL(request.url);
-    const topicId = searchParams.get('topicId');
-    const difficulty = searchParams.get('difficulty');
-    const limit = parseInt(searchParams.get('limit') || '100');
-
-    console.log('📊 Fetching questions:', { topicId, difficulty, limit });
-
     // Build where clause
     const where: any = {};
     if (topicId) {
@@ -48,13 +49,46 @@ export async function GET(request: NextRequest) {
       }
     }));
 
-    console.log(`✅ Found ${formattedQuestions.length} questions`);
+    logger.debug('Questions fetched successfully', {
+      topicId,
+      difficulty,
+      count: formattedQuestions.length,
+      limit
+    });
 
-    return NextResponse.json(formattedQuestions);
+    return NextResponse.json({
+      success: true,
+      count: formattedQuestions.length,
+      total: formattedQuestions.length,
+      questions: formattedQuestions
+    });
   } catch (error) {
-    console.error('❌ Error fetching questions:', error);
+    // Check for specific database errors
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      logger.error('Database connection failed in questions API', error);
+      return NextResponse.json(
+        { success: false, error: 'Database temporarily unavailable. Please try again.' },
+        { status: 503 }
+      );
+    }
+    
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2025') {
+        return NextResponse.json(
+          { success: false, error: 'Topic not found' },
+          { status: 404 }
+        );
+      }
+    }
+    
+    logger.error('Failed to fetch questions', error instanceof Error ? error : undefined, {
+      topicId,
+      difficulty,
+      limit
+    });
+    
     return NextResponse.json(
-      { error: 'Failed to fetch questions' },
+      { success: false, error: 'Failed to fetch questions' },
       { status: 500 }
     );
   }

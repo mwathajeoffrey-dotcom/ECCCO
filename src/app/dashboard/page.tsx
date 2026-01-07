@@ -12,83 +12,78 @@ import {
   FileText,
   ExternalLink,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-
-interface UserStats {
-  stats: {
-    examSessions: {
-      total: number;
-      completed: number;
-      averageScore: number;
-      bestScore: number;
-      totalTimeSpent: number;
-      currentStreak: number;
-    };
-    questions: {
-      total: number;
-      correct: number;
-      accuracy: number;
-    };
-    overall: {
-      studyHours: number;
-      totalAttempts: number;
-    };
-  };
-  topicPerformance: Array<{
-    topicName: string;
-    attempted: number;
-    correct: number;
-    percentage: number;
-  }>;
-}
+import { api, ApiError } from "@/lib/api-client";
+import { logger } from "@/lib/logger";
+import type { UserStats } from "@/types/api";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const fetchUserStats = async () => {
+    if (!isLoaded) return;
+
+    // Check if user is signed in
+    if (!user) {
+      setError("Please sign in to view your dashboard.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const stats = await api.user.getStats();
+      setUserStats(stats);
+      setRetryCount(0); // Reset retry count on success
+      
+    } catch (error) {
+      // Specific error handling based on error type
+      if (error instanceof ApiError) {
+        if (error.status === 401) {
+          setError('Your session has expired. Please sign in again.');
+        } else if (error.status === 404) {
+          setError('No statistics found yet. Complete an exam to get started!');
+        } else if (error.status === 503) {
+          setError('Service temporarily unavailable. Retrying...');
+          
+          // Auto-retry for service unavailable (max 3 times)
+          if (retryCount < 3) {
+            setTimeout(() => {
+              setRetryCount(prev => prev + 1);
+              fetchUserStats();
+            }, 3000);
+          }
+        } else {
+          setError(error.message || 'Failed to load your statistics.');
+        }
+      } else {
+        setError('Network error. Please check your connection and try again.');
+      }
+      
+      // Log error for debugging (development only)
+      logger.error('Failed to fetch user stats', error instanceof Error ? error : undefined, {
+        userId: user?.id,
+        retryCount,
+        timestamp: new Date().toISOString()
+      });
+      
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserStats = async () => {
-      if (!isLoaded) return;
-
-      // Check if user is signed in
-      if (!user) {
-        setError("Please sign in to view your dashboard.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        console.log("Fetching user stats...");
-        const response = await fetch("/api/user/stats");
-
-        console.log("Response status:", response.status);
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error("API Error:", errorData);
-          throw new Error(errorData.error || "Failed to fetch user statistics");
-        }
-
-        const data = await response.json();
-        console.log("Received stats:", data);
-        setUserStats(data);
-      } catch (error) {
-        console.error("Error fetching user stats:", error);
-        setError(error instanceof Error ? error.message : "Unable to load your statistics. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserStats();
-  }, [isLoaded]);
+  }, [isLoaded, user]);
 
   // Calculate overall stats
   const overallStats = userStats
@@ -162,14 +157,25 @@ export default function DashboardPage() {
               <div className="flex-1">
                 <p className="text-red-800 font-medium mb-2">Error Loading Dashboard</p>
                 <p className="text-red-700">{error}</p>
-                {error.includes("sign in") && (
-                  <Link
-                    href="/auth/signin"
-                    className="inline-block mt-4 px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                )}
+                <div className="mt-4 flex gap-3">
+                  {error.includes("sign in") ? (
+                    <Link
+                      href="/auth/signin"
+                      className="inline-flex items-center px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={fetchUserStats}
+                      disabled={loading}
+                      className="inline-flex items-center px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                      {loading ? 'Retrying...' : 'Try Again'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -242,7 +248,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-gray-700">{topic.topicName}</span>
                         <span className="text-sm text-gray-600">
-                          {topic.correct}/{topic.attempted} ({topic.percentage}%)
+                          {topic.correctAnswers}/{topic.questionsAnswered} ({topic.percentage}%)
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
