@@ -5,6 +5,7 @@ import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -99,6 +100,21 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Script id="chunk-error-handler" strategy="beforeInteractive">
+          {`
+            window.addEventListener('error', (event) => {
+              if (
+                event.message?.includes('Failed to fetch') ||
+                event.message?.includes('ChunkLoadError') ||
+                event.message?.includes('Loading chunk') ||
+                event.message?.includes('Failed to load chunk')
+              ) {
+                console.warn('Chunk load error detected - reloading to get latest version...');
+                setTimeout(() => window.location.reload(), 100);
+              }
+            });
+          `}
+        </Script>
         <ClerkProvider>
           <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
             <AppLayout>{children}</AppLayout>
