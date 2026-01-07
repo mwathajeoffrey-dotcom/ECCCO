@@ -260,7 +260,8 @@ export default function CreateLiveQuizPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="container mx-auto px-4 py-8">
+      {/* Add left padding to account for fixed sidebar navigation */}
+      <div className="container mx-auto px-4 py-8 lg:pl-72">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button 
