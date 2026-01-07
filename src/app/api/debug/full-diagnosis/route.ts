@@ -14,7 +14,7 @@ export async function GET() {
         id: true,
         name: true,
         _count: {
-          select: { questions: true }
+          select: { Question: true }
         }
       }
     });
