@@ -262,3 +262,86 @@ model QuizTemplate {
   @@index([isPublic])
   @@index([createdAt])
 }
+
+// ============================================
+// QUIZ ARENA - Live Competitive Quiz Platform
+// ============================================
+
+model QuizSession {
+  id                String        @id
+  title             String
+  description       String?
+  accessCode        String        @unique // 6-digit code
+  hostId            String        // User who created it
+  
+  // Session State
+  status            String        @default("LOBBY") // LOBBY, QUESTION, ANSWER, LEADERBOARD, FINISHED
+  currentQuestion   Int           @default(0)
+  
+  // Settings
+  timePerQuestion   Int           @default(20) // seconds
+  pointsPerQuestion Int           @default(1000)
+  playMusic         Boolean       @default(true)
+  playSound         Boolean       @default(true)
+  showAnswerAfter   Boolean       @default(true)
+  allowLateJoin     Boolean       @default(false)
+  
+  // Questions (JSON array of question objects or IDs)
+  questions         String        // JSON stringified array
+  
+  // Timestamps
+  startedAt         DateTime?
+  endedAt           DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime
+  
+  // Relations
+  participants      Participant[]
+  answers           Answer[]
+  
+  @@index([accessCode])
+  @@index([hostId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Participant {
+  id            String      @id
+  sessionId     String
+  nickname      String
+  avatar        String?     // Color code or emoji
+  score         Int         @default(0)
+  streak        Int         @default(0)
+  rank          Int?
+  isActive      Boolean     @default(true)
+  joinedAt      DateTime    @default(now())
+  
+  // Relations
+  session       QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  answers       Answer[]
+  
+  @@index([sessionId])
+  @@index([score])
+}
+
+model Answer {
+  id              String      @id
+  sessionId       String
+  participantId   String
+  questionIndex   Int         // Which question (0-based)
+  selectedOption  Int         // Selected answer index (0-based)
+  isCorrect       Boolean
+  timeToAnswer    Int         // milliseconds
+  pointsEarned    Int
+  answeredAt      DateTime    @default(now())
+  
+  // Relations
+  session         QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant     Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  @@unique([sessionId, participantId, questionIndex])
+  @@index([sessionId])
+  @@index([participantId])
+  @@index([questionIndex])
+}
+
