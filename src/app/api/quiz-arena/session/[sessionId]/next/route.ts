@@ -33,7 +33,7 @@ export async function POST(
       );
     }
 
-    const questions = session.questions as any[];
+    const questions = JSON.parse(session.questions as string) as any[];
     const nextQuestionIndex = session.currentQuestion + 1;
 
     // Check if there are more questions

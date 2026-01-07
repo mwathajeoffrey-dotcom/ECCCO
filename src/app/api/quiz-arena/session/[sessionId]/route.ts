@@ -20,7 +20,7 @@ export async function GET(
         },
         answers: {
           orderBy: {
-            createdAt: 'desc'
+            answeredAt: 'desc'
           }
         }
       }
