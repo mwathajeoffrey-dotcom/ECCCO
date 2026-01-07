@@ -47,7 +47,6 @@ export default function StickyHeader({ onSidebarToggle, isSidebarOpen }: StickyH
   const studyToolsItems = [
     { icon: Clock, label: 'Full Timed Exam', description: '300 questions - real conditions', href: '/exam' },
     { icon: Target, label: 'Custom Exam', description: 'Build your own exam', href: '/exam' },
-    { icon: Users, label: 'Live Quiz', description: 'Multiplayer competition', href: '/live-quiz' },
     { icon: BarChart3, label: 'Learning Analytics', description: 'AI-powered insights', href: '/learning-analytics' },
   ];
 

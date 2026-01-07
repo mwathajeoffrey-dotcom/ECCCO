@@ -150,11 +150,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           icon: Target,
         },
         {
-          label: "Live Quiz",
-          href: "/live-quiz",
-          icon: Users,
-        },
-        {
           label: "Learning Analytics",
           href: "/learning-analytics",
           icon: BarChart3,

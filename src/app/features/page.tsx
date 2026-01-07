@@ -47,13 +47,6 @@ const features = [
     link: '/exam?mode=timed'
   },
   {
-    icon: Users,
-    title: 'Live Quiz Mode',
-    description: 'Compete with peers in real-time quiz sessions.',
-    color: 'red',
-    link: '/live-quiz'
-  },
-  {
     icon: Zap,
     title: 'Evidence Library',
     description: 'Access curated emergency medicine research and clinical guidelines.',

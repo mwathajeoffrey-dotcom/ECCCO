@@ -41,7 +41,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       items: [
         { label: 'Full Timed Exam', href: '/exam', icon: Clock },
         { label: 'Custom Exam', href: '/exam', icon: Target },
-        { label: 'Live Quiz', href: '/live-quiz', icon: Users },
         { label: 'Learning Analytics', href: '/learning-analytics', icon: BarChart3 },
       ],
     },

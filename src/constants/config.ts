@@ -44,7 +44,6 @@ export const APP_CONFIG = {
   
   // Feature flags
   features: {
-    liveQuiz: true,
     evidenceSearch: true,
     guidelinesSearch: true,
     algorithms: true,

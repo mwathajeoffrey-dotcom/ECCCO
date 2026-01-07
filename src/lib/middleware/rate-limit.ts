@@ -93,8 +93,3 @@ export const authRateLimit = rateLimit({
   message: 'Too many authentication attempts, please try again later.',
 });
 
-export const liveQuizRateLimit = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 30, // Limit each IP to 30 live quiz requests per minute
-  message: 'Too many live quiz requests, please try again later.',
-});

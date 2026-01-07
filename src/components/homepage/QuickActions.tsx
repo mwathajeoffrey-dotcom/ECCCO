@@ -55,15 +55,6 @@ export default function QuickActions() {
       iconBg: 'bg-gradient-to-br from-violet-500 to-purple-600',
     },
     {
-      icon: Users,
-      title: 'Live Quiz',
-      description: 'Join/Host',
-      subtitle: 'Multiplayer mode',
-      href: '/live-quiz',
-      gradient: 'from-orange-500 via-red-500 to-pink-500',
-      iconBg: 'bg-gradient-to-br from-orange-500 to-red-600',
-    },
-    {
       icon: BookOpen,
       title: 'Guidelines',
       description: 'Browse',

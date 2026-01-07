@@ -186,21 +186,6 @@ export default function Home() {
             <span className="text-blue-600 font-semibold group-hover:underline">Start Practicing →</span>
           </Link>
 
-          {/* Live Quiz */}
-          <Link
-            href="/live-quiz"
-            className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1"
-          >
-            <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Zap className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Live Quiz Mode</h3>
-            <p className="text-gray-600 mb-4">
-              Real-time collaborative quizzes with instant feedback and leaderboards.
-            </p>
-            <span className="text-pink-600 font-semibold group-hover:underline">Join Live Quiz →</span>
-          </Link>
-
           {/* Evidence Library */}
           <Link
             href="/emergency-references"
@@ -350,11 +335,6 @@ export default function Home() {
                 <li>
                   <Link href="/practice" className="hover:text-white transition-colors">
                     Practice Questions
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/live-quiz" className="hover:text-white transition-colors">
-                    Live Quiz Mode
                   </Link>
                 </li>
                 <li>
