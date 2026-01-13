@@ -1,11 +1,13 @@
 # Live Quiz Arena - Complete Implementation Plan
 
 ## Overview
+
 A live, competitive, multiplayer quiz platform for medical education with real-time scoring, leaderboards, countdown timers, music, and engagement features.
 
 ## Core Features
 
 ### 1. **Host Experience**
+
 - Create quiz sessions with custom or database questions
 - Generate unique join codes (6-digit codes)
 - Control quiz flow (start, pause, next question, end)
@@ -14,6 +16,7 @@ A live, competitive, multiplayer quiz platform for medical education with real-t
 - Question preview before showing to participants
 
 ### 2. **Participant Experience**
+
 - Join with simple code (no login required for guests)
 - Colorful, engaging lobby with participant list
 - Large, tappable answer buttons (A, B, C, D)
@@ -25,6 +28,7 @@ A live, competitive, multiplayer quiz platform for medical education with real-t
 - Sound effects and background music
 
 ### 3. **Question Management**
+
 - **Option 1**: Select from existing question database (839 questions)
 - **Option 2**: Create custom questions on-the-fly
 - Support for 2-6 answer options
@@ -33,6 +37,7 @@ A live, competitive, multiplayer quiz platform for medical education with real-t
 - Point values (100-2000 points)
 
 ### 4. **Scoring System**
+
 - Base points for correct answers
 - Speed bonus (faster = more points)
 - Streak multipliers (consecutive correct answers)
@@ -40,6 +45,7 @@ A live, competitive, multiplayer quiz platform for medical education with real-t
 - Final rankings with podium (1st, 2nd, 3rd)
 
 ### 5. **Engagement Features**
+
 - 🎵 Background music (toggle on/off)
 - 🔊 Sound effects (correct, wrong, countdown)
 - 🎉 Celebration animations
@@ -59,11 +65,11 @@ model QuizSession {
   description       String?
   accessCode        String              @unique // 6-digit code
   hostId            String              // User who created it
-  
+
   // Session State
   status            SessionStatus       @default(LOBBY)
   currentQuestion   Int                 @default(0)
-  
+
   // Settings
   timePerQuestion   Int                 @default(20) // seconds
   pointsPerQuestion Int                 @default(1000)
@@ -71,19 +77,19 @@ model QuizSession {
   playSound         Boolean             @default(true)
   showAnswerAfter   Boolean             @default(true)
   allowLateJoin     Boolean             @default(false)
-  
+
   // Questions (JSON array of question IDs or custom questions)
   questions         Json
-  
+
   // Timestamps
   startedAt         DateTime?
   endedAt           DateTime?
   createdAt         DateTime            @default(now())
-  
+
   // Relations
   participants      Participant[]
   answers           Answer[]
-  
+
   @@index([accessCode])
   @@index([hostId])
   @@index([status])
@@ -108,11 +114,11 @@ model Participant {
   rank          Int?
   isActive      Boolean      @default(true)
   joinedAt      DateTime     @default(now())
-  
+
   // Relations
   session       QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   answers       Answer[]
-  
+
   @@index([sessionId])
 }
 
@@ -127,11 +133,11 @@ model Answer {
   timeToAnswer    Int          // milliseconds
   pointsEarned    Int
   answeredAt      DateTime     @default(now())
-  
+
   // Relations
   session         QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   participant     Participant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  
+
   @@unique([sessionId, participantId, questionIndex])
   @@index([sessionId])
   @@index([participantId])
@@ -176,22 +182,23 @@ src/app/api/quiz-arena/
 ## UI/UX Design
 
 ### Color Scheme (Vibrant & Engaging)
+
 ```typescript
 const colors = {
-  primary: '#6366F1',      // Indigo
-  success: '#10B981',      // Green
-  error: '#EF4444',        // Red
-  warning: '#F59E0B',      // Amber
-  
+  primary: "#6366F1", // Indigo
+  success: "#10B981", // Green
+  error: "#EF4444", // Red
+  warning: "#F59E0B", // Amber
+
   answers: {
-    A: '#EF4444',         // Red
-    B: '#3B82F6',         // Blue
-    C: '#F59E0B',         // Amber
-    D: '#10B981',         // Green
-    E: '#8B5CF6',         // Purple
-    F: '#EC4899',         // Pink
-  }
-}
+    A: "#EF4444", // Red
+    B: "#3B82F6", // Blue
+    C: "#F59E0B", // Amber
+    D: "#10B981", // Green
+    E: "#8B5CF6", // Purple
+    F: "#EC4899", // Pink
+  },
+};
 ```
 
 ### Key Components
@@ -210,6 +217,7 @@ const colors = {
 ## Implementation Phases
 
 ### Phase 1: Core Setup ✅ (Start Here)
+
 - [ ] Database schema
 - [ ] Basic page structure
 - [ ] API routes skeleton
@@ -217,6 +225,7 @@ const colors = {
 - [ ] Join code generation
 
 ### Phase 2: Host Experience
+
 - [ ] Quiz creation interface
 - [ ] Question selection from database
 - [ ] Custom question builder
@@ -224,6 +233,7 @@ const colors = {
 - [ ] Session state management
 
 ### Phase 3: Participant Experience
+
 - [ ] Join flow with code
 - [ ] Lobby with participant list
 - [ ] Question display
@@ -231,6 +241,7 @@ const colors = {
 - [ ] Results view
 
 ### Phase 4: Real-time Features
+
 - [ ] WebSocket or Server-Sent Events
 - [ ] Live participant updates
 - [ ] Synchronized question display
@@ -238,6 +249,7 @@ const colors = {
 - [ ] Live leaderboard
 
 ### Phase 5: Engagement Features
+
 - [ ] Background music
 - [ ] Sound effects
 - [ ] Animations (confetti, streaks)
@@ -245,6 +257,7 @@ const colors = {
 - [ ] Emoji reactions
 
 ### Phase 6: Advanced Features
+
 - [ ] Question images
 - [ ] Custom timer per question
 - [ ] Team mode
@@ -254,6 +267,7 @@ const colors = {
 ## Key Interactions
 
 ### Host Flow:
+
 1. Create Quiz → Select Questions → Generate Code
 2. Wait in Lobby (see participants joining)
 3. Start Quiz → Show Question
@@ -262,6 +276,7 @@ const colors = {
 6. Repeat until done → Final Results
 
 ### Participant Flow:
+
 1. Enter Code → Enter Nickname
 2. Wait in Lobby (see other participants)
 3. See Question → Select Answer
@@ -276,22 +291,20 @@ const colors = {
 function calculatePoints(
   isCorrect: boolean,
   timeToAnswer: number, // ms
-  timeLimit: number,    // ms
+  timeLimit: number, // ms
   basePoints: number,
   streak: number
 ): number {
   if (!isCorrect) return 0;
-  
+
   // Speed bonus (0-50% extra points)
   const timeRatio = timeToAnswer / timeLimit;
   const speedBonus = Math.max(0, 1 - timeRatio) * 0.5;
-  
+
   // Streak multiplier
-  const streakMultiplier = 1 + (Math.min(streak, 10) * 0.1);
-  
-  return Math.round(
-    basePoints * (1 + speedBonus) * streakMultiplier
-  );
+  const streakMultiplier = 1 + Math.min(streak, 10) * 0.1;
+
+  return Math.round(basePoints * (1 + speedBonus) * streakMultiplier);
 }
 ```
 
@@ -301,16 +314,16 @@ Use **Server-Sent Events (SSE)** for simplicity:
 
 ```typescript
 // Host and participants subscribe to session updates
-GET /api/quiz-arena/session/[sessionId]/state
-
-// Events sent:
-- participant_joined
-- participant_left
-- question_started
-- answer_submitted
-- question_ended
-- leaderboard_updated
-- session_ended
+GET / api / quiz -
+  arena / session / [sessionId] / state -
+  // Events sent:
+  participant_joined -
+  participant_left -
+  question_started -
+  answer_submitted -
+  question_ended -
+  leaderboard_updated -
+  session_ended;
 ```
 
 ## Next Steps

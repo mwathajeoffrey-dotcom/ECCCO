@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/db';
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/db";
 
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ sessionId: string }> }
-) {
+export async function GET(request: NextRequest, context: { params: Promise<{ sessionId: string }> }) {
   try {
     const { sessionId } = await context.params;
 
@@ -15,30 +12,24 @@ export async function GET(
       include: {
         participants: {
           orderBy: {
-            score: 'desc'
-          }
+            score: "desc",
+          },
         },
         answers: {
           orderBy: {
-            answeredAt: 'desc'
-          }
-        }
-      }
+            answeredAt: "desc",
+          },
+        },
+      },
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
     return NextResponse.json(session);
   } catch (error) {
-    console.error('Error fetching session:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch session' },
-      { status: 500 }
-    );
+    console.error("Error fetching session:", error);
+    return NextResponse.json({ error: "Failed to fetch session" }, { status: 500 });
   }
 }

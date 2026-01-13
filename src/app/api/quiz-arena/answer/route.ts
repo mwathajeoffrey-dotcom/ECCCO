@@ -1,38 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
-    const {
-      sessionId,
-      participantId,
-      questionIndex,
-      selectedOption,
-      timeToAnswer
-    } = await request.json();
+    const { sessionId, participantId, questionIndex, selectedOption, timeToAnswer } = await request.json();
 
     // Validation
     if (!sessionId || !participantId || questionIndex === undefined || selectedOption === undefined) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Fetch session and participant
     const session = await prisma.quizSession.findUnique({
-      where: { id: sessionId }
+      where: { id: sessionId },
     });
 
     const participant = await prisma.participant.findUnique({
-      where: { id: participantId }
+      where: { id: participantId },
     });
 
     if (!session || !participant) {
-      return NextResponse.json(
-        { error: 'Session or participant not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Session or participant not found" }, { status: 404 });
     }
 
     // Parse questions
@@ -40,10 +28,7 @@ export async function POST(request: NextRequest) {
     const currentQuestion = questions[questionIndex];
 
     if (!currentQuestion) {
-      return NextResponse.json(
-        { error: 'Invalid question index' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid question index" }, { status: 400 });
     }
 
     // Check if answer is correct
@@ -53,13 +38,13 @@ export async function POST(request: NextRequest) {
     let pointsEarned = 0;
     if (isCorrect) {
       const maxTime = session.timePerQuestion * 1000; // Convert to milliseconds
-      const timeBonus = Math.max(0, 1 - (timeToAnswer / maxTime));
-      pointsEarned = Math.round(session.pointsPerQuestion * (0.5 + (0.5 * timeBonus)));
+      const timeBonus = Math.max(0, 1 - timeToAnswer / maxTime);
+      pointsEarned = Math.round(session.pointsPerQuestion * (0.5 + 0.5 * timeBonus));
     }
 
     // Update streak
     const newStreak = isCorrect ? participant.streak + 1 : 0;
-    
+
     // Apply streak bonus
     if (newStreak >= 3) {
       pointsEarned = Math.round(pointsEarned * (1 + (newStreak - 2) * 0.1)); // 10% bonus per streak after 3
@@ -78,8 +63,8 @@ export async function POST(request: NextRequest) {
         isCorrect,
         timeToAnswer,
         pointsEarned,
-        answeredAt: new Date()
-      }
+        answeredAt: new Date(),
+      },
     });
 
     // Update participant score and streak
@@ -87,8 +72,8 @@ export async function POST(request: NextRequest) {
       where: { id: participantId },
       data: {
         score: newScore,
-        streak: newStreak
-      }
+        streak: newStreak,
+      },
     });
 
     return NextResponse.json({
@@ -96,13 +81,10 @@ export async function POST(request: NextRequest) {
       pointsEarned,
       newScore,
       newStreak,
-      correctAnswer: currentQuestion.correctIndex
+      correctAnswer: currentQuestion.correctIndex,
     });
   } catch (error) {
-    console.error('Error submitting answer:', error);
-    return NextResponse.json(
-      { error: 'Failed to submit answer' },
-      { status: 500 }
-    );
+    console.error("Error submitting answer:", error);
+    return NextResponse.json({ error: "Failed to submit answer" }, { status: 500 });
   }
 }

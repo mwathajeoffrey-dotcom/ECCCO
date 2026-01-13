@@ -1,12 +1,14 @@
 # Vercel DATABASE_URL Not Updating - Troubleshooting Guide
 
 ## Current Status
+
 ✅ Code deployed successfully (commit e9a6902)
 ✅ API format fixed (returns {success, questions})
 ❌ Still showing OLD database (851 questions, 36 topics)
 ❌ Should show NEW database (1,845 questions, 46 topics)
 
 ## Problem
+
 Even after updating DATABASE_URL in Vercel and redeploying, production still uses the old database.
 
 ## Most Likely Causes
@@ -14,11 +16,13 @@ Even after updating DATABASE_URL in Vercel and redeploying, production still use
 ### 1. DATABASE_URL Not Set for "Production" Environment ⭐ MOST LIKELY
 
 **What happened:**
+
 - When editing DATABASE_URL in Vercel, there's a checkbox section for "Environments"
 - Options: Production, Preview, Development
 - If only "Preview" or "Development" is checked, production won't use it!
 
 **How to Fix:**
+
 1. Go to Vercel → Settings → Environment Variables
 2. Find DATABASE_URL
 3. Look at the "Environments" column - does it show "Production"?
@@ -36,10 +40,12 @@ Even after updating DATABASE_URL in Vercel and redeploying, production still use
 ### 2. Multiple DATABASE_URL Variables
 
 **What happened:**
+
 - There might be multiple DATABASE_URL entries
 - One for Production (old value) and one for Preview (new value)
 
 **How to Fix:**
+
 1. Go to Vercel → Settings → Environment Variables
 2. Look for ALL DATABASE_URL entries
 3. You might see multiple rows, each with different environments
@@ -49,12 +55,14 @@ Even after updating DATABASE_URL in Vercel and redeploying, production still use
 ### 3. Typo in DATABASE_URL
 
 **Check for these common mistakes:**
+
 - Missing characters when copying
 - Extra spaces at the beginning or end
 - Wrong port (should be `:6543`)
 - Wrong database name (should end with `/postgres`)
 
 **Correct format:**
+
 ```
 postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pooler.supabase.com:6543/postgres
 ```
@@ -62,6 +70,7 @@ postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pool
 ### 4. Need to Restart/Clear Cache
 
 Some users report needing to:
+
 1. Delete the environment variable completely
 2. Save
 3. Wait 1 minute
@@ -95,12 +104,13 @@ Some users report needing to:
 ### Step 3: If Production IS checked but still not working
 
 Try the "nuclear option":
+
 1. **Delete** the DATABASE_URL variable completely
 2. Click **Save**
 3. Wait 30 seconds
 4. Click **Add New Variable**
 5. Name: `DATABASE_URL`
-6. Value: 
+6. Value:
    ```
    postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pooler.supabase.com:6543/postgres
    ```
@@ -111,11 +121,13 @@ Try the "nuclear option":
 ### Step 4: Verify After Redeploy
 
 Wait 3 minutes after deployment shows "Ready", then run:
+
 ```bash
 ./quick-verify.sh
 ```
 
 Expected output:
+
 ```
 ✅ SUCCESS! Database updated correctly!
    You now have all 1,845 questions across 46 topics
@@ -144,8 +156,8 @@ vercel --prod
 
 When you look at the environment variables page, you should see:
 
-| Name | Value | Environments |
-|------|-------|--------------|
+| Name         | Value                    | Environments                     |
+| ------------ | ------------------------ | -------------------------------- |
 | DATABASE_URL | postgresql://postgres... | Production, Preview, Development |
 
 **NOT:**
@@ -158,6 +170,7 @@ When you look at the environment variables page, you should see:
 ## Need More Help?
 
 Share a screenshot showing:
+
 1. The Environment Variables page with DATABASE_URL visible
 2. The Environments column for that variable
 3. The latest deployment status

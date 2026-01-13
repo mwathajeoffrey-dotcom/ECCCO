@@ -1,0 +1,90 @@
+
+> eccco-exam-platform@1.0.0 dev
+> next dev
+
+▲ Next.js 16.1.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.5.14:3000
+- Environments: .env.development.local, .env.local, .env
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 7.5s
+🔧 Using local Prisma client
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany()` invocation in
+/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__c7a3fdee._.js:391:187
+
+  388 async function GET() {
+  389     try {
+  390         // Fetch topics from database with question counts
+→ 391         const topics = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany(
+error: Error validating datasource `db`: the URL must start with the protocol `file:`.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "sqlite"
+ 7 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+[2026-01-12T08:39:09.101Z] ERROR: Database connection failed in topics API
+  Error: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany()` invocation in
+/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__c7a3fdee._.js:391:187
+
+  388 async function GET() {
+  389     try {
+  390         // Fetch topics from database with question counts
+→ 391         const topics = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany(
+error: Error validating datasource `db`: the URL must start with the protocol `file:`.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "sqlite"
+ 7 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+  Stack: PrismaClientInitializationError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany()` invocation in
+/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__c7a3fdee._.js:391:187
+
+  388 async function GET() {
+  389     try {
+  390         // Fetch topics from database with question counts
+→ 391         const topics = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$database$2f$prisma$2d$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].topic.findMany(
+error: Error validating datasource `db`: the URL must start with the protocol `file:`.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "sqlite"
+ 7 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at ei.handleRequestError (/Users/apple/ECCCO/node_modules/@prisma/client/runtime/library.js:121:7568)
+    at ei.handleAndLogRequestError (/Users/apple/ECCCO/node_modules/@prisma/client/runtime/library.js:121:6593)
+    at ei.request (/Users/apple/ECCCO/node_modules/@prisma/client/runtime/library.js:121:6300)
+    at async a (/Users/apple/ECCCO/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async GET (/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__c7a3fdee._.js:391:24)
+    at async AppRouteRouteModule.do (/Users/apple/ECCCO/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:37866)
+    at async AppRouteRouteModule.handle (/Users/apple/ECCCO/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:45156)
+    at async responseGenerator (/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__591deb0d._.js:17606:38)
+    at async AppRouteRouteModule.handleResponse (/Users/apple/ECCCO/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:1:187713)
+    at async handleResponse (/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__591deb0d._.js:17669:32)
+    at async Module.handler (/Users/apple/ECCCO/.next/dev/server/chunks/[root-of-the-server]__591deb0d._.js:17720:13)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/apple/ECCCO/node_modules/next/dist/server/base-server.js:1422:9)
+    at async DevServer.renderPageComponent (/Users/apple/ECCCO/node_modules/next/dist/server/base-server.js:1474:24)
+    at async DevServer.renderToResponseImpl (/Users/apple/ECCCO/node_modules/next/dist/server/base-server.js:1524:32)
+    at async DevServer.pipeImpl (/Users/apple/ECCCO/node_modules/next/dist/server/base-server.js:1018:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/apple/ECCCO/node_modules/next/dist/server/next-server.js:395:17)
+    at async DevServer.handleRequestImpl (/Users/apple/ECCCO/node_modules/next/dist/server/base-server.js:909:17)
+    at async /Users/apple/ECCCO/node_modules/next/dist/server/dev/next-dev-server.js:387:20
+    at async Span.traceAsyncFn (/Users/apple/ECCCO/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (/Users/apple/ECCCO/node_modules/next/dist/server/dev/next-dev-server.js:383:24)
+    at async invokeRender (/Users/apple/ECCCO/node_modules/next/dist/server/lib/router-server.js:248:21)
+    at async handleRequest (/Users/apple/ECCCO/node_modules/next/dist/server/lib/router-server.js:447:24)
+    at async requestHandlerImpl (/Users/apple/ECCCO/node_modules/next/dist/server/lib/router-server.js:496:13)
+    at async Server.requestListener (/Users/apple/ECCCO/node_modules/next/dist/server/lib/start-server.js:226:13)
+ GET /api/topics 503 in 3.2s (compile: 2.3s, proxy.ts: 554ms, render: 384ms)
+[?25h

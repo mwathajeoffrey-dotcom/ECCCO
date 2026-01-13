@@ -155,27 +155,27 @@ export default function ExamInterface() {
     setIsLoading(true);
     try {
       // Validate topicId
-      if (!topicId || topicId === '') {
-        throw new Error('Please select a topic before starting the exam');
+      if (!topicId || topicId === "") {
+        throw new Error("Please select a topic before starting the exam");
       }
 
       const response = await fetch(`/api/questions?topicId=${topicId}&limit=30`);
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `Failed to fetch questions (${response.status})`);
       }
-      
+
       const data = await response.json();
 
       // API returns {success, count, total, questions: [...]}
       // We need to extract the questions array
       const questionsArray = data.questions || [];
-      
+
       if (questionsArray.length === 0) {
         throw new Error(`No questions available for this topic. Topic ID: ${topicId}`);
       }
-      
+
       setQuestions(questionsArray);
       setCurrentQuestionIndex(0);
       setSelectedAnswers({});
@@ -191,11 +191,11 @@ export default function ExamInterface() {
       console.error("Error fetching questions:", error);
       console.error("Topic ID attempted:", topicId);
       console.error("Full error details:", {
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: error instanceof Error ? error.message : "Unknown error",
         topicId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-      alert(error instanceof Error ? error.message : 'Failed to load questions. Please try again.');
+      alert(error instanceof Error ? error.message : "Failed to load questions. Please try again.");
     } finally {
       setIsLoading(false);
     }

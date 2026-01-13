@@ -245,13 +245,13 @@ model QuizTemplate {
   createdBy           String   // User ID who created the template
   topicId             String?
   questionIds         String   // JSON array of question IDs
-  
+
   // Template Settings
   pointsPerQuestion   Int      @default(1000)
   timePerQuestion     Int      @default(30)
   showCorrectAnswers  Boolean  @default(true)
   playSound           Boolean  @default(false)
-  
+
   isPublic            Boolean  @default(false) // Can other users use this template
   usageCount          Int      @default(0)
   createdAt           DateTime @default(now())
@@ -273,11 +273,11 @@ model QuizSession {
   description       String?
   accessCode        String        @unique // 6-digit code
   hostId            String        // User who created it
-  
+
   // Session State
   status            String        @default("LOBBY") // LOBBY, QUESTION, ANSWER, LEADERBOARD, FINISHED
   currentQuestion   Int           @default(0)
-  
+
   // Settings
   timePerQuestion   Int           @default(20) // seconds
   pointsPerQuestion Int           @default(1000)
@@ -285,20 +285,20 @@ model QuizSession {
   playSound         Boolean       @default(true)
   showAnswerAfter   Boolean       @default(true)
   allowLateJoin     Boolean       @default(false)
-  
+
   // Questions (JSON array of question objects or IDs)
   questions         String        // JSON stringified array
-  
+
   // Timestamps
   startedAt         DateTime?
   endedAt           DateTime?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime
-  
+
   // Relations
   participants      Participant[]
   answers           Answer[]
-  
+
   @@index([accessCode])
   @@index([hostId])
   @@index([status])
@@ -315,11 +315,11 @@ model Participant {
   rank          Int?
   isActive      Boolean     @default(true)
   joinedAt      DateTime    @default(now())
-  
+
   // Relations
   session       QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   answers       Answer[]
-  
+
   @@index([sessionId])
   @@index([score])
 }
@@ -334,11 +334,11 @@ model Answer {
   timeToAnswer    Int         // milliseconds
   pointsEarned    Int
   answeredAt      DateTime    @default(now())
-  
+
   // Relations
   session         QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   participant     Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  
+
   @@unique([sessionId, participantId, questionIndex])
   @@index([sessionId])
   @@index([participantId])

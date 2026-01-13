@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { 
-  Users, 
-  Play, 
-  Pause, 
-  SkipForward, 
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  Users,
+  Play,
+  Pause,
+  SkipForward,
   StopCircle,
   Copy,
   Check,
@@ -15,8 +15,8 @@ import {
   ArrowLeft,
   Music,
   Volume2,
-  Share2
-} from 'lucide-react';
+  Share2,
+} from "lucide-react";
 
 interface Participant {
   id: string;
@@ -54,7 +54,7 @@ export default function HostQuizPage() {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Fetch session data
   useEffect(() => {
@@ -67,15 +67,15 @@ export default function HostQuizPage() {
     try {
       const response = await fetch(`/api/quiz-arena/session/${sessionId}`);
       if (!response.ok) {
-        throw new Error('Session not found');
+        throw new Error("Session not found");
       }
       const data = await response.json();
       setSession(data);
       setParticipants(data.participants || []);
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching session:', err);
-      setError('Failed to load quiz session');
+      console.error("Error fetching session:", err);
+      setError("Failed to load quiz session");
       setLoading(false);
     }
   };
@@ -92,47 +92,47 @@ export default function HostQuizPage() {
     if (session) {
       const url = `${window.location.origin}/quiz-arena/play/${session.accessCode}`;
       navigator.clipboard.writeText(url);
-      alert('Join link copied to clipboard!');
+      alert("Join link copied to clipboard!");
     }
   };
 
   const handleStartQuiz = async () => {
     try {
       const response = await fetch(`/api/quiz-arena/session/${sessionId}/start`, {
-        method: 'POST',
+        method: "POST",
       });
       if (response.ok) {
         fetchSession();
       }
     } catch (err) {
-      console.error('Error starting quiz:', err);
+      console.error("Error starting quiz:", err);
     }
   };
 
   const handleNextQuestion = async () => {
     try {
       const response = await fetch(`/api/quiz-arena/session/${sessionId}/next`, {
-        method: 'POST',
+        method: "POST",
       });
       if (response.ok) {
         fetchSession();
       }
     } catch (err) {
-      console.error('Error moving to next question:', err);
+      console.error("Error moving to next question:", err);
     }
   };
 
   const handleEndQuiz = async () => {
-    if (confirm('Are you sure you want to end this quiz?')) {
+    if (confirm("Are you sure you want to end this quiz?")) {
       try {
         const response = await fetch(`/api/quiz-arena/session/${sessionId}/end`, {
-          method: 'POST',
+          method: "POST",
         });
         if (response.ok) {
           fetchSession();
         }
       } catch (err) {
-        console.error('Error ending quiz:', err);
+        console.error("Error ending quiz:", err);
       }
     }
   };
@@ -149,9 +149,9 @@ export default function HostQuizPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white text-2xl font-bold mb-4">{error || 'Session not found'}</div>
+          <div className="text-white text-2xl font-bold mb-4">{error || "Session not found"}</div>
           <button
-            onClick={() => router.push('/quiz-arena')}
+            onClick={() => router.push("/quiz-arena")}
             className="bg-white text-purple-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-100"
           >
             Back to Quiz Arena
@@ -162,8 +162,8 @@ export default function HostQuizPage() {
   }
 
   const currentQuestionData = session.questions[session.currentQuestion];
-  const isLobby = session.status === 'LOBBY';
-  const isFinished = session.status === 'FINISHED';
+  const isLobby = session.status === "LOBBY";
+  const isFinished = session.status === "FINISHED";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600">
@@ -172,13 +172,13 @@ export default function HostQuizPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => router.push('/quiz-arena')}
+              onClick={() => router.push("/quiz-arena")}
               className="text-white/80 hover:text-white flex items-center"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Exit
             </button>
-            
+
             <div className="text-center">
               <h1 className="text-2xl font-bold text-white">{session.title}</h1>
               <p className="text-white/80 text-sm">Host Controls</p>
@@ -200,20 +200,14 @@ export default function HostQuizPage() {
             <div className="bg-white rounded-3xl p-8 shadow-2xl mb-8 text-center">
               <div className="mb-6">
                 <Trophy className="w-20 h-20 text-yellow-500 mx-auto mb-4 animate-bounce" />
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  Waiting for Players...
-                </h2>
-                <p className="text-gray-600">
-                  Share this code with participants to join
-                </p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Waiting for Players...</h2>
+                <p className="text-gray-600">Share this code with participants to join</p>
               </div>
 
               <div className="mb-6">
                 <div className="text-sm text-gray-600 mb-2">Join Code</div>
                 <div className="flex items-center justify-center space-x-4">
-                  <div className="text-6xl font-black text-purple-600 tracking-widest">
-                    {session.accessCode}
-                  </div>
+                  <div className="text-6xl font-black text-purple-600 tracking-widest">{session.accessCode}</div>
                   <button
                     onClick={handleCopyCode}
                     className="bg-purple-100 hover:bg-purple-200 text-purple-700 p-4 rounded-2xl transition-all"
@@ -251,9 +245,7 @@ export default function HostQuizPage() {
                 <div className="text-center py-12">
                   <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500">No players yet...</p>
-                  <p className="text-gray-400 text-sm mt-2">
-                    Waiting for players to join with the code above
-                  </p>
+                  <p className="text-gray-400 text-sm mt-2">Waiting for players to join with the code above</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -265,12 +257,8 @@ export default function HostQuizPage() {
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3 text-white text-2xl font-bold">
                         {participant.nickname.charAt(0).toUpperCase()}
                       </div>
-                      <div className="font-bold text-gray-900 truncate">
-                        {participant.nickname}
-                      </div>
-                      <div className="text-xs text-green-600 mt-1">
-                        ● Ready
-                      </div>
+                      <div className="font-bold text-gray-900 truncate">{participant.nickname}</div>
+                      <div className="text-xs text-green-600 mt-1">● Ready</div>
                     </div>
                   ))}
                 </div>
@@ -281,21 +269,15 @@ export default function HostQuizPage() {
             <div className="bg-white rounded-3xl p-6 shadow-2xl mb-8">
               <div className="grid grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-purple-600">
-                    {session.questions.length}
-                  </div>
+                  <div className="text-3xl font-bold text-purple-600">{session.questions.length}</div>
                   <div className="text-gray-600 text-sm">Questions</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-blue-600">
-                    {session.timePerQuestion}s
-                  </div>
+                  <div className="text-3xl font-bold text-blue-600">{session.timePerQuestion}s</div>
                   <div className="text-gray-600 text-sm">Per Question</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-green-600">
-                    {session.pointsPerQuestion}
-                  </div>
+                  <div className="text-3xl font-bold text-green-600">{session.pointsPerQuestion}</div>
                   <div className="text-gray-600 text-sm">Max Points</div>
                 </div>
               </div>
@@ -332,24 +314,24 @@ export default function HostQuizPage() {
 
                   {currentQuestionData && (
                     <>
-                      <div className="text-xl font-semibold text-gray-900 mb-6">
-                        {currentQuestionData.questionText}
-                      </div>
+                      <div className="text-xl font-semibold text-gray-900 mb-6">{currentQuestionData.questionText}</div>
 
                       <div className="grid grid-cols-2 gap-4">
                         {currentQuestionData.options?.map((option: string, index: number) => {
                           const colors = [
-                            'from-red-500 to-red-600',
-                            'from-blue-500 to-blue-600',
-                            'from-yellow-500 to-yellow-600',
-                            'from-green-500 to-green-600',
-                            'from-purple-500 to-purple-600',
-                            'from-pink-500 to-pink-600',
+                            "from-red-500 to-red-600",
+                            "from-blue-500 to-blue-600",
+                            "from-yellow-500 to-yellow-600",
+                            "from-green-500 to-green-600",
+                            "from-purple-500 to-purple-600",
+                            "from-pink-500 to-pink-600",
                           ];
                           return (
                             <div
                               key={index}
-                              className={`bg-gradient-to-br ${colors[index % colors.length]} text-white p-6 rounded-2xl font-bold text-center`}
+                              className={`bg-gradient-to-br ${
+                                colors[index % colors.length]
+                              } text-white p-6 rounded-2xl font-bold text-center`}
                             >
                               {option}
                             </div>
@@ -393,33 +375,35 @@ export default function HostQuizPage() {
                       <div
                         key={participant.id}
                         className={`flex items-center p-3 rounded-xl ${
-                          index === 0 ? 'bg-yellow-50 border-2 border-yellow-400' :
-                          index === 1 ? 'bg-gray-50 border-2 border-gray-400' :
-                          index === 2 ? 'bg-orange-50 border-2 border-orange-400' :
-                          'bg-gray-50'
+                          index === 0
+                            ? "bg-yellow-50 border-2 border-yellow-400"
+                            : index === 1
+                            ? "bg-gray-50 border-2 border-gray-400"
+                            : index === 2
+                            ? "bg-orange-50 border-2 border-orange-400"
+                            : "bg-gray-50"
                         }`}
                       >
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 ${
-                          index === 0 ? 'bg-yellow-400 text-white' :
-                          index === 1 ? 'bg-gray-400 text-white' :
-                          index === 2 ? 'bg-orange-400 text-white' :
-                          'bg-gray-300 text-gray-700'
-                        }`}>
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 ${
+                            index === 0
+                              ? "bg-yellow-400 text-white"
+                              : index === 1
+                              ? "bg-gray-400 text-white"
+                              : index === 2
+                              ? "bg-orange-400 text-white"
+                              : "bg-gray-300 text-gray-700"
+                          }`}
+                        >
                           {index + 1}
                         </div>
                         <div className="flex-1">
-                          <div className="font-bold text-gray-900">
-                            {participant.nickname}
-                          </div>
+                          <div className="font-bold text-gray-900">{participant.nickname}</div>
                           {participant.streak > 0 && (
-                            <div className="text-xs text-orange-600">
-                              🔥 {participant.streak} streak
-                            </div>
+                            <div className="text-xs text-orange-600">🔥 {participant.streak} streak</div>
                           )}
                         </div>
-                        <div className="font-bold text-purple-600">
-                          {participant.score}
-                        </div>
+                        <div className="font-bold text-purple-600">{participant.score}</div>
                       </div>
                     ))}
                 </div>
@@ -433,16 +417,12 @@ export default function HostQuizPage() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-3xl p-12 shadow-2xl text-center">
               <Trophy className="w-24 h-24 text-yellow-500 mx-auto mb-6 animate-bounce" />
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Quiz Complete!
-              </h2>
-              
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Quiz Complete!</h2>
+
               {participants.length > 0 && (
                 <div className="mb-8">
-                  <div className="text-2xl font-bold text-purple-600 mb-6">
-                    🏆 Final Rankings
-                  </div>
-                  
+                  <div className="text-2xl font-bold text-purple-600 mb-6">🏆 Final Rankings</div>
+
                   <div className="space-y-4">
                     {participants
                       .sort((a, b) => b.score - a.score)
@@ -451,30 +431,26 @@ export default function HostQuizPage() {
                         <div
                           key={participant.id}
                           className={`p-6 rounded-2xl ${
-                            index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white scale-110' :
-                            index === 1 ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-white scale-105' :
-                            'bg-gradient-to-r from-orange-300 to-orange-400 text-white'
+                            index === 0
+                              ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-white scale-110"
+                              : index === 1
+                              ? "bg-gradient-to-r from-gray-300 to-gray-400 text-white scale-105"
+                              : "bg-gradient-to-r from-orange-300 to-orange-400 text-white"
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
                               <div className="text-3xl font-black mr-4">
-                                {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                                {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                               </div>
                               <div className="text-left">
-                                <div className="text-2xl font-bold">
-                                  {participant.nickname}
-                                </div>
+                                <div className="text-2xl font-bold">{participant.nickname}</div>
                                 {participant.streak > 0 && (
-                                  <div className="text-sm opacity-90">
-                                    Best streak: {participant.streak}
-                                  </div>
+                                  <div className="text-sm opacity-90">Best streak: {participant.streak}</div>
                                 )}
                               </div>
                             </div>
-                            <div className="text-3xl font-black">
-                              {participant.score}
-                            </div>
+                            <div className="text-3xl font-black">{participant.score}</div>
                           </div>
                         </div>
                       ))}
@@ -483,7 +459,7 @@ export default function HostQuizPage() {
               )}
 
               <button
-                onClick={() => router.push('/quiz-arena')}
+                onClick={() => router.push("/quiz-arena")}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-all"
               >
                 Create Another Quiz

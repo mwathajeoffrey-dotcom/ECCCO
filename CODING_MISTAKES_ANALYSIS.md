@@ -1,6 +1,6 @@
 # 🎯 Common Coding Mistakes & How to Fix Them
 
-**Analysis Date**: January 7, 2026  
+**Analysis Date**: January 7, 2026
 **Seed Progress**: 1,300/2,816 questions (46% complete)
 
 ---
@@ -14,17 +14,18 @@ You have **THREE different ways** to import Prisma across your codebase:
 
 ```typescript
 // Method 1: Some files use this
-import { prisma } from '@/lib/database/prisma-client';
+import { prisma } from "@/lib/database/prisma-client";
 
-// Method 2: Other files use this  
-import prisma from '@/lib/db';
+// Method 2: Other files use this
+import prisma from "@/lib/db";
 
 // Method 3: Scripts use this
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 ```
 
 **Why This Breaks Things**:
+
 - Different imports may connect to different databases
 - Some imports use Accelerate extension, others don't
 - Causes confusion about which instance is being used
@@ -32,25 +33,32 @@ const prisma = new PrismaClient();
 - Makes refactoring dangerous
 
 **Files Affected**:
+
 - ✅ `src/lib/db.ts` - Simple singleton
 - ✅ `src/lib/database/prisma-client.ts` - With Accelerate
 - ✅ `src/lib/database/prisma.ts` - Another singleton
 - ❌ Mix of imports across API routes
 
 **The Fix**:
+
 ```typescript
 // ✅ CREATE ONE FILE: src/lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-});
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
@@ -59,7 +67,7 @@ export default prisma;
 
 ```typescript
 // ✅ EVERYWHERE ELSE: Always import the same way
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
 // Never do this again:
 // ❌ import { prisma } from '@/lib/database/prisma-client';
@@ -75,16 +83,20 @@ You're using environment variables inconsistently:
 
 ```typescript
 // Found in your code:
-const datasourceUrl = isDev ? process.env.DATABASE_URL : (process.env.ACCELERATE_URL || process.env.DATABASE_URL);
+const datasourceUrl = isDev
+  ? process.env.DATABASE_URL
+  : process.env.ACCELERATE_URL || process.env.DATABASE_URL;
 ```
 
 **Why This Breaks Things**:
+
 - Local dev uses SQLite (`DATABASE_URL="file:./prisma/dev.db"`)
 - Production uses PostgreSQL but wasn't seeded
 - No clear documentation of which env vars are needed
 - Easy to forget to set production environment variables
 
 **Current State**:
+
 ```bash
 # Local (.env.development.local)
 DATABASE_URL="file:./prisma/prisma/dev.db"  # SQLite
@@ -97,6 +109,7 @@ ACCELERATE_URL="prisma://..." # Optional for caching
 **The Fix**:
 
 1. **Document ALL environment variables**:
+
 ```bash
 # .env.example (commit this to git)
 # Database
@@ -119,21 +132,22 @@ SENTRY_DSN="https://..."
 ```
 
 2. **Create validation script**:
+
 ```typescript
 // src/lib/env-validation.ts
 const requiredEnvVars = [
-  'DATABASE_URL',
-  'NEXTAUTH_SECRET',
-  'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+  "DATABASE_URL",
+  "NEXTAUTH_SECRET",
+  "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
 ];
 
 export function validateEnv() {
-  const missing = requiredEnvVars.filter(key => !process.env[key]);
-  
+  const missing = requiredEnvVars.filter((key) => !process.env[key]);
+
   if (missing.length > 0) {
     throw new Error(
-      `Missing required environment variables:\n${missing.join('\n')}\n\n` +
-      `Please check .env.example for required variables.`
+      `Missing required environment variables:\n${missing.join("\n")}\n\n` +
+        `Please check .env.example for required variables.`
     );
   }
 }
@@ -153,16 +167,17 @@ Many of your API routes have try-catch blocks, but they don't properly log or ha
 // ❌ Your current pattern:
 try {
   const session = await prisma.quizSession.findUnique({
-    where: { id: sessionId }
+    where: { id: sessionId },
   });
   // ... more code
 } catch (error) {
-  console.error('Error:', error);
-  return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  console.error("Error:", error);
+  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 }
 ```
 
 **Why This Breaks Things**:
+
 - Generic error messages make debugging impossible
 - No distinction between database errors, validation errors, not found errors
 - Users see unhelpful "Internal server error" messages
@@ -172,7 +187,7 @@ try {
 
 ```typescript
 // ✅ Better error handling pattern:
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 
 export async function GET(
   request: Request,
@@ -180,52 +195,48 @@ export async function GET(
 ) {
   try {
     const sessionId = params.sessionId;
-    
+
     // Validate input
     if (!sessionId) {
       return NextResponse.json(
-        { error: 'Session ID is required' },
+        { error: "Session ID is required" },
         { status: 400 }
       );
     }
 
     const session = await prisma.quizSession.findUnique({
-      where: { id: sessionId }
+      where: { id: sessionId },
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
     return NextResponse.json({ session });
-    
   } catch (error) {
     // Handle specific Prisma errors
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       // Database constraint violations, etc.
-      console.error('Database error:', error.code, error.message);
+      console.error("Database error:", error.code, error.message);
       return NextResponse.json(
-        { error: 'Database operation failed', code: error.code },
+        { error: "Database operation failed", code: error.code },
         { status: 500 }
       );
     }
-    
+
     if (error instanceof Prisma.PrismaClientValidationError) {
       // Invalid query
-      console.error('Validation error:', error.message);
+      console.error("Validation error:", error.message);
       return NextResponse.json(
-        { error: 'Invalid query parameters' },
+        { error: "Invalid query parameters" },
         { status: 400 }
       );
     }
 
     // Unknown error
-    console.error('Unexpected error:', error);
+    console.error("Unexpected error:", error);
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: "An unexpected error occurred" },
       { status: 500 }
     );
   }
@@ -247,6 +258,7 @@ setInterval(() => fetchSession(), 2000); // 2 second polling
 ```
 
 **Why This Breaks Things**:
+
 - Difficult to change behavior later
 - No single source of truth for configuration
 - Hard to test with different values
@@ -270,8 +282,9 @@ export const QUIZ_ARENA_CONFIG = {
 
 // ✅ Usage:
 const accessCode = Math.floor(
-  QUIZ_ARENA_CONFIG.ACCESS_CODE_MIN + 
-  Math.random() * (QUIZ_ARENA_CONFIG.ACCESS_CODE_MAX - QUIZ_ARENA_CONFIG.ACCESS_CODE_MIN)
+  QUIZ_ARENA_CONFIG.ACCESS_CODE_MIN +
+    Math.random() *
+      (QUIZ_ARENA_CONFIG.ACCESS_CODE_MAX - QUIZ_ARENA_CONFIG.ACCESS_CODE_MIN)
 ).toString();
 
 // ✅ Easy to change later:
@@ -293,12 +306,13 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 ```
 
 **Why This Breaks Things**:
+
 - If you need to fix a bug, you have to fix it in 3+ places
 - Easy to forget to update all copies
 - Increases codebase size unnecessarily
@@ -330,6 +344,7 @@ const data = await response.json(); // data is 'any'
 ```
 
 **Why This Breaks Things**:
+
 - TypeScript can't catch errors
 - Refactoring becomes dangerous
 - No autocomplete in your IDE
@@ -392,6 +407,7 @@ npx prisma generate
 ```
 
 **Why This Breaks Things**:
+
 - `prisma db push` can lose data
 - No migration history
 - Can't rollback changes
@@ -417,6 +433,7 @@ npx prisma generate
 ```
 
 **Add to package.json**:
+
 ```json
 {
   "scripts": {
@@ -451,6 +468,7 @@ datasource db {
 ```
 
 **Why This Breaks Things**:
+
 - SQLite and PostgreSQL have different features
 - Prisma Client is generated differently for each
 - Data types differ (JSON handling, dates, etc.)
@@ -465,13 +483,14 @@ datasource db {
   // For production-like development, use PostgreSQL everywhere:
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
+
   // Or use conditional databases:
   // provider = env("DATABASE_PROVIDER") // "sqlite" or "postgresql"
 }
 ```
 
 **Environment setup**:
+
 ```bash
 # .env.development.local - LOCAL PostgreSQL (better)
 DATABASE_URL="postgresql://user:pass@localhost:5432/eccco_dev"
@@ -484,6 +503,7 @@ DATABASE_URL="postgresql://...supabase.com..."
 ```
 
 **Why PostgreSQL everywhere is better**:
+
 - ✅ Identical behavior in dev and production
 - ✅ No surprises when deploying
 - ✅ Can test production features locally
@@ -503,6 +523,7 @@ You had questions in code but never seeded production:
 ```
 
 **Why This Breaks Things**:
+
 - Easy to forget to seed new environments
 - Inconsistent data between environments
 - Manual process is error-prone
@@ -525,6 +546,7 @@ You had questions in code but never seeded production:
 ```
 
 **Vercel configuration** (vercel.json):
+
 ```json
 {
   "buildCommand": "prisma generate && prisma migrate deploy && npm run build",
@@ -549,6 +571,7 @@ src/app/api/
 ```
 
 **Why This Breaks Things**:
+
 - Hard to find related code
 - Duplicate functionality (live-quiz vs quiz-arena)
 - Unclear ownership of features
@@ -595,18 +618,21 @@ src/
 ## 📋 Action Plan: Fix Your Codebase
 
 ### Phase 1: Critical Fixes (Do Today)
+
 - [ ] **Consolidate Prisma imports** → Use single `src/lib/prisma.ts`
 - [ ] **Document environment variables** → Create `.env.example`
 - [ ] **Switch to PostgreSQL everywhere** → No more SQLite
 - [ ] **Add seed script to package.json** → Automate seeding
 
 ### Phase 2: Quality Improvements (This Week)
+
 - [ ] **Add TypeScript types for APIs** → Create `types/api.ts`
 - [ ] **Improve error handling** → Use proper Prisma error types
 - [ ] **Extract magic numbers** → Create config files
 - [ ] **Remove duplicate code** → DRY principle
 
 ### Phase 3: Architecture (Next Week)
+
 - [ ] **Reorganize folder structure** → Clear feature separation
 - [ ] **Add environment validation** → Fail fast on missing vars
 - [ ] **Set up proper migrations** → Use `prisma migrate`
@@ -617,10 +643,12 @@ src/
 ## 🎓 Learning Resources
 
 **Books**:
+
 - "Clean Code" by Robert C. Martin
 - "The Pragmatic Programmer" by Hunt & Thomas
 
 **Concepts to Study**:
+
 - **DRY**: Don't Repeat Yourself
 - **SOLID Principles**: Single Responsibility, etc.
 - **Type Safety**: Leverage TypeScript fully
@@ -628,6 +656,7 @@ src/
 - **Configuration Management**: Centralize settings
 
 **Tools to Use**:
+
 - **ESLint**: Catch common mistakes
 - **Prettier**: Consistent formatting
 - **TypeScript strict mode**: `"strict": true`
@@ -638,24 +667,28 @@ src/
 ## ✅ Quick Wins You Can Do Right Now
 
 1. **Delete duplicate Prisma files**:
+
 ```bash
 rm src/lib/db.ts src/lib/database/prisma.ts src/lib/database/prisma-client.ts
 # Keep only one!
 ```
 
 2. **Create `.env.example`**:
+
 ```bash
 cp .env.development.local .env.example
 # Remove sensitive values, commit to git
 ```
 
 3. **Add this to your next API route**:
+
 ```typescript
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 // Use proper error handling from examples above
 ```
 
 4. **Create a config file**:
+
 ```typescript
 // config/constants.ts
 export const APP_CONFIG = {
@@ -664,7 +697,7 @@ export const APP_CONFIG = {
     CODE_LENGTH: 6,
   },
   API: {
-    VERSION: 'v1',
+    VERSION: "v1",
     TIMEOUT_MS: 30000,
   },
 } as const;
@@ -674,7 +707,7 @@ export const APP_CONFIG = {
 
 ## 🚀 Current Seed Progress
 
-**Status**: 1,300 / 2,816 questions (46%)  
+**Status**: 1,300 / 2,816 questions (46%)
 **ETA**: ~45 more minutes
 
 Once complete, you'll have a working system, but apply these learnings to make it maintainable long-term!

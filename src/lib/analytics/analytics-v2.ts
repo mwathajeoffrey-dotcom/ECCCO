@@ -1,6 +1,6 @@
 /**
  * ECCCO Analytics System v2.0 - Production Ready
- * 
+ *
  * Features:
  * - Vercel-compatible database handling
  * - Client-side session persistence with server sync
@@ -25,7 +25,7 @@ export interface ExamSession {
   metadata?: {
     userAgent?: string;
     difficulty?: string;
-    mode?: 'practice' | 'exam';
+    mode?: "practice" | "exam";
   };
 }
 
@@ -70,8 +70,8 @@ class ECCCOAnalyticsV2 {
    * Initialize analytics system - safe for SSR
    */
   async initialize(): Promise<void> {
-    if (typeof window === 'undefined') {
-      console.log('[Analytics] Server-side initialization - skipping localStorage');
+    if (typeof window === "undefined") {
+      console.log("[Analytics] Server-side initialization - skipping localStorage");
       this.isInitialized = true;
       return;
     }
@@ -79,7 +79,7 @@ class ECCCOAnalyticsV2 {
     try {
       // Load existing session data from localStorage
       await this.loadLocalSessions();
-      
+
       // Sync with server if we have sessions
       if (this.sessions.length > 0) {
         await this.syncWithServer();
@@ -88,7 +88,7 @@ class ECCCOAnalyticsV2 {
       this.isInitialized = true;
       console.log(`[Analytics] Initialized with ${this.sessions.length} sessions`);
     } catch (error) {
-      console.error('[Analytics] Initialization error:', error);
+      console.error("[Analytics] Initialization error:", error);
       this.isInitialized = true; // Continue anyway
     }
   }
@@ -114,11 +114,11 @@ class ECCCOAnalyticsV2 {
         sessionId: this.sessionId,
         topicId,
         topicName,
-        questions: questions.map(q => ({
+        questions: questions.map((q) => ({
           id: q.id,
           topicId: q.topicId || topicId,
           difficulty: q.difficulty,
-          correctIndex: q.correctIndex
+          correctIndex: q.correctIndex,
         })),
         answers,
         score,
@@ -127,9 +127,9 @@ class ECCCOAnalyticsV2 {
         timeSpent,
         completedAt: new Date(),
         metadata: {
-          userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
-          mode: 'exam'
-        }
+          userAgent: typeof window !== "undefined" ? window.navigator.userAgent : "server",
+          mode: "exam",
+        },
       };
 
       // Add to local sessions
@@ -143,7 +143,7 @@ class ECCCOAnalyticsV2 {
 
       console.log(`[Analytics] Recorded exam completion: ${topicName} - ${score}%`);
     } catch (error) {
-      console.error('[Analytics] Failed to record exam completion:', error);
+      console.error("[Analytics] Failed to record exam completion:", error);
     }
   }
 
@@ -162,9 +162,12 @@ class ECCCOAnalyticsV2 {
     const totalTimeSpent = this.sessions.reduce((sum, s) => sum + s.timeSpent, 0);
 
     // Calculate topic performance
-    const topicStats = new Map<string, { name: string; sessions: number; totalQuestions: number; correctAnswers: number; scores: number[] }>();
+    const topicStats = new Map<
+      string,
+      { name: string; sessions: number; totalQuestions: number; correctAnswers: number; scores: number[] }
+    >();
 
-    this.sessions.forEach(session => {
+    this.sessions.forEach((session) => {
       const key = session.topicId;
       if (!topicStats.has(key)) {
         topicStats.set(key, {
@@ -172,7 +175,7 @@ class ECCCOAnalyticsV2 {
           sessions: 0,
           totalQuestions: 0,
           correctAnswers: 0,
-          scores: []
+          scores: [],
         });
       }
       const stats = topicStats.get(key)!;
@@ -188,13 +191,13 @@ class ECCCOAnalyticsV2 {
       sessions: stats.sessions,
       averageScore: Math.round(stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length),
       totalQuestions: stats.totalQuestions,
-      correctAnswers: stats.correctAnswers
+      correctAnswers: stats.correctAnswers,
     }));
 
     // Find strongest and weakest topics
     const sortedTopics = topicPerformance.sort((a, b) => b.averageScore - a.averageScore);
-    const strongestTopic = sortedTopics[0] || { name: 'N/A', score: 0 };
-    const weakestTopic = sortedTopics[sortedTopics.length - 1] || { name: 'N/A', score: 0 };
+    const strongestTopic = sortedTopics[0] || { name: "N/A", score: 0 };
+    const weakestTopic = sortedTopics[sortedTopics.length - 1] || { name: "N/A", score: 0 };
 
     return {
       totalSessions,
@@ -206,7 +209,7 @@ class ECCCOAnalyticsV2 {
       weakestTopic: { name: weakestTopic.topicName, score: weakestTopic.averageScore },
       recentSessions: this.sessions.slice(-10).reverse(),
       topicPerformance,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
@@ -233,56 +236,56 @@ class ECCCOAnalyticsV2 {
   }
 
   private async loadLocalSessions(): Promise<void> {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
-      const stored = localStorage.getItem('eccco_analytics_sessions');
+      const stored = localStorage.getItem("eccco_analytics_sessions");
       if (stored) {
         const parsed = JSON.parse(stored);
         this.sessions = parsed.map((s: any) => ({
           ...s,
-          completedAt: new Date(s.completedAt)
+          completedAt: new Date(s.completedAt),
         }));
       }
 
       // Also check for session ID
-      const storedSessionId = localStorage.getItem('eccco_session_id');
+      const storedSessionId = localStorage.getItem("eccco_session_id");
       if (storedSessionId) {
         this.sessionId = storedSessionId;
       } else {
-        localStorage.setItem('eccco_session_id', this.sessionId);
+        localStorage.setItem("eccco_session_id", this.sessionId);
       }
     } catch (error) {
-      console.error('[Analytics] Failed to load local sessions:', error);
+      console.error("[Analytics] Failed to load local sessions:", error);
     }
   }
 
   private async saveLocalSessions(): Promise<void> {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
-      localStorage.setItem('eccco_analytics_sessions', JSON.stringify(this.sessions));
-      localStorage.setItem('eccco_session_id', this.sessionId);
+      localStorage.setItem("eccco_analytics_sessions", JSON.stringify(this.sessions));
+      localStorage.setItem("eccco_session_id", this.sessionId);
     } catch (error) {
-      console.error('[Analytics] Failed to save local sessions:', error);
+      console.error("[Analytics] Failed to save local sessions:", error);
     }
   }
 
   private async syncSessionToServer(session: ExamSession): Promise<void> {
     try {
-      const response = await fetch('/api/analytics/record', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(session)
+      const response = await fetch("/api/analytics/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(session),
       });
 
       if (response.ok) {
-        console.log('[Analytics] Session synced to server successfully');
+        console.log("[Analytics] Session synced to server successfully");
       } else {
-        console.log('[Analytics] Server sync failed, session stored locally');
+        console.log("[Analytics] Server sync failed, session stored locally");
       }
     } catch (error) {
-      console.log('[Analytics] Server sync failed, session stored locally:', error);
+      console.log("[Analytics] Server sync failed, session stored locally:", error);
     }
   }
 
@@ -293,11 +296,11 @@ class ECCCOAnalyticsV2 {
         const data = await response.json();
         if (data.success && data.sessions) {
           // Merge server sessions with local sessions
-          console.log('[Analytics] Synced with server data');
+          console.log("[Analytics] Synced with server data");
         }
       }
     } catch (error) {
-      console.log('[Analytics] Server sync unavailable, using local data only');
+      console.log("[Analytics] Server sync unavailable, using local data only");
     }
   }
 
@@ -308,11 +311,11 @@ class ECCCOAnalyticsV2 {
       totalCorrect: 0,
       averageScore: 0,
       totalTimeSpent: 0,
-      strongestTopic: { name: 'Complete an exam to see your strongest topic', score: 0 },
-      weakestTopic: { name: 'Complete an exam to see improvement areas', score: 0 },
+      strongestTopic: { name: "Complete an exam to see your strongest topic", score: 0 },
+      weakestTopic: { name: "Complete an exam to see improvement areas", score: 0 },
       recentSessions: [],
       topicPerformance: [],
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 }
@@ -325,7 +328,7 @@ export const analytics = {
   initialize: () => analyticsV2.initialize(),
   trackExamComplete: (topicId: string, score: number, timeSpent: number, questions?: any[], answers?: any) => {
     if (questions && answers) {
-      const topicName = 'Exam'; // Could be enhanced to get actual topic name
+      const topicName = "Exam"; // Could be enhanced to get actual topic name
       return analyticsV2.recordExamCompletion(topicId, topicName, questions, answers, timeSpent);
     }
   },
@@ -333,5 +336,5 @@ export const analytics = {
   trackExamStart: () => {}, // No-op for now
   trackQuestionAnswered: () => {}, // No-op for now
   trackTopicSelection: () => {}, // No-op for now
-  trackPDFDownload: () => {} // No-op for now
+  trackPDFDownload: () => {}, // No-op for now
 };

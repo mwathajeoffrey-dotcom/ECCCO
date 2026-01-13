@@ -32,21 +32,21 @@ try:
     total_topics = len(data)
     total_questions = sum(t.get('_count', {}).get('questions', 0) for t in data)
     topics_with_q = len([t for t in data if t.get('_count', {}).get('questions', 0) > 0])
-    
+
     print('📊 Production Database Status:\n')
     print(f'  Total Topics: {total_topics}')
     print(f'  Topics with Questions: {topics_with_q}')
     print(f'  Total Questions: {total_questions}\n')
-    
+
     # Check OB/GYN
     obgyn = [t for t in data if 'ob' in t['name'].lower() or 'gyn' in t['name'].lower()]
     if obgyn:
         print('✅ OB/GYN Topics Found:\n')
         for t in obgyn:
             print(f'  - {t[\"name\"]}: {t.get(\"_count\", {}).get(\"questions\", 0)} questions')
-    
+
     print('')
-    
+
     if total_questions >= 1800:
         print('🎉 SUCCESS! Production has ALL 1,845 questions!\n')
         print('✅ You can now visit: https://eccco.vercel.app/exam')
@@ -58,7 +58,7 @@ try:
     else:
         print('❌ Still showing old database (851 questions)')
         print('   Make sure you updated DATABASE_URL in Vercel and redeployed!\n')
-        
+
 except json.JSONDecodeError:
     print('❌ Invalid JSON response from API')
     sys.exit(1)

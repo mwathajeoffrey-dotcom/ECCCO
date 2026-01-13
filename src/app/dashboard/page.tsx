@@ -13,6 +13,9 @@ import {
   ExternalLink,
   Loader2,
   RefreshCw,
+  Gamepad2,
+  Users,
+  Swords,
 } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
@@ -44,38 +47,36 @@ export default function DashboardPage() {
       const stats = await api.user.getStats();
       setUserStats(stats);
       setRetryCount(0); // Reset retry count on success
-      
     } catch (error) {
       // Specific error handling based on error type
       if (error instanceof ApiError) {
         if (error.status === 401) {
-          setError('Your session has expired. Please sign in again.');
+          setError("Your session has expired. Please sign in again.");
         } else if (error.status === 404) {
-          setError('No statistics found yet. Complete an exam to get started!');
+          setError("No statistics found yet. Complete an exam to get started!");
         } else if (error.status === 503) {
-          setError('Service temporarily unavailable. Retrying...');
-          
+          setError("Service temporarily unavailable. Retrying...");
+
           // Auto-retry for service unavailable (max 3 times)
           if (retryCount < 3) {
             setTimeout(() => {
-              setRetryCount(prev => prev + 1);
+              setRetryCount((prev) => prev + 1);
               fetchUserStats();
             }, 3000);
           }
         } else {
-          setError(error.message || 'Failed to load your statistics.');
+          setError(error.message || "Failed to load your statistics.");
         }
       } else {
-        setError('Network error. Please check your connection and try again.');
+        setError("Network error. Please check your connection and try again.");
       }
-      
+
       // Log error for debugging (development only)
-      logger.error('Failed to fetch user stats', error instanceof Error ? error : undefined, {
+      logger.error("Failed to fetch user stats", error instanceof Error ? error : undefined, {
         userId: user?.id,
         retryCount,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-      
     } finally {
       setLoading(false);
     }
@@ -171,8 +172,8 @@ export default function DashboardPage() {
                       disabled={loading}
                       className="inline-flex items-center px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                      {loading ? 'Retrying...' : 'Try Again'}
+                      <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+                      {loading ? "Retrying..." : "Try Again"}
                     </button>
                   )}
                 </div>
@@ -231,6 +232,65 @@ export default function DashboardPage() {
                     <p className="text-sm font-medium text-gray-600">Study Time</p>
                     <p className="text-2xl font-bold text-gray-900">{overallStats.studyHours}h</p>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quiz Arena Featured Card */}
+            <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-600 rounded-xl shadow-lg p-6 mb-8 text-white">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Gamepad2 className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-2xl font-bold">Quiz Arena</h3>
+                      <span className="px-2 py-0.5 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full">
+                        NEW
+                      </span>
+                    </div>
+                    <p className="text-white/90 text-lg mb-4">
+                      Create competitive live quizzes and challenge your peers in real-time!
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        href="/quiz-arena/create"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white text-purple-600 font-bold rounded-lg hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
+                      >
+                        <Swords className="w-5 h-5" />
+                        Create Quiz
+                      </Link>
+                      <Link
+                        href="/quiz-arena/join"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/20 transition-all border-2 border-white/30"
+                      >
+                        <Users className="w-5 h-5" />
+                        Join Quiz
+                      </Link>
+                      <Link
+                        href="/quiz-arena"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/20 transition-all border-2 border-white/30"
+                      >
+                        <Gamepad2 className="w-5 h-5" />
+                        Learn More
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-white/20">
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1">5+</div>
+                  <div className="text-sm text-white/80">Selection Features</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1">Real-time</div>
+                  <div className="text-sm text-white/80">Multiplayer</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1">800+</div>
+                  <div className="text-sm text-white/80">Questions</div>
                 </div>
               </div>
             </div>
@@ -456,6 +516,13 @@ export default function DashboardPage() {
                   <div className="p-4 bg-green-50 rounded-lg">
                     <h4 className="font-semibold text-green-900 mb-2">Quick Actions</h4>
                     <div className="space-y-2">
+                      <Link
+                        href="/quiz-arena/create"
+                        className="block w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-center py-2.5 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                      >
+                        <Swords className="w-4 h-4" />
+                        Create Live Quiz
+                      </Link>
                       <Link
                         href="/exam"
                         className="block w-full bg-green-600 text-white text-center py-2 rounded-lg font-medium hover:bg-green-700 transition-colors"

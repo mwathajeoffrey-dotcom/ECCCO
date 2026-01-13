@@ -5,13 +5,15 @@
 ## 🔍 Investigation Results
 
 ### Production (Vercel):
+
 - **Total Topics**: 36
 - **Total Questions**: 851
 - **Missing**: "OB/GYN Emergencies" topic (shows 0 in UI)
 - **Has**: "Obstetric & Gynecologic Emergencies" with 30 questions
 
 ### Local Database:
-- **Total Topics**: 46  
+
+- **Total Topics**: 46
 - **Total Questions**: 1,845
 - **All OB/GYN topics present** ✅
 
@@ -44,11 +46,13 @@ We need to **seed the ACTUAL production database** that Vercel is using.
 ### Steps:
 
 1. **Find Vercel's DATABASE_URL**:
+
    - Go to vercel.com dashboard
    - Project settings → Environment Variables
    - Copy the actual production DATABASE_URL
 
 2. **Seed the correct database**:
+
    ```bash
    DATABASE_URL="<vercel-production-url>" npm run seed
    ```
@@ -65,4 +69,3 @@ We need to **seed the ACTUAL production database** that Vercel is using.
 - [ ] Run seed script against production database
 - [ ] Verify all questions present
 - [ ] Add OB/GYN questions from data/obgyn-questions/ directory
-

@@ -9,6 +9,7 @@
 Quiz Arena is a real-time competitive quiz platform inspired by Kahoot, designed for medical education with engaging gameplay, live scoring, and multiplayer competition.
 
 ### ✨ Key Features
+
 - 🎲 **6-digit join codes** for easy access
 - 🏆 **Live leaderboards** with real-time ranking
 - ⏱️ **Countdown timers** per question
@@ -31,11 +32,11 @@ model QuizSession {
   description       String?
   accessCode        String        @unique // 6-digit code
   hostId            String
-  
+
   // Session State
   status            String        // LOBBY, QUESTION, ANSWER, LEADERBOARD, FINISHED
   currentQuestion   Int           @default(0)
-  
+
   // Settings
   timePerQuestion   Int           @default(20)
   pointsPerQuestion Int           @default(1000)
@@ -43,10 +44,10 @@ model QuizSession {
   playSound         Boolean       @default(true)
   showAnswerAfter   Boolean       @default(true)
   allowLateJoin     Boolean       @default(false)
-  
+
   // Questions (JSON array)
   questions         String        // Stringified JSON
-  
+
   // Relations
   participants      Participant[]
   answers           Answer[]
@@ -60,7 +61,7 @@ model Participant {
   streak        Int         @default(0)
   rank          Int?
   isActive      Boolean     @default(true)
-  
+
   session       QuizSession
   answers       Answer[]
 }
@@ -75,7 +76,7 @@ model Answer {
   timeToAnswer    Int         // milliseconds
   pointsEarned    Int
   answeredAt      DateTime    @default(now())
-  
+
   session         QuizSession
   participant     Participant
 }
@@ -90,6 +91,7 @@ model Answer {
 **Create Quiz** → **Lobby** → **Question Display** → **Leaderboard** → **Finish**
 
 1. **Create Quiz** (`/quiz-arena/create`)
+
    - Enter quiz title & description
    - Set time per question (5-60s)
    - Set points per question (100-5000)
@@ -98,15 +100,18 @@ model Answer {
    - Filter by topic, search questions
 
 2. **Host Control Panel** (`/quiz-arena/host/[sessionId]`)
+
    - **Lobby View:**
+
      - Large 6-digit code display
      - Copy code button
      - Share link generation
      - Real-time participant grid
      - Quiz stats preview
      - Start button (disabled until players join)
-   
+
    - **In-Progress View:**
+
      - Current question display
      - Colorful answer options preview
      - Next question button
@@ -114,7 +119,7 @@ model Answer {
      - Live leaderboard sidebar
      - Top 3 podium highlighting
      - Streak indicators
-   
+
    - **Finished View:**
      - Trophy celebration
      - Final rankings (top 3 podium)
@@ -125,16 +130,19 @@ model Answer {
 **Join** → **Lobby** → **Answer Questions** → **See Results**
 
 1. **Join Quiz** (`/quiz-arena/play/[accessCode]`)
+
    - Enter nickname (max 20 chars)
    - Join with code
    - Auto-validation
 
 2. **Lobby Waiting**
+
    - See other players joining
    - Highlight your name
    - Wait for host to start
 
 3. **Gameplay**
+
    - See question text
    - Countdown timer (with alerts at 5s)
    - Large tap-friendly answer buttons (6 colors)
@@ -155,6 +163,7 @@ model Answer {
 ## 🎨 UI Design
 
 ### Color Scheme
+
 - **Primary Gradient:** Purple (600) → Pink (600)
 - **Answer Colors:**
   1. Red (500-600)
@@ -165,6 +174,7 @@ model Answer {
   6. Pink (500-600)
 
 ### Answer Button States
+
 - **Unselected:** Gradient background, hover scale
 - **Selected:** Scale up, border highlight
 - **Correct:** Green ring, checkmark
@@ -172,6 +182,7 @@ model Answer {
 - **Disabled:** Reduced opacity
 
 ### Animations
+
 - Trophy bounce (lobby & finish)
 - Timer pulse (last 5 seconds)
 - Answer button scale on hover
@@ -183,26 +194,31 @@ model Answer {
 ## 📊 Scoring Formula
 
 ### Base Points
+
 ```
 basePoints = pointsPerQuestion (set by host, default 1000)
 ```
 
 ### Time Bonus
+
 ```
 timeBonus = 1 - (timeToAnswer / maxTime)
 actualPoints = basePoints * (0.5 + 0.5 * timeBonus)
 ```
+
 - Instant answer: 100% of points
 - Half time: 75% of points
 - Last second: 50% of points
 
 ### Streak Multiplier
+
 ```
 if (streak >= 3) {
   multiplier = 1 + (streak - 2) * 0.1
   finalPoints = actualPoints * multiplier
 }
 ```
+
 - 3-streak: +10% bonus
 - 5-streak: +30% bonus
 - 10-streak: +80% bonus
@@ -212,20 +228,22 @@ if (streak >= 3) {
 ## 🔌 API Routes
 
 ### Session Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/quiz-arena/create` | Create new session |
-| GET | `/api/quiz-arena/session/[sessionId]` | Get session details |
-| POST | `/api/quiz-arena/session/[sessionId]/start` | Start quiz |
-| POST | `/api/quiz-arena/session/[sessionId]/next` | Next question |
-| POST | `/api/quiz-arena/session/[sessionId]/end` | End quiz |
+
+| Method | Endpoint                                    | Description         |
+| ------ | ------------------------------------------- | ------------------- |
+| POST   | `/api/quiz-arena/create`                    | Create new session  |
+| GET    | `/api/quiz-arena/session/[sessionId]`       | Get session details |
+| POST   | `/api/quiz-arena/session/[sessionId]/start` | Start quiz          |
+| POST   | `/api/quiz-arena/session/[sessionId]/next`  | Next question       |
+| POST   | `/api/quiz-arena/session/[sessionId]/end`   | End quiz            |
 
 ### Participant Actions
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/quiz-arena/join/[accessCode]` | Get session by code |
-| POST | `/api/quiz-arena/join/[accessCode]` | Join session |
-| POST | `/api/quiz-arena/answer` | Submit answer |
+
+| Method | Endpoint                            | Description         |
+| ------ | ----------------------------------- | ------------------- |
+| GET    | `/api/quiz-arena/join/[accessCode]` | Get session by code |
+| POST   | `/api/quiz-arena/join/[accessCode]` | Join session        |
+| POST   | `/api/quiz-arena/answer`            | Submit answer       |
 
 ---
 
@@ -234,6 +252,7 @@ if (streak >= 3) {
 ### As a Host
 
 1. **Create Quiz:**
+
    ```
    Navigate to /quiz-arena
    Click "Create Quiz"
@@ -243,6 +262,7 @@ if (streak >= 3) {
    ```
 
 2. **Share Code:**
+
    ```
    Display 6-digit code to participants
    Or share direct link
@@ -260,6 +280,7 @@ if (streak >= 3) {
 ### As a Participant
 
 1. **Join:**
+
    ```
    Navigate to /quiz-arena
    Enter join code
@@ -268,6 +289,7 @@ if (streak >= 3) {
    ```
 
 2. **Play:**
+
    ```
    Wait in lobby
    Answer questions when they appear
@@ -287,11 +309,13 @@ if (streak >= 3) {
 ## 🔄 Real-Time Updates
 
 ### Current Implementation (Polling)
+
 - **Frequency:** Every 2 seconds
 - **Host:** Fetches participants, scores, answers
 - **Participants:** Fetches session status, question updates
 
 ### Future Enhancement (WebSocket/SSE)
+
 - Instant question broadcast
 - Live answer collection
 - Real-time leaderboard updates
@@ -302,12 +326,14 @@ if (streak >= 3) {
 ## 📱 Pages Created
 
 ### Frontend
+
 - ✅ `/src/app/quiz-arena/page.tsx` - Landing page (join/create)
 - ✅ `/src/app/quiz-arena/create/page.tsx` - Quiz creation wizard
 - ✅ `/src/app/quiz-arena/host/[sessionId]/page.tsx` - Host control panel
 - ✅ `/src/app/quiz-arena/play/[accessCode]/page.tsx` - Participant gameplay
 
 ### API Routes
+
 - ✅ `/src/app/api/quiz-arena/create/route.ts`
 - ✅ `/src/app/api/quiz-arena/session/[sessionId]/route.ts`
 - ✅ `/src/app/api/quiz-arena/session/[sessionId]/start/route.ts`
@@ -321,6 +347,7 @@ if (streak >= 3) {
 ## 🧪 Testing Checklist
 
 ### Create Quiz
+
 - [ ] Create quiz with custom title
 - [ ] Set different time limits (5s, 20s, 60s)
 - [ ] Set different point values (100, 1000, 5000)
@@ -330,6 +357,7 @@ if (streak >= 3) {
 - [ ] Verify unique 6-digit code generation
 
 ### Host Experience
+
 - [ ] See join code displayed prominently
 - [ ] Copy code to clipboard
 - [ ] Share link generation
@@ -342,6 +370,7 @@ if (streak >= 3) {
 - [ ] View final rankings
 
 ### Participant Experience
+
 - [ ] Join with valid code
 - [ ] Enter nickname
 - [ ] See lobby with other players
@@ -357,6 +386,7 @@ if (streak >= 3) {
 - [ ] View top 3 podium
 
 ### Scoring
+
 - [ ] Verify time bonus (fast answer = more points)
 - [ ] Verify streak multiplier (3+ = bonus)
 - [ ] Check leaderboard sorting
@@ -364,6 +394,7 @@ if (streak >= 3) {
 - [ ] Test incorrect answer (streak reset)
 
 ### Edge Cases
+
 - [ ] Invalid join code
 - [ ] Join after quiz started
 - [ ] Join after quiz finished
@@ -377,6 +408,7 @@ if (streak >= 3) {
 ## 🎯 Next Steps (Phase 4+)
 
 ### Real-Time Enhancements
+
 - [ ] WebSocket/Server-Sent Events implementation
 - [ ] Synchronized countdown timers across all clients
 - [ ] Instant question broadcast
@@ -384,6 +416,7 @@ if (streak >= 3) {
 - [ ] Real-time participant presence
 
 ### Audio/Visual Polish
+
 - [ ] Background music tracks
 - [ ] Sound effects (correct, incorrect, countdown, win)
 - [ ] Confetti animations on win
@@ -391,6 +424,7 @@ if (streak >= 3) {
 - [ ] Emoji reactions
 
 ### Advanced Features
+
 - [ ] Custom question creation (host adds own Q&A)
 - [ ] Question image support
 - [ ] Team mode (2v2, 3v3)
@@ -400,6 +434,7 @@ if (streak >= 3) {
 - [ ] Export results to CSV
 
 ### Engagement
+
 - [ ] Player avatars
 - [ ] Profile pictures
 - [ ] Custom themes
@@ -412,6 +447,7 @@ if (streak >= 3) {
 ## 📊 Current Status
 
 ### ✅ Completed (Phases 1-3)
+
 - [x] Database schema & models
 - [x] Landing page with join/create
 - [x] Quiz creation wizard
@@ -431,11 +467,13 @@ if (streak >= 3) {
 - [x] Mobile-responsive design
 
 ### 🚧 In Progress
+
 - [ ] Real-time sync (WebSocket/SSE)
 - [ ] Audio implementation
 - [ ] Custom question creation
 
 ### 📋 Planned
+
 - [ ] Team mode
 - [ ] Advanced analytics
 - [ ] Quiz templates
@@ -446,6 +484,7 @@ if (streak >= 3) {
 ## 🐛 Known Issues
 
 ### Current Limitations
+
 1. **Polling vs Real-Time:** Using 2-second polling instead of WebSocket (Phase 4)
 2. **Timer Sync:** Countdown may drift between devices (needs WebSocket)
 3. **No Audio:** Music and sound toggles exist but no audio files yet
@@ -453,6 +492,7 @@ if (streak >= 3) {
 5. **No Late Join:** Once started, new players blocked (by design, can enable)
 
 ### Fixed Issues
+
 - ✅ Old live-quiz files removed
 - ✅ Prisma import paths fixed
 - ✅ TypeScript build errors resolved
@@ -464,6 +504,7 @@ if (streak >= 3) {
 ## 🎓 Educational Use
 
 ### Medical Education Benefits
+
 - **Active Recall:** Competitive format encourages memory retention
 - **Engagement:** Gamification increases participation
 - **Immediate Feedback:** Learn from mistakes in real-time
@@ -471,6 +512,7 @@ if (streak >= 3) {
 - **Progress Tracking:** Streaks and ranks motivate continued practice
 
 ### Use Cases
+
 - **Class Reviews:** Instructor-led quiz sessions
 - **Study Groups:** Peer-to-peer competitive learning
 - **Exam Prep:** Timed practice for board exams
@@ -482,6 +524,7 @@ if (streak >= 3) {
 ## 🔐 Security
 
 ### Current Implementation
+
 - ✅ Clerk authentication for hosts
 - ✅ Unique session IDs
 - ✅ Host authorization (only host can control)
@@ -491,6 +534,7 @@ if (streak >= 3) {
 - ✅ Input sanitization (nickname, title)
 
 ### Future Enhancements
+
 - [ ] Rate limiting on answer submission
 - [ ] Anti-cheating measures
 - [ ] IP-based duplicate detection
@@ -502,6 +546,7 @@ if (streak >= 3) {
 ## 📈 Performance
 
 ### Optimizations
+
 - ✅ Prisma with SQLite (fast local queries)
 - ✅ Indexed fields (accessCode, sessionId, score)
 - ✅ Client-side polling (reduces server load)
@@ -509,6 +554,7 @@ if (streak >= 3) {
 - ✅ Minimal re-renders with state management
 
 ### Future Improvements
+
 - [ ] Redis caching for sessions
 - [ ] CDN for static assets
 - [ ] WebSocket connection pooling
@@ -530,6 +576,7 @@ if (streak >= 3) {
 ## 🎉 Success Metrics
 
 ### MVP Achieved ✅
+
 - [x] Functional Kahoot-style quiz platform
 - [x] Multi-player support
 - [x] Live scoring & leaderboards
@@ -542,6 +589,7 @@ if (streak >= 3) {
 - [x] Final rankings
 
 ### Ready for Production Testing
+
 - Server deployed on Vercel
 - Database running on SQLite
 - All core features functional
@@ -552,16 +600,17 @@ if (streak >= 3) {
 
 ## 🙏 Credits
 
-**Built for:** ECCCO Medical Education Platform  
-**Inspired by:** Kahoot! Educational Game Platform  
-**Tech Stack:** Next.js 16, Prisma, SQLite, Clerk, TailwindCSS  
-**Database:** 839 medical questions across multiple topics  
+**Built for:** ECCCO Medical Education Platform
+**Inspired by:** Kahoot! Educational Game Platform
+**Tech Stack:** Next.js 16, Prisma, SQLite, Clerk, TailwindCSS
+**Database:** 839 medical questions across multiple topics
 
 ---
 
 ## 📝 Changelog
 
 ### Phase 1 (Jan 7, 2026)
+
 - Created database schema
 - Built landing page
 - Created quiz creation wizard
@@ -570,6 +619,7 @@ if (streak >= 3) {
 - **Commit:** 7a423e1
 
 ### Phase 2 (Jan 7, 2026)
+
 - Built host control panel
 - Created lobby view
 - Implemented session controls
@@ -578,6 +628,7 @@ if (streak >= 3) {
 - **Commit:** acbc732
 
 ### Phase 3 (Jan 7, 2026)
+
 - Created participant join flow
 - Built gameplay interface
 - Implemented answer submission
@@ -586,6 +637,7 @@ if (streak >= 3) {
 - **Commit:** 3a93d57
 
 ### Bug Fixes (Jan 7, 2026)
+
 - Removed old live-quiz files
 - Fixed Prisma imports
 - Resolved TypeScript errors

@@ -29,7 +29,7 @@ trap cleanup SIGINT SIGTERM
 while true; do
     echo "▶️  Starting Next.js dev server..."
     npm run dev
-    
+
     # If we get here, the server stopped
     echo ""
     echo "⚠️  Server stopped! Restarting in 3 seconds..."

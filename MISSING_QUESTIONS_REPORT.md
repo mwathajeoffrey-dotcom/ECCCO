@@ -1,9 +1,11 @@
 # 🚨 MISSING QUESTIONS REPORT
 
 ## Summary
+
 **YOU ARE CORRECT!** We found a major discrepancy in the question count.
 
 ### Current Status
+
 - **📊 Questions in Codebase**: **2,816 questions** (in TypeScript files)
 - **🗄️ Questions in Database**: **839 questions** (only 30% of total!)
 - **⚠️ Missing**: **1,977 questions** (70% of questions NOT seeded!)
@@ -11,13 +13,15 @@
 ### Breakdown by Location
 
 #### Main Questions Directory (src/lib/questions/)
+
 - **Total Files**: 42 TypeScript files
 - **Questions**: ~1,041 questions
 
 #### OB/GYN Subdirectory (src/lib/questions/obgyn/)
-- **Total Files**: 17 TypeScript files  
+
+- **Total Files**: 17 TypeScript files
 - **Questions**: 480 questions
-- **Topics**: 
+- **Topics**:
   - Cardiac disease in pregnancy (30)
   - Diabetes in pregnancy (30)
   - Gynecological emergencies (30)
@@ -35,6 +39,7 @@
   - Thyroid disorders (30)
 
 #### Algorithm Questions
+
 - **algorithm-questions-combined.ts**: 73 questions
 - **algorithm-questions-generated.ts**: 48 questions
 - **enhanced-algorithm-questions.ts**: 336 questions
@@ -49,6 +54,7 @@
 ### Impact on Vercel (Production)
 
 **CRITICAL**: Your Vercel deployment likely has **0 questions** because:
+
 1. SQLite database file isn't deployed to Vercel (file-based)
 2. Production needs PostgreSQL or another hosted database
 3. Seed scripts haven't been run in production environment
@@ -56,6 +62,7 @@
 ## Solution Required
 
 ### Option 1: Complete Local Seed (Recommended for Testing)
+
 ```bash
 # 1. Stop all processes using the database
 pkill -f "next dev"
@@ -69,6 +76,7 @@ sqlite3 prisma/prisma/dev.db "SELECT COUNT(*) FROM Question;"
 ```
 
 ### Option 2: Production Database Setup (Required for Vercel)
+
 1. Set up PostgreSQL database (Neon, Supabase, or Vercel Postgres)
 2. Update DATABASE_URL in Vercel environment variables
 3. Run `prisma db push` to create schema
@@ -76,6 +84,7 @@ sqlite3 prisma/prisma/dev.db "SELECT COUNT(*) FROM Question;"
 5. All 2,816 questions will be available in production
 
 ### Option 3: Prisma Accelerate (Recommended)
+
 - Use Prisma Accelerate for caching and connection pooling
 - Supports both SQLite (local) and PostgreSQL (production)
 - Automatic edge caching for better performance
@@ -83,6 +92,7 @@ sqlite3 prisma/prisma/dev.db "SELECT COUNT(*) FROM Question;"
 ## Files Created
 
 ✅ **scripts/seed-all-questions.ts** - Comprehensive seed script that:
+
 - Recursively scans ALL question directories
 - Imports all 2,816 questions
 - Creates all 46 topics automatically
@@ -99,7 +109,7 @@ sqlite3 prisma/prisma/dev.db "SELECT COUNT(*) FROM Question;"
 
 ```
 Main Questions:      1,041 questions
-OB/GYN Questions:      480 questions  
+OB/GYN Questions:      480 questions
 Algorithm Questions:   457 questions
 Enhanced PALS:           8 questions
 Other Emergency Sets:  830+ questions

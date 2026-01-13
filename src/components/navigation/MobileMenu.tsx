@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   BookOpen,
   FileText,
@@ -16,7 +16,7 @@ import {
   Target,
   ChevronRight,
   Home,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -26,31 +26,31 @@ interface MobileMenuProps {
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const menuSections = [
     {
-      title: 'Practice',
+      title: "Practice",
       icon: FileText,
       items: [
-        { label: 'Topic Practice', href: '/practice', icon: FileText },
-        { label: 'Random Practice', href: '/practice', icon: Zap },
-        { label: 'ACLS', href: '/practice/acls', icon: Activity },
-        { label: 'PALS', href: '/practice/pals', icon: Heart },
+        { label: "Topic Practice", href: "/practice", icon: FileText },
+        { label: "Random Practice", href: "/practice", icon: Zap },
+        { label: "ACLS", href: "/practice/acls", icon: Activity },
+        { label: "PALS", href: "/practice/pals", icon: Heart },
       ],
     },
     {
-      title: 'Study Tools',
+      title: "Study Tools",
       icon: Trophy,
       items: [
-        { label: 'Full Timed Exam', href: '/exam', icon: Clock },
-        { label: 'Custom Exam', href: '/exam', icon: Target },
-        { label: 'Learning Analytics', href: '/learning-analytics', icon: BarChart3 },
+        { label: "Full Timed Exam", href: "/exam", icon: Clock },
+        { label: "Custom Exam", href: "/exam", icon: Target },
+        { label: "Learning Analytics", href: "/learning-analytics", icon: BarChart3 },
       ],
     },
     {
-      title: 'Resources',
+      title: "Resources",
       icon: Library,
       items: [
-        { label: 'Evidence Library', href: '/emergency-references', icon: Library },
-        { label: 'Clinical Guidelines', href: '/guidelines', icon: BookOpen },
-        { label: 'Dashboard', href: '/dashboard', icon: Trophy },
+        { label: "Evidence Library", href: "/emergency-references", icon: Library },
+        { label: "Clinical Guidelines", href: "/guidelines", icon: BookOpen },
+        { label: "Dashboard", href: "/dashboard", icon: Trophy },
       ],
     },
   ];
@@ -71,10 +71,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
           {/* Menu Panel */}
           <motion.div
-            initial={{ x: '100%' }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed top-16 right-0 bottom-0 w-full max-w-sm bg-white shadow-2xl z-50 lg:hidden overflow-y-auto"
           >
             <div className="p-6 space-y-6">
@@ -113,9 +113,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <div key={section.title} className="space-y-2">
                   <div className="flex items-center gap-2 px-2 py-1">
                     <section.icon className="w-5 h-5 text-gray-400" />
-                    <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wide">
-                      {section.title}
-                    </h3>
+                    <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wide">{section.title}</h3>
                   </div>
                   <div className="space-y-1">
                     {section.items.map((item) => (

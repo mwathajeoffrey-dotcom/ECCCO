@@ -1,17 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { 
-  Trophy, 
-  Clock, 
-  Zap,
-  CheckCircle,
-  XCircle,
-  Users,
-  Star,
-  Flame
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Trophy, Clock, Zap, CheckCircle, XCircle, Users, Star, Flame } from "lucide-react";
 
 interface Participant {
   id: string;
@@ -38,11 +29,16 @@ interface QuizSession {
 export default function PlayQuizPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const accessCode = params.accessCode as string;
 
+  // Get URL parameters (from join page redirect)
+  const urlParticipantId = searchParams.get("participantId");
+  const urlNickname = searchParams.get("nickname");
+
   const [session, setSession] = useState<QuizSession | null>(null);
-  const [nickname, setNickname] = useState('');
-  const [participantId, setParticipantId] = useState<string | null>(null);
+  const [nickname, setNickname] = useState(urlNickname || "");
+  const [participantId, setParticipantId] = useState<string | null>(urlParticipantId);
   const [myScore, setMyScore] = useState(0);
   const [myStreak, setMyStreak] = useState(0);
   const [myRank, setMyRank] = useState<number | null>(null);
@@ -52,8 +48,8 @@ export default function PlayQuizPage() {
   const [pointsEarned, setPointsEarned] = useState(0);
   const [timeLeft, setTimeLeft] = useState(20);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [joined, setJoined] = useState(false);
+  const [error, setError] = useState("");
+  const [joined, setJoined] = useState(!!urlParticipantId); // Auto-join if participantId is in URL
 
   // Fetch session data periodically
   useEffect(() => {
@@ -66,9 +62,9 @@ export default function PlayQuizPage() {
 
   // Timer countdown
   useEffect(() => {
-    if (session?.status === 'QUESTION' && !answerSubmitted && timeLeft > 0) {
+    if (session?.status === "QUESTION" && !answerSubmitted && timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => Math.max(0, prev - 1));
+        setTimeLeft((prev) => Math.max(0, prev - 1));
       }, 1000);
       return () => clearInterval(timer);
     }
@@ -89,11 +85,11 @@ export default function PlayQuizPage() {
     try {
       const response = await fetch(`/api/quiz-arena/join/${accessCode}`);
       if (!response.ok) {
-        throw new Error('Session not found');
+        throw new Error("Session not found");
       }
       const data = await response.json();
       setSession(data);
-      
+
       // Update my stats
       if (participantId) {
         const me = data.participants.find((p: Participant) => p.id === participantId);
@@ -102,28 +98,28 @@ export default function PlayQuizPage() {
           setMyStreak(me.streak);
           // Calculate rank
           const sorted = [...data.participants].sort((a, b) => b.score - a.score);
-          setMyRank(sorted.findIndex(p => p.id === participantId) + 1);
+          setMyRank(sorted.findIndex((p) => p.id === participantId) + 1);
         }
       }
-      
+
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching session:', err);
-      setError('Quiz session not found');
+      console.error("Error fetching session:", err);
+      setError("Quiz session not found");
       setLoading(false);
     }
   };
 
   const handleJoin = async () => {
     if (!nickname.trim()) {
-      alert('Please enter a nickname');
+      alert("Please enter a nickname");
       return;
     }
 
     try {
       const response = await fetch(`/api/quiz-arena/join/${accessCode}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nickname: nickname.trim() }),
       });
 
@@ -134,11 +130,11 @@ export default function PlayQuizPage() {
         setJoined(true);
         fetchSession();
       } else {
-        alert('Error joining quiz: ' + data.error);
+        alert("Error joining quiz: " + data.error);
       }
     } catch (err) {
-      console.error('Error joining quiz:', err);
-      alert('Failed to join quiz');
+      console.error("Error joining quiz:", err);
+      alert("Failed to join quiz");
     }
   };
 
@@ -152,8 +148,8 @@ export default function PlayQuizPage() {
 
     try {
       const response = await fetch(`/api/quiz-arena/answer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId: session.id,
           participantId,
@@ -172,7 +168,7 @@ export default function PlayQuizPage() {
         setMyStreak(data.newStreak);
       }
     } catch (err) {
-      console.error('Error submitting answer:', err);
+      console.error("Error submitting answer:", err);
     }
   };
 
@@ -190,7 +186,7 @@ export default function PlayQuizPage() {
         <div className="text-center">
           <div className="text-white text-2xl font-bold mb-4">{error}</div>
           <button
-            onClick={() => router.push('/quiz-arena')}
+            onClick={() => router.push("/quiz-arena")}
             className="bg-white text-purple-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-100"
           >
             Back to Quiz Arena
@@ -213,14 +209,12 @@ export default function PlayQuizPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Your Nickname
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Your Nickname</label>
               <input
                 type="text"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleJoin()}
+                onKeyPress={(e) => e.key === "Enter" && handleJoin()}
                 placeholder="Enter your nickname..."
                 maxLength={20}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none text-lg"
@@ -249,9 +243,8 @@ export default function PlayQuizPage() {
     );
   }
 
-  const currentQuestionData = session.questions[session.currentQuestion];
-  const isLobby = session.status === 'LOBBY';
-  const isFinished = session.status === 'FINISHED';
+  const isLobby = session.status === "LOBBY";
+  const isFinished = session.status === "FINISHED";
 
   // LOBBY SCREEN
   if (isLobby) {
@@ -261,12 +254,8 @@ export default function PlayQuizPage() {
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-3xl p-8 shadow-2xl text-center">
               <Users className="w-20 h-20 text-purple-600 mx-auto mb-4 animate-pulse" />
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Get Ready!
-              </h2>
-              <p className="text-gray-600 mb-8">
-                Waiting for host to start the quiz...
-              </p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Get Ready!</h2>
+              <p className="text-gray-600 mb-8">Waiting for host to start the quiz...</p>
 
               <div className="mb-8">
                 <div className="text-sm text-gray-600 mb-2">You joined as</div>
@@ -274,17 +263,13 @@ export default function PlayQuizPage() {
               </div>
 
               <div className="bg-purple-50 rounded-2xl p-6">
-                <h3 className="font-bold text-gray-900 mb-4">
-                  Players in Lobby ({session.participants.length})
-                </h3>
+                <h3 className="font-bold text-gray-900 mb-4">Players in Lobby ({session.participants.length})</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {session.participants.map((participant) => (
                     <div
                       key={participant.id}
                       className={`p-3 rounded-xl font-semibold ${
-                        participant.id === participantId
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-white text-gray-900'
+                        participant.id === participantId ? "bg-purple-600 text-white" : "bg-white text-gray-900"
                       }`}
                     >
                       {participant.nickname}
@@ -303,7 +288,7 @@ export default function PlayQuizPage() {
   if (isFinished) {
     const topThree = [...session.participants].sort((a, b) => b.score - a.score).slice(0, 3);
     const isWinner = topThree[0]?.id === participantId;
-    const isTopThree = topThree.some(p => p.id === participantId);
+    const isTopThree = topThree.some((p) => p.id === participantId);
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600">
@@ -313,31 +298,23 @@ export default function PlayQuizPage() {
               {isWinner && (
                 <div className="mb-6">
                   <div className="text-6xl mb-4">🏆</div>
-                  <h2 className="text-4xl font-bold text-yellow-600 mb-2">
-                    You Won!
-                  </h2>
+                  <h2 className="text-4xl font-bold text-yellow-600 mb-2">You Won!</h2>
                   <p className="text-2xl text-gray-600">Congratulations!</p>
                 </div>
               )}
 
               {!isWinner && isTopThree && (
                 <div className="mb-6">
-                  <div className="text-6xl mb-4">
-                    {myRank === 2 ? '🥈' : '🥉'}
-                  </div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    Great Job!
-                  </h2>
-                  <p className="text-xl text-gray-600">You finished {myRank === 2 ? '2nd' : '3rd'}!</p>
+                  <div className="text-6xl mb-4">{myRank === 2 ? "🥈" : "🥉"}</div>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Great Job!</h2>
+                  <p className="text-xl text-gray-600">You finished {myRank === 2 ? "2nd" : "3rd"}!</p>
                 </div>
               )}
 
               {!isTopThree && (
                 <div className="mb-6">
                   <Trophy className="w-20 h-20 text-gray-400 mx-auto mb-4" />
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    Quiz Complete!
-                  </h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Quiz Complete!</h2>
                   <p className="text-xl text-gray-600">You finished #{myRank}</p>
                 </div>
               )}
@@ -364,29 +341,25 @@ export default function PlayQuizPage() {
                     <div
                       key={participant.id}
                       className={`p-4 rounded-2xl flex items-center justify-between ${
-                        index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white scale-105' :
-                        index === 1 ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-white' :
-                        'bg-gradient-to-r from-orange-300 to-orange-400 text-white'
+                        index === 0
+                          ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-white scale-105"
+                          : index === 1
+                          ? "bg-gradient-to-r from-gray-300 to-gray-400 text-white"
+                          : "bg-gradient-to-r from-orange-300 to-orange-400 text-white"
                       }`}
                     >
                       <div className="flex items-center">
-                        <div className="text-2xl font-black mr-3">
-                          {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
-                        </div>
-                        <div className="font-bold text-lg">
-                          {participant.nickname}
-                        </div>
+                        <div className="text-2xl font-black mr-3">{index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}</div>
+                        <div className="font-bold text-lg">{participant.nickname}</div>
                       </div>
-                      <div className="text-2xl font-black">
-                        {participant.score}
-                      </div>
+                      <div className="text-2xl font-black">{participant.score}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <button
-                onClick={() => router.push('/quiz-arena')}
+                onClick={() => router.push("/quiz-arena")}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-all"
               >
                 Play Again
@@ -399,6 +372,8 @@ export default function PlayQuizPage() {
   }
 
   // QUESTION SCREEN
+  const currentQuestionData = session.questions[session.currentQuestion];
+
   if (!currentQuestionData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
@@ -408,12 +383,20 @@ export default function PlayQuizPage() {
   }
 
   const answerColors = [
-    { bg: 'from-red-500 to-red-600', hover: 'hover:from-red-600 hover:to-red-700', border: 'border-red-400' },
-    { bg: 'from-blue-500 to-blue-600', hover: 'hover:from-blue-600 hover:to-blue-700', border: 'border-blue-400' },
-    { bg: 'from-yellow-500 to-yellow-600', hover: 'hover:from-yellow-600 hover:to-yellow-700', border: 'border-yellow-400' },
-    { bg: 'from-green-500 to-green-600', hover: 'hover:from-green-600 hover:to-green-700', border: 'border-green-400' },
-    { bg: 'from-purple-500 to-purple-600', hover: 'hover:from-purple-600 hover:to-purple-700', border: 'border-purple-400' },
-    { bg: 'from-pink-500 to-pink-600', hover: 'hover:from-pink-600 hover:to-pink-700', border: 'border-pink-400' },
+    { bg: "from-red-500 to-red-600", hover: "hover:from-red-600 hover:to-red-700", border: "border-red-400" },
+    { bg: "from-blue-500 to-blue-600", hover: "hover:from-blue-600 hover:to-blue-700", border: "border-blue-400" },
+    {
+      bg: "from-yellow-500 to-yellow-600",
+      hover: "hover:from-yellow-600 hover:to-yellow-700",
+      border: "border-yellow-400",
+    },
+    { bg: "from-green-500 to-green-600", hover: "hover:from-green-600 hover:to-green-700", border: "border-green-400" },
+    {
+      bg: "from-purple-500 to-purple-600",
+      hover: "hover:from-purple-600 hover:to-purple-700",
+      border: "border-purple-400",
+    },
+    { bg: "from-pink-500 to-pink-600", hover: "hover:from-pink-600 hover:to-pink-700", border: "border-pink-400" },
   ];
 
   return (
@@ -433,13 +416,9 @@ export default function PlayQuizPage() {
                   <span className="font-bold">{myStreak}</span>
                 </div>
               )}
-              <div className="text-sm opacity-80">
-                Rank: #{myRank}
-              </div>
+              <div className="text-sm opacity-80">Rank: #{myRank}</div>
             </div>
-            <div className="text-sm font-semibold">
-              {nickname}
-            </div>
+            <div className="text-sm font-semibold">{nickname}</div>
           </div>
         </div>
       </div>
@@ -454,9 +433,9 @@ export default function PlayQuizPage() {
                 {session.currentQuestion + 1} / {session.questions.length}
               </div>
             </div>
-            <div className={`bg-white rounded-2xl px-6 py-3 shadow-lg ${timeLeft <= 5 ? 'animate-pulse' : ''}`}>
+            <div className={`bg-white rounded-2xl px-6 py-3 shadow-lg ${timeLeft <= 5 ? "animate-pulse" : ""}`}>
               <div className="flex items-center">
-                <Clock className={`w-6 h-6 mr-2 ${timeLeft <= 5 ? 'text-red-600' : 'text-blue-600'}`} />
+                <Clock className={`w-6 h-6 mr-2 ${timeLeft <= 5 ? "text-red-600" : "text-blue-600"}`} />
                 <div className="text-3xl font-black ${timeLeft <= 5 ? 'text-red-600' : 'text-blue-600'}">
                   {timeLeft}s
                 </div>
@@ -466,13 +445,11 @@ export default function PlayQuizPage() {
 
           {/* Question */}
           <div className="bg-white rounded-3xl p-8 shadow-2xl mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              {currentQuestionData.questionText}
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">{currentQuestionData.questionText}</h2>
 
             {/* Answer Feedback */}
             {answerSubmitted && answerCorrect !== null && (
-              <div className={`mb-6 p-6 rounded-2xl ${answerCorrect ? 'bg-green-50' : 'bg-red-50'}`}>
+              <div className={`mb-6 p-6 rounded-2xl ${answerCorrect ? "bg-green-50" : "bg-red-50"}`}>
                 <div className="flex items-center justify-center">
                   {answerCorrect ? (
                     <>
@@ -497,29 +474,25 @@ export default function PlayQuizPage() {
               {currentQuestionData.options?.map((option: string, index: number) => {
                 const colors = answerColors[index % answerColors.length];
                 const isSelected = selectedAnswer === index;
-                const isCorrectAnswer = session.showAnswerAfter && answerSubmitted && 
-                  index === currentQuestionData.correctIndex;
-                
+                const isCorrectAnswer =
+                  session.showAnswerAfter && answerSubmitted && index === currentQuestionData.correctIndex;
+
                 return (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={answerSubmitted}
-                    className={`bg-gradient-to-br ${colors.bg} ${!answerSubmitted && colors.hover} text-white p-6 rounded-2xl font-bold text-lg text-center transition-all transform ${
-                      !answerSubmitted ? 'hover:scale-105' : ''
-                    } ${isSelected ? `scale-105 border-4 ${colors.border}` : ''} ${
-                      isCorrectAnswer ? 'ring-4 ring-green-400' : ''
+                    className={`bg-gradient-to-br ${colors.bg} ${
+                      !answerSubmitted && colors.hover
+                    } text-white p-6 rounded-2xl font-bold text-lg text-center transition-all transform ${
+                      !answerSubmitted ? "hover:scale-105" : ""
+                    } ${isSelected ? `scale-105 border-4 ${colors.border}` : ""} ${
+                      isCorrectAnswer ? "ring-4 ring-green-400" : ""
                     } disabled:cursor-not-allowed disabled:opacity-70`}
                   >
                     {option}
-                    {isSelected && answerSubmitted && (
-                      <div className="mt-2">
-                        {answerCorrect ? '✓' : '✗'}
-                      </div>
-                    )}
-                    {isCorrectAnswer && (
-                      <div className="mt-2 text-sm">✓ Correct Answer</div>
-                    )}
+                    {isSelected && answerSubmitted && <div className="mt-2">{answerCorrect ? "✓" : "✗"}</div>}
+                    {isCorrectAnswer && <div className="mt-2 text-sm">✓ Correct Answer</div>}
                   </button>
                 );
               })}
@@ -529,9 +502,7 @@ export default function PlayQuizPage() {
           {/* Waiting Message */}
           {answerSubmitted && (
             <div className="bg-white rounded-2xl p-6 shadow-lg text-center">
-              <div className="text-gray-600">
-                ⏳ Waiting for other players...
-              </div>
+              <div className="text-gray-600">⏳ Waiting for other players...</div>
             </div>
           )}
         </div>

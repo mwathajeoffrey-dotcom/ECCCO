@@ -2,13 +2,14 @@
 
 ## Current Situation
 
-✅ **Local Development**: 839 questions in SQLite  
-❌ **Production (Vercel)**: 0 questions (PostgreSQL not seeded)  
+✅ **Local Development**: 839 questions in SQLite
+❌ **Production (Vercel)**: 0 questions (PostgreSQL not seeded)
 📦 **Available**: 2,816 questions in codebase
 
 ## Supabase PostgreSQL Database
 
 Your production database:
+
 ```
 DATABASE_URL="postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pooler.supabase.com:6543/postgres"
 ```
@@ -50,6 +51,7 @@ DATABASE_URL=postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-u
 ## Alternative: Seed Both Databases
 
 ### Local SQLite (Development)
+
 ```bash
 #  Stop dev server first
 pkill -f "next dev"
@@ -63,6 +65,7 @@ sqlite3 prisma/prisma/dev.db "SELECT COUNT(*) FROM Question;"
 ```
 
 ### Production PostgreSQL (Vercel)
+
 ```bash
 # Seed PostgreSQL with all questions
 DATABASE_URL="postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pooler.supabase.com:6543/postgres" npx tsx scripts/seed-all-questions.ts
@@ -71,6 +74,7 @@ DATABASE_URL="postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-
 ## Troubleshooting
 
 ### If Database is Locked (SQLite)
+
 ```bash
 # Find and kill processes using the database
 lsof prisma/prisma/dev.db
@@ -81,6 +85,7 @@ pkill -9 node
 ```
 
 ### If PostgreSQL Connection Fails
+
 ```bash
 # Test connection first
 psql "postgresql://postgres.dckhoqbqtxddghojkoer:afcL7QWHirRbBXp4@aws-1-us-east-1.pooler.supabase.com:6543/postgres" -c "SELECT version();"
@@ -90,6 +95,7 @@ DATABASE_URL="postgresql://...?sslmode=require"
 ```
 
 ### If Seed Script Hangs
+
 - Check Supabase dashboard for connection limits
 - Try using direct connection URL (port 5432) instead of pooler (port 6543)
 - Break into smaller batches if timeout occurs
@@ -99,6 +105,7 @@ DATABASE_URL="postgresql://...?sslmode=require"
 Since you switched from PostgreSQL back to SQLite, you need to update `prisma/schema.prisma`:
 
 **For Production (PostgreSQL)**:
+
 ```prisma
 datasource db {
   provider = "postgresql"
@@ -107,6 +114,7 @@ datasource db {
 ```
 
 **For Local Development (SQLite)**:
+
 ```prisma
 datasource db {
   provider = "sqlite"
@@ -115,6 +123,7 @@ datasource db {
 ```
 
 **RECOMMENDED**: Use environment-based provider:
+
 ```prisma
 datasource db {
   provider = env("DATABASE_PROVIDER")  // "sqlite" or "postgresql"
@@ -123,12 +132,14 @@ datasource db {
 ```
 
 Then in `.env.development.local`:
+
 ```env
 DATABASE_PROVIDER="sqlite"
 DATABASE_URL="file:./prisma/prisma/dev.db"
 ```
 
 And in Vercel (production):
+
 ```env
 DATABASE_PROVIDER="postgresql"
 DATABASE_URL="postgresql://..."
@@ -148,6 +159,7 @@ npm run seed:all
 ```
 
 Add to `package.json`:
+
 ```json
 {
   "scripts": {

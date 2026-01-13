@@ -46,7 +46,7 @@ export interface EvidenceSearchResult {
   pmid?: string;
   abstract?: string;
   url?: string;
-  source: 'pubmed' | 'crossref' | 'europepmc';
+  source: "pubmed" | "crossref" | "europepmc";
 }
 
 // ============================================================================
@@ -74,7 +74,7 @@ export interface Question {
   options: string[];
   correctAnswer: number;
   explanation: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   topicId: string;
   topic?: Topic;
   references?: string[];
@@ -128,7 +128,7 @@ export interface QuizSession {
   title: string;
   description: string | null;
   accessCode: string;
-  status: 'waiting' | 'active' | 'paused' | 'completed';
+  status: "waiting" | "active" | "paused" | "completed";
   hostId: string;
   currentQuestionIndex: number;
   timePerQuestion: number;
@@ -179,7 +179,7 @@ export interface CreateQuizResponse {
 export interface FeedbackSubmission {
   userName?: string;
   userEmail: string;
-  type: 'bug' | 'feature' | 'question' | 'complaint';
+  type: "bug" | "feature" | "question" | "complaint";
   category?: string;
   subject: string;
   message: string;
@@ -195,7 +195,7 @@ export interface FeedbackResponse {
 
 export interface GuidelineSearchResult {
   id: string;
-  source: 'nice' | 'who' | 'aha';
+  source: "nice" | "who" | "aha";
   title: string;
   summary: string;
   published: string;

@@ -7,14 +7,17 @@ The Quiz Arena tables need to be created in your Supabase PostgreSQL database.
 ### Option A: Via Supabase Dashboard (Recommended)
 
 1. **Go to Supabase Dashboard:**
+
    - Visit: https://supabase.com/dashboard
    - Select your project
 
 2. **Open SQL Editor:**
+
    - Click "SQL Editor" in the left sidebar
    - Click "New query"
 
 3. **Run the Migration:**
+
    - Copy the contents of `migrate-quiz-arena.sql`
    - Paste into the SQL editor
    - Click "Run" (or press Cmd/Ctrl + Enter)
@@ -40,12 +43,14 @@ cat migrate-quiz-arena.sql | DATABASE_URL="postgresql://postgres.dckhoqbqtxddgho
 ## Step 2: Test Quiz Arena Locally 🧪
 
 ### Terminal 1: Start Dev Server
+
 ```bash
 npm run dev
 # Wait for "Ready in XXXms"
 ```
 
 ### Terminal 2: Verify Tables Exist
+
 ```bash
 node -e "
 const { PrismaClient } = require('@prisma/client');
@@ -61,9 +66,11 @@ const prisma = new PrismaClient();
 ### Browser: Create & Test Quiz
 
 1. **Create a Quiz:**
+
    ```
    http://localhost:3000/quiz-arena/create
    ```
+
    - Select topic: "ACLS" (or any topic)
    - Number of questions: 5
    - Time per question: 30 seconds
@@ -71,17 +78,21 @@ const prisma = new PrismaClient();
    - **COPY THE ACCESS CODE** shown
 
 2. **Open Second Browser Window (Incognito):**
+
    ```
    http://localhost:3000/quiz-arena/play/[YOUR-ACCESS-CODE]
    ```
+
    - Enter your name (e.g., "Player 1")
    - Click "Join Quiz"
 
 3. **Back to First Window (Host):**
+
    - You should see "Player 1" in the participants list
    - Click "Start Quiz"
 
 4. **Both Windows:**
+
    - Questions should appear
    - Answer them!
    - Watch scores update
@@ -96,6 +107,7 @@ const prisma = new PrismaClient();
 ## Step 3: Deploy to Production 🚀
 
 ### Commit the Migration File
+
 ```bash
 git add migrate-quiz-arena.sql QUIZ_ARENA_STATUS.md QUIZ_ARENA_SETUP.md
 git commit -m "Add Quiz Arena database migration and documentation"
@@ -114,11 +126,13 @@ git push
 ### Test on Production
 
 1. **Create Quiz:**
+
    ```
    https://eccco.vercel.app/quiz-arena/create
    ```
 
 2. **Join Quiz (different device/browser):**
+
    ```
    https://eccco.vercel.app/quiz-arena/play/[ACCESS-CODE]
    ```
@@ -133,6 +147,7 @@ git push
 
 1. **Create a quiz** on production
 2. **Share the access code** via:
+
    - Text message
    - Email
    - Slack/Discord
@@ -150,20 +165,25 @@ git push
 ## Common Issues & Solutions
 
 ### Issue 1: "Failed to create quiz session"
+
 **Cause:** Tables don't exist in database
 **Solution:** Run the migration SQL in Supabase
 
 ### Issue 2: "Invalid access code"
+
 **Cause:** Quiz session not found
 **Solution:** Make sure access code is correct (6 characters)
 
 ### Issue 3: Questions not loading
+
 **Cause:** Topic has no questions or wrong topic ID
-**Solution:** 
+**Solution:**
+
 - Check topic exists: `curl https://eccco.vercel.app/api/topics`
 - Use valid topic ID from the list
 
 ### Issue 4: Participants not seeing updates
+
 **Cause:** Polling delay (2-3 seconds)
 **Solution:** This is normal with polling. For instant updates, we need to implement SSE (Phase 4)
 
@@ -193,17 +213,20 @@ git push
 ## Next Steps
 
 ### Immediate:
+
 1. ✅ Run migration (create tables)
 2. ✅ Test locally with 2 windows
 3. ✅ Test on production with friends
 
 ### Short-term:
+
 1. Implement Server-Sent Events (SSE) for real-time updates
 2. Add sound effects
 3. Add quiz session cleanup (auto-delete after 24 hours)
 4. Add reconnection support
 
 ### Long-term:
+
 1. Team mode (2v2, 3v3)
 2. Custom question sets
 3. Quiz templates

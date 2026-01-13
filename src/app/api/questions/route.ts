@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
-import { logger } from '@/lib/logger';
-import { Prisma } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma-client";
+import { logger } from "@/lib/logger";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   // Extract params outside try block for error logging
   const { searchParams } = new URL(request.url);
-  const topicId = searchParams.get('topicId');
-  const difficulty = searchParams.get('difficulty');
-  const limit = parseInt(searchParams.get('limit') || '100');
-  
+  const topicId = searchParams.get("topicId");
+  const difficulty = searchParams.get("difficulty");
+  const limit = parseInt(searchParams.get("limit") || "100");
+
   try {
     // Build where clause
     const where: any = {};
@@ -45,51 +45,45 @@ export async function GET(request: NextRequest) {
       topicId: q.topicId,
       topic: {
         id: q.Topic.id,
-        name: q.Topic.name
-      }
+        name: q.Topic.name,
+      },
     }));
 
-    logger.debug('Questions fetched successfully', {
+    logger.debug("Questions fetched successfully", {
       topicId,
       difficulty,
       count: formattedQuestions.length,
-      limit
+      limit,
     });
 
     return NextResponse.json({
       success: true,
       count: formattedQuestions.length,
       total: formattedQuestions.length,
-      questions: formattedQuestions
+      questions: formattedQuestions,
     });
   } catch (error) {
     // Check for specific database errors
     if (error instanceof Prisma.PrismaClientInitializationError) {
-      logger.error('Database connection failed in questions API', error);
+      logger.error("Database connection failed in questions API", error);
       return NextResponse.json(
-        { success: false, error: 'Database temporarily unavailable. Please try again.' },
+        { success: false, error: "Database temporarily unavailable. Please try again." },
         { status: 503 }
       );
     }
-    
+
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return NextResponse.json(
-          { success: false, error: 'Topic not found' },
-          { status: 404 }
-        );
+      if (error.code === "P2025") {
+        return NextResponse.json({ success: false, error: "Topic not found" }, { status: 404 });
       }
     }
-    
-    logger.error('Failed to fetch questions', error instanceof Error ? error : undefined, {
+
+    logger.error("Failed to fetch questions", error instanceof Error ? error : undefined, {
       topicId,
       difficulty,
-      limit
+      limit,
     });
-    
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch questions' },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ success: false, error: "Failed to fetch questions" }, { status: 500 });
   }
 }

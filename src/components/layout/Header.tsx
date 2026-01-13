@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { BookOpen, User, LogIn, LogOut, UserPlus } from 'lucide-react';
-import Link from 'next/link';
-import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
+import { useState } from "react";
+import { BookOpen, User, LogIn, LogOut, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
 
 interface HeaderProps {
   title?: string;
@@ -11,18 +11,18 @@ interface HeaderProps {
   currentPage?: string;
 }
 
-export default function Header({ title = 'ECCCO', subtitle, currentPage }: HeaderProps) {
+export default function Header({ title = "ECCCO", subtitle, currentPage }: HeaderProps) {
   const { isSignedIn, user, isLoaded } = useUser();
   const [showAuthMenu, setShowAuthMenu] = useState(false);
 
   const isLoading = !isLoaded;
 
   const handleSignIn = (provider?: string) => {
-    if (provider === 'google') {
-      window.location.href = '/auth/signin';
+    if (provider === "google") {
+      window.location.href = "/auth/signin";
     } else {
       // Redirect to custom sign in page for email/password options
-      window.location.href = '/auth/signin';
+      window.location.href = "/auth/signin";
     }
     setShowAuthMenu(false);
   };
@@ -38,9 +38,7 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h1>
-              {subtitle && (
-                <p className="text-xs sm:text-sm text-gray-600">{subtitle}</p>
-              )}
+              {subtitle && <p className="text-xs sm:text-sm text-gray-600">{subtitle}</p>}
             </div>
           </Link>
 
@@ -48,35 +46,35 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
           <div className="flex items-center space-x-4 sm:space-x-8">
             {/* Navigation Links */}
             <nav className="hidden md:flex space-x-6">
-              <Link 
-                href="/modules" 
+              <Link
+                href="/modules"
                 className={`font-medium text-sm ${
-                  currentPage === 'modules' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                  currentPage === "modules" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
                 }`}
               >
                 Modules
               </Link>
-              <Link 
-                href="/practice" 
+              <Link
+                href="/practice"
                 className={`font-medium text-sm ${
-                  currentPage === 'practice' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                  currentPage === "practice" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
                 }`}
               >
                 Practice
               </Link>
-              <Link 
-                href="/exam" 
+              <Link
+                href="/exam"
                 className={`font-medium text-sm ${
-                  currentPage === 'exam' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                  currentPage === "exam" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
                 }`}
               >
                 Exams
               </Link>
               {isSignedIn && (
-                <Link 
-                  href="/dashboard" 
+                <Link
+                  href="/dashboard"
                   className={`font-medium text-sm ${
-                    currentPage === 'dashboard' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                    currentPage === "dashboard" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
                   }`}
                 >
                   Dashboard
@@ -92,16 +90,14 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                 /* Signed In User */
                 <div className="flex items-center space-x-3">
                   <div className="hidden sm:block text-right">
-                    <p className="text-sm font-medium text-gray-900">
-                      {user?.firstName || 'User'}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{user?.firstName || "User"}</p>
                     <p className="text-xs text-gray-600">{user?.emailAddresses[0]?.emailAddress}</p>
                   </div>
-                  
+
                   {user?.imageUrl ? (
                     <img
                       src={user?.imageUrl}
-                      alt={user?.firstName || 'User'}
+                      alt={user?.firstName || "User"}
                       className="w-8 h-8 rounded-full border-2 border-gray-200"
                     />
                   ) : (
@@ -109,12 +105,9 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                       <User className="w-4 h-4 text-white" />
                     </div>
                   )}
-                  
+
                   <SignOutButton>
-                    <button
-                      className="text-gray-700 hover:text-red-600 transition-colors"
-                      title="Sign Out"
-                    >
+                    <button className="text-gray-700 hover:text-red-600 transition-colors" title="Sign Out">
                       <LogOut className="w-4 h-4" />
                     </button>
                   </SignOutButton>
@@ -137,9 +130,9 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                         <p className="text-sm font-medium text-gray-900">Choose Sign In Method</p>
                         <p className="text-xs text-gray-600">Select your preferred way to access ECCCO</p>
                       </div>
-                      
+
                       <button
-                        onClick={() => handleSignIn('google')}
+                        onClick={() => handleSignIn("google")}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3"
                       >
                         <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
@@ -150,7 +143,7 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                           <p className="text-xs text-gray-600">Quick and secure sign-in</p>
                         </div>
                       </button>
-                      
+
                       <button
                         onClick={() => handleSignIn()}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3"
@@ -161,11 +154,9 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
                           <p className="text-xs text-gray-600">Sign up with email or Google</p>
                         </div>
                       </button>
-                      
+
                       <div className="px-4 py-2 border-t border-gray-100">
-                        <p className="text-xs text-gray-500">
-                          Your data is secure and we respect your privacy
-                        </p>
+                        <p className="text-xs text-gray-500">Your data is secure and we respect your privacy</p>
                       </div>
                     </div>
                   )}
@@ -185,35 +176,35 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
         {/* Mobile Navigation */}
         <nav className="md:hidden mt-4 pt-4 border-t border-gray-200">
           <div className="flex flex-wrap gap-4">
-            <Link 
-              href="/modules" 
+            <Link
+              href="/modules"
               className={`text-sm font-medium ${
-                currentPage === 'modules' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                currentPage === "modules" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
               }`}
             >
               Modules
             </Link>
-            <Link 
-              href="/practice" 
+            <Link
+              href="/practice"
               className={`text-sm font-medium ${
-                currentPage === 'practice' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                currentPage === "practice" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
               }`}
             >
               Practice
             </Link>
-            <Link 
-              href="/exam" 
+            <Link
+              href="/exam"
               className={`text-sm font-medium ${
-                currentPage === 'exam' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                currentPage === "exam" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
               }`}
             >
               Exams
             </Link>
             {isSignedIn && (
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className={`text-sm font-medium ${
-                  currentPage === 'dashboard' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                  currentPage === "dashboard" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
                 }`}
               >
                 Dashboard
@@ -224,12 +215,7 @@ export default function Header({ title = 'ECCCO', subtitle, currentPage }: Heade
       </div>
 
       {/* Click outside to close auth menu */}
-      {showAuthMenu && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setShowAuthMenu(false)}
-        ></div>
-      )}
+      {showAuthMenu && <div className="fixed inset-0 z-40" onClick={() => setShowAuthMenu(false)}></div>}
     </header>
   );
 }

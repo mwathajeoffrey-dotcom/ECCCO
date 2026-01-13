@@ -23,10 +23,10 @@ const FeedbackSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate with Zod (provides specific error messages)
     const validatedData = FeedbackSchema.parse(body);
-    
+
     // Create feedback entry
     const feedback = await prisma.feedback.create({
       data: {
@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Send admin notification (async, don't block response)
-    sendAdminNotification(feedback).catch(err => 
-      logger.error('Failed to send admin notification', err instanceof Error ? err : undefined, {
-        feedbackId: feedback.id
+    sendAdminNotification(feedback).catch((err) =>
+      logger.error("Failed to send admin notification", err instanceof Error ? err : undefined, {
+        feedbackId: feedback.id,
       })
     );
 
@@ -58,49 +58,39 @@ export async function POST(request: NextRequest) {
       message: "Feedback submitted successfully",
       id: feedback.id,
     });
-    
   } catch (error) {
     // Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
           error: "Validation failed",
-          details: error.errors.map(e => ({
-            field: e.path.join('.'),
-            message: e.message
-          }))
+          details: error.errors.map((e) => ({
+            field: e.path.join("."),
+            message: e.message,
+          })),
         },
         { status: 400 }
       );
     }
-    
+
     // Prisma errors
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return NextResponse.json(
-          { error: "Duplicate feedback submission detected" },
-          { status: 409 }
-        );
+      if (error.code === "P2002") {
+        return NextResponse.json({ error: "Duplicate feedback submission detected" }, { status: 409 });
       }
     }
-    
+
     if (error instanceof Prisma.PrismaClientInitializationError) {
-      logger.error('Database connection failed in feedback API', error);
-      return NextResponse.json(
-        { error: "Database temporarily unavailable. Please try again." },
-        { status: 503 }
-      );
+      logger.error("Database connection failed in feedback API", error);
+      return NextResponse.json({ error: "Database temporarily unavailable. Please try again." }, { status: 503 });
     }
-    
+
     // Unknown errors
-    logger.error('Feedback submission failed', error instanceof Error ? error : undefined, {
-      timestamp: new Date().toISOString()
+    logger.error("Feedback submission failed", error instanceof Error ? error : undefined, {
+      timestamp: new Date().toISOString(),
     });
-    
-    return NextResponse.json(
-      { error: "An unexpected error occurred. Please try again." },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ error: "An unexpected error occurred. Please try again." }, { status: 500 });
   }
 }
 
@@ -121,8 +111,8 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Feedback API health check failed', error instanceof Error ? error : undefined);
-    
+    logger.error("Feedback API health check failed", error instanceof Error ? error : undefined);
+
     return NextResponse.json(
       {
         status: "error",
@@ -166,13 +156,13 @@ async function sendAdminNotification(feedback: {
   message: string;
 }) {
   // For now, just log that notification would be sent
-  logger.info('Admin notification triggered', {
+  logger.info("Admin notification triggered", {
     feedbackId: feedback.id,
     type: feedback.type,
     subject: feedback.subject,
-    userEmail: feedback.userEmail
+    userEmail: feedback.userEmail,
   });
-  
+
   // Example implementation when ready:
   // const response = await fetch('/api/send-email', {
   //   method: 'POST',

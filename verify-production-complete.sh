@@ -20,7 +20,7 @@ API_RESPONSE=$(curl -s "https://eccco.vercel.app/api/questions?topicId=acls&limi
 
 if echo "$API_RESPONSE" | grep -q '"success"' && echo "$API_RESPONSE" | grep -q '"questions"'; then
     echo -e "${GREEN}✅ API returns correct format with 'success' and 'questions' fields${NC}"
-    
+
     # Extract question count
     QUESTION_COUNT=$(echo "$API_RESPONSE" | grep -o '"count":[0-9]*' | grep -o '[0-9]*')
     echo "   Questions returned: $QUESTION_COUNT"

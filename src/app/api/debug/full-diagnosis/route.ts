@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma-client";
 
 export async function GET() {
   try {
     // Get actual count from database
     const questionCount = await prisma.$queryRaw`SELECT COUNT(*)::int as count FROM "Question"`;
     const topicCount = await prisma.$queryRaw`SELECT COUNT(*)::int as count FROM "Topic"`;
-    
+
     // Get first 5 topics
     const topics = await prisma.topic.findMany({
       take: 5,
@@ -14,20 +14,20 @@ export async function GET() {
         id: true,
         name: true,
         _count: {
-          select: { Question: true }
-        }
-      }
+          select: { Question: true },
+        },
+      },
     });
-    
+
     // Parse DATABASE_URL
-    const dbUrl = process.env.DATABASE_URL || 'NOT SET';
-    let dbInfo: any = { status: 'NOT SET' };
-    
-    if (dbUrl !== 'NOT SET') {
+    const dbUrl = process.env.DATABASE_URL || "NOT SET";
+    let dbInfo: any = { status: "NOT SET" };
+
+    if (dbUrl !== "NOT SET") {
       const match = dbUrl.match(/postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
       if (match) {
         dbInfo = {
-          status: 'CONFIGURED',
+          status: "CONFIGURED",
           user: match[1],
           host: match[3],
           port: match[4],
@@ -35,7 +35,7 @@ export async function GET() {
         };
       }
     }
-    
+
     return NextResponse.json({
       success: true,
       database: {
@@ -52,13 +52,16 @@ export async function GET() {
         isCorrectDatabase: (questionCount as any)[0].count === 1845 || (questionCount as any)[0].count > 1800,
         expectedQuestions: 1845,
         actualQuestions: (questionCount as any)[0].count,
-      }
+      },
     });
   } catch (error: any) {
-    return NextResponse.json({
-      success: false,
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message,
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      },
+      { status: 500 }
+    );
   }
 }

@@ -1,92 +1,120 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>ECCCO API Test</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
-        .success { color: green; }
-        .error { color: red; }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🧪 ECCCO API Test Page</h1>
-    
+
     <div>
-        <button onclick="testTopics()">Test Topics API</button>
-        <button onclick="testQuestions()">Test Questions API</button>
-        <button onclick="testSpecificTopic()">Test Specific Topic (ACLS)</button>
+      <button onclick="testTopics()">Test Topics API</button>
+      <button onclick="testQuestions()">Test Questions API</button>
+      <button onclick="testSpecificTopic()">Test Specific Topic (ACLS)</button>
     </div>
-    
+
     <div id="result"></div>
-    
+
     <script>
-        const resultDiv = document.getElementById('result');
-        
-        async function testTopics() {
-            resultDiv.innerHTML = '<p>Testing /api/topics...</p>';
-            try {
-                const response = await fetch('/api/topics');
-                const data = await response.json();
-                const total = data.reduce((sum, t) => sum + (t._count?.questions || 0), 0);
-                resultDiv.innerHTML = `
+      const resultDiv = document.getElementById("result");
+
+      async function testTopics() {
+        resultDiv.innerHTML = "<p>Testing /api/topics...</p>";
+        try {
+          const response = await fetch("/api/topics");
+          const data = await response.json();
+          const total = data.reduce(
+            (sum, t) => sum + (t._count?.questions || 0),
+            0
+          );
+          resultDiv.innerHTML = `
                     <p class="success">✅ SUCCESS</p>
                     <p>Topics: ${data.length}</p>
                     <p>Total Questions: ${total}</p>
                     <pre>${JSON.stringify(data.slice(0, 3), null, 2)}</pre>
                 `;
-            } catch (error) {
-                resultDiv.innerHTML = `
+        } catch (error) {
+          resultDiv.innerHTML = `
                     <p class="error">❌ ERROR</p>
                     <pre>${error.message}\n${error.stack}</pre>
                 `;
-            }
         }
-        
-        async function testQuestions() {
-            resultDiv.innerHTML = '<p>Testing /api/questions...</p>';
-            try {
-                const response = await fetch('/api/questions?limit=3');
-                const data = await response.json();
-                resultDiv.innerHTML = `
+      }
+
+      async function testQuestions() {
+        resultDiv.innerHTML = "<p>Testing /api/questions...</p>";
+        try {
+          const response = await fetch("/api/questions?limit=3");
+          const data = await response.json();
+          resultDiv.innerHTML = `
                     <p class="success">✅ SUCCESS</p>
                     <p>Success: ${data.success}</p>
                     <p>Count: ${data.count}</p>
                     <p>Questions: ${data.questions?.length || 0}</p>
                     <pre>${JSON.stringify(data, null, 2)}</pre>
                 `;
-            } catch (error) {
-                resultDiv.innerHTML = `
+        } catch (error) {
+          resultDiv.innerHTML = `
                     <p class="error">❌ ERROR</p>
                     <pre>${error.message}\n${error.stack}</pre>
                 `;
-            }
         }
-        
-        async function testSpecificTopic() {
-            resultDiv.innerHTML = '<p>Testing /api/questions?topicId=acls&limit=5...</p>';
-            try {
-                const response = await fetch('/api/questions?topicId=acls&limit=5');
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                const data = await response.json();
-                resultDiv.innerHTML = `
+      }
+
+      async function testSpecificTopic() {
+        resultDiv.innerHTML =
+          "<p>Testing /api/questions?topicId=acls&limit=5...</p>";
+        try {
+          const response = await fetch("/api/questions?topicId=acls&limit=5");
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          const data = await response.json();
+          resultDiv.innerHTML = `
                     <p class="success">✅ SUCCESS</p>
                     <p>Success: ${data.success}</p>
                     <p>Count: ${data.count}</p>
                     <p>Questions: ${data.questions?.length || 0}</p>
-                    <p>First question: ${data.questions[0]?.question.substring(0, 100)}...</p>
-                    <pre>${JSON.stringify(data, null, 2).substring(0, 1000)}...</pre>
+                    <p>First question: ${data.questions[0]?.question.substring(
+                      0,
+                      100
+                    )}...</p>
+                    <pre>${JSON.stringify(data, null, 2).substring(
+                      0,
+                      1000
+                    )}...</pre>
                 `;
-            } catch (error) {
-                resultDiv.innerHTML = `
+        } catch (error) {
+          resultDiv.innerHTML = `
                     <p class="error">❌ ERROR</p>
                     <pre>${error.message}\n${error.stack}</pre>
                 `;
-            }
         }
+      }
     </script>
-</body>
+  </body>
 </html>

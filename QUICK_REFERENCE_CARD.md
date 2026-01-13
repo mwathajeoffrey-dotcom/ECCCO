@@ -3,16 +3,18 @@
 ## The Golden Rules
 
 ### 1. ONE WAY to Do Each Thing
+
 ```typescript
 // ✅ DO: Always import Prisma the same way
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
 // ❌ DON'T: Mix different imports
-import { prisma } from '@/lib/database/prisma-client';
-import prisma from '@/lib/db';
+import { prisma } from "@/lib/database/prisma-client";
+import prisma from "@/lib/db";
 ```
 
 ### 2. Environment Variables = Configuration File
+
 ```bash
 # ✅ DO: Document all env vars in .env.example
 DATABASE_URL="postgresql://..."
@@ -23,6 +25,7 @@ const url = "postgresql://localhost..." // Wrong!
 ```
 
 ### 3. Types Everywhere
+
 ```typescript
 // ✅ DO: Define types for everything
 interface ApiResponse<T> {
@@ -35,6 +38,7 @@ const data = await response.json(); // data is 'any' - bad!
 ```
 
 ### 4. Handle Errors Properly
+
 ```typescript
 // ✅ DO: Specific error messages
 catch (error) {
@@ -53,6 +57,7 @@ catch (error) {
 ```
 
 ### 5. No Magic Numbers
+
 ```typescript
 // ✅ DO: Use constants
 const POLLING_INTERVAL = 2000;
@@ -63,6 +68,7 @@ setInterval(fetchData, 2000); // What's 2000?
 ```
 
 ### 6. DRY - Don't Repeat Yourself
+
 ```typescript
 // ✅ DO: Extract common code
 function generateAccessCode() {
@@ -75,18 +81,20 @@ const code2 = Math.floor(100000 + Math.random() * 900000).toString();
 ```
 
 ### 7. Validate Input
+
 ```typescript
 // ✅ DO: Check inputs early
-if (!sessionId || typeof sessionId !== 'string') {
-  return json({ error: 'Invalid session ID' }, { status: 400 });
+if (!sessionId || typeof sessionId !== "string") {
+  return json({ error: "Invalid session ID" }, { status: 400 });
 }
 
 // ❌ DON'T: Assume input is valid
-const session = await prisma.findUnique({ where: { id: sessionId }});
+const session = await prisma.findUnique({ where: { id: sessionId } });
 // sessionId could be undefined!
 ```
 
 ### 8. Use Migrations, Not Push
+
 ```bash
 # ✅ DO: Create migrations
 npx prisma migrate dev --name add_feature
@@ -96,6 +104,7 @@ npx prisma db push # Can lose data!
 ```
 
 ### 9. Same Database Provider Everywhere
+
 ```prisma
 // ✅ DO: Use PostgreSQL everywhere
 datasource db {
@@ -108,6 +117,7 @@ datasource db {
 ```
 
 ### 10. Automate Everything
+
 ```json
 // ✅ DO: Add scripts
 {
@@ -153,16 +163,19 @@ datasource db {
 ## Quick Fix Priority
 
 **Fix Today** (Breaking Issues):
+
 1. Consolidate to ONE Prisma import
 2. Switch to PostgreSQL everywhere
 3. Add .env.example file
 
 **Fix This Week** (Quality Issues):
+
 1. Add TypeScript types for APIs
 2. Improve error handling
 3. Extract magic numbers to config
 
 **Fix When You Can** (Nice to Have):
+
 1. Reorganize folder structure
 2. Add tests
 3. Set up linting rules
@@ -174,26 +187,30 @@ datasource db {
 When something breaks:
 
 1. **Check environment variables first**
+
    ```bash
    echo $DATABASE_URL
    # Make sure it's set and correct
    ```
 
 2. **Check Prisma connection**
+
    ```bash
    npx prisma db pull
    # Should work if DB is accessible
    ```
 
 3. **Check for TypeScript errors**
+
    ```bash
    npm run build
    # Fix all TS errors
    ```
 
 4. **Check the logs**
+
    ```typescript
-   console.error('Full error:', JSON.stringify(error, null, 2));
+   console.error("Full error:", JSON.stringify(error, null, 2));
    // Don't just log error.message
    ```
 

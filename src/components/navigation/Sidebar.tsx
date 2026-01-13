@@ -31,6 +31,8 @@ import {
   User,
   Shield,
   UserCog,
+  Gamepad2,
+  Swords,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -159,6 +161,28 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           href: "/bookmarks",
           icon: Bookmark,
           badge: "New",
+        },
+      ],
+    },
+    {
+      title: "Quiz Arena",
+      icon: Gamepad2,
+      items: [
+        {
+          label: "Quiz Arena Home",
+          href: "/quiz-arena",
+          icon: Trophy,
+        },
+        {
+          label: "Create Quiz",
+          href: "/quiz-arena/create",
+          icon: Swords,
+          badge: "New",
+        },
+        {
+          label: "Join Quiz",
+          href: "/quiz-arena/join",
+          icon: Users,
         },
       ],
     },
