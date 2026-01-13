@@ -63,19 +63,39 @@ export async function POST(request: NextRequest) {
     });
 
     if (questions.length !== questionIds.length) {
+      logger.warn("Some questions not found", { 
+        requested: questionIds.length, 
+        found: questions.length 
+      });
       return NextResponse.json({ error: "One or more questions not found" }, { status: 400 });
     }
 
     // Parse options from JSON strings and format questions for the quiz
-    const formattedQuestions = questions.map((q: any) => ({
-      id: q.id,
-      questionText: q.question, // Rename to questionText for consistency
-      options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options,
-      correctIndex: q.correctIndex,
-      explanation: q.explanation,
-      difficulty: q.difficulty,
-      topicId: q.topicId,
-    }));
+    const formattedQuestions = questions.map((q: any) => {
+      // Parse options if it's a string, otherwise use as-is
+      let parsedOptions = q.options;
+      if (typeof q.options === "string") {
+        try {
+          parsedOptions = JSON.parse(q.options);
+        } catch (e) {
+          logger.error("Failed to parse options for question in quiz creation", e instanceof Error ? e : undefined, { 
+            questionId: q.id 
+          });
+          parsedOptions = [];
+        }
+      }
+
+      return {
+        id: q.id,
+        question: q.question,         // Keep original field name
+        questionText: q.question,     // Also include for compatibility
+        options: parsedOptions,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        topicId: q.topicId,
+      };
+    });
 
     // Generate unique access code
     let accessCode = generateAccessCode();

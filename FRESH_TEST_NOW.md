@@ -17,7 +17,7 @@ The quiz session `quiz_1768209445425_fp7y2t224` no longer exists in the database
    - Click "Quick Add Random" button **twice**
    - This gives you 2 random questions for quick testing
 5. Click **"Create Quiz Session"**
-6. **WRITE DOWN THE NEW ACCESS CODE:** ******\_\_\_\_******
+6. **WRITE DOWN THE NEW ACCESS CODE:** **\*\***\_\_\_\_**\*\***
    (It will be 6 letters like: ABCDEF, WJBUDC, etc.)
 
 ✅ You should see: "Quiz created successfully!" with the access code displayed
@@ -39,7 +39,7 @@ The quiz session `quiz_1768209445425_fp7y2t224` no longer exists in the database
 
 **In the incognito window:**
 
-1. Enter the access code: ******\_\_\_\_****** (from Step 1)
+1. Enter the access code: **\*\***\_\_\_\_**\*\*** (from Step 1)
 2. Enter nickname: `TestPlayer`
 3. Click "Join Quiz! 🎮"
 
@@ -191,4 +191,4 @@ Creating a fresh quiz ensures we're testing with a valid, active session.
 
 Total time needed: ~5 minutes
 
-Write the access code here when you create the quiz: ******\_\_\_\_******
+Write the access code here when you create the quiz: **\*\***\_\_\_\_**\*\***

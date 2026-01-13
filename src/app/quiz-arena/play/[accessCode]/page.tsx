@@ -53,8 +53,11 @@ export default function PlayQuizPage() {
 
   // Fetch session data periodically
   useEffect(() => {
+    // Always fetch session info (needed for join screen too)
+    fetchSession();
+    
     if (joined) {
-      fetchSession();
+      // Poll for updates only when joined
       const interval = setInterval(fetchSession, 2000); // Poll every 2 seconds
       return () => clearInterval(interval);
     }
@@ -68,7 +71,7 @@ export default function PlayQuizPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [session?.status, answerSubmitted, timeLeft]);
+  }, [session?.status, answerSubmitted]); // Removed timeLeft from dependencies
 
   // Reset answer state when question changes
   useEffect(() => {
@@ -88,6 +91,23 @@ export default function PlayQuizPage() {
         throw new Error("Session not found");
       }
       const data = await response.json();
+      
+      // Validate session data
+      if (!data.questions || data.questions.length === 0) {
+        console.error("Session has no questions:", data);
+        setError("This quiz has no questions. Please contact the host.");
+        setLoading(false);
+        return;
+      }
+      
+      console.log("Session loaded:", {
+        id: data.id,
+        status: data.status,
+        questionCount: data.questions.length,
+        currentQuestion: data.currentQuestion,
+        participantCount: data.participants.length,
+      });
+      
       setSession(data);
 
       // Update my stats
@@ -377,10 +397,22 @@ export default function PlayQuizPage() {
   if (!currentQuestionData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
-        <div className="text-white text-2xl font-bold">Loading question...</div>
+        <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md">
+          <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
+          <div className="text-2xl font-bold text-gray-900 mb-2">Question Not Available</div>
+          <div className="text-gray-600 mb-4">
+            Question {session.currentQuestion + 1} could not be loaded.
+          </div>
+          <div className="text-sm text-gray-500">
+            Please wait for the host to move to the next question or contact support.
+          </div>
+        </div>
       </div>
     );
   }
+
+  // Extract question text - handle both field names
+  const questionText = currentQuestionData.questionText || currentQuestionData.question || "Question text not available";
 
   const answerColors = [
     { bg: "from-red-500 to-red-600", hover: "hover:from-red-600 hover:to-red-700", border: "border-red-400" },
@@ -445,7 +477,7 @@ export default function PlayQuizPage() {
 
           {/* Question */}
           <div className="bg-white rounded-3xl p-8 shadow-2xl mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">{currentQuestionData.questionText}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">{questionText}</h2>
 
             {/* Answer Feedback */}
             {answerSubmitted && answerCorrect !== null && (

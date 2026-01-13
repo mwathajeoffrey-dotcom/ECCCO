@@ -16,14 +16,14 @@
 - [ ] Click "Create Live Quiz" (purple button)
 - [ ] Add 2 questions (use "Quick Add Random" twice)
 - [ ] Click "Create Quiz Session"
-- [ ] **Access Code:** ********\_******** (write it here)
+- [ ] **Access Code:** **\*\*\*\***\_**\*\*\*\*** (write it here)
 
 ### 2. JOIN QUIZ (1 minute)
 
 **Open incognito window:**
 
 - [ ] Go to http://localhost:3000/quiz-arena/join
-- [ ] Enter access code: ******\_\_\_\_******
+- [ ] Enter access code: **\*\***\_\_\_\_**\*\***
 - [ ] Enter nickname: TestPlayer
 - [ ] Click "Join Quiz"
 - [ ] See lobby screen ✅

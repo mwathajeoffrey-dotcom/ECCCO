@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 export async function GET(request: NextRequest, context: { params: Promise<{ accessCode: string }> }) {
   try {
@@ -20,15 +21,38 @@ export async function GET(request: NextRequest, context: { params: Promise<{ acc
       return NextResponse.json({ error: "Quiz session not found" }, { status: 404 });
     }
 
-    // Parse questions from JSON
-    const questions = JSON.parse(session.questions as string);
+    // Parse questions from JSON with error handling
+    let questions = [];
+    try {
+      questions = JSON.parse(session.questions as string);
+      
+      // Ensure each question has both 'question' and 'questionText' fields
+      questions = questions.map((q: any) => ({
+        ...q,
+        question: q.question || q.questionText,
+        questionText: q.questionText || q.question,
+      }));
+      
+      logger.debug("Join session questions parsed successfully", {
+        accessCode,
+        questionCount: questions.length,
+      });
+    } catch (error) {
+      logger.error("Failed to parse join session questions", error instanceof Error ? error : undefined, {
+        accessCode,
+        questionsRaw: session.questions,
+      });
+      questions = [];
+    }
 
     return NextResponse.json({
       ...session,
       questions,
     });
   } catch (error) {
-    console.error("Error fetching session by access code:", error);
+    logger.error("Error fetching session by access code", error instanceof Error ? error : undefined, {
+      accessCode: context.params,
+    });
     return NextResponse.json({ error: "Failed to fetch session" }, { status: 500 });
   }
 }

@@ -70,6 +70,23 @@ export default function HostQuizPage() {
         throw new Error("Session not found");
       }
       const data = await response.json();
+      
+      // Validate session data
+      if (!data.questions || data.questions.length === 0) {
+        console.error("Session has no questions:", data);
+        setError("This quiz has no questions configured.");
+        setLoading(false);
+        return;
+      }
+      
+      console.log("Host session loaded:", {
+        id: data.id,
+        status: data.status,
+        questionCount: data.questions.length,
+        currentQuestion: data.currentQuestion,
+        participantCount: data.participants?.length || 0,
+      });
+      
       setSession(data);
       setParticipants(data.participants || []);
       setLoading(false);
@@ -164,6 +181,11 @@ export default function HostQuizPage() {
   const currentQuestionData = session.questions[session.currentQuestion];
   const isLobby = session.status === "LOBBY";
   const isFinished = session.status === "FINISHED";
+  
+  // Extract question text - handle both field names
+  const currentQuestionText = currentQuestionData 
+    ? (currentQuestionData.questionText || currentQuestionData.question || "Question text not available")
+    : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600">
@@ -314,7 +336,7 @@ export default function HostQuizPage() {
 
                   {currentQuestionData && (
                     <>
-                      <div className="text-xl font-semibold text-gray-900 mb-6">{currentQuestionData.questionText}</div>
+                      <div className="text-xl font-semibold text-gray-900 mb-6">{currentQuestionText}</div>
 
                       <div className="grid grid-cols-2 gap-4">
                         {currentQuestionData.options?.map((option: string, index: number) => {

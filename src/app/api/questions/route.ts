@@ -34,20 +34,33 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    // Format to match expected structure
-    const formattedQuestions = questions.map((q: any) => ({
-      id: q.id,
-      question: q.question,
-      options: q.options,
-      correctIndex: q.correctIndex,
-      explanation: q.explanation,
-      difficulty: q.difficulty,
-      topicId: q.topicId,
-      topic: {
-        id: q.Topic.id,
-        name: q.Topic.name,
-      },
-    }));
+    // Format to match expected structure - properly parse options from JSON string
+    const formattedQuestions = questions.map((q: any) => {
+      // Parse options if it's a string, otherwise use as-is
+      let parsedOptions = q.options;
+      if (typeof q.options === "string") {
+        try {
+          parsedOptions = JSON.parse(q.options);
+        } catch (e) {
+          logger.warn("Failed to parse options for question", { questionId: q.id });
+          parsedOptions = [];
+        }
+      }
+
+      return {
+        id: q.id,
+        question: q.question,
+        options: parsedOptions,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        topicId: q.topicId,
+        topic: {
+          id: q.Topic.id,
+          name: q.Topic.name,
+        },
+      };
+    });
 
     logger.debug("Questions fetched successfully", {
       topicId,
@@ -82,8 +95,14 @@ export async function GET(request: NextRequest) {
       topicId,
       difficulty,
       limit,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorStack: error instanceof Error ? error.stack : undefined,
     });
 
-    return NextResponse.json({ success: false, error: "Failed to fetch questions" }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      error: "Failed to fetch questions",
+      details: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 });
   }
 }

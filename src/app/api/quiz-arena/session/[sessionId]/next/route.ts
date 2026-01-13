@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest, context: { params: Promise<{ sessionId: string }> }) {
   try {
@@ -24,7 +25,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
       return NextResponse.json({ error: "Only the host can control the quiz" }, { status: 403 });
     }
 
-    const questions = JSON.parse(session.questions as string) as any[];
+    let questions: any[] = [];
+    try {
+      questions = JSON.parse(session.questions as string);
+    } catch (error) {
+      logger.error("Failed to parse questions in next", error instanceof Error ? error : undefined, { sessionId });
+      return NextResponse.json({ error: "Invalid quiz questions" }, { status: 500 });
+    }
+
     const nextQuestionIndex = session.currentQuestion + 1;
 
     // Check if there are more questions
@@ -35,8 +43,12 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
         data: {
           status: "FINISHED",
           endedAt: new Date(),
+          updatedAt: new Date(),
         },
       });
+      
+      logger.info("Quiz session finished", { sessionId, totalQuestions: questions.length });
+      
       return NextResponse.json(updatedSession);
     }
 
@@ -46,12 +58,15 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
       data: {
         status: "QUESTION",
         currentQuestion: nextQuestionIndex,
+        updatedAt: new Date(),
       },
     });
 
+    logger.debug("Moved to next question", { sessionId, questionIndex: nextQuestionIndex });
+
     return NextResponse.json(updatedSession);
   } catch (error) {
-    console.error("Error moving to next question:", error);
+    logger.error("Error moving to next question", error instanceof Error ? error : undefined);
     return NextResponse.json({ error: "Failed to move to next question" }, { status: 500 });
   }
 }
