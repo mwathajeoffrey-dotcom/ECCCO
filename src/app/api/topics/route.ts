@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/database/prisma-client";
+import prisma from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
 
