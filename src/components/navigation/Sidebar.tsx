@@ -162,6 +162,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           icon: Bookmark,
           badge: "New",
         },
+        {
+          label: "My Notes",
+          href: "/notes",
+          icon: StickyNote,
+        },
       ],
     },
     {
