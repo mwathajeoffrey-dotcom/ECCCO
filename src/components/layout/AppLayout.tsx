@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/navigation/Sidebar';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Menu } from 'lucide-react';
 
 interface AppLayoutProps {
@@ -28,13 +27,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      {/* Theme Toggle - Fixed position */}
-      <div className="fixed top-4 right-4 z-50">
-        <ThemeToggle />
-      </div>
-      
-      {/* Main Content - Add padding-top for fixed header */}
-      <div className="flex-1 pt-16">
+      {/* Main Content */}
+      <div className="flex-1">
         {children}
       </div>
     </div>

@@ -105,25 +105,25 @@ export default function JoinQuizPage() {
 
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {/* Main Join Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mb-4">
               <Gamepad2 className="w-10 h-10 text-blue-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ready to Play?</h2>
-            <p className="text-gray-600">Get the 6-digit access code from your quiz host</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Ready to Play?</h2>
+            <p className="text-gray-600 dark:text-gray-300">Get the 6-digit access code from your quiz host</p>
           </div>
 
           <form onSubmit={handleJoinQuiz} className="space-y-6">
             {/* Access Code Input */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Access Code</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Access Code</label>
               <input
                 type="text"
                 value={accessCode}
                 onChange={handleAccessCodeChange}
                 placeholder="ABC123"
-                className="w-full px-6 py-4 text-center text-3xl font-bold tracking-widest border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all uppercase"
+                className="w-full px-6 py-4 text-center text-3xl font-bold tracking-widest border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all uppercase"
                 maxLength={6}
                 disabled={isJoining}
                 autoComplete="off"
@@ -134,7 +134,7 @@ export default function JoinQuizPage() {
 
             {/* Player Name Input */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Your Name</label>
               <input
                 type="text"
                 value={playerName}
@@ -143,7 +143,7 @@ export default function JoinQuizPage() {
                   setError(null);
                 }}
                 placeholder="Enter your name"
-                className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                className="w-full px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                 maxLength={30}
                 disabled={isJoining}
               />
@@ -178,12 +178,12 @@ export default function JoinQuizPage() {
           </form>
 
           {/* Help Text */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <Trophy className="w-5 h-5 text-blue-600" />
               How to Join a Quiz
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <span className="font-bold text-blue-600 mr-2">1.</span>
                 <span>Get the 6-digit access code from the quiz host</span>
@@ -205,8 +205,8 @@ export default function JoinQuizPage() {
 
           {/* Troubleshooting */}
           <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-            <p className="text-sm font-semibold text-gray-700 mb-2">Trouble joining?</p>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Trouble joining?</p>
+            <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
               <li>• Make sure the code is exactly 6 characters</li>
               <li>• Check with the host that the quiz hasn't started yet</li>
               <li>• Try a different name if yours is already taken</li>
@@ -217,17 +217,17 @@ export default function JoinQuizPage() {
 
         {/* Quick Stats */}
         <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl shadow-md p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">800+</div>
-            <div className="text-sm text-gray-600 mt-1">Questions</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Questions</div>
           </div>
-          <div className="bg-white rounded-xl shadow-md p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">Live</div>
-            <div className="text-sm text-gray-600 mt-1">Real-time</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Real-time</div>
           </div>
-          <div className="bg-white rounded-xl shadow-md p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-indigo-600">Fun</div>
-            <div className="text-sm text-gray-600 mt-1">Competitive</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Competitive</div>
           </div>
         </div>
       </div>

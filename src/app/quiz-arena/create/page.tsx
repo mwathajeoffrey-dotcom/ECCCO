@@ -271,7 +271,7 @@ export default function CreateQuizPage() {
           <button
             onClick={() => setStep("settings")}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-              step === "settings" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 hover:bg-gray-100"
+              step === "settings" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
             }`}
           >
             <Settings className="w-5 h-5 inline mr-2" />
@@ -280,7 +280,7 @@ export default function CreateQuizPage() {
           <button
             onClick={() => setStep("questions")}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-              step === "questions" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 hover:bg-gray-100"
+              step === "questions" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
             }`}
           >
             <Plus className="w-5 h-5 inline mr-2" />
@@ -290,38 +290,38 @@ export default function CreateQuizPage() {
 
         {/* Settings Step */}
         {step === "settings" && (
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
             <h2 className="text-2xl font-bold mb-6">Quiz Settings</h2>
 
             <div className="space-y-6">
               {/* Title */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Quiz Title *</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Quiz Title *</label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Emergency Medicine Challenge"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Description (Optional)</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Brief description of the quiz..."
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Time Per Question */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     <Clock className="w-4 h-4 inline mr-1" />
                     Time Per Question (seconds)
                   </label>
@@ -331,13 +331,13 @@ export default function CreateQuizPage() {
                     onChange={(e) => setTimePerQuestion(Number(e.target.value))}
                     min={5}
                     max={60}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                   />
                 </div>
 
                 {/* Points Per Question */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     <Trophy className="w-4 h-4 inline mr-1" />
                     Points Per Question
                   </label>
@@ -348,7 +348,7 @@ export default function CreateQuizPage() {
                     min={100}
                     max={5000}
                     step={100}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -360,7 +360,7 @@ export default function CreateQuizPage() {
                     <Music className="w-5 h-5 text-purple-600 mr-3" />
                     <div>
                       <div className="font-semibold">Background Music</div>
-                      <div className="text-sm text-gray-600">Play music during quiz</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Play music during quiz</div>
                     </div>
                   </div>
                   <input
@@ -376,7 +376,7 @@ export default function CreateQuizPage() {
                     <Volume2 className="w-5 h-5 text-purple-600 mr-3" />
                     <div>
                       <div className="font-semibold">Sound Effects</div>
-                      <div className="text-sm text-gray-600">Play sounds for answers</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Play sounds for answers</div>
                     </div>
                   </div>
                   <input
@@ -392,7 +392,7 @@ export default function CreateQuizPage() {
                     <Settings className="w-5 h-5 text-purple-600 mr-3" />
                     <div>
                       <div className="font-semibold">Show Correct Answer</div>
-                      <div className="text-sm text-gray-600">Display answer after each question</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Display answer after each question</div>
                     </div>
                   </div>
                   <input
@@ -418,21 +418,21 @@ export default function CreateQuizPage() {
         {step === "questions" && (
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Question Browser */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+            <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold">Add Questions</h2>
                 {selectedTopic && availableQuestions.length > 0 && (
-                  <div className="text-sm text-gray-600">{filteredQuestions.length} available</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">{filteredQuestions.length} available</div>
                 )}
               </div>
 
               {/* Topic Selection */}
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Select Topic</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Select Topic</label>
                 <select
                   value={selectedTopic}
                   onChange={(e) => setSelectedTopic(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                 >
                   <option value="">Choose a topic to browse questions...</option>
                   {topics.map((topic) => (
@@ -448,7 +448,7 @@ export default function CreateQuizPage() {
                 <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border-2 border-blue-200">
                   <div className="flex items-center mb-3">
                     <Zap className="w-5 h-5 text-blue-600 mr-2" />
-                    <h3 className="font-bold text-gray-900">Quick Add</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Quick Add</h3>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
@@ -460,7 +460,7 @@ export default function CreateQuizPage() {
                         onChange={(e) => setQuickAddCount(Math.max(1, Math.min(50, Number(e.target.value))))}
                         min={1}
                         max={50}
-                        className="w-20 px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-center"
+                        className="w-20 px-3 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none text-center"
                       />
                       <button
                         onClick={handleQuickAddRandom}
@@ -491,7 +491,7 @@ export default function CreateQuizPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search questions..."
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
                     disabled={!selectedTopic}
                   />
                 </div>
@@ -502,7 +502,7 @@ export default function CreateQuizPage() {
                   <select
                     value={difficultyFilter}
                     onChange={(e) => setDifficultyFilter(e.target.value)}
-                    className="flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="flex-1 px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-purple-500 focus:outline-none"
                     disabled={!selectedTopic}
                   >
                     <option value="all">All Difficulties</option>
@@ -517,7 +517,7 @@ export default function CreateQuizPage() {
               {loadingQuestions && (
                 <div className="text-center py-12">
                   <Loader2 className="w-12 h-12 mx-auto mb-3 text-purple-600 animate-spin" />
-                  <p className="text-gray-600">Loading questions...</p>
+                  <p className="text-gray-600 dark:text-gray-300">Loading questions...</p>
                 </div>
               )}
 
@@ -553,14 +553,14 @@ export default function CreateQuizPage() {
                     <div
                       key={question.id}
                       className={`p-4 border-2 rounded-xl transition-all cursor-pointer ${
-                        isSelected ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-purple-500"
+                        isSelected ? "border-green-500 bg-green-50" : "border-gray-200 dark:border-gray-700 hover:border-purple-500"
                       }`}
                       onClick={() => (isSelected ? handleRemoveQuestion(question.id) : handleAddQuestion(question))}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900 mb-2 line-clamp-2">{question.questionText}</p>
-                          <div className="flex items-center text-sm text-gray-600">
+                          <p className="font-medium text-gray-900 dark:text-white mb-2 line-clamp-2">{question.questionText}</p>
+                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                             <span
                               className={`px-2 py-1 rounded mr-2 ${
                                 question.difficulty === "easy"
@@ -584,7 +584,7 @@ export default function CreateQuizPage() {
             </div>
 
             {/* Selected Questions */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold">Selected ({selectedQuestions.length}/50)</h3>
                 {selectedQuestions.length > 0 && (
@@ -613,7 +613,7 @@ export default function CreateQuizPage() {
                         <span className="inline-block w-6 h-6 bg-purple-600 text-white rounded-full text-center text-sm font-bold mr-2">
                           {index + 1}
                         </span>
-                        <p className="text-sm font-medium text-gray-900 line-clamp-2 inline">{question.questionText}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 inline">{question.questionText}</p>
                       </div>
                       <button
                         onClick={() => handleRemoveQuestion(question.id)}

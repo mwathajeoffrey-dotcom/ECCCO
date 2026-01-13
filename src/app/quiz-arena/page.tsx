@@ -38,14 +38,14 @@ export default function QuizArenaPage() {
         {/* Main Action Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
           {/* Join Quiz Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition-all">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition-all">
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center mr-4">
                 <Play className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Join Quiz</h2>
-                <p className="text-gray-600">Enter a 6-digit code</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Join Quiz</h2>
+                <p className="text-gray-600 dark:text-gray-300">Enter a 6-digit code</p>
               </div>
             </div>
 
@@ -56,7 +56,7 @@ export default function QuizArenaPage() {
                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                 placeholder="XXXXXX"
                 maxLength={6}
-                className="w-full text-3xl font-bold text-center py-4 px-6 border-4 border-gray-300 rounded-2xl mb-4 focus:border-blue-500 focus:outline-none uppercase tracking-widest"
+                className="w-full text-3xl font-bold text-center py-4 px-6 border-4 border-gray-300 dark:border-gray-600 rounded-2xl mb-4 focus:border-blue-500 focus:outline-none uppercase tracking-widest"
               />
               <button
                 type="submit"
@@ -70,27 +70,27 @@ export default function QuizArenaPage() {
           </div>
 
           {/* Create Quiz Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition-all">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition-all">
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4">
                 <Plus className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Host Quiz</h2>
-                <p className="text-gray-600">Create a new game</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Host Quiz</h2>
+                <p className="text-gray-600 dark:text-gray-300">Create a new game</p>
               </div>
             </div>
 
             <div className="space-y-3 mb-6">
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <Target className="w-5 h-5 mr-3 text-purple-500" />
                 <span>Choose from 839 questions</span>
               </div>
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <Zap className="w-5 h-5 mr-3 text-yellow-500" />
                 <span>Real-time competition</span>
               </div>
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <Trophy className="w-5 h-5 mr-3 text-yellow-600" />
                 <span>Live leaderboards</span>
               </div>

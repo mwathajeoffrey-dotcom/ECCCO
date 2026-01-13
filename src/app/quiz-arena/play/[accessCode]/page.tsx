@@ -220,16 +220,16 @@ export default function PlayQuizPage() {
   if (!joined) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-md w-full">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
           <div className="text-center mb-8">
             <Trophy className="w-20 h-20 text-yellow-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Join Quiz!</h1>
-            <p className="text-gray-600">Code: {accessCode}</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Join Quiz!</h1>
+            <p className="text-gray-600 dark:text-gray-300">Code: {accessCode}</p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Your Nickname</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Your Nickname</label>
               <input
                 type="text"
                 value={nickname}
@@ -237,7 +237,7 @@ export default function PlayQuizPage() {
                 onKeyPress={(e) => e.key === "Enter" && handleJoin()}
                 placeholder="Enter your nickname..."
                 maxLength={20}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none text-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none text-lg"
                 autoFocus
               />
             </div>
@@ -272,24 +272,24 @@ export default function PlayQuizPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-3xl p-8 shadow-2xl text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
               <Users className="w-20 h-20 text-purple-600 mx-auto mb-4 animate-pulse" />
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Get Ready!</h2>
-              <p className="text-gray-600 mb-8">Waiting for host to start the quiz...</p>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Get Ready!</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-8">Waiting for host to start the quiz...</p>
 
               <div className="mb-8">
-                <div className="text-sm text-gray-600 mb-2">You joined as</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">You joined as</div>
                 <div className="text-3xl font-bold text-purple-600">{nickname}</div>
               </div>
 
               <div className="bg-purple-50 rounded-2xl p-6">
-                <h3 className="font-bold text-gray-900 mb-4">Players in Lobby ({session.participants.length})</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4">Players in Lobby ({session.participants.length})</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {session.participants.map((participant) => (
                     <div
                       key={participant.id}
                       className={`p-3 rounded-xl font-semibold ${
-                        participant.id === participantId ? "bg-purple-600 text-white" : "bg-white text-gray-900"
+                        participant.id === participantId ? "bg-purple-600 text-white" : "bg-white text-gray-900 dark:text-white"
                       }`}
                     >
                       {participant.nickname}
@@ -314,48 +314,48 @@ export default function PlayQuizPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-3xl p-8 shadow-2xl text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
               {isWinner && (
                 <div className="mb-6">
                   <div className="text-6xl mb-4">🏆</div>
                   <h2 className="text-4xl font-bold text-yellow-600 mb-2">You Won!</h2>
-                  <p className="text-2xl text-gray-600">Congratulations!</p>
+                  <p className="text-2xl text-gray-600 dark:text-gray-300">Congratulations!</p>
                 </div>
               )}
 
               {!isWinner && isTopThree && (
                 <div className="mb-6">
                   <div className="text-6xl mb-4">{myRank === 2 ? "🥈" : "🥉"}</div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Great Job!</h2>
-                  <p className="text-xl text-gray-600">You finished {myRank === 2 ? "2nd" : "3rd"}!</p>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Great Job!</h2>
+                  <p className="text-xl text-gray-600 dark:text-gray-300">You finished {myRank === 2 ? "2nd" : "3rd"}!</p>
                 </div>
               )}
 
               {!isTopThree && (
                 <div className="mb-6">
                   <Trophy className="w-20 h-20 text-gray-400 mx-auto mb-4" />
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Quiz Complete!</h2>
-                  <p className="text-xl text-gray-600">You finished #{myRank}</p>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Quiz Complete!</h2>
+                  <p className="text-xl text-gray-600 dark:text-gray-300">You finished #{myRank}</p>
                 </div>
               )}
 
               <div className="grid grid-cols-3 gap-4 mb-8">
                 <div className="bg-purple-50 rounded-2xl p-4">
                   <div className="text-3xl font-bold text-purple-600">{myScore}</div>
-                  <div className="text-sm text-gray-600">Points</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Points</div>
                 </div>
                 <div className="bg-blue-50 rounded-2xl p-4">
                   <div className="text-3xl font-bold text-blue-600">#{myRank}</div>
-                  <div className="text-sm text-gray-600">Rank</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Rank</div>
                 </div>
                 <div className="bg-orange-50 rounded-2xl p-4">
                   <div className="text-3xl font-bold text-orange-600">{myStreak}</div>
-                  <div className="text-sm text-gray-600">Best Streak</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Best Streak</div>
                 </div>
               </div>
 
               <div className="mb-8">
-                <h3 className="font-bold text-xl text-gray-900 mb-4">Final Rankings</h3>
+                <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Final Rankings</h3>
                 <div className="space-y-3">
                   {topThree.map((participant, index) => (
                     <div
@@ -397,10 +397,10 @@ export default function PlayQuizPage() {
   if (!currentQuestionData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
-        <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center max-w-md">
           <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
-          <div className="text-2xl font-bold text-gray-900 mb-2">Question Not Available</div>
-          <div className="text-gray-600 mb-4">
+          <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Question Not Available</div>
+          <div className="text-gray-600 dark:text-gray-300 mb-4">
             Question {session.currentQuestion + 1} could not be loaded.
           </div>
           <div className="text-sm text-gray-500">
@@ -459,13 +459,13 @@ export default function PlayQuizPage() {
         <div className="max-w-4xl mx-auto">
           {/* Timer & Question Number */}
           <div className="mb-6 flex items-center justify-between">
-            <div className="bg-white rounded-2xl px-6 py-3 shadow-lg">
-              <div className="text-sm text-gray-600">Question</div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl px-6 py-3 shadow-lg">
+              <div className="text-sm text-gray-600 dark:text-gray-300">Question</div>
               <div className="text-2xl font-bold text-purple-600">
                 {session.currentQuestion + 1} / {session.questions.length}
               </div>
             </div>
-            <div className={`bg-white rounded-2xl px-6 py-3 shadow-lg ${timeLeft <= 5 ? "animate-pulse" : ""}`}>
+            <div className={`bg-white dark:bg-gray-800 rounded-2xl px-6 py-3 shadow-lg ${timeLeft <= 5 ? "animate-pulse" : ""}`}>
               <div className="flex items-center">
                 <Clock className={`w-6 h-6 mr-2 ${timeLeft <= 5 ? "text-red-600" : "text-blue-600"}`} />
                 <div className="text-3xl font-black ${timeLeft <= 5 ? 'text-red-600' : 'text-blue-600'}">
@@ -476,8 +476,8 @@ export default function PlayQuizPage() {
           </div>
 
           {/* Question */}
-          <div className="bg-white rounded-3xl p-8 shadow-2xl mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">{questionText}</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">{questionText}</h2>
 
             {/* Answer Feedback */}
             {answerSubmitted && answerCorrect !== null && (
@@ -533,8 +533,8 @@ export default function PlayQuizPage() {
 
           {/* Waiting Message */}
           {answerSubmitted && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg text-center">
-              <div className="text-gray-600">⏳ Waiting for other players...</div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg text-center">
+              <div className="text-gray-600 dark:text-gray-300">⏳ Waiting for other players...</div>
             </div>
           )}
         </div>
