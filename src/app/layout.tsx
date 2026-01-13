@@ -5,6 +5,7 @@ import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Script from "next/script";
 import "./globals.css";
 
@@ -115,13 +116,15 @@ export default function RootLayout({
             });
           `}
         </Script>
-        <ClerkProvider>
-          <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
-            <AppLayout>{children}</AppLayout>
-          </ErrorBoundary>
-          <PWAInstallPrompt />
-          <FloatingPracticeButton />
-        </ClerkProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ClerkProvider>
+            <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+              <AppLayout>{children}</AppLayout>
+            </ErrorBoundary>
+            <PWAInstallPrompt />
+            <FloatingPracticeButton />
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
