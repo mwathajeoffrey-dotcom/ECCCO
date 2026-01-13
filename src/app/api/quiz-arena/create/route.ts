@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse options from JSON strings and format questions for the quiz
-    const formattedQuestions = questions.map((q) => ({
+    const formattedQuestions = questions.map((q: any) => ({
       id: q.id,
       questionText: q.question, // Rename to questionText for consistency
       options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options,
