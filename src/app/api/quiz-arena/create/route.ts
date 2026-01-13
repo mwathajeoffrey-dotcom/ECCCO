@@ -66,6 +66,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "One or more questions not found" }, { status: 400 });
     }
 
+    // Parse options from JSON strings and format questions for the quiz
+    const formattedQuestions = questions.map((q) => ({
+      id: q.id,
+      questionText: q.question, // Rename to questionText for consistency
+      options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options,
+      correctIndex: q.correctIndex,
+      explanation: q.explanation,
+      difficulty: q.difficulty,
+      topicId: q.topicId,
+    }));
+
     // Generate unique access code
     let accessCode = generateAccessCode();
     let attempts = 0;
@@ -102,7 +113,7 @@ export async function POST(request: NextRequest) {
         playSound,
         showAnswerAfter,
         allowLateJoin,
-        questions: JSON.stringify(questions),
+        questions: JSON.stringify(formattedQuestions),
         updatedAt: new Date(),
       },
     });
@@ -113,7 +124,7 @@ export async function POST(request: NextRequest) {
         accessCode: session.accessCode,
         title: session.title,
         status: session.status,
-        questionCount: questions.length,
+        questionCount: formattedQuestions.length,
       },
     });
   } catch (error) {

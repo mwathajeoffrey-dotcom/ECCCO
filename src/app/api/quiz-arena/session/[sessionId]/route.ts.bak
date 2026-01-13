@@ -27,13 +27,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ ses
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
-    // Parse questions from JSON
-    const questions = JSON.parse(session.questions as string);
-
-    return NextResponse.json({
-      ...session,
-      questions,
-    });
+    return NextResponse.json(session);
   } catch (error) {
     console.error("Error fetching session:", error);
     return NextResponse.json({ error: "Failed to fetch session" }, { status: 500 });
