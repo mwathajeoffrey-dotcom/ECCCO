@@ -6,6 +6,7 @@ import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Toaster } from "sonner";
 import Script from "next/script";
@@ -131,6 +132,7 @@ export default function RootLayout({
               duration={4000}
             />
             <PWAInstallPrompt />
+            <DesktopMenuButton />
             <FloatingPracticeButton />
             <MobileBottomNav />
           </ClerkProvider>
