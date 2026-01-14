@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { Activity, Heart, Zap, Clock, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Question {
   id: string;
@@ -25,12 +25,24 @@ interface Question {
 
 export default function ACLSPracticePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const questionIdParam = searchParams.get('questionId');
+  
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const [showAnswersImmediately, setShowAnswersImmediately] = useState(true);
+
+  useEffect(() => {
+    // Load setting from localStorage
+    const setting = localStorage.getItem('showAnswersImmediately');
+    if (setting !== null) {
+      setShowAnswersImmediately(setting === 'true');
+    }
+  }, []);
 
   useEffect(() => {
     // Fetch ACLS questions from API
@@ -43,6 +55,14 @@ export default function ACLSPracticePage() {
         const data = await response.json();
         if (data.success && Array.isArray(data.questions)) {
           setQuestions(data.questions);
+          
+          // If questionId is provided, find and set that question as current
+          if (questionIdParam && data.questions.length > 0) {
+            const questionIndex = data.questions.findIndex((q: Question) => q.id === questionIdParam);
+            if (questionIndex !== -1) {
+              setCurrentQuestionIndex(questionIndex);
+            }
+          }
         }
       } catch (error) {
         console.error('Error fetching ACLS questions:', error);
@@ -52,13 +72,17 @@ export default function ACLSPracticePage() {
     };
 
     fetchQuestions();
-  }, []);
+  }, [questionIdParam]);
 
   const handleAnswerSelect = (index: number) => {
     if (showExplanation) return; // Prevent changing answer after submission
     
     setSelectedAnswer(index);
-    setShowExplanation(true);
+    
+    // Only show explanation immediately if setting is enabled
+    if (showAnswersImmediately) {
+      setShowExplanation(true);
+    }
     
     // Update score
     const currentQuestion = questions[currentQuestionIndex];
@@ -66,6 +90,12 @@ export default function ACLSPracticePage() {
       setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
     } else {
       setScore(prev => ({ ...prev, total: prev.total + 1 }));
+    }
+  };
+
+  const handleSubmitAnswer = () => {
+    if (selectedAnswer !== null && !showExplanation) {
+      setShowExplanation(true);
     }
   };
 
@@ -243,6 +273,17 @@ export default function ACLSPracticePage() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Submit Answer Button (when show answers immediately is disabled) */}
+          {!showAnswersImmediately && selectedAnswer !== null && !showExplanation && (
+            <button
+              onClick={handleSubmitAnswer}
+              className="w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center justify-center gap-2 mb-6"
+            >
+              Submit Answer
+              <CheckCircle className="w-5 h-5" />
+            </button>
           )}
 
           {/* Next Button */}
