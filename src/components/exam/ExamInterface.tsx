@@ -9,6 +9,8 @@ import { EnhancedErrorBoundary } from "@/components/ui/EnhancedErrorBoundary";
 import { analytics } from "@/lib/analytics/service";
 import BookmarkButton from "@/components/BookmarkButton";
 import QuestionRating from "@/components/QuestionRating";
+import { toast } from "sonner";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
 
 interface Question {
   id: string;
@@ -73,6 +75,13 @@ export default function ExamInterface() {
       setLoadingTopics(true);
       try {
         const response = await fetch("/api/topics");
+        
+        if (!response.ok) {
+          const errorMsg = ERROR_MESSAGES.LOAD_FAILED;
+          toast.error(errorMsg.title, { description: errorMsg.message });
+          throw new Error('Failed to fetch topics');
+        }
+        
         const data = await response.json();
         setTopics(data);
 
@@ -81,6 +90,8 @@ export default function ExamInterface() {
         analytics.trackPageView("/exam", "Exam Topics Selection");
       } catch (error) {
         console.error("Error fetching topics:", error);
+        const errorMsg = getErrorFromFetch(error);
+        toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {
         setLoadingTopics(false);
       }
@@ -156,6 +167,8 @@ export default function ExamInterface() {
     try {
       // Validate topicId
       if (!topicId || topicId === "") {
+        const errorMsg = ERROR_MESSAGES.VALIDATION_ERROR;
+        toast.error(errorMsg.title, { description: "Please select a topic before starting" });
         throw new Error("Please select a topic before starting the exam");
       }
 
@@ -163,6 +176,8 @@ export default function ExamInterface() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        const errorMsg = ERROR_MESSAGES.QUESTIONS_FAILED;
+        toast.error(errorMsg.title, { description: errorData.error || errorMsg.message });
         throw new Error(errorData.error || `Failed to fetch questions (${response.status})`);
       }
 
@@ -173,6 +188,8 @@ export default function ExamInterface() {
       const questionsArray = data.questions || [];
 
       if (questionsArray.length === 0) {
+        const errorMsg = ERROR_MESSAGES.NO_QUESTIONS;
+        toast.error(errorMsg.title, { description: `No questions found for this topic` });
         throw new Error(`No questions available for this topic. Topic ID: ${topicId}`);
       }
 
@@ -187,6 +204,11 @@ export default function ExamInterface() {
       // Track exam start
       const topic = topics.find((t) => t.id === topicId);
       analytics.trackExamStart(topicId, topic?.name || "Unknown Topic");
+      
+      // Success toast
+      toast.success("Exam Started!", { 
+        description: `${questionsArray.length} questions loaded. Good luck!` 
+      });
     } catch (error) {
       console.error("Error fetching questions:", error);
       console.error("Topic ID attempted:", topicId);
@@ -195,7 +217,12 @@ export default function ExamInterface() {
         topicId,
         timestamp: new Date().toISOString(),
       });
-      alert(error instanceof Error ? error.message : "Failed to load questions. Please try again.");
+      
+      // Only show additional error if not already shown by specific handler
+      if (error instanceof Error && !error.message.includes("No questions") && !error.message.includes("select a topic")) {
+        const errorMsg = getErrorFromFetch(error);
+        toast.error(errorMsg.title, { description: errorMsg.message });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -333,9 +360,9 @@ export default function ExamInterface() {
     const categorizedTopics = categorizeTopics();
     const obgynTopics =
       filterParam === "new"
-        ? categorizedTopics["New Medical Comorbidity Topics (2024-2025)"]
-        : categorizedTopics["OB/GYN Emergencies"];
-    const otherTopics = categorizedTopics["Other Topics"];
+        ? (categorizedTopics["New Medical Comorbidity Topics (2024-2025)"] || [])
+        : (categorizedTopics["OB/GYN Emergencies"] || []);
+    const otherTopics = categorizedTopics["Other Topics"] || []; // Add fallback to empty array
 
     return (
       <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
