@@ -33,10 +33,10 @@ export default function FloatingPracticeButton() {
       className={`
         fixed z-40 group transition-all duration-300
         
-        /* Hide on mobile - Practice is in bottom nav */
+        /* IMPORTANT: Hidden on mobile - Practice is already in bottom nav */
         hidden md:flex
         
-        /* Desktop: Top left corner, fixed position */
+        /* Desktop only: Top left corner, fixed position */
         md:top-6 md:left-6
         
         ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}
