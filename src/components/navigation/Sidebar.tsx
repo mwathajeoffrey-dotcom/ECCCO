@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionSearch from "./QuestionSearch";
 import {
@@ -28,6 +28,7 @@ import {
   Bookmark,
   StickyNote,
   LogIn,
+  LogOut,
   User,
   Shield,
   UserCog,
@@ -56,7 +57,7 @@ interface NavSection {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
   const [expandedSections, setExpandedSections] = useState<string[]>(["Practice", "Study Tools", "Resources"]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
@@ -455,17 +456,57 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Divider */}
           <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
 
-          {/* Sign In Link - December 19th working auth */}
-          <Link
-            href="/auth/signin"
-            onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
-              pathname === "/auth/signin" ? "ring-2 ring-blue-300" : ""
-            }`}
-          >
-            <LogIn className="w-5 h-5 flex-shrink-0" />
-            <span>🔐 Sign In</span>
-          </Link>
+          {/* Authentication Section */}
+          {!isLoaded ? (
+            <div className="px-4 py-3">
+              <div className="w-full h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </div>
+          ) : isSignedIn ? (
+            /* Signed In User */
+            <div className="px-4 py-3 space-y-3">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200 dark:border-blue-800">
+                {user?.imageUrl ? (
+                  <img
+                    src={user?.imageUrl}
+                    alt={user?.firstName || "User"}
+                    className="w-10 h-10 rounded-full border-2 border-blue-300 dark:border-blue-600 flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="w-5 h-5 text-white" />
+                  </div>
+                )}
+                
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                    {user?.firstName || "User"} {user?.lastName || ""}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                    {user?.emailAddresses[0]?.emailAddress}
+                  </p>
+                </div>
+              </div>
+
+              <SignOutButton>
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-md">
+                  <LogOut className="w-5 h-5 flex-shrink-0" />
+                  <span>🚪 Sign Out</span>
+                </button>
+              </SignOutButton>
+            </div>
+          ) : (
+            /* Not Signed In */
+            <Link
+              href="/auth/signin"
+              onClick={onClose}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md ${
+                pathname === "/auth/signin" ? "ring-2 ring-blue-300" : ""
+              }`}
+            >
+              <LogIn className="w-5 h-5 flex-shrink-0" />
+              <span>🔐 Sign In</span>
+            </Link>
+          )}
         </nav>
 
         {/* Footer */}
