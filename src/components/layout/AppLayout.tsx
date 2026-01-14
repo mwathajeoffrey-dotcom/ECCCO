@@ -27,6 +27,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
+      {/* Floating Menu Button - Visible on ALL devices */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110"
+        aria-label="Open menu"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
+      
       {/* Main Content */}
       <div className="flex-1">
         {children}
