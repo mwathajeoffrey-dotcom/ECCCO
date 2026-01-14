@@ -57,7 +57,7 @@ export default function PlayQuizPage() {
   useEffect(() => {
     // Always fetch session info (needed for join screen too)
     fetchSession();
-    
+
     if (joined) {
       // Poll for updates only when joined
       const interval = setInterval(fetchSession, 2000); // Poll every 2 seconds
@@ -95,7 +95,7 @@ export default function PlayQuizPage() {
         throw new Error("Session not found");
       }
       const data = await response.json();
-      
+
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
         console.error("Session has no questions:", data);
@@ -105,7 +105,7 @@ export default function PlayQuizPage() {
         setLoading(false);
         return;
       }
-      
+
       console.log("Session loaded:", {
         id: data.id,
         status: data.status,
@@ -113,7 +113,7 @@ export default function PlayQuizPage() {
         currentQuestion: data.currentQuestion,
         participantCount: data.participants.length,
       });
-      
+
       setSession(data);
 
       // Update my stats
@@ -199,15 +199,15 @@ export default function PlayQuizPage() {
         setPointsEarned(data.pointsEarned);
         setMyScore(data.newScore);
         setMyStreak(data.newStreak);
-        
+
         // Show success feedback
         if (data.isCorrect) {
           toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER, {
             description: `+${data.pointsEarned} points!`,
           });
         } else {
-          toast.error("Incorrect Answer", { 
-            description: "Better luck next time!" 
+          toast.error("Incorrect Answer", {
+            description: "Better luck next time!"
           });
         }
       } else {

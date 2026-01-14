@@ -45,13 +45,13 @@ export default function BookmarksPage() {
     try {
       setLoading(true);
       const response = await fetch(`/api/bookmarks?userId=${user?.id}`);
-      
+
       if (!response.ok) {
         const errorMsg = ERROR_MESSAGES.LOAD_FAILED;
         toast.error(errorMsg.title, { description: errorMsg.message });
         throw new Error('Failed to fetch bookmarks');
       }
-      
+
       const data = await response.json();
       console.log("📚 Fetched bookmarks:", data);
       if (data.success && data.bookmarks) {

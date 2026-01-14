@@ -29,7 +29,7 @@ export default function ACLSPracticePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const questionIdParam = searchParams.get('questionId');
-  
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -57,11 +57,11 @@ export default function ACLSPracticePage() {
           toast.error(errorMsg.title, { description: errorMsg.message });
           throw new Error('Failed to fetch questions');
         }
-        
+
         const data = await response.json();
         if (data.success && Array.isArray(data.questions)) {
           setQuestions(data.questions);
-          
+
           // If questionId is provided, find and set that question as current
           if (questionIdParam && data.questions.length > 0) {
             const questionIndex = data.questions.findIndex((q: Question) => q.id === questionIdParam);
@@ -87,18 +87,18 @@ export default function ACLSPracticePage() {
 
   const handleAnswerSelect = (index: number) => {
     if (showExplanation) return; // Prevent changing answer after submission
-    
+
     setSelectedAnswer(index);
-    
+
     // Only show explanation immediately if setting is enabled
     if (showAnswersImmediately) {
       setShowExplanation(true);
     }
-    
+
     // Update score
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = index === currentQuestion.correctIndex;
-    
+
     if (isCorrect) {
       setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
       if (showAnswersImmediately) {
@@ -117,7 +117,7 @@ export default function ACLSPracticePage() {
       setShowExplanation(true);
       const currentQuestion = questions[currentQuestionIndex];
       const isCorrect = selectedAnswer === currentQuestion.correctIndex;
-      
+
       if (isCorrect) {
         toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER);
       } else {
@@ -136,12 +136,12 @@ export default function ACLSPracticePage() {
       const finalCorrect = score.correct + (selectedAnswer === questions[currentQuestionIndex].correctIndex ? 1 : 0);
       const finalTotal = score.total + 1;
       const accuracy = Math.round((finalCorrect / finalTotal) * 100);
-      
+
       toast.success(SUCCESS_MESSAGES.PRACTICE_COMPLETE, {
         description: `Score: ${finalCorrect}/${finalTotal} (${accuracy}% accuracy)`,
         duration: 6000,
       });
-      
+
       setTimeout(() => router.push('/practice'), 2000);
     }
   };
@@ -198,7 +198,7 @@ export default function ACLSPracticePage() {
                 <p className="text-sm text-gray-600">Advanced Cardiovascular Life Support</p>
               </div>
             </div>
-            
+
             {/* Score */}
             <div className="flex items-center gap-4">
               <div className="text-right">

@@ -22,6 +22,7 @@ import { useUser } from "@clerk/nextjs";
 import { api, ApiError } from "@/lib/api-client";
 import { logger } from "@/lib/logger";
 import type { UserStats } from "@/types/api";
+import { DashboardStatsSkeleton } from "@/components/ui/skeletons";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -145,9 +146,8 @@ export default function DashboardPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-            <span className="ml-3 text-gray-600">Loading your statistics...</span>
+          <div className="mb-8">
+            <DashboardStatsSkeleton />
           </div>
         )}
 

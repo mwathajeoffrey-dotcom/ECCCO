@@ -11,6 +11,7 @@ import BookmarkButton from "@/components/BookmarkButton";
 import QuestionRating from "@/components/QuestionRating";
 import { toast } from "sonner";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
+import { TopicGridSkeleton, QuestionSkeleton } from "@/components/ui/skeletons";
 
 interface Question {
   id: string;
@@ -334,10 +335,13 @@ export default function ExamInterface() {
   // Loading screen for topics
   if (loadingTopics) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading exam topics...</p>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <div className="h-10 bg-gray-200 rounded-lg w-64 mb-4 animate-pulse" />
+            <div className="h-6 bg-gray-200 rounded-lg w-96 animate-pulse" />
+          </div>
+          <TopicGridSkeleton count={12} />
         </div>
       </div>
     );
@@ -346,10 +350,9 @@ export default function ExamInterface() {
   // Loading screen for questions
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading exam questions...</p>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-4xl mx-auto">
+          <QuestionSkeleton />
         </div>
       </div>
     );
