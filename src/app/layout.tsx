@@ -4,7 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
-import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -133,7 +132,6 @@ export default function RootLayout({
             />
             <PWAInstallPrompt />
             <DesktopMenuButton />
-            <FloatingPracticeButton />
             <MobileBottomNav />
           </ClerkProvider>
         </ThemeProvider>
