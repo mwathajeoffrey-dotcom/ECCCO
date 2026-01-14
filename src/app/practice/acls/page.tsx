@@ -9,6 +9,8 @@ import { useState, useEffect } from 'react';
 import { Activity, Heart, Zap, Clock, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from '@/lib/error-messages';
 
 interface Question {
   id: string;
@@ -50,7 +52,11 @@ export default function ACLSPracticePage() {
       try {
         setIsLoading(true);
         const response = await fetch('/api/questions?category=ACLS&limit=20');
-        if (!response.ok) throw new Error('Failed to fetch questions');
+        if (!response.ok) {
+          const errorMsg = ERROR_MESSAGES.QUESTIONS_FAILED;
+          toast.error(errorMsg.title, { description: errorMsg.message });
+          throw new Error('Failed to fetch questions');
+        }
         
         const data = await response.json();
         if (data.success && Array.isArray(data.questions)) {
@@ -63,9 +69,14 @@ export default function ACLSPracticePage() {
               setCurrentQuestionIndex(questionIndex);
             }
           }
+        } else {
+          const errorMsg = ERROR_MESSAGES.NO_QUESTIONS;
+          toast.error(errorMsg.title, { description: errorMsg.message });
         }
       } catch (error) {
         console.error('Error fetching ACLS questions:', error);
+        const errorMsg = getErrorFromFetch(error);
+        toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {
         setIsLoading(false);
       }
@@ -86,16 +97,32 @@ export default function ACLSPracticePage() {
     
     // Update score
     const currentQuestion = questions[currentQuestionIndex];
-    if (index === currentQuestion.correctIndex) {
+    const isCorrect = index === currentQuestion.correctIndex;
+    
+    if (isCorrect) {
       setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
+      if (showAnswersImmediately) {
+        toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER);
+      }
     } else {
       setScore(prev => ({ ...prev, total: prev.total + 1 }));
+      if (showAnswersImmediately) {
+        toast.error("Incorrect", { description: "Review the explanation below" });
+      }
     }
   };
 
   const handleSubmitAnswer = () => {
     if (selectedAnswer !== null && !showExplanation) {
       setShowExplanation(true);
+      const currentQuestion = questions[currentQuestionIndex];
+      const isCorrect = selectedAnswer === currentQuestion.correctIndex;
+      
+      if (isCorrect) {
+        toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER);
+      } else {
+        toast.error("Incorrect", { description: "Review the explanation below" });
+      }
     }
   };
 
@@ -106,8 +133,16 @@ export default function ACLSPracticePage() {
       setShowExplanation(false);
     } else {
       // Practice session complete
-      alert(`Practice Complete!\n\nScore: ${score.correct}/${score.total + 1}\nAccuracy: ${Math.round(((score.correct + (selectedAnswer === questions[currentQuestionIndex].correctIndex ? 1 : 0)) / (score.total + 1)) * 100)}%`);
-      router.push('/practice');
+      const finalCorrect = score.correct + (selectedAnswer === questions[currentQuestionIndex].correctIndex ? 1 : 0);
+      const finalTotal = score.total + 1;
+      const accuracy = Math.round((finalCorrect / finalTotal) * 100);
+      
+      toast.success(SUCCESS_MESSAGES.PRACTICE_COMPLETE, {
+        description: `Score: ${finalCorrect}/${finalTotal} (${accuracy}% accuracy)`,
+        duration: 6000,
+      });
+      
+      setTimeout(() => router.push('/practice'), 2000);
     }
   };
 

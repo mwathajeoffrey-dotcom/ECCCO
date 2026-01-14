@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Trophy, Clock, Zap, CheckCircle, XCircle, Users, Star, Flame } from "lucide-react";
+import { toast } from "sonner";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, INFO_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
 
 interface Participant {
   id: string;
@@ -88,6 +90,8 @@ export default function PlayQuizPage() {
     try {
       const response = await fetch(`/api/quiz-arena/join/${accessCode}`);
       if (!response.ok) {
+        const errorMsg = ERROR_MESSAGES.SESSION_NOT_FOUND;
+        toast.error(errorMsg.title, { description: errorMsg.message });
         throw new Error("Session not found");
       }
       const data = await response.json();
@@ -95,6 +99,8 @@ export default function PlayQuizPage() {
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
         console.error("Session has no questions:", data);
+        const errorMsg = ERROR_MESSAGES.NO_QUESTIONS;
+        toast.error(errorMsg.title, { description: errorMsg.message });
         setError("This quiz has no questions. Please contact the host.");
         setLoading(false);
         return;
@@ -125,6 +131,10 @@ export default function PlayQuizPage() {
       setLoading(false);
     } catch (err) {
       console.error("Error fetching session:", err);
+      const errorMsg = getErrorFromFetch(err);
+      if (!error) { // Only show toast on initial error
+        toast.error(errorMsg.title, { description: errorMsg.message });
+      }
       setError("Quiz session not found");
       setLoading(false);
     }
@@ -132,7 +142,7 @@ export default function PlayQuizPage() {
 
   const handleJoin = async () => {
     if (!nickname.trim()) {
-      alert("Please enter a nickname");
+      toast.error("Nickname Required", { description: "Please enter a nickname to join" });
       return;
     }
 
@@ -148,13 +158,16 @@ export default function PlayQuizPage() {
       if (response.ok) {
         setParticipantId(data.participantId);
         setJoined(true);
+        toast.success(SUCCESS_MESSAGES.QUIZ_JOINED);
         fetchSession();
       } else {
-        alert("Error joining quiz: " + data.error);
+        const errorMsg = ERROR_MESSAGES.UNKNOWN_ERROR;
+        toast.error(errorMsg.title, { description: data.error || errorMsg.message });
       }
     } catch (err) {
       console.error("Error joining quiz:", err);
-      alert("Failed to join quiz");
+      const errorMsg = getErrorFromFetch(err);
+      toast.error(errorMsg.title, { description: errorMsg.message });
     }
   };
 
@@ -186,9 +199,25 @@ export default function PlayQuizPage() {
         setPointsEarned(data.pointsEarned);
         setMyScore(data.newScore);
         setMyStreak(data.newStreak);
+        
+        // Show success feedback
+        if (data.isCorrect) {
+          toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER, {
+            description: `+${data.pointsEarned} points!`,
+          });
+        } else {
+          toast.error("Incorrect Answer", { 
+            description: "Better luck next time!" 
+          });
+        }
+      } else {
+        const errorMsg = ERROR_MESSAGES.SUBMISSION_FAILED;
+        toast.error(errorMsg.title, { description: errorMsg.message });
       }
     } catch (err) {
       console.error("Error submitting answer:", err);
+      const errorMsg = getErrorFromFetch(err);
+      toast.error(errorMsg.title, { description: errorMsg.message });
     }
   };
 

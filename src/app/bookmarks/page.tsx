@@ -15,6 +15,8 @@ import {
   BookmarkCheck,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
 
 interface BookmarkData {
   questionId: string;
@@ -43,6 +45,13 @@ export default function BookmarksPage() {
     try {
       setLoading(true);
       const response = await fetch(`/api/bookmarks?userId=${user?.id}`);
+      
+      if (!response.ok) {
+        const errorMsg = ERROR_MESSAGES.LOAD_FAILED;
+        toast.error(errorMsg.title, { description: errorMsg.message });
+        throw new Error('Failed to fetch bookmarks');
+      }
+      
       const data = await response.json();
       console.log("📚 Fetched bookmarks:", data);
       if (data.success && data.bookmarks) {
@@ -50,14 +59,14 @@ export default function BookmarksPage() {
       }
     } catch (error) {
       console.error("Failed to fetch bookmarks:", error);
+      const errorMsg = getErrorFromFetch(error);
+      toast.error(errorMsg.title, { description: errorMsg.message });
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (questionId: string) => {
-    if (!confirm("Are you sure you want to remove this bookmark?")) return;
-
     try {
       const response = await fetch("/api/bookmarks", {
         method: "DELETE",
@@ -67,9 +76,15 @@ export default function BookmarksPage() {
 
       if (response.ok) {
         setBookmarks(bookmarks.filter((b) => b.questionId !== questionId));
+        toast.success(SUCCESS_MESSAGES.BOOKMARK_REMOVED);
+      } else {
+        const errorMsg = ERROR_MESSAGES.DELETE_FAILED;
+        toast.error(errorMsg.title, { description: errorMsg.message });
       }
     } catch (error) {
       console.error("Failed to delete bookmark:", error);
+      const errorMsg = getErrorFromFetch(error);
+      toast.error(errorMsg.title, { description: errorMsg.message });
     }
   };
 

@@ -73,6 +73,7 @@
     "react-dom": "19.2.0",
     "react-intersection-observer": "^10.0.0",
     "recharts": "^3.3.0",
+    "sonner": "^2.0.7",
     "uuid": "^13.0.0",
     "vitest": "^4.0.8",
     "ws": "^8.18.3",

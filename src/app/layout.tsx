@@ -6,6 +6,7 @@ import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Toaster } from "sonner";
 import Script from "next/script";
 import "./globals.css";
 
@@ -121,6 +122,13 @@ export default function RootLayout({
             <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
               <AppLayout>{children}</AppLayout>
             </ErrorBoundary>
+            <Toaster 
+              position="top-right" 
+              richColors 
+              closeButton 
+              expand={false}
+              duration={4000}
+            />
             <PWAInstallPrompt />
             <FloatingPracticeButton />
           </ClerkProvider>
