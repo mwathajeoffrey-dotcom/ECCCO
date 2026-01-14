@@ -93,4 +93,50 @@ body {
     overflow-y: auto;
     overscroll-behavior-y: contain;
   }
+
+  /* Safe area for mobile notches */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+    min-height: 64px; /* 16 * 4 = 64px base height */
+  }
+
+  /* Mobile bottom nav padding (add to main content) */
+  @media (max-width: 768px) {
+    body {
+      padding-bottom: env(safe-area-inset-bottom, 64px);
+    }
+  }
+
+  /* Shimmer animation for skeletons */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      to right,
+      #f0f0f0 0%,
+      #e0e0e0 20%,
+      #f0f0f0 40%,
+      #f0f0f0 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  .dark .animate-shimmer {
+    background: linear-gradient(
+      to right,
+      #374151 0%,
+      #4b5563 20%,
+      #374151 40%,
+      #374151 100%
+    );
+  }
 }
+

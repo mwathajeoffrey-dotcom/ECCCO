@@ -5,6 +5,7 @@ import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingPracticeButton from "@/components/practice/FloatingPracticeButton";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Toaster } from "sonner";
 import Script from "next/script";
@@ -131,6 +132,7 @@ export default function RootLayout({
             />
             <PWAInstallPrompt />
             <FloatingPracticeButton />
+            <MobileBottomNav />
           </ClerkProvider>
         </ThemeProvider>
       </body>
