@@ -325,14 +325,30 @@ export default function CreateQuizPage() {
                     <Clock className="w-4 h-4 inline mr-1" />
                     Time Per Question (seconds)
                   </label>
-                  <input
-                    type="number"
-                    value={timePerQuestion}
-                    onChange={(e) => setTimePerQuestion(Number(e.target.value))}
-                    min={5}
-                    max={60}
-                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-purple-500 focus:outline-none"
-                  />
+                  <div className="space-y-3">
+                    <input
+                      type="range"
+                      value={timePerQuestion}
+                      onChange={(e) => setTimePerQuestion(Number(e.target.value))}
+                      min={5}
+                      max={180}
+                      step={5}
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                    />
+                    <div className="flex items-center justify-between">
+                      <input
+                        type="number"
+                        value={timePerQuestion}
+                        onChange={(e) => setTimePerQuestion(Number(e.target.value))}
+                        min={5}
+                        max={180}
+                        className="w-24 px-3 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      />
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {timePerQuestion < 15 ? "⚡ Fast" : timePerQuestion < 45 ? "🎯 Normal" : "🧠 Thorough"}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Points Per Question */}

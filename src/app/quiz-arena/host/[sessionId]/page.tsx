@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Users,
@@ -16,7 +16,18 @@ import {
   Music,
   Volume2,
   Share2,
+  CheckCircle,
+  Circle,
 } from "lucide-react";
+
+interface Answer {
+  participantId: string;
+  questionIndex: number;
+  selectedOption: number;
+  isCorrect: boolean;
+  timeToAnswer: number;
+  pointsEarned: number;
+}
 
 interface Participant {
   id: string;
@@ -42,6 +53,7 @@ interface QuizSession {
   playSound: boolean;
   questions: any[];
   participants: Participant[];
+  answers: Answer[];
   createdAt: string;
 }
 
@@ -55,6 +67,11 @@ export default function HostQuizPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [submittedCount, setSubmittedCount] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const questionStartTimeRef = useRef<number | null>(null);
 
   // Fetch session data
   useEffect(() => {
@@ -62,6 +79,45 @@ export default function HostQuizPage() {
     const interval = setInterval(fetchSession, 2000); // Poll every 2 seconds
     return () => clearInterval(interval);
   }, [sessionId]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (isTimerActive && timeLeft > 0) {
+      timerRef.current = setTimeout(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0 && isTimerActive && session && session.status !== "LOBBY" && session.status !== "FINISHED") {
+      // Time's up! Auto-advance to next question
+      handleNextQuestion();
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [timeLeft, isTimerActive, session]);
+
+  // Check if all participants have submitted when session updates
+  useEffect(() => {
+    if (session && session.status !== "LOBBY" && session.status !== "FINISHED") {
+      const currentQuestionAnswers = session.answers?.filter(
+        (answer) => answer.questionIndex === session.currentQuestion
+      ) || [];
+      
+      setSubmittedCount(currentQuestionAnswers.length);
+      
+      // Auto-advance if all participants have submitted
+      if (session.participants.length > 0 && 
+          currentQuestionAnswers.length === session.participants.length &&
+          isTimerActive) {
+        // Small delay to show all submissions before advancing
+        setTimeout(() => {
+          handleNextQuestion();
+        }, 2000);
+      }
+    }
+  }, [session]);
 
   const fetchSession = async () => {
     try {
@@ -85,6 +141,7 @@ export default function HostQuizPage() {
         questionCount: data.questions.length,
         currentQuestion: data.currentQuestion,
         participantCount: data.participants?.length || 0,
+        answerCount: data.answers?.length || 0,
       });
       
       setSession(data);
@@ -119,7 +176,14 @@ export default function HostQuizPage() {
         method: "POST",
       });
       if (response.ok) {
-        fetchSession();
+        await fetchSession();
+        // Start timer for first question
+        if (session) {
+          setTimeLeft(session.timePerQuestion);
+          setIsTimerActive(true);
+          questionStartTimeRef.current = Date.now();
+          setSubmittedCount(0);
+        }
       }
     } catch (err) {
       console.error("Error starting quiz:", err);
@@ -128,11 +192,21 @@ export default function HostQuizPage() {
 
   const handleNextQuestion = async () => {
     try {
+      setIsTimerActive(false); // Stop current timer
       const response = await fetch(`/api/quiz-arena/session/${sessionId}/next`, {
         method: "POST",
       });
       if (response.ok) {
-        fetchSession();
+        await fetchSession();
+        // Start timer for next question
+        if (session && session.currentQuestion < session.questions.length - 1) {
+          setTimeLeft(session.timePerQuestion);
+          setIsTimerActive(true);
+          questionStartTimeRef.current = Date.now();
+          setSubmittedCount(0);
+        } else {
+          setIsTimerActive(false); // Quiz finished
+        }
       }
     } catch (err) {
       console.error("Error moving to next question:", err);
@@ -142,6 +216,7 @@ export default function HostQuizPage() {
   const handleEndQuiz = async () => {
     if (confirm("Are you sure you want to end this quiz?")) {
       try {
+        setIsTimerActive(false); // Stop timer
         const response = await fetch(`/api/quiz-arena/session/${sessionId}/end`, {
           method: "POST",
         });
@@ -320,6 +395,74 @@ export default function HostQuizPage() {
         {/* IN-PROGRESS VIEW */}
         {!isLobby && !isFinished && (
           <div className="max-w-6xl mx-auto">
+            {/* Live Timer & Submission Counter */}
+            <div className="mb-6 grid grid-cols-2 gap-4">
+              {/* Countdown Timer */}
+              <div className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-4 ${
+                timeLeft <= 5 ? 'border-red-500 animate-pulse' : 
+                timeLeft <= 10 ? 'border-orange-500' : 'border-green-500'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 font-semibold mb-1">Time Remaining</div>
+                    <div className={`text-5xl font-black ${
+                      timeLeft <= 5 ? 'text-red-600' :
+                      timeLeft <= 10 ? 'text-orange-600' : 'text-green-600'
+                    }`}>
+                      {timeLeft}s
+                    </div>
+                  </div>
+                  <Clock className={`w-16 h-16 ${
+                    timeLeft <= 5 ? 'text-red-500' :
+                    timeLeft <= 10 ? 'text-orange-500' : 'text-green-500'
+                  }`} />
+                </div>
+                <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-1000 ${
+                      timeLeft <= 5 ? 'bg-red-500' :
+                      timeLeft <= 10 ? 'bg-orange-500' : 'bg-green-500'
+                    }`}
+                    style={{ width: `${(timeLeft / (session?.timePerQuestion || 30)) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Submission Counter */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-4 border-blue-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 font-semibold mb-1">Submissions</div>
+                    <div className="text-5xl font-black text-blue-600">
+                      {submittedCount}/{participants.length}
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <Users className="w-16 h-16 text-blue-500" />
+                    {submittedCount === participants.length && participants.length > 0 && (
+                      <CheckCircle className="w-8 h-8 text-green-500 absolute -top-2 -right-2 animate-bounce" />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-2 text-sm">
+                  {participants.map((p) => {
+                    const hasSubmitted = session?.answers?.some(
+                      a => a.participantId === p.id && a.questionIndex === session.currentQuestion
+                    );
+                    return (
+                      <div
+                        key={p.id}
+                        className={`flex-1 h-2 rounded-full ${
+                          hasSubmitted ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+                        }`}
+                        title={`${p.nickname}${hasSubmitted ? ' ✓' : ''}`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Question Display */}
               <div className="lg:col-span-2">
@@ -328,9 +471,10 @@ export default function HostQuizPage() {
                     <div className="text-2xl font-bold text-gray-900 dark:text-white">
                       Question {session.currentQuestion + 1} / {session.questions.length}
                     </div>
-                    <div className="flex items-center text-purple-600">
-                      <Clock className="w-5 h-5 mr-2" />
-                      {session.timePerQuestion}s
+                    <div className="flex items-center gap-4">
+                      <div className="text-purple-600 font-bold">
+                        {session.pointsPerQuestion} pts
+                      </div>
                     </div>
                   </div>
 
