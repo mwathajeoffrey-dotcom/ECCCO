@@ -5,11 +5,21 @@ import { Search, Sparkles, Loader2, AlertCircle, CheckCircle2, BookOpen } from "
 import ClinicalSynthesisView from "@/components/evidence/ClinicalSynthesisView";
 import type { ClinicalSynthesis } from "@/lib/evidence/clinical-synthesis-engine";
 
+interface ErrorWithSuggestions {
+  error: string;
+  message?: string;
+  suggestions?: string[];
+  tips?: string[];
+  expandedTerms?: string[];
+  articlesFound?: number;
+}
+
 export default function EvidenceSearchPage() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [synthesis, setSynthesis] = useState<ClinicalSynthesis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorDetails, setErrorDetails] = useState<ErrorWithSuggestions | null>(null);
   const [useAI, setUseAI] = useState(true);
 
   const suggestedQueries = [
@@ -25,6 +35,7 @@ export default function EvidenceSearchPage() {
 
     setLoading(true);
     setError(null);
+    setErrorDetails(null);
     setSynthesis(null);
 
     try {
@@ -42,7 +53,14 @@ export default function EvidenceSearchPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to generate synthesis");
+        // Check if we have suggestions from the server
+        if (data.suggestions || data.tips) {
+          setErrorDetails(data);
+          setError(data.message || data.error || "Search failed");
+        } else {
+          throw new Error(data.error || "Failed to generate synthesis");
+        }
+        return;
       }
 
       console.log("✅ Synthesis received:", data);
@@ -149,14 +167,59 @@ export default function EvidenceSearchPage() {
           </div>
         </div>
 
-        {/* Error Message */}
+        {/* Error Message with Suggestions */}
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-8">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold text-red-800 mb-1">Search Error</h3>
-                <p className="text-red-700">{error}</p>
+                <p className="text-red-700 mb-3">{error}</p>
+
+                {/* Search Suggestions */}
+                {errorDetails?.suggestions && errorDetails.suggestions.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    <p className="text-sm font-medium text-red-800">Try these related searches:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {errorDetails.suggestions.map((suggestion, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setQuery(suggestion);
+                            setError(null);
+                            setErrorDetails(null);
+                          }}
+                          className="px-4 py-2 bg-white text-red-700 rounded-lg text-sm hover:bg-red-100 transition-colors border border-red-200 font-medium"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Search Tips */}
+                {errorDetails?.tips && errorDetails.tips.length > 0 && (
+                  <div className="mt-4 p-4 bg-white/50 rounded-lg">
+                    <p className="text-sm font-medium text-red-800 mb-2">💡 Search Tips:</p>
+                    <ul className="space-y-1 text-sm text-red-700">
+                      {errorDetails.tips.map((tip, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="text-red-400 mt-0.5">•</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Articles Found Info */}
+                {errorDetails?.articlesFound !== undefined && errorDetails.articlesFound > 0 && (
+                  <div className="mt-3 text-sm text-red-600">
+                    📊 Found {errorDetails.articlesFound} articles, but not enough met quality standards for clinical
+                    use.
+                  </div>
+                )}
               </div>
             </div>
           </div>

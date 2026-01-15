@@ -11,6 +11,12 @@ import { searchStrategicEvidence } from "@/lib/evidence/unified-search";
 import { getCachedSynthesis, cacheSynthesis } from "@/lib/evidence/cache";
 import { generateDecisionSupport } from "@/lib/evidence/decision-support";
 import { PatientContext } from "@/lib/evidence/patient-context";
+import {
+  analyzeQuery,
+  expandQueryForSearch,
+  getSearchSuggestions,
+  generateAlternativeQueries,
+} from "@/lib/evidence/query-expansion";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -55,29 +61,92 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Step 2: STRATEGIC SEARCH (Guidelines → Meta-analyses → RCTs)
-    console.log(`[Evidence Synthesis] Searching for: "${query}"${patientContext ? " (patient-specific)" : ""}`);
-    const searchResponse = await searchStrategicEvidence(query, maxArticles * 2); // Get 2x for filtering
-    const searchResults = searchResponse.articles || [];
+    // Step 2: Analyze query and expand for better coverage
+    console.log(`[Evidence Synthesis] Analyzing query: "${query}"`);
+    const queryAnalysis = analyzeQuery(query);
+    console.log(
+      `[Evidence Synthesis] Found ${queryAnalysis.medicalConcepts.length} medical concepts, ${queryAnalysis.expandedTerms.length} expanded terms`
+    );
 
+    // Step 3: Try original query first
+    console.log(`[Evidence Synthesis] Searching for: "${query}"${patientContext ? " (patient-specific)" : ""}`);
+    let searchResponse = await searchStrategicEvidence(query, maxArticles * 2);
+    let searchResults = searchResponse.articles || [];
+
+    // Step 4: If no results, try expanded query
+    if (searchResults.length === 0 && queryAnalysis.expandedTerms.length > 1) {
+      console.log(`[Evidence Synthesis] No results found, trying expanded query...`);
+      const expandedQuery = expandQueryForSearch(query);
+      console.log(`[Evidence Synthesis] Expanded query: "${expandedQuery}"`);
+
+      searchResponse = await searchStrategicEvidence(expandedQuery, maxArticles * 2);
+      searchResults = searchResponse.articles || [];
+    }
+
+    // Step 5: If still no results, try broadened query
+    if (searchResults.length === 0 && queryAnalysis.broadenedQuery !== query) {
+      console.log(`[Evidence Synthesis] Still no results, trying broadened query...`);
+      console.log(`[Evidence Synthesis] Broadened query: "${queryAnalysis.broadenedQuery}"`);
+
+      searchResponse = await searchStrategicEvidence(queryAnalysis.broadenedQuery, maxArticles * 2);
+      searchResults = searchResponse.articles || [];
+    }
+
+    // Step 6: If still no results, provide helpful suggestions
     if (!searchResults || searchResults.length === 0) {
-      return NextResponse.json({ error: "No articles found matching your query" }, { status: 404 });
+      const suggestions = getSearchSuggestions(query, "no_results");
+      const alternatives = generateAlternativeQueries(query);
+
+      return NextResponse.json(
+        {
+          error: "No articles found",
+          message: suggestions.message,
+          suggestions: alternatives.slice(0, 5),
+          tips: suggestions.tips,
+          originalQuery: query,
+          expandedTerms: queryAnalysis.expandedTerms.slice(0, 5),
+        },
+        { status: 404 }
+      );
     }
 
     console.log(`[Evidence Synthesis] Found ${searchResults.length} articles, generating synthesis...`);
 
-    // Step 3: Generate clinical synthesis
-    const synthesis = await generateClinicalSynthesis(query, searchResults, {
-      minQualityScore,
-      useAI,
-      maxArticles,
-    });
+    // Step 7: Generate clinical synthesis
+    let synthesis;
+    try {
+      synthesis = await generateClinicalSynthesis(query, searchResults, {
+        minQualityScore,
+        useAI,
+        maxArticles,
+      });
+    } catch (error: any) {
+      // If synthesis fails due to quality filters, provide suggestions
+      if (error.message?.includes("Insufficient evidence")) {
+        const suggestions = getSearchSuggestions(query, "low_quality");
+        const alternatives = generateAlternativeQueries(query);
+
+        return NextResponse.json(
+          {
+            error: "Insufficient high-quality evidence",
+            message: `Found ${searchResults.length} articles, but not enough meet quality standards.`,
+            suggestions: alternatives.slice(0, 5),
+            tips: suggestions.tips,
+            originalQuery: query,
+            articlesFound: searchResults.length,
+            tryBroaderSearch: true,
+          },
+          { status: 404 }
+        );
+      }
+      throw error; // Re-throw other errors
+    }
 
     console.log(
       `[Evidence Synthesis] Generated synthesis with ${synthesis.sections.length} sections, ${synthesis.references.length} references`
     );
 
-    // Step 4: Generate clinical decision support if requested
+    // Step 8: Generate clinical decision support if requested
     let decisionTree = undefined;
     if (includeDecisionSupport) {
       console.log("[Decision Support] Generating clinical protocol...");
