@@ -132,7 +132,8 @@ export default function PlayQuizPage() {
     } catch (err) {
       console.error("Error fetching session:", err);
       const errorMsg = getErrorFromFetch(err);
-      if (!error) { // Only show toast on initial error
+      if (!error) {
+        // Only show toast on initial error
         toast.error(errorMsg.title, { description: errorMsg.message });
       }
       setError("Quiz session not found");
@@ -207,7 +208,7 @@ export default function PlayQuizPage() {
           });
         } else {
           toast.error("Incorrect Answer", {
-            description: "Better luck next time!"
+            description: "Better luck next time!",
           });
         }
       } else {
@@ -312,13 +313,17 @@ export default function PlayQuizPage() {
               </div>
 
               <div className="bg-purple-50 rounded-2xl p-6">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-4">Players in Lobby ({session.participants.length})</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4">
+                  Players in Lobby ({session.participants.length})
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {session.participants.map((participant) => (
                     <div
                       key={participant.id}
                       className={`p-3 rounded-xl font-semibold ${
-                        participant.id === participantId ? "bg-purple-600 text-white" : "bg-white text-gray-900 dark:text-white"
+                        participant.id === participantId
+                          ? "bg-purple-600 text-white"
+                          : "bg-white text-gray-900 dark:text-white"
                       }`}
                     >
                       {participant.nickname}
@@ -356,7 +361,9 @@ export default function PlayQuizPage() {
                 <div className="mb-6">
                   <div className="text-6xl mb-4">{myRank === 2 ? "🥈" : "🥉"}</div>
                   <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Great Job!</h2>
-                  <p className="text-xl text-gray-600 dark:text-gray-300">You finished {myRank === 2 ? "2nd" : "3rd"}!</p>
+                  <p className="text-xl text-gray-600 dark:text-gray-300">
+                    You finished {myRank === 2 ? "2nd" : "3rd"}!
+                  </p>
                 </div>
               )}
 
@@ -441,7 +448,8 @@ export default function PlayQuizPage() {
   }
 
   // Extract question text - handle both field names
-  const questionText = currentQuestionData.questionText || currentQuestionData.question || "Question text not available";
+  const questionText =
+    currentQuestionData.questionText || currentQuestionData.question || "Question text not available";
 
   const answerColors = [
     { bg: "from-red-500 to-red-600", hover: "hover:from-red-600 hover:to-red-700", border: "border-red-400" },
@@ -494,7 +502,11 @@ export default function PlayQuizPage() {
                 {session.currentQuestion + 1} / {session.questions.length}
               </div>
             </div>
-            <div className={`bg-white dark:bg-gray-800 rounded-2xl px-6 py-3 shadow-lg ${timeLeft <= 5 ? "animate-pulse" : ""}`}>
+            <div
+              className={`bg-white dark:bg-gray-800 rounded-2xl px-6 py-3 shadow-lg ${
+                timeLeft <= 5 ? "animate-pulse" : ""
+              }`}
+            >
               <div className="flex items-center">
                 <Clock className={`w-6 h-6 mr-2 ${timeLeft <= 5 ? "text-red-600" : "text-blue-600"}`} />
                 <div className="text-3xl font-black ${timeLeft <= 5 ? 'text-red-600' : 'text-blue-600'}">

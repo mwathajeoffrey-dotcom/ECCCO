@@ -25,14 +25,14 @@ export async function GET(request: NextRequest, context: { params: Promise<{ acc
     let questions = [];
     try {
       questions = JSON.parse(session.questions as string);
-      
+
       // Ensure each question has both 'question' and 'questionText' fields
       questions = questions.map((q: any) => ({
         ...q,
         question: q.question || q.questionText,
         questionText: q.questionText || q.question,
       }));
-      
+
       logger.debug("Join session questions parsed successfully", {
         accessCode,
         questionCount: questions.length,

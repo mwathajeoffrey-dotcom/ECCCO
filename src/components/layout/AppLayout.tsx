@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import Sidebar from '@/components/navigation/Sidebar';
-import { Menu } from 'lucide-react';
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import Sidebar from "@/components/navigation/Sidebar";
+import { Menu } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -15,8 +15,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   // Pages that should not show the sidebar (auth pages and redirects)
   // Note: /auth/signin handles both signin and signup (December 19th version)
-  const noSidebarPages = ['/sign-in', '/sign-up', '/login', '/auth'];
-  const shouldShowSidebar = !noSidebarPages.some(page => pathname.startsWith(page));
+  const noSidebarPages = ["/sign-in", "/sign-up", "/login", "/auth"];
+  const shouldShowSidebar = !noSidebarPages.some((page) => pathname.startsWith(page));
 
   if (!shouldShowSidebar) {
     return <>{children}</>;
@@ -26,7 +26,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
+
       {/* Floating Menu Button - Visible on ALL devices */}
       <button
         onClick={() => setSidebarOpen(true)}
@@ -35,11 +35,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       >
         <Menu className="w-6 h-6" />
       </button>
-      
+
       {/* Main Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 }

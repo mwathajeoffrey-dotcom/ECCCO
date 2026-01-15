@@ -76,13 +76,13 @@ export default function ExamInterface() {
       setLoadingTopics(true);
       try {
         const response = await fetch("/api/topics");
-        
+
         if (!response.ok) {
           const errorMsg = ERROR_MESSAGES.LOAD_FAILED;
           toast.error(errorMsg.title, { description: errorMsg.message });
-          throw new Error('Failed to fetch topics');
+          throw new Error("Failed to fetch topics");
         }
-        
+
         const data = await response.json();
         setTopics(data);
 
@@ -205,10 +205,10 @@ export default function ExamInterface() {
       // Track exam start
       const topic = topics.find((t) => t.id === topicId);
       analytics.trackExamStart(topicId, topic?.name || "Unknown Topic");
-      
+
       // Success toast
-      toast.success("Exam Started!", { 
-        description: `${questionsArray.length} questions loaded. Good luck!` 
+      toast.success("Exam Started!", {
+        description: `${questionsArray.length} questions loaded. Good luck!`,
       });
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -218,9 +218,13 @@ export default function ExamInterface() {
         topicId,
         timestamp: new Date().toISOString(),
       });
-      
+
       // Only show additional error if not already shown by specific handler
-      if (error instanceof Error && !error.message.includes("No questions") && !error.message.includes("select a topic")) {
+      if (
+        error instanceof Error &&
+        !error.message.includes("No questions") &&
+        !error.message.includes("select a topic")
+      ) {
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       }
@@ -363,8 +367,8 @@ export default function ExamInterface() {
     const categorizedTopics = categorizeTopics();
     const obgynTopics =
       filterParam === "new"
-        ? (categorizedTopics["New Medical Comorbidity Topics (2024-2025)"] || [])
-        : (categorizedTopics["OB/GYN Emergencies"] || []);
+        ? categorizedTopics["New Medical Comorbidity Topics (2024-2025)"] || []
+        : categorizedTopics["OB/GYN Emergencies"] || [];
     const otherTopics = categorizedTopics["Other Topics"] || []; // Add fallback to empty array
 
     return (

@@ -1,8 +1,9 @@
 # 🚀 ECCCO Platform - Strategic Improvement Roadmap
+
 ## Comprehensive Analysis & Enhancement Recommendations
 
-**Date:** January 14, 2026  
-**Current Status:** Production-Ready MVP with Core Features Complete  
+**Date:** January 14, 2026
+**Current Status:** Production-Ready MVP with Core Features Complete
 **Platform:** [eccco.vercel.app](https://eccco.vercel.app)
 
 ---
@@ -12,6 +13,7 @@
 Based on comprehensive analysis of your codebase, current production deployment, and recent accomplishments, this document outlines strategic improvements across **7 key areas** to elevate ECCCO from a solid MVP to an **industry-leading medical education platform**.
 
 **Current Strengths:**
+
 - ✅ Robust quiz arena with live multiplayer capabilities
 - ✅ Comprehensive question database (ACLS, PALS, OBGYN)
 - ✅ Modern tech stack (Next.js 16, Prisma, Clerk Auth)
@@ -20,6 +22,7 @@ Based on comprehensive analysis of your codebase, current production deployment,
 - ✅ Responsive design with sidebar navigation
 
 **Opportunity Areas:**
+
 - 🎯 Performance optimization
 - 🎯 Enhanced user engagement
 - 🎯 Advanced analytics and insights
@@ -33,9 +36,11 @@ Based on comprehensive analysis of your codebase, current production deployment,
 ## 🎯 PRIORITY 1: Critical User Experience Enhancements
 
 ### 1.1 **Performance Optimization** ⚡
+
 **Impact:** HIGH | **Effort:** MEDIUM | **Timeline:** 1-2 weeks
 
 #### Current State:
+
 - Multiple fetch calls without caching
 - No image optimization strategy
 - Polling every 2 seconds in quiz arena
@@ -44,11 +49,12 @@ Based on comprehensive analysis of your codebase, current production deployment,
 #### Recommendations:
 
 **A. Implement React Query for Data Management**
+
 ```tsx
 // Install: npm install @tanstack/react-query
 
 // src/providers/QueryProvider.tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,17 +69,16 @@ const queryClient = new QueryClient({
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
 ```
 
 **B. Add SWR for Real-time Updates (Alternative to polling)**
+
 ```tsx
 // Replace polling in quiz-arena with SWR
-import useSWR from 'swr';
+import useSWR from "swr";
 
 const { data: session } = useSWR(
   `/api/quiz-arena/join/${accessCode}`,
@@ -83,9 +88,10 @@ const { data: session } = useSWR(
 ```
 
 **C. Implement Image Optimization**
+
 ```tsx
 // Replace <img> with Next.js Image
-import Image from 'next/image';
+import Image from "next/image";
 
 <Image
   src={user?.imageUrl}
@@ -94,10 +100,11 @@ import Image from 'next/image';
   height={32}
   className="rounded-full"
   priority // For above-fold images
-/>
+/>;
 ```
 
 **D. Add Loading Skeletons (Better than spinners)**
+
 ```tsx
 // src/components/ui/QuestionSkeleton.tsx
 export function QuestionSkeleton() {
@@ -115,6 +122,7 @@ export function QuestionSkeleton() {
 ```
 
 **Expected Improvements:**
+
 - 40-60% reduction in API calls
 - Instant perceived loading (skeletons)
 - Better mobile data usage
@@ -123,9 +131,11 @@ export function QuestionSkeleton() {
 ---
 
 ### 1.2 **Enhanced Error Handling & Feedback** 🛡️
+
 **Impact:** HIGH | **Effort:** LOW | **Timeline:** 3-5 days
 
 #### Current Gaps:
+
 - Basic error messages ("Failed to fetch")
 - No retry mechanism for users
 - No offline detection
@@ -134,12 +144,14 @@ export function QuestionSkeleton() {
 #### Recommendations:
 
 **A. User-Friendly Error Messages**
+
 ```tsx
 // src/lib/errors.ts
 export const ERROR_MESSAGES = {
   NETWORK_ERROR: {
     title: "Connection Issue",
-    message: "Unable to reach the server. Please check your internet connection.",
+    message:
+      "Unable to reach the server. Please check your internet connection.",
     action: "Retry",
   },
   SESSION_NOT_FOUND: {
@@ -156,17 +168,19 @@ export const ERROR_MESSAGES = {
 ```
 
 **B. Toast Notifications (Better than alerts)**
+
 ```tsx
 // Install: npm install sonner
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
 // Usage
-toast.success('Answer submitted!');
-toast.error('Failed to join quiz. Please try again.');
-toast.info('Question auto-advanced due to timeout');
+toast.success("Answer submitted!");
+toast.error("Failed to join quiz. Please try again.");
+toast.info("Question auto-advanced due to timeout");
 ```
 
 **C. Offline Detection**
+
 ```tsx
 // src/hooks/useOnlineStatus.ts
 export function useOnlineStatus() {
@@ -175,19 +189,19 @@ export function useOnlineStatus() {
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      toast.success('Connection restored');
+      toast.success("Connection restored");
     };
     const handleOffline = () => {
       setIsOnline(false);
-      toast.error('You are offline');
+      toast.error("You are offline");
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -196,6 +210,7 @@ export function useOnlineStatus() {
 ```
 
 **D. Error Boundary Enhancement**
+
 ```tsx
 // Add to existing EnhancedErrorBoundary
 - Show "What you can do" suggestions
@@ -206,9 +221,11 @@ export function useOnlineStatus() {
 ---
 
 ### 1.3 **Progressive Web App (PWA)** 📱
+
 **Impact:** VERY HIGH | **Effort:** MEDIUM | **Timeline:** 1 week
 
 #### Why This Matters:
+
 - Mobile users can install like native app
 - Offline practice mode
 - Push notifications for quiz invites
@@ -217,6 +234,7 @@ export function useOnlineStatus() {
 #### Implementation:
 
 **A. Add PWA Manifest**
+
 ```json
 // public/manifest.json
 {
@@ -243,35 +261,38 @@ export function useOnlineStatus() {
 ```
 
 **B. Service Worker for Offline Support**
+
 ```tsx
 // Install: npm install next-pwa
 // next.config.ts
-import withPWA from 'next-pwa';
+import withPWA from "next-pwa";
 
 export default withPWA({
-  dest: 'public',
+  dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === "development",
 })({
   // existing config
 });
 ```
 
 **C. Offline Practice Mode**
+
 ```tsx
 // Cache questions for offline use
-if ('serviceWorker' in navigator && 'caches' in window) {
-  caches.open('eccco-questions-v1').then(cache => {
+if ("serviceWorker" in navigator && "caches" in window) {
+  caches.open("eccco-questions-v1").then((cache) => {
     cache.addAll([
-      '/api/questions?category=ACLS',
-      '/api/questions?category=PALS',
+      "/api/questions?category=ACLS",
+      "/api/questions?category=PALS",
     ]);
   });
 }
 ```
 
 **Expected Impact:**
+
 - 📱 30-40% increase in mobile engagement
 - ⚡ Instant load times on repeat visits
 - 📊 Better retention rates
@@ -282,11 +303,13 @@ if ('serviceWorker' in navigator && 'caches' in window) {
 ## 🎯 PRIORITY 2: Learning Experience & Engagement
 
 ### 2.1 **Gamification System** 🏆
+
 **Impact:** VERY HIGH | **Effort:** HIGH | **Timeline:** 2-3 weeks
 
 #### Features to Add:
 
 **A. Achievement System**
+
 ```prisma
 // Add to schema.prisma
 model Achievement {
@@ -300,9 +323,9 @@ model Achievement {
   target      Int
   unlockedAt  DateTime?
   createdAt   DateTime @default(now())
-  
+
   user        User     @relation(fields: [userId], references: [clerkUserId])
-  
+
   @@index([userId])
   @@index([type])
 }
@@ -313,12 +336,13 @@ model UserLevel {
   level       Int      @default(1)
   xp          Int      @default(0)
   totalXP     Int      @default(0)
-  
+
   user        User     @relation(fields: [userId], references: [clerkUserId])
 }
 ```
 
 **B. XP System**
+
 ```tsx
 // Award XP for actions
 const XP_REWARDS = {
@@ -332,16 +356,17 @@ const XP_REWARDS = {
 
 // Level progression
 const LEVEL_THRESHOLDS = [
-  0,    // Level 1
-  100,  // Level 2
-  250,  // Level 3
-  500,  // Level 4
+  0, // Level 1
+  100, // Level 2
+  250, // Level 3
+  500, // Level 4
   1000, // Level 5
   // etc.
 ];
 ```
 
 **C. Daily Streak System**
+
 ```tsx
 // Track consecutive days of practice
 - Show streak counter on dashboard
@@ -350,6 +375,7 @@ const LEVEL_THRESHOLDS = [
 ```
 
 **D. Leaderboards**
+
 ```tsx
 // Global and category-specific leaderboards
 - Weekly top scorers
@@ -361,12 +387,15 @@ const LEVEL_THRESHOLDS = [
 ---
 
 ### 2.2 **Spaced Repetition Algorithm** 🧠
+
 **Impact:** VERY HIGH | **Effort:** HIGH | **Timeline:** 2-3 weeks
 
 #### Why This Matters:
+
 Medical education requires long-term retention. Spaced repetition is scientifically proven to enhance memory.
 
 **A. Implement SM-2 Algorithm**
+
 ```prisma
 // Add to schema.prisma
 model CardReview {
@@ -379,15 +408,16 @@ model CardReview {
   lastReviewed      DateTime?
   nextReview        DateTime
   qualityResponse   Int      // 0-5 rating
-  
+
   user              User     @relation(fields: [userId], references: [clerkUserId])
-  
+
   @@unique([userId, questionId])
   @@index([userId, nextReview])
 }
 ```
 
 **B. Smart Review Queue**
+
 ```tsx
 // src/lib/spaced-repetition.ts
 export function calculateNextReview(
@@ -396,7 +426,8 @@ export function calculateNextReview(
   interval: number,
   repetitions: number
 ) {
-  let newEaseFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+  let newEaseFactor =
+    easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
   newEaseFactor = Math.max(1.3, newEaseFactor);
 
   let newInterval = 0;
@@ -427,6 +458,7 @@ export function calculateNextReview(
 ```
 
 **C. Dashboard Integration**
+
 ```tsx
 // Show on dashboard:
 - "Due for Review" count
@@ -438,14 +470,17 @@ export function calculateNextReview(
 ---
 
 ### 2.3 **Enhanced Analytics Dashboard** 📊
+
 **Impact:** HIGH | **Effort:** MEDIUM | **Timeline:** 1-2 weeks
 
 #### Current Gap:
+
 Basic stats without actionable insights
 
 #### Recommendations:
 
 **A. Comprehensive Performance Metrics**
+
 ```tsx
 // Add to dashboard:
 
@@ -471,6 +506,7 @@ Basic stats without actionable insights
 ```
 
 **B. Visual Progress Indicators**
+
 ```tsx
 // Install: npm install recharts
 
@@ -488,11 +524,12 @@ import { LineChart, BarChart, RadarChart } from 'recharts';
 ```
 
 **C. Predictive Insights**
+
 ```tsx
 // AI-powered predictions
-- "At this rate, you'll be exam-ready in 6 weeks"
-- "Practice 30 more questions to reach 80% mastery"
-- "Your retention rate suggests reviewing bookmarks"
+-"At this rate, you'll be exam-ready in 6 weeks" -
+  "Practice 30 more questions to reach 80% mastery" -
+  "Your retention rate suggests reviewing bookmarks";
 ```
 
 ---
@@ -500,9 +537,11 @@ import { LineChart, BarChart, RadarChart } from 'recharts';
 ## 🎯 PRIORITY 3: Mobile Experience
 
 ### 3.1 **Mobile-First Optimization** 📱
+
 **Impact:** VERY HIGH | **Effort:** MEDIUM | **Timeline:** 1-2 weeks
 
 #### Current Issues:
+
 - Some components not optimized for small screens
 - Touch targets could be larger
 - Text sizes need adjustment
@@ -510,6 +549,7 @@ import { LineChart, BarChart, RadarChart } from 'recharts';
 #### Recommendations:
 
 **A. Touch-Friendly Interface**
+
 ```tsx
 // Minimum touch target: 44x44px (Apple HIG)
 // Current buttons: Update to larger size on mobile
@@ -522,36 +562,35 @@ import { LineChart, BarChart, RadarChart } from 'recharts';
 ```
 
 **B. Bottom Sheet for Mobile Actions**
+
 ```tsx
 // Install: npm install react-modal-sheet
 
 // For quiz answers on mobile - easier to reach
 <Sheet isOpen={true} onClose={() => {}}>
   <Sheet.Container>
-    <Sheet.Content>
-      {/* Answer options here */}
-    </Sheet.Content>
+    <Sheet.Content>{/* Answer options here */}</Sheet.Content>
   </Sheet.Container>
 </Sheet>
 ```
 
 **C. Swipe Gestures**
+
 ```tsx
 // Install: npm install react-swipeable
 
-import { useSwipeable } from 'react-swipeable';
+import { useSwipeable } from "react-swipeable";
 
 const handlers = useSwipeable({
   onSwipedLeft: () => handleNextQuestion(),
   onSwipedRight: () => handlePreviousQuestion(),
 });
 
-<div {...handlers}>
-  {/* Question content */}
-</div>
+<div {...handlers}>{/* Question content */}</div>;
 ```
 
 **D. Mobile Navigation Improvements**
+
 ```tsx
 // Add bottom navigation bar (in addition to sidebar)
 <nav className="fixed bottom-0 left-0 right-0 bg-white border-t md:hidden">
@@ -567,6 +606,7 @@ const handlers = useSwipeable({
 ---
 
 ### 3.2 **Haptic Feedback (Mobile)** 📳
+
 **Impact:** MEDIUM | **Effort:** LOW | **Timeline:** 2-3 days
 
 ```tsx
@@ -601,9 +641,11 @@ onWrongAnswer={() => {
 ## 🎯 PRIORITY 4: Accessibility (WCAG 2.1 AA)
 
 ### 4.1 **Screen Reader Support** ♿
+
 **Impact:** HIGH | **Effort:** MEDIUM | **Timeline:** 1 week
 
 #### Current Gaps:
+
 - Missing ARIA labels
 - No skip navigation
 - Focus management issues
@@ -612,11 +654,12 @@ onWrongAnswer={() => {
 #### Recommendations:
 
 **A. Comprehensive ARIA Implementation**
+
 ```tsx
 // Quiz question with proper ARIA
 <div role="region" aria-label="Quiz question">
   <h2 id="question-title">{question.question}</h2>
-  
+
   <fieldset aria-labelledby="question-title">
     <legend className="sr-only">Answer options</legend>
     {options.map((option, index) => (
@@ -635,6 +678,7 @@ onWrongAnswer={() => {
 ```
 
 **B. Skip Navigation**
+
 ```tsx
 // Add at top of layout
 <a
@@ -646,6 +690,7 @@ onWrongAnswer={() => {
 ```
 
 **C. Keyboard Navigation**
+
 ```tsx
 // Ensure all interactive elements are keyboard accessible
 - Tab through all buttons/links
@@ -662,10 +707,11 @@ onKeyDown={(e) => {
 ```
 
 **D. Focus Management**
+
 ```tsx
 // After quiz question changes, focus title
 useEffect(() => {
-  const questionTitle = document.getElementById('question-title');
+  const questionTitle = document.getElementById("question-title");
   questionTitle?.focus();
 }, [currentQuestionIndex]);
 ```
@@ -673,6 +719,7 @@ useEffect(() => {
 ---
 
 ### 4.2 **Color Contrast & Visual Accessibility** 👁️
+
 **Impact:** MEDIUM | **Effort:** LOW | **Timeline:** 3-5 days
 
 ```tsx
@@ -697,14 +744,16 @@ useEffect(() => {
 ## 🎯 PRIORITY 5: Advanced Features
 
 ### 5.1 **AI Study Assistant** 🤖
+
 **Impact:** VERY HIGH | **Effort:** HIGH | **Timeline:** 3-4 weeks
 
 **A. OpenAI Integration**
+
 ```tsx
 // Install: npm install openai
 
 // src/lib/ai-tutor.ts
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -716,20 +765,20 @@ export async function getExplanation(
   correctAnswer: string
 ) {
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: "gpt-4-turbo-preview",
     messages: [
       {
-        role: 'system',
-        content: `You are an expert medical educator specializing in emergency 
-                  and critical care. Explain why the correct answer is right and 
+        role: "system",
+        content: `You are an expert medical educator specializing in emergency
+                  and critical care. Explain why the correct answer is right and
                   why common misconceptions are wrong. Keep it concise and clinical.`,
       },
       {
-        role: 'user',
+        role: "user",
         content: `Question: ${question}
                   Student answered: ${userAnswer}
                   Correct answer: ${correctAnswer}
-                  
+
                   Explain why the correct answer is right.`,
       },
     ],
@@ -740,6 +789,7 @@ export async function getExplanation(
 ```
 
 **B. Personalized Study Plans**
+
 ```tsx
 // AI analyzes performance and creates custom study schedule
 - Identifies weak areas automatically
@@ -749,22 +799,23 @@ export async function getExplanation(
 ```
 
 **C. Chatbot for Questions**
+
 ```tsx
 // Add floating chat button
 <ChatWidget>
-  - "Explain this algorithm to me"
-  - "What's the difference between ACLS and PALS?"
-  - "Quiz me on cardiac arrest protocols"
-  - "Why is this answer correct?"
+  - "Explain this algorithm to me" - "What's the difference between ACLS and
+  PALS?" - "Quiz me on cardiac arrest protocols" - "Why is this answer correct?"
 </ChatWidget>
 ```
 
 ---
 
 ### 5.2 **Collaborative Learning** 👥
+
 **Impact:** HIGH | **Effort:** HIGH | **Timeline:** 3-4 weeks
 
 **A. Study Groups**
+
 ```prisma
 model StudyGroup {
   id          String   @id @default(cuid())
@@ -775,7 +826,7 @@ model StudyGroup {
   members     GroupMember[]
   sessions    GroupSession[]
   createdAt   DateTime @default(now())
-  
+
   owner       User     @relation(fields: [ownerId], references: [clerkUserId])
 }
 
@@ -785,15 +836,16 @@ model GroupMember {
   userId    String
   role      String   // "OWNER", "ADMIN", "MEMBER"
   joinedAt  DateTime @default(now())
-  
+
   group     StudyGroup @relation(fields: [groupId], references: [id])
   user      User       @relation(fields: [userId], references: [clerkUserId])
-  
+
   @@unique([groupId, userId])
 }
 ```
 
 **B. Shared Quizzes**
+
 ```tsx
 - Create custom quizzes and share with group
 - Collaborative quiz creation
@@ -802,6 +854,7 @@ model GroupMember {
 ```
 
 **C. Discussion Forums**
+
 ```tsx
 // Question-specific discussions
 - "Why is option B incorrect here?"
@@ -813,9 +866,11 @@ model GroupMember {
 ---
 
 ### 5.3 **Video Explanations** 🎥
+
 **Impact:** HIGH | **Effort:** HIGH | **Timeline:** Ongoing
 
 **A. Integration with YouTube/Vimeo**
+
 ```tsx
 // Add video IDs to questions
 interface Question {
@@ -825,10 +880,11 @@ interface Question {
 }
 
 // Component
-<VideoExplanation url={question.videoExplanationUrl} />
+<VideoExplanation url={question.videoExplanationUrl} />;
 ```
 
 **B. Record Your Own Explanations**
+
 ```tsx
 // Allow educators to upload video explanations
 - Screen recording integration
@@ -841,70 +897,74 @@ interface Question {
 ## 🎯 PRIORITY 6: Developer Experience & Code Quality
 
 ### 6.1 **Testing Infrastructure** 🧪
+
 **Impact:** MEDIUM | **Effort:** MEDIUM | **Timeline:** 1-2 weeks
 
 **Current State:** No automated tests (risky for production)
 
 **A. Unit Tests (Jest + Testing Library)**
+
 ```tsx
 // Install: npm install --save-dev jest @testing-library/react @testing-library/jest-dom
 
 // src/__tests__/components/QuestionCard.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import QuestionCard from '@/components/QuestionCard';
+import { render, screen, fireEvent } from "@testing-library/react";
+import QuestionCard from "@/components/QuestionCard";
 
-describe('QuestionCard', () => {
-  it('displays question text', () => {
+describe("QuestionCard", () => {
+  it("displays question text", () => {
     const question = {
-      question: 'What is the first drug in cardiac arrest?',
-      options: ['Epinephrine', 'Amiodarone', 'Lidocaine', 'Atropine'],
+      question: "What is the first drug in cardiac arrest?",
+      options: ["Epinephrine", "Amiodarone", "Lidocaine", "Atropine"],
       correctIndex: 0,
     };
-    
+
     render(<QuestionCard question={question} />);
     expect(screen.getByText(question.question)).toBeInTheDocument();
   });
 
-  it('allows selecting an answer', () => {
+  it("allows selecting an answer", () => {
     const handleSelect = jest.fn();
     render(<QuestionCard onSelect={handleSelect} />);
-    
-    fireEvent.click(screen.getByText('Epinephrine'));
+
+    fireEvent.click(screen.getByText("Epinephrine"));
     expect(handleSelect).toHaveBeenCalledWith(0);
   });
 });
 ```
 
 **B. E2E Tests (Playwright)**
+
 ```tsx
 // Install: npm install --save-dev @playwright/test
 
 // tests/e2e/quiz-flow.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('user can complete a quiz', async ({ page }) => {
-  await page.goto('/quiz-arena/create');
-  
+test("user can complete a quiz", async ({ page }) => {
+  await page.goto("/quiz-arena/create");
+
   // Create quiz
-  await page.fill('[name="title"]', 'Test Quiz');
+  await page.fill('[name="title"]', "Test Quiz");
   await page.click('button:has-text("Create Quiz")');
-  
+
   // Verify creation
-  await expect(page.locator('h1')).toContainText('Test Quiz');
+  await expect(page.locator("h1")).toContainText("Test Quiz");
 });
 ```
 
 **C. API Tests**
+
 ```tsx
 // tests/api/questions.test.ts
-import { GET } from '@/app/api/questions/route';
+import { GET } from "@/app/api/questions/route";
 
-describe('Questions API', () => {
-  it('returns ACLS questions', async () => {
-    const request = new Request('http://localhost/api/questions?category=ACLS');
+describe("Questions API", () => {
+  it("returns ACLS questions", async () => {
+    const request = new Request("http://localhost/api/questions?category=ACLS");
     const response = await GET(request);
     const data = await response.json();
-    
+
     expect(data.success).toBe(true);
     expect(data.questions).toBeInstanceOf(Array);
   });
@@ -912,6 +972,7 @@ describe('Questions API', () => {
 ```
 
 **D. Set Test Coverage Goals**
+
 ```json
 // package.json
 {
@@ -931,9 +992,11 @@ describe('Questions API', () => {
 ---
 
 ### 6.2 **Code Quality Tools** 🔍
+
 **Impact:** MEDIUM | **Effort:** LOW | **Timeline:** 1 week
 
 **A. Husky Pre-commit Hooks**
+
 ```bash
 npm install --save-dev husky lint-staged
 
@@ -945,6 +1008,7 @@ npm run test
 ```
 
 **B. Prettier Configuration**
+
 ```json
 // .prettierrc
 {
@@ -957,6 +1021,7 @@ npm run test
 ```
 
 **C. ESLint Enhancements**
+
 ```json
 // eslint.config.mjs
 rules: {
@@ -970,14 +1035,16 @@ rules: {
 ---
 
 ### 6.3 **Monitoring & Observability** 📈
+
 **Impact:** HIGH | **Effort:** MEDIUM | **Timeline:** 1 week
 
 **A. Error Tracking (Sentry)**
+
 ```tsx
 // Install: npm install @sentry/nextjs
 
 // sentry.client.config.ts
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -994,6 +1061,7 @@ Sentry.init({
 ```
 
 **B. Performance Monitoring (Vercel Analytics)**
+
 ```tsx
 // Already on Vercel, just enable:
 // 1. Go to Vercel Dashboard
@@ -1002,18 +1070,22 @@ Sentry.init({
 ```
 
 **C. Custom Analytics Events**
+
 ```tsx
 // src/lib/analytics.ts
-export function trackEvent(eventName: string, properties?: Record<string, any>) {
+export function trackEvent(
+  eventName: string,
+  properties?: Record<string, any>
+) {
   // Send to your analytics service
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, properties);
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", eventName, properties);
   }
 }
 
 // Usage:
-trackEvent('quiz_completed', {
-  category: 'ACLS',
+trackEvent("quiz_completed", {
+  category: "ACLS",
   score: 85,
   questionsCount: 20,
   timeSpent: 300, // seconds
@@ -1021,20 +1093,21 @@ trackEvent('quiz_completed', {
 ```
 
 **D. Database Query Monitoring**
+
 ```tsx
 // Add Prisma logging in production
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient({
   log: [
-    { emit: 'event', level: 'query' },
-    { emit: 'event', level: 'error' },
+    { emit: "event", level: "query" },
+    { emit: "event", level: "error" },
   ],
 });
 
-prisma.$on('query', (e) => {
+prisma.$on("query", (e) => {
   if (e.duration > 1000) {
-    console.warn('Slow query detected:', e.query, `${e.duration}ms`);
+    console.warn("Slow query detected:", e.query, `${e.duration}ms`);
   }
 });
 ```
@@ -1044,6 +1117,7 @@ prisma.$on('query', (e) => {
 ## 🎯 PRIORITY 7: Security & Compliance
 
 ### 7.1 **Apply RLS Security (URGENT)** 🔒
+
 **Impact:** CRITICAL | **Effort:** LOW | **Timeline:** 1 day
 
 **YOU ALREADY HAVE THE SQL FILE - APPLY IT NOW!**
@@ -1058,6 +1132,7 @@ prisma.$on('query', (e) => {
 ```
 
 **Why This is Critical:**
+
 - Currently anyone can read/write ALL data
 - HIPAA/PHI compliance risk
 - Production security vulnerability
@@ -1066,65 +1141,69 @@ prisma.$on('query', (e) => {
 ---
 
 ### 7.2 **Additional Security Measures** 🛡️
+
 **Impact:** HIGH | **Effort:** MEDIUM | **Timeline:** 1 week
 
 **A. Rate Limiting**
+
 ```tsx
 // Install: npm install @upstash/ratelimit @upstash/redis
 
 // src/middleware.ts
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, '10 s'), // 10 requests per 10 seconds
+  limiter: Ratelimit.slidingWindow(10, "10 s"), // 10 requests per 10 seconds
 });
 
 export async function middleware(request: NextRequest) {
-  const ip = request.ip ?? '127.0.0.1';
+  const ip = request.ip ?? "127.0.0.1";
   const { success } = await ratelimit.limit(ip);
-  
+
   if (!success) {
-    return new Response('Too many requests', { status: 429 });
+    return new Response("Too many requests", { status: 429 });
   }
-  
+
   return NextResponse.next();
 }
 ```
 
 **B. Content Security Policy**
+
 ```tsx
 // next.config.ts
 const securityHeaders = [
   {
-    key: 'X-DNS-Prefetch-Control',
-    value: 'on'
+    key: "X-DNS-Prefetch-Control",
+    value: "on",
   },
   {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload'
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
   },
   {
-    key: 'X-Content-Type-Options',
-    value: 'nosniff'
+    key: "X-Content-Type-Options",
+    value: "nosniff",
   },
   {
-    key: 'X-Frame-Options',
-    value: 'DENY'
+    key: "X-Frame-Options",
+    value: "DENY",
   },
   {
-    key: 'Referrer-Policy',
-    value: 'origin-when-cross-origin'
+    key: "Referrer-Policy",
+    value: "origin-when-cross-origin",
   },
 ];
 ```
 
 **C. Input Sanitization**
+
 ```tsx
 // Install: npm install dompurify isomorphic-dompurify
 
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 
 // Sanitize user input before displaying
 const cleanNickname = DOMPurify.sanitize(nickname);
@@ -1136,6 +1215,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 ## 📋 Implementation Roadmap
 
 ### **Phase 1: Critical Fixes (Week 1)**
+
 - [ ] Apply RLS Security SQL migration ⚠️ **URGENT**
 - [ ] Add error boundaries to all major routes
 - [ ] Implement toast notifications
@@ -1143,6 +1223,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 - [ ] Fix TODO in notes save functionality
 
 ### **Phase 2: Performance & UX (Weeks 2-3)**
+
 - [ ] Implement React Query for data fetching
 - [ ] Add PWA capabilities
 - [ ] Optimize images with Next.js Image
@@ -1150,6 +1231,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 - [ ] Bottom navigation for mobile
 
 ### **Phase 3: Engagement Features (Weeks 4-6)**
+
 - [ ] Gamification system (XP, levels, achievements)
 - [ ] Spaced repetition algorithm
 - [ ] Enhanced analytics dashboard
@@ -1157,6 +1239,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 - [ ] Leaderboards
 
 ### **Phase 4: Advanced Learning (Weeks 7-10)**
+
 - [ ] AI study assistant integration
 - [ ] Personalized study plans
 - [ ] Study groups functionality
@@ -1164,6 +1247,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 - [ ] Video explanations
 
 ### **Phase 5: Quality & Scale (Weeks 11-12)**
+
 - [ ] Comprehensive test suite (80%+ coverage)
 - [ ] Performance monitoring (Sentry)
 - [ ] Accessibility audit (WCAG AA)
@@ -1175,6 +1259,7 @@ const cleanNotes = DOMPurify.sanitize(notes);
 ## 💰 Cost-Benefit Analysis
 
 ### High ROI (Do First)
+
 1. **RLS Security** - Free, prevents breach
 2. **PWA** - $0 cost, 40% engagement boost
 3. **Gamification** - Medium effort, high retention
@@ -1182,12 +1267,14 @@ const cleanNotes = DOMPurify.sanitize(notes);
 5. **Toast Notifications** - 1 day, better feedback
 
 ### Medium ROI (Phase 2-3)
+
 1. **AI Assistant** - OpenAI costs ~$50-200/month
 2. **Spaced Repetition** - Complex but proven effective
 3. **Mobile Optimization** - Essential for growth
 4. **Analytics Dashboard** - Helps users see progress
 
 ### Long-term ROI (Phase 4-5)
+
 1. **Study Groups** - Community building
 2. **Video Explanations** - Content creation overhead
 3. **Discussion Forums** - Moderation required
@@ -1198,27 +1285,32 @@ const cleanNotes = DOMPurify.sanitize(notes);
 ## 🎯 Quick Wins (This Week)
 
 ### 1. **Apply Security Fix** (30 minutes)
+
 ```bash
 # Run the SQL migration you already have
 ```
 
 ### 2. **Add Toast Notifications** (2 hours)
+
 ```bash
 npm install sonner
 # Replace all alert() calls with toast()
 ```
 
 ### 3. **Loading Skeletons** (4 hours)
+
 ```tsx
 # Replace loading spinners with skeleton screens
 ```
 
 ### 4. **Error Messages** (2 hours)
+
 ```tsx
 # Update error handling with user-friendly messages
 ```
 
 ### 5. **Mobile Touch Targets** (3 hours)
+
 ```tsx
 # Increase button sizes on mobile
 ```
@@ -1232,6 +1324,7 @@ npm install sonner
 Track these KPIs after implementing improvements:
 
 ### User Engagement
+
 - Daily Active Users (DAU)
 - Session duration
 - Questions answered per session
@@ -1239,18 +1332,21 @@ Track these KPIs after implementing improvements:
 - Return rate (Day 1, 7, 30)
 
 ### Performance
+
 - Page load time (< 2s goal)
 - Time to Interactive (< 3s)
 - API response time (< 200ms)
 - Error rate (< 0.1%)
 
 ### Learning Outcomes
+
 - Average score improvement over time
 - Retention rate (spaced repetition)
 - Bookmark usage
 - Review session frequency
 
 ### Business Metrics
+
 - User registration rate
 - Mobile vs Desktop usage
 - Feature adoption rates
@@ -1263,12 +1359,14 @@ Track these KPIs after implementing improvements:
 Your ECCCO platform has a **solid foundation** with impressive core features. The roadmap above will transform it into a **world-class medical education platform** that rivals Osmosis, Anki, and Quizlet.
 
 ### Immediate Next Steps:
+
 1. **TODAY:** Apply RLS security SQL migration
 2. **This Week:** Implement quick wins (toasts, skeletons, mobile improvements)
 3. **This Month:** Add PWA + gamification basics
 4. **Next Quarter:** AI assistant + spaced repetition
 
 ### Expected Outcomes (3 months):
+
 - 📈 **3-5x increase** in daily active users
 - ⚡ **50% faster** perceived performance
 - 📱 **60% mobile engagement** boost

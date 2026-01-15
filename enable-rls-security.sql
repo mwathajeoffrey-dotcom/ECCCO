@@ -218,7 +218,7 @@ CREATE POLICY "Participants can submit answers"
   WITH CHECK (true);
 
 -- LiveQuizSession (if exists): Similar to QuizSession
-DO $$ 
+DO $$
 BEGIN
     IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'LiveQuizSession') THEN
         EXECUTE 'CREATE POLICY "Anyone can view live quiz sessions" ON "LiveQuizSession" FOR SELECT USING (true)';
@@ -228,7 +228,7 @@ BEGIN
 END $$;
 
 -- LiveQuizParticipant (if exists)
-DO $$ 
+DO $$
 BEGIN
     IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'LiveQuizParticipant') THEN
         EXECUTE 'CREATE POLICY "Anyone can view live quiz participants" ON "LiveQuizParticipant" FOR SELECT USING (true)';

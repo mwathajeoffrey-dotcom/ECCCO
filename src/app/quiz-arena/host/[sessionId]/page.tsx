@@ -84,9 +84,15 @@ export default function HostQuizPage() {
   useEffect(() => {
     if (isTimerActive && timeLeft > 0) {
       timerRef.current = setTimeout(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0 && isTimerActive && session && session.status !== "LOBBY" && session.status !== "FINISHED") {
+    } else if (
+      timeLeft === 0 &&
+      isTimerActive &&
+      session &&
+      session.status !== "LOBBY" &&
+      session.status !== "FINISHED"
+    ) {
       // Time's up! Auto-advance to next question
       handleNextQuestion();
     }
@@ -101,16 +107,17 @@ export default function HostQuizPage() {
   // Check if all participants have submitted when session updates
   useEffect(() => {
     if (session && session.status !== "LOBBY" && session.status !== "FINISHED") {
-      const currentQuestionAnswers = session.answers?.filter(
-        (answer) => answer.questionIndex === session.currentQuestion
-      ) || [];
-      
+      const currentQuestionAnswers =
+        session.answers?.filter((answer) => answer.questionIndex === session.currentQuestion) || [];
+
       setSubmittedCount(currentQuestionAnswers.length);
-      
+
       // Auto-advance if all participants have submitted
-      if (session.participants.length > 0 && 
-          currentQuestionAnswers.length === session.participants.length &&
-          isTimerActive) {
+      if (
+        session.participants.length > 0 &&
+        currentQuestionAnswers.length === session.participants.length &&
+        isTimerActive
+      ) {
         // Small delay to show all submissions before advancing
         setTimeout(() => {
           handleNextQuestion();
@@ -126,7 +133,7 @@ export default function HostQuizPage() {
         throw new Error("Session not found");
       }
       const data = await response.json();
-      
+
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
         console.error("Session has no questions:", data);
@@ -134,7 +141,7 @@ export default function HostQuizPage() {
         setLoading(false);
         return;
       }
-      
+
       console.log("Host session loaded:", {
         id: data.id,
         status: data.status,
@@ -143,7 +150,7 @@ export default function HostQuizPage() {
         participantCount: data.participants?.length || 0,
         answerCount: data.answers?.length || 0,
       });
-      
+
       setSession(data);
       setParticipants(data.participants || []);
       setLoading(false);
@@ -256,10 +263,10 @@ export default function HostQuizPage() {
   const currentQuestionData = session.questions[session.currentQuestion];
   const isLobby = session.status === "LOBBY";
   const isFinished = session.status === "FINISHED";
-  
+
   // Extract question text - handle both field names
-  const currentQuestionText = currentQuestionData 
-    ? (currentQuestionData.questionText || currentQuestionData.question || "Question text not available")
+  const currentQuestionText = currentQuestionData
+    ? currentQuestionData.questionText || currentQuestionData.question || "Question text not available"
     : null;
 
   return (
@@ -398,30 +405,36 @@ export default function HostQuizPage() {
             {/* Live Timer & Submission Counter */}
             <div className="mb-6 grid grid-cols-2 gap-4">
               {/* Countdown Timer */}
-              <div className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-4 ${
-                timeLeft <= 5 ? 'border-red-500 animate-pulse' : 
-                timeLeft <= 10 ? 'border-orange-500' : 'border-green-500'
-              }`}>
+              <div
+                className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-4 ${
+                  timeLeft <= 5
+                    ? "border-red-500 animate-pulse"
+                    : timeLeft <= 10
+                    ? "border-orange-500"
+                    : "border-green-500"
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-gray-600 dark:text-gray-400 font-semibold mb-1">Time Remaining</div>
-                    <div className={`text-5xl font-black ${
-                      timeLeft <= 5 ? 'text-red-600' :
-                      timeLeft <= 10 ? 'text-orange-600' : 'text-green-600'
-                    }`}>
+                    <div
+                      className={`text-5xl font-black ${
+                        timeLeft <= 5 ? "text-red-600" : timeLeft <= 10 ? "text-orange-600" : "text-green-600"
+                      }`}
+                    >
                       {timeLeft}s
                     </div>
                   </div>
-                  <Clock className={`w-16 h-16 ${
-                    timeLeft <= 5 ? 'text-red-500' :
-                    timeLeft <= 10 ? 'text-orange-500' : 'text-green-500'
-                  }`} />
+                  <Clock
+                    className={`w-16 h-16 ${
+                      timeLeft <= 5 ? "text-red-500" : timeLeft <= 10 ? "text-orange-500" : "text-green-500"
+                    }`}
+                  />
                 </div>
                 <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                   <div
                     className={`h-full transition-all duration-1000 ${
-                      timeLeft <= 5 ? 'bg-red-500' :
-                      timeLeft <= 10 ? 'bg-orange-500' : 'bg-green-500'
+                      timeLeft <= 5 ? "bg-red-500" : timeLeft <= 10 ? "bg-orange-500" : "bg-green-500"
                     }`}
                     style={{ width: `${(timeLeft / (session?.timePerQuestion || 30)) * 100}%` }}
                   />
@@ -447,15 +460,15 @@ export default function HostQuizPage() {
                 <div className="mt-3 flex items-center gap-2 text-sm">
                   {participants.map((p) => {
                     const hasSubmitted = session?.answers?.some(
-                      a => a.participantId === p.id && a.questionIndex === session.currentQuestion
+                      (a) => a.participantId === p.id && a.questionIndex === session.currentQuestion
                     );
                     return (
                       <div
                         key={p.id}
                         className={`flex-1 h-2 rounded-full ${
-                          hasSubmitted ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+                          hasSubmitted ? "bg-green-500" : "bg-gray-300 dark:bg-gray-600"
                         }`}
-                        title={`${p.nickname}${hasSubmitted ? ' ✓' : ''}`}
+                        title={`${p.nickname}${hasSubmitted ? " ✓" : ""}`}
                       />
                     );
                   })}
@@ -472,15 +485,15 @@ export default function HostQuizPage() {
                       Question {session.currentQuestion + 1} / {session.questions.length}
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-purple-600 font-bold">
-                        {session.pointsPerQuestion} pts
-                      </div>
+                      <div className="text-purple-600 font-bold">{session.pointsPerQuestion} pts</div>
                     </div>
                   </div>
 
                   {currentQuestionData && (
                     <>
-                      <div className="text-xl font-semibold text-gray-900 dark:text-white mb-6">{currentQuestionText}</div>
+                      <div className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                        {currentQuestionText}
+                      </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         {currentQuestionData.options?.map((option: string, index: number) => {

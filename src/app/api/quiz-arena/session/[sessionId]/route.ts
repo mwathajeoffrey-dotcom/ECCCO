@@ -32,14 +32,14 @@ export async function GET(request: NextRequest, context: { params: Promise<{ ses
     let questions = [];
     try {
       questions = JSON.parse(session.questions as string);
-      
+
       // Ensure each question has both 'question' and 'questionText' fields
       questions = questions.map((q: any) => ({
         ...q,
         question: q.question || q.questionText,
         questionText: q.questionText || q.question,
       }));
-      
+
       logger.debug("Session questions parsed successfully", {
         sessionId,
         questionCount: questions.length,

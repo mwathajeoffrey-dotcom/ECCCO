@@ -3,6 +3,7 @@
 ## ⚠️ URGENT: Apply This Today
 
 Your database currently has **18 security vulnerabilities** because Row Level Security (RLS) is disabled. This means:
+
 - ❌ Anyone can read ALL user data
 - ❌ Anyone can modify quiz sessions
 - ❌ Anyone can see all bookmarks
@@ -16,25 +17,30 @@ Your database currently has **18 security vulnerabilities** because Row Level Se
 ## 📋 Step-by-Step Instructions
 
 ### Step 1: Open Supabase Dashboard
+
 1. Go to [https://supabase.com/dashboard](https://supabase.com/dashboard)
 2. Sign in to your account
 3. Select your ECCCO project
 
 ### Step 2: Open SQL Editor
+
 1. In the left sidebar, click **"SQL Editor"**
 2. Click **"New Query"** button (top right)
 
 ### Step 3: Copy the SQL Migration
+
 1. Open the file: `enable-rls-security.sql` in your project root
 2. Select ALL the contents (Cmd+A / Ctrl+A)
 3. Copy (Cmd+C / Ctrl+C)
 
 ### Step 4: Paste and Run
+
 1. Paste the SQL into the Supabase SQL Editor
 2. Click **"Run"** button (or Cmd+Enter)
 3. Wait for completion (should take 2-3 seconds)
 
 ### Step 5: Verify Success ✅
+
 1. In Supabase dashboard, go to **Database → Security Advisor**
 2. Confirm you see: **"0 critical issues"** 🎉
 3. Previously showed **"18 RLS Disabled in Public"** - now should be ZERO
@@ -46,11 +52,13 @@ Your database currently has **18 security vulnerabilities** because Row Level Se
 The migration enables Row Level Security on 18 tables and creates policies that:
 
 ### Public Read-Only Tables (No Auth Required)
+
 ✅ **Question** - Anyone can browse questions
-✅ **Topic** - Anyone can see topics  
+✅ **Topic** - Anyone can see topics
 ✅ **EvidenceReference** - Anyone can read evidence
 
 ### User-Owned Tables (Auth Required)
+
 🔐 **Bookmarks** - Users see only THEIR bookmarks
 🔐 **User** - Users see only THEIR profile
 🔐 **Attempt** - Users see only THEIR attempts
@@ -59,16 +67,19 @@ The migration enables Row Level Security on 18 tables and creates policies that:
 🔐 **StudyProgress** - Users see only THEIR progress
 
 ### Quiz Arena Tables (Mixed Access)
+
 🎮 **QuizSession** - Public read, host can modify
 🎮 **Participant** - See participants in YOUR sessions
 🎮 **Answer** - See answers in YOUR sessions
 🎮 **Leaderboard** - Public read
 
 ### Feedback Tables
+
 💬 **Feedback** - Anyone can submit, users see their own
 💬 **QuestionFeedback** - Anyone can submit feedback
 
 ### Admin Tables
+
 👑 **AdminLog** - Admins only
 👑 **EvidenceReference** (write) - Admins can edit
 
@@ -77,6 +88,7 @@ The migration enables Row Level Security on 18 tables and creates policies that:
 ## 🧪 Test After Applying
 
 ### Test 1: Anonymous User (Not Signed In)
+
 ```bash
 # Should work:
 - Browse questions ✅
@@ -90,6 +102,7 @@ The migration enables Row Level Security on 18 tables and creates policies that:
 ```
 
 ### Test 2: Signed-In User
+
 ```bash
 # Should work:
 - All anonymous features ✅
@@ -104,6 +117,7 @@ The migration enables Row Level Security on 18 tables and creates policies that:
 ```
 
 ### Test 3: Admin User
+
 ```bash
 # Should work:
 - All user features ✅
@@ -117,13 +131,17 @@ The migration enables Row Level Security on 18 tables and creates policies that:
 ## 🚨 If You See Errors
 
 ### Error: "permission denied for table"
+
 **Solution:** The policy isn't applied yet. Re-run the SQL.
 
 ### Error: "column does not exist"
+
 **Solution:** Your schema might be different. Check table names match.
 
 ### Error: "already exists"
+
 **Solution:** RLS already enabled. You can skip or drop existing policies first:
+
 ```sql
 -- Run this first if you get "already exists" errors
 ALTER TABLE "Question" DISABLE ROW LEVEL SECURITY;
@@ -136,6 +154,7 @@ DROP POLICY IF EXISTS "Public read access" ON "Question";
 ## 📊 Before vs After
 
 ### BEFORE (Current - INSECURE ❌)
+
 ```sql
 -- Anyone can do this:
 SELECT * FROM "User";  -- See ALL users
@@ -144,6 +163,7 @@ DELETE FROM "QuizSession";  -- Delete ANY quiz
 ```
 
 ### AFTER (Secure ✅)
+
 ```sql
 -- Anonymous users:
 SELECT * FROM "Question";  -- ✅ Works
@@ -176,11 +196,13 @@ DELETE FROM "QuizSession" WHERE "ownerId" = auth.uid();  -- ✅ Own sessions onl
 Once RLS is enabled, you can:
 
 1. **Monitor Security**
+
    - Regularly check Security Advisor
    - Review RLS policies quarterly
    - Update as new tables are added
 
 2. **Enhanced Security**
+
    - Add rate limiting (covered in roadmap)
    - Implement content security policy
    - Add input sanitization
@@ -195,10 +217,12 @@ Once RLS is enabled, you can:
 ## 💡 Pro Tips
 
 1. **Backup First** (Optional but Recommended)
+
    - Go to Database → Backups
    - Create a snapshot before applying
 
 2. **Test in Development**
+
    - If you have a dev database, test there first
    - Verify queries still work as expected
 
@@ -229,6 +253,7 @@ If you encounter issues after applying RLS:
 ## 🎉 Success!
 
 Once applied, your ECCCO platform will be:
+
 - ✅ **Secure** - Users can only access their own data
 - ✅ **Compliant** - Meets privacy standards
 - ✅ **Safe** - No unauthorized data access
@@ -238,7 +263,7 @@ Once applied, your ECCCO platform will be:
 
 ---
 
-**Last Updated:** January 14, 2026  
-**Priority:** CRITICAL 🚨  
-**Time Required:** 5 minutes  
+**Last Updated:** January 14, 2026
+**Priority:** CRITICAL 🚨
+**Time Required:** 5 minutes
 **Difficulty:** Easy (copy-paste)

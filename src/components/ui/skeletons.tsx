@@ -1,35 +1,30 @@
-import React from 'react';
+import React from "react";
 
 // Base Skeleton Component
 interface SkeletonProps {
   className?: string;
-  variant?: 'rectangular' | 'circular' | 'text';
-  animation?: 'pulse' | 'wave' | 'none';
+  variant?: "rectangular" | "circular" | "text";
+  animation?: "pulse" | "wave" | "none";
   style?: React.CSSProperties;
 }
 
-export function Skeleton({ 
-  className = '', 
-  variant = 'rectangular',
-  animation = 'pulse',
-  style
-}: SkeletonProps) {
-  const baseClasses = 'bg-gray-200 dark:bg-gray-700';
-  
+export function Skeleton({ className = "", variant = "rectangular", animation = "pulse", style }: SkeletonProps) {
+  const baseClasses = "bg-gray-200 dark:bg-gray-700";
+
   const variantClasses = {
-    rectangular: 'rounded-md',
-    circular: 'rounded-full',
-    text: 'rounded h-4'
+    rectangular: "rounded-md",
+    circular: "rounded-full",
+    text: "rounded h-4",
   };
-  
+
   const animationClasses = {
-    pulse: 'animate-pulse',
-    wave: 'animate-shimmer',
-    none: ''
+    pulse: "animate-pulse",
+    wave: "animate-shimmer",
+    none: "",
   };
-  
+
   return (
-    <div 
+    <div
       className={`${baseClasses} ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
       style={style}
       aria-hidden="true"
@@ -43,21 +38,21 @@ export function QuestionSkeleton() {
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md" role="status" aria-label="Loading question">
       {/* Question Number */}
       <Skeleton className="h-6 w-32 mb-4" />
-      
+
       {/* Question Text */}
       <div className="space-y-2 mb-6">
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-3/4" />
       </div>
-      
+
       {/* Answer Options */}
       <div className="space-y-3 mb-6">
         {[1, 2, 3, 4].map((i) => (
           <Skeleton key={i} className="h-12 w-full" />
         ))}
       </div>
-      
+
       {/* Bottom Actions */}
       <div className="flex gap-4 justify-between">
         <Skeleton className="h-10 w-32" />
@@ -74,13 +69,13 @@ export function QuizCardSkeleton() {
       <Skeleton className="h-6 w-48 mb-3" />
       <Skeleton className="h-4 w-full mb-2" />
       <Skeleton className="h-4 w-2/3 mb-4" />
-      
+
       <div className="flex gap-2 mb-4">
         <Skeleton className="h-6 w-20" />
         <Skeleton className="h-6 w-20" />
         <Skeleton className="h-6 w-20" />
       </div>
-      
+
       <Skeleton className="h-10 w-full" />
     </div>
   );
@@ -89,7 +84,11 @@ export function QuizCardSkeleton() {
 // Dashboard Stats Skeleton (4-grid stats display)
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="status" aria-label="Loading dashboard statistics">
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      role="status"
+      aria-label="Loading dashboard statistics"
+    >
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
           <div className="flex items-start justify-between mb-4">
@@ -111,12 +110,16 @@ interface LeaderboardSkeletonProps {
 
 export function LeaderboardSkeleton({ rows = 10 }: LeaderboardSkeletonProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden" role="status" aria-label="Loading leaderboard">
+    <div
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+      role="status"
+      aria-label="Loading leaderboard"
+    >
       {/* Header */}
       <div className="bg-gray-50 dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
         <Skeleton className="h-6 w-48" />
       </div>
-      
+
       {/* Rows */}
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {Array.from({ length: rows }).map((_, i) => (
@@ -158,7 +161,11 @@ interface TopicGridSkeletonProps {
 
 export function TopicGridSkeleton({ count = 12 }: TopicGridSkeletonProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="status" aria-label="Loading topics">
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      role="status"
+      aria-label="Loading topics"
+    >
       {Array.from({ length: count }).map((_, i) => (
         <TopicCardSkeleton key={i} />
       ))}
@@ -202,7 +209,11 @@ interface TableSkeletonProps {
 
 export function TableSkeleton({ rows = 10, columns = 5 }: TableSkeletonProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden" role="status" aria-label="Loading table">
+    <div
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+      role="status"
+      aria-label="Loading table"
+    >
       {/* Header */}
       <div className="bg-gray-50 dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex gap-4">
@@ -211,7 +222,7 @@ export function TableSkeleton({ rows = 10, columns = 5 }: TableSkeletonProps) {
           ))}
         </div>
       </div>
-      
+
       {/* Rows */}
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {Array.from({ length: rows }).map((_, i) => (
@@ -271,7 +282,7 @@ interface ChartSkeletonProps {
   height?: string;
 }
 
-export function ChartSkeleton({ height = 'h-64' }: ChartSkeletonProps) {
+export function ChartSkeleton({ height = "h-64" }: ChartSkeletonProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md" role="status" aria-label="Loading chart">
       <Skeleton className="h-6 w-48 mb-6" />
@@ -298,11 +309,11 @@ export function PageSkeleton() {
         <Skeleton className="h-10 w-64 mb-4" />
         <Skeleton className="h-6 w-96" />
       </div>
-      
+
       {/* Content */}
       <div className="max-w-7xl mx-auto">
         <DashboardStatsSkeleton />
-        
+
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartSkeleton />
           <ChartSkeleton />

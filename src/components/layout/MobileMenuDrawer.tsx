@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from 'lucide-react';
-import { useUser, useClerk } from '@clerk/nextjs';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 interface MobileMenuDrawerProps {
   isOpen: boolean;
@@ -24,31 +24,31 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   const mainMenuItems = [
-    { icon: Home, label: 'Dashboard', href: '/dashboard', description: 'Your progress & stats' },
-    { icon: BookOpen, label: 'Practice', href: '/practice', description: 'ACLS & PALS questions' },
-    { icon: FileText, label: 'Exam Mode', href: '/exam', description: 'Timed practice exams' },
-    { icon: Gamepad2, label: 'Quiz Arena', href: '/quiz-arena', description: 'Multiplayer quizzes' },
-    { icon: User, label: 'Profile', href: '/profile', description: 'Your account settings' },
+    { icon: Home, label: "Dashboard", href: "/dashboard", description: "Your progress & stats" },
+    { icon: BookOpen, label: "Practice", href: "/practice", description: "ACLS & PALS questions" },
+    { icon: FileText, label: "Exam Mode", href: "/exam", description: "Timed practice exams" },
+    { icon: Gamepad2, label: "Quiz Arena", href: "/quiz-arena", description: "Multiplayer quizzes" },
+    { icon: User, label: "Profile", href: "/profile", description: "Your account settings" },
   ];
 
   const secondaryMenuItems = [
-    { icon: Settings, label: 'Settings', href: '/settings' },
-    { icon: HelpCircle, label: 'Support', href: '/support' },
+    { icon: Settings, label: "Settings", href: "/settings" },
+    { icon: HelpCircle, label: "Support", href: "/support" },
   ];
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/' || pathname === '/dashboard';
+    if (href === "/dashboard") {
+      return pathname === "/" || pathname === "/dashboard";
     }
     return pathname.startsWith(href);
   };
@@ -58,7 +58,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity duration-300 md:hidden ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
         aria-hidden="true"
@@ -67,7 +67,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
       {/* Drawer */}
       <div
         className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-gray-900 z-[70] transition-transform duration-300 ease-out md:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         role="dialog"
         aria-modal="true"
@@ -79,17 +79,13 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
             {user?.imageUrl && (
               <img
                 src={user.imageUrl}
-                alt={user.firstName || 'User'}
+                alt={user.firstName || "User"}
                 className="w-10 h-10 rounded-full ring-2 ring-blue-500"
               />
             )}
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {user?.firstName || 'Student'}
-              </p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
-                {user?.primaryEmailAddress?.emailAddress}
-              </p>
+              <p className="font-semibold text-gray-900 dark:text-white">{user?.firstName || "Student"}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">{user?.primaryEmailAddress?.emailAddress}</p>
             </div>
           </div>
           <button
@@ -107,7 +103,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
             <div className="space-y-1">
               {mainMenuItems.map(({ icon: Icon, label, href, description }) => {
                 const active = isActive(href);
-                
+
                 return (
                   <Link
                     key={href}
@@ -116,24 +112,18 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                       flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                       ${
                         active
-                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                       }
                     `}
-                    aria-current={active ? 'page' : undefined}
+                    aria-current={active ? "page" : undefined}
                   >
                     <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={active ? 2.5 : 2} />
                     <div className="flex-1 min-w-0">
-                      <p className={`font-medium ${active ? 'font-semibold' : ''}`}>
-                        {label}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {description}
-                      </p>
+                      <p className={`font-medium ${active ? "font-semibold" : ""}`}>{label}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
                     </div>
-                    {active && (
-                      <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    )}
+                    {active && <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
                   </Link>
                 );
               })}

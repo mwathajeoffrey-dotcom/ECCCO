@@ -2,8 +2,8 @@
 
 ## Deployment Status: ✅ LIVE
 
-**Commit:** fdf0297  
-**Deployment ID:** cpt1::xf9r5-1768365019893-1a95892456a1  
+**Commit:** fdf0297
+**Deployment ID:** cpt1::xf9r5-1768365019893-1a95892456a1
 **URL:** https://eccco.vercel.app
 
 ---
@@ -11,11 +11,13 @@
 ## 🎯 Feature 1: Show Answers After Attempt - NOW WORKING!
 
 ### What Was Fixed:
+
 Previously, answers and explanations showed automatically the moment you selected any option. Now you have full control!
 
 ### How to Use:
 
 #### Step 1: Configure Your Preference
+
 1. Go to **Settings** (from sidebar or `/settings`)
 2. Click **"Practice Settings"** tab (second tab)
 3. Find **"Show Answers Immediately"** toggle
@@ -25,6 +27,7 @@ Previously, answers and explanations showed automatically the moment you selecte
 #### Step 2: Practice with Your Setting
 
 **When Toggle is ON (Immediate Mode - Default):**
+
 ```
 1. Open any question
 2. Click an answer choice
@@ -34,6 +37,7 @@ Previously, answers and explanations showed automatically the moment you selecte
 ```
 
 **When Toggle is OFF (Manual Submit Mode):**
+
 ```
 1. Open any question
 2. Click an answer choice
@@ -45,9 +49,11 @@ Previously, answers and explanations showed automatically the moment you selecte
 ```
 
 ### Bonus Features Added:
+
 In Practice Settings, you also get:
+
 - **Shuffle Questions** toggle
-- **Auto-advance to Next Question** toggle  
+- **Auto-advance to Next Question** toggle
 - **Default Questions Per Session** dropdown (10/20/30/50/100)
 
 All settings save automatically to your browser!
@@ -57,15 +63,18 @@ All settings save automatically to your browser!
 ## 📖 Feature 2: Bookmark View Question - NOW WORKING!
 
 ### What Was Fixed:
+
 The document icon (📄) next to the delete button in your Saved Questions was doing nothing. Now it takes you directly to that question!
 
 ### How to Use:
 
 #### Step 1: Go to Your Bookmarks
+
 1. Click **"Saved Questions"** in sidebar
 2. You'll see all your bookmarked questions
 
 #### Step 2: View a Specific Question
+
 1. Find any bookmarked question
 2. Look at the action buttons on the right:
    - 📄 **Document icon** = View in Practice Mode
@@ -75,6 +84,7 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 5. ✓ Jumps directly to that specific question!
 
 ### Perfect For:
+
 - Reviewing flagged questions
 - Studying bookmarked topics
 - Quick access to saved problems
@@ -85,6 +95,7 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 ## 🧪 Test It Right Now!
 
 ### Test Show Answers Toggle:
+
 1. Visit: https://eccco.vercel.app/settings
 2. Go to "Practice Settings" tab
 3. Turn OFF "Show Answers Immediately"
@@ -94,6 +105,7 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 7. Click it to reveal the answer!
 
 ### Test Bookmark View Question:
+
 1. Visit: https://eccco.vercel.app/bookmarks
 2. Find any saved question
 3. Click the 📄 document icon
@@ -104,11 +116,13 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 ## 🔧 Technical Details
 
 ### Files Changed:
+
 - `src/app/settings/page.tsx` - Added Practice Settings tab
 - `src/app/practice/acls/page.tsx` - Added settings support + URL params
 - `SHOW_ANSWERS_BOOKMARK_FIX.md` - Full technical documentation
 
 ### How Settings Work:
+
 - Stored in browser `localStorage`
 - Key: `showAnswersImmediately`
 - Values: `"true"` or `"false"`
@@ -116,6 +130,7 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 - No account/database needed
 
 ### How Bookmark Links Work:
+
 - Format: `/practice/acls?questionId=abc123`
 - Practice page reads `questionId` from URL
 - Finds matching question in fetched list
@@ -126,13 +141,13 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 
 ## 📊 Summary
 
-| Feature | Status | Test URL |
-|---------|--------|----------|
-| Practice Settings Page | ✅ Live | [/settings](https://eccco.vercel.app/settings) |
-| Show Answers Toggle | ✅ Working | Try it now! |
-| Submit Answer Button | ✅ Appears when OFF | [/practice/acls](https://eccco.vercel.app/practice/acls) |
-| Bookmark View Question | ✅ Working | [/bookmarks](https://eccco.vercel.app/bookmarks) |
-| Question ID URL Params | ✅ Working | Automatic |
+| Feature                | Status              | Test URL                                                 |
+| ---------------------- | ------------------- | -------------------------------------------------------- |
+| Practice Settings Page | ✅ Live             | [/settings](https://eccco.vercel.app/settings)           |
+| Show Answers Toggle    | ✅ Working          | Try it now!                                              |
+| Submit Answer Button   | ✅ Appears when OFF | [/practice/acls](https://eccco.vercel.app/practice/acls) |
+| Bookmark View Question | ✅ Working          | [/bookmarks](https://eccco.vercel.app/bookmarks)         |
+| Question ID URL Params | ✅ Working          | Automatic                                                |
 
 ---
 
@@ -140,7 +155,8 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 
 1. **Study Tip:** Turn OFF "Show Answers Immediately" to test yourself without seeing answers first!
 
-2. **Workflow Tip:** 
+2. **Workflow Tip:**
+
    - Bookmark tricky questions while studying
    - Later, use 📄 icon to review them one by one
    - Perfect for exam prep!
@@ -152,6 +168,7 @@ The document icon (📄) next to the delete button in your Saved Questions was d
 ## Next Steps (Optional Enhancements)
 
 If you want even more features, consider:
+
 - [ ] Apply same to other practice categories (PALS, etc.)
 - [ ] Add "Review Mode" - all answers hidden until end
 - [ ] Add keyboard shortcuts (Enter = submit, arrows = navigate)

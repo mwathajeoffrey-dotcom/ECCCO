@@ -15,6 +15,7 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 ### 1. Practice Page (ACLS Questions)
 
 **❌ BEFORE:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -24,9 +25,11 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │                                 │
 └─────────────────────────────────┘
 ```
-*Problem: Generic, boring, no context about what's loading*
+
+_Problem: Generic, boring, no context about what's loading_
 
 **✅ AFTER:**
+
 ```
 ┌─────────────────────────────────┐
 │  ▓▓▓▓▓▓▓▓ (shimmer)            │  ← Question number
@@ -43,13 +46,15 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │  ▓▓▓▓▓▓▓▓     ▓▓▓▓▓▓▓▓          │  ← Action buttons
 └─────────────────────────────────┘
 ```
-*Solution: Shows EXACTLY what's coming - question layout with 4 answers*
+
+_Solution: Shows EXACTLY what's coming - question layout with 4 answers_
 
 ---
 
 ### 2. Exam Page (Topic Selection)
 
 **❌ BEFORE:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -58,9 +63,11 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │                                 │
 └─────────────────────────────────┘
 ```
-*Problem: Blank screen, no idea how many topics are loading*
+
+_Problem: Blank screen, no idea how many topics are loading_
 
 **✅ AFTER:**
+
 ```
 ┌─────────────────────────────────────────────┐
 │  ▓▓▓▓▓▓▓▓▓▓ (shimmer)                      │  ← Page title
@@ -81,13 +88,15 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │  └──────┘  └──────┘  └──────┘  └──────┘  │
 └─────────────────────────────────────────────┘
 ```
-*Solution: Shows 12 topic cards in a grid - exactly what you'll see*
+
+_Solution: Shows 12 topic cards in a grid - exactly what you'll see_
 
 ---
 
 ### 3. Dashboard (Stats Overview)
 
 **❌ BEFORE:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -96,9 +105,11 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │                                 │
 └─────────────────────────────────┘
 ```
-*Problem: No visual context for dashboard layout*
+
+_Problem: No visual context for dashboard layout_
 
 **✅ AFTER:**
+
 ```
 ┌───────────────────────────────────────────────┐
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────│
@@ -109,13 +120,15 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │  └──────────┘ └──────────┘ └──────────┘ └────│
 └───────────────────────────────────────────────┘
 ```
-*Solution: Shows 4-grid layout with icons, values, labels*
+
+_Solution: Shows 4-grid layout with icons, values, labels_
 
 ---
 
 ### 4. Bookmarks Page
 
 **❌ BEFORE:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -123,9 +136,11 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │                                 │
 └─────────────────────────────────┘
 ```
-*Problem: Blank page during loading*
+
+_Problem: Blank page during loading_
 
 **✅ AFTER:**
+
 ```
 ┌─────────────────────────────────────────┐
 │  ┌──────────────────────────────┐  ⚪   │  ← Bookmark 1
@@ -145,13 +160,15 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │  [... 3 more bookmark skeletons ...]   │
 └─────────────────────────────────────────┘
 ```
-*Solution: Shows list of bookmark cards with question previews*
+
+_Solution: Shows list of bookmark cards with question previews_
 
 ---
 
 ### 5. Quiz Arena Play Page
 
 **❌ BEFORE:**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -160,9 +177,11 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │                                 │
 └─────────────────────────────────┘
 ```
-*Problem: Generic loading, no quiz context*
+
+_Problem: Generic loading, no quiz context_
 
 **✅ AFTER:**
+
 ```
 ┌─────────────────────────────────────────┐
 │  ┌─────────────────────────────────┐   │  ← Quiz header
@@ -187,25 +206,30 @@ We replaced boring loading spinners with **content-aware skeleton placeholders**
 │  └─────────────────────────────────┘   │
 └─────────────────────────────────────────┘
 ```
-*Solution: Shows quiz header + question layout*
+
+_Solution: Shows quiz header + question layout_
 
 ---
 
 ## 🎨 Animation: Pulse vs Wave
 
 ### Pulse Animation (Default)
+
 ```
 Light → Dark → Light → Dark
 (Fade in/out effect)
 ```
+
 - **Pros:** Lighter on CPU, works on all devices
 - **Use:** Default for most content
 
 ### Wave/Shimmer Animation
+
 ```
 ──────→ (Wave moves left to right)
 ███░░░░░░░ → ░███░░░░░░ → ░░░███░░░░ → ░░░░░███░░
 ```
+
 - **Pros:** More premium feel, modern look
 - **Use:** Special content, hero sections
 - **Example:** Facebook/LinkedIn-style shimmer
@@ -215,12 +239,14 @@ Light → Dark → Light → Dark
 ## 🌗 Dark Mode Support
 
 **Light Mode Gradient:**
+
 ```
 #f0f0f0 → #e0e0e0 → #f0f0f0
 (Light gray → Slightly darker → Light gray)
 ```
 
 **Dark Mode Gradient:**
+
 ```
 #374151 → #4b5563 → #374151
 (Dark gray → Lighter gray → Dark gray)
@@ -233,6 +259,7 @@ Both modes use the same shimmer animation, just different colors.
 ## ♿ Accessibility Features
 
 ### Screen Reader Announcements
+
 ```html
 <div role="status" aria-label="Loading question">
   <QuestionSkeleton />
@@ -240,11 +267,13 @@ Both modes use the same shimmer animation, just different colors.
 ```
 
 **What screen readers say:**
+
 - "Loading question, status"
 - Users know content is loading
 - No confusion about blank spaces
 
 ### Visual Indicators
+
 - High contrast (WCAG AA compliant)
 - Clear placeholder shapes
 - No reliance on color alone
@@ -254,17 +283,20 @@ Both modes use the same shimmer animation, just different colors.
 ## 📊 Performance Metrics
 
 ### Perceived Load Time
+
 ```
 Before:  ━━━━━━━━━━ 100% (feels slow)
 After:   ━━━━ 40-60% (feels much faster!)
 ```
 
 **Why it feels faster:**
+
 1. **Immediate feedback** - Something shows instantly
 2. **Predictable layout** - No layout shift (CLS)
 3. **Context** - User knows what's coming
 
 ### Actual Load Time
+
 ```
 Same network speed, same data fetch time
 But perceived as 40-60% faster!
@@ -286,16 +318,19 @@ But perceived as 40-60% faster!
 ### What to Check:
 
 ✅ **Layout Match:**
+
 - Skeleton layout matches actual content
 - No jarring shift when content loads
 - Sizes are similar
 
 ✅ **Animation:**
+
 - Smooth pulse or shimmer
 - No janky/stuttering animation
 - Dark mode gradients work
 
 ✅ **Accessibility:**
+
 - Screen reader announces loading
 - Keyboard nav doesn't break
 - Focus management works
@@ -307,12 +342,14 @@ But perceived as 40-60% faster!
 ### When to Use Skeletons
 
 ✅ **Use skeletons for:**
+
 - Initial page load (topics, questions, stats)
 - Content lists (bookmarks, quizzes)
 - Card grids (dashboard, exam topics)
 - Tables, charts, leaderboards
 
 ❌ **Don't use skeletons for:**
+
 - Very fast operations (<200ms)
 - Error states (use error messages)
 - Empty states (use empty illustrations)
@@ -330,18 +367,21 @@ But perceived as 40-60% faster!
 ## 🎯 Impact Summary
 
 ### User Experience
+
 - ⚡ **40-60% faster** perceived load time
 - 🎨 **More professional** feel
 - 😌 **Less anxiety** during loading
 - ♿ **Better accessibility** for all users
 
 ### Developer Experience
+
 - 🔧 **Easy to use** - One import, drop in component
 - 🎯 **Consistent** - Same pattern everywhere
 - 📝 **TypeScript support** - Full type safety
 - 🌗 **Dark mode** - Built-in, no extra work
 
 ### Business Impact
+
 - 📈 **Higher engagement** - Users stay on page
 - 🎯 **Lower bounce rate** - No blank screens
 - ⭐ **Better reviews** - "App feels fast!"

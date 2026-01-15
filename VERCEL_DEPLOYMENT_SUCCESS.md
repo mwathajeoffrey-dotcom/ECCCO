@@ -5,6 +5,7 @@
 **Production URL**: https://eccco-jzut1xjdu-mwathajeoffrey-dotcoms-projects.vercel.app
 
 **Deployment Details**:
+
 - Inspect: https://vercel.com/mwathajeoffrey-dotcoms-projects/eccco/6NKVLMKKZVton37Wrx19cRkkSGdH
 - Status: ✅ Live
 - Date: January 13, 2026
@@ -12,6 +13,7 @@
 ## 🎯 What Was Deployed
 
 ### All Quiz Arena Fixes:
+
 1. ✅ **Question Loading** - Fixed 500 errors, parse JSON options properly
 2. ✅ **Questions Visibility** - Questions now display in live sessions
 3. ✅ **Timer Fix** - Timer now counts down properly (removed from dependency array)
@@ -23,17 +25,20 @@
 ## 📱 Test on Your Phone
 
 ### Option 1: Use Production URL
+
 1. Open on phone: `https://eccco-jzut1xjdu-mwathajeoffrey-dotcoms-projects.vercel.app/quiz-arena`
 2. Create a quiz on desktop
 3. Share the access code
 4. Join on phone and test!
 
 ### Option 2: Use Custom Domain (if configured)
+
 If you have a custom domain set up, use that instead.
 
 ## 🧪 Full Test Flow
 
 ### On Desktop (Host):
+
 1. Go to: https://eccco-jzut1xjdu-mwathajeoffrey-dotcoms-projects.vercel.app/quiz-arena
 2. Click "Host Quiz" → "Create New Quiz"
 3. Select topic (e.g., "BLS")
@@ -43,6 +48,7 @@ If you have a custom domain set up, use that instead.
 7. Click "Start Quiz" when participant joins
 
 ### On Phone (Participant):
+
 1. Go to: https://eccco-jzut1xjdu-mwathajeoffrey-dotcoms-projects.vercel.app/quiz-arena
 2. Enter the access code
 3. Enter your nickname

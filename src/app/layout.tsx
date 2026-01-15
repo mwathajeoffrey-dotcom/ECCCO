@@ -93,11 +93,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3B82F6" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
@@ -123,13 +124,7 @@ export default function RootLayout({
             <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
               <AppLayout>{children}</AppLayout>
             </ErrorBoundary>
-            <Toaster 
-              position="top-right" 
-              richColors 
-              closeButton 
-              expand={false}
-              duration={4000}
-            />
+            <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
             <PWAInstallPrompt />
             <DesktopMenuButton />
             <MobileBottomNav />

@@ -63,9 +63,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (questions.length !== questionIds.length) {
-      logger.warn("Some questions not found", { 
-        requested: questionIds.length, 
-        found: questions.length 
+      logger.warn("Some questions not found", {
+        requested: questionIds.length,
+        found: questions.length,
       });
       return NextResponse.json({ error: "One or more questions not found" }, { status: 400 });
     }
@@ -78,8 +78,8 @@ export async function POST(request: NextRequest) {
         try {
           parsedOptions = JSON.parse(q.options);
         } catch (e) {
-          logger.error("Failed to parse options for question in quiz creation", e instanceof Error ? e : undefined, { 
-            questionId: q.id 
+          logger.error("Failed to parse options for question in quiz creation", e instanceof Error ? e : undefined, {
+            questionId: q.id,
           });
           parsedOptions = [];
         }
@@ -87,8 +87,8 @@ export async function POST(request: NextRequest) {
 
       return {
         id: q.id,
-        question: q.question,         // Keep original field name
-        questionText: q.question,     // Also include for compatibility
+        question: q.question, // Keep original field name
+        questionText: q.question, // Also include for compatibility
         options: parsedOptions,
         correctIndex: q.correctIndex,
         explanation: q.explanation,

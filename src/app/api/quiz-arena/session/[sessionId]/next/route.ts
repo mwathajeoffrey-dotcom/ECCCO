@@ -46,9 +46,9 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
           updatedAt: new Date(),
         },
       });
-      
+
       logger.info("Quiz session finished", { sessionId, totalQuestions: questions.length });
-      
+
       return NextResponse.json(updatedSession);
     }
 

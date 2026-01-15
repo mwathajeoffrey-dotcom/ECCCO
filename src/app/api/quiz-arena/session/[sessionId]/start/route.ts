@@ -34,11 +34,11 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
     try {
       const questions = JSON.parse(session.questions as string);
       questionCount = questions.length;
-      
+
       if (questionCount === 0) {
         return NextResponse.json({ error: "Cannot start quiz with no questions" }, { status: 400 });
       }
-      
+
       logger.info("Starting quiz session", {
         sessionId,
         questionCount,

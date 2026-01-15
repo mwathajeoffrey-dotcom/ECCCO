@@ -49,7 +49,7 @@ export default function BookmarksPage() {
       if (!response.ok) {
         const errorMsg = ERROR_MESSAGES.LOAD_FAILED;
         toast.error(errorMsg.title, { description: errorMsg.message });
-        throw new Error('Failed to fetch bookmarks');
+        throw new Error("Failed to fetch bookmarks");
       }
 
       const data = await response.json();
@@ -128,7 +128,10 @@ export default function BookmarksPage() {
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <Link
+              href="/dashboard"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
               <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </Link>
             <div className="flex-1">
@@ -159,7 +162,9 @@ export default function BookmarksPage() {
               <button
                 onClick={() => setFilter("all")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === "all" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  filter === "all"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
               >
                 All ({bookmarks.length})
@@ -167,7 +172,9 @@ export default function BookmarksPage() {
               <button
                 onClick={() => setFilter("with-notes")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === "with-notes" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  filter === "with-notes"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
               >
                 With Notes ({bookmarks.filter((b) => b.notes).length})
@@ -175,7 +182,9 @@ export default function BookmarksPage() {
               <button
                 onClick={() => setFilter("no-notes")}
                 className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
-                  filter === "no-notes" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  filter === "no-notes"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
               >
                 No Notes ({bookmarks.filter((b) => !b.notes).length})
@@ -203,7 +212,9 @@ export default function BookmarksPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <BookmarkCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Question ID: {bookmark.questionId}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Question ID: {bookmark.questionId}
+                      </h3>
                       <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium rounded">
                         {bookmark.category}
                       </span>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Menu } from 'lucide-react';
-import { useState } from 'react';
-import { MobileMenuDrawer } from './MobileMenuDrawer';
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import { MobileMenuDrawer } from "./MobileMenuDrawer";
 
 export function DesktopMenuButton() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

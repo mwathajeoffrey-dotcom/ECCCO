@@ -271,7 +271,9 @@ export default function CreateQuizPage() {
           <button
             onClick={() => setStep("settings")}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-              step === "settings" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
+              step === "settings"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
             }`}
           >
             <Settings className="w-5 h-5 inline mr-2" />
@@ -280,7 +282,9 @@ export default function CreateQuizPage() {
           <button
             onClick={() => setStep("questions")}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-              step === "questions" ? "bg-purple-600 text-white shadow-lg" : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
+              step === "questions"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-white text-gray-700 dark:text-gray-300 hover:bg-gray-100"
             }`}
           >
             <Plus className="w-5 h-5 inline mr-2" />
@@ -296,7 +300,9 @@ export default function CreateQuizPage() {
             <div className="space-y-6">
               {/* Title */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Quiz Title *</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Quiz Title *
+                </label>
                 <input
                   type="text"
                   value={title}
@@ -308,7 +314,9 @@ export default function CreateQuizPage() {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Description (Optional)
+                </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -444,7 +452,9 @@ export default function CreateQuizPage() {
 
               {/* Topic Selection */}
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Select Topic</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Select Topic
+                </label>
                 <select
                   value={selectedTopic}
                   onChange={(e) => setSelectedTopic(e.target.value)}
@@ -569,13 +579,17 @@ export default function CreateQuizPage() {
                     <div
                       key={question.id}
                       className={`p-4 border-2 rounded-xl transition-all cursor-pointer ${
-                        isSelected ? "border-green-500 bg-green-50" : "border-gray-200 dark:border-gray-700 hover:border-purple-500"
+                        isSelected
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-200 dark:border-gray-700 hover:border-purple-500"
                       }`}
                       onClick={() => (isSelected ? handleRemoveQuestion(question.id) : handleAddQuestion(question))}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900 dark:text-white mb-2 line-clamp-2">{question.questionText}</p>
+                          <p className="font-medium text-gray-900 dark:text-white mb-2 line-clamp-2">
+                            {question.questionText}
+                          </p>
                           <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                             <span
                               className={`px-2 py-1 rounded mr-2 ${
@@ -629,7 +643,9 @@ export default function CreateQuizPage() {
                         <span className="inline-block w-6 h-6 bg-purple-600 text-white rounded-full text-center text-sm font-bold mr-2">
                           {index + 1}
                         </span>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 inline">{question.questionText}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 inline">
+                          {question.questionText}
+                        </p>
                       </div>
                       <button
                         onClick={() => handleRemoveQuestion(question.id)}

@@ -99,10 +99,13 @@ export async function GET(request: NextRequest) {
       errorStack: error instanceof Error ? error.stack : undefined,
     });
 
-    return NextResponse.json({ 
-      success: false, 
-      error: "Failed to fetch questions",
-      details: error instanceof Error ? error.message : "Unknown error"
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to fetch questions",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

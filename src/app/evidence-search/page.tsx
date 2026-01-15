@@ -1,1147 +1,229 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { 
-  Search, Filter, BookOpen, ExternalLink, Download, 
-  Calendar, TrendingUp, Award, FileText, ChevronDown, ChevronUp,
-  Sparkles, Database, CheckCircle2, Quote, Link2, BookmarkPlus,
-  Copy, Check, FileDown
-} from 'lucide-react';
-import { exportFormats, downloadFile, type ExportFormat } from '@/lib/export/citation-formatter';
-import { calculateQualityScore, getQualityColor, type QualityScore } from '@/lib/quality/evidence-scorer';
-import { calculateReadingTime, getReadingTimeCategory } from '@/lib/reading-time/estimator';
-import { findRelatedStudies, getSimilarityColor, formatSimilarityPercentage } from '@/lib/recommendations/related-finder';
-import { detectConsensus, getConsensusColor, type ConsensusAnalysis } from '@/lib/consensus/consensus-detector';
-import { synthesizeClinicalEvidence, type ClinicalSynthesis } from '@/lib/synthesis/clinical-synthesizer';
-
-interface Article {
-  id: string;
-  source: 'pubmed' | 'crossref' | 'europepmc';
-  title: string;
-  authors: string[];
-  journal: string;
-  published: string;
-  abstract?: string;
-  doi?: string;
-  pmid?: string;
-  url: string;
-  citationCount: number;
-  isOpenAccess: boolean;
-  fullTextUrl?: string;
-  // New fields for enhanced display
-  aiSummary?: string; // OpenEvidence-style summary
-  keyFindings?: string[];
-  relevantParagraphs?: Array<{
-    text: string;
-    context: string;
-    relevanceScore?: number;
-  }>;
-  references?: Array<{
-    title: string;
-    authors: string;
-    url: string;
-    doi?: string;
-  }>;
-  qualityScore?: QualityScore; // Evidence quality rating
-}
-
-const POPULAR_JOURNALS = [
-  'NEJM', 'Lancet', 'JAMA', 'BMJ', 'Annals of Emergency Medicine',
-  'Academic Emergency Medicine', 'Emergency Medicine Journal'
-];
-
-const ARTICLE_TYPES = [
-  { value: 'clinical-trial', label: 'Clinical Trials' },
-  { value: 'review', label: 'Reviews' },
-  { value: 'guideline', label: 'Guidelines' },
-  { value: 'meta-analysis', label: 'Meta-Analyses' },
-  { value: 'case-report', label: 'Case Reports' },
-];
+import { useState } from "react";
+import { Search, Sparkles, Loader2, AlertCircle, CheckCircle2, BookOpen } from "lucide-react";
+import ClinicalSynthesisView from "@/components/evidence/ClinicalSynthesisView";
+import type { ClinicalSynthesis } from "@/lib/evidence/clinical-synthesis-engine";
 
 export default function EvidenceSearchPage() {
-  const [query, setQuery] = useState('');
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [totalResults, setTotalResults] = useState(0);
-  const [sourceBreakdown, setSourceBreakdown] = useState<Record<string, number>>({});
-  
-  // New state for OpenEvidence-style UI
-  const [showReferences, setShowReferences] = useState(true);
-  const [expandedArticles, setExpandedArticles] = useState<Set<string>>(new Set());
-  const [copiedText, setCopiedText] = useState<string | null>(null);
-  const [overallSummary, setOverallSummary] = useState<string>('');
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const [consensus, setConsensus] = useState<ConsensusAnalysis | null>(null);
-  const [clinicalSynthesis, setClinicalSynthesis] = useState<ClinicalSynthesis | null>(null);
-  
-  // Filters
-  const [selectedSources, setSelectedSources] = useState<string[]>(['pubmed', 'crossref', 'europepmc']);
-  const [selectedJournal, setSelectedJournal] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
-  const [openAccessOnly, setOpenAccessOnly] = useState(false);
-  const [hasAbstract, setHasAbstract] = useState(false);
-  const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'citations' | 'quality'>('quality'); // Default to quality
-  const [showFilters, setShowFilters] = useState(false);
-  const [minQualityScore, setMinQualityScore] = useState(6.0); // Minimum acceptable quality
-  const [showHighQualityOnly, setShowHighQualityOnly] = useState(true); // Enable by default to filter low-quality
+  const [synthesis, setSynthesis] = useState<ClinicalSynthesis | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [useAI, setUseAI] = useState(true);
+
+  const suggestedQueries = [
+    "treatment for uncomplicated malaria",
+    "management of septic shock",
+    "diagnosis of acute appendicitis",
+    "antibiotic choice for pneumonia",
+    "treatment of acute coronary syndrome",
+  ];
 
   const handleSearch = async () => {
     if (!query.trim()) return;
-    
+
     setLoading(true);
+    setError(null);
+    setSynthesis(null);
+
     try {
-      const params = new URLSearchParams({
-        q: query,
-        sources: selectedSources.join(','),
-        limit: '50', // Get more to filter from
-        sort: sortBy,
+      const response = await fetch("/api/evidence/synthesize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: query.trim(),
+          useAI,
+          minQualityScore: 50,
+          maxArticles: 15,
+        }),
       });
-      
-      if (selectedJournal) params.append('journal', selectedJournal);
-      if (selectedType) params.append('type', selectedType);
-      if (dateFrom) params.append('fromDate', dateFrom);
-      if (dateTo) params.append('toDate', dateTo);
-      if (openAccessOnly) params.append('openAccess', 'true');
-      if (hasAbstract) params.append('hasAbstract', 'true');
-      
-      const response = await fetch(`/api/evidence/search?${params}`);
+
       const data = await response.json();
-      
-      if (data.success) {
-        // Calculate quality scores for all articles
-        const articlesWithScores = data.articles.map((article: Article) => ({
-          ...article,
-          qualityScore: calculateQualityScore({
-            abstract: article.abstract,
-            title: article.title,
-            journal: article.journal,
-            citationCount: article.citationCount || 0
-          })
-        }));
-        
-        // SMART FILTERING: Always filter low-quality studies (below 6.0)
-        // This removes case reports, editorials, and unreliable studies
-        let filteredArticles = articlesWithScores.filter(
-          (article: Article) => (article.qualityScore?.overallScore || 0) >= 6.0
-        );
-        
-        // Additional user-controlled quality filter if enabled
-        if (showHighQualityOnly && minQualityScore > 6.0) {
-          filteredArticles = filteredArticles.filter(
-            (article: Article) => (article.qualityScore?.overallScore || 0) >= minQualityScore
-          );
-        }
-        
-        // Sort by quality score (best evidence first)
-        filteredArticles.sort((a: Article, b: Article) => 
-          (b.qualityScore?.overallScore || 0) - (a.qualityScore?.overallScore || 0)
-        );
-        
-        // Limit to top 15 most relevant, high-quality results
-        // (Like OpenEvidence - focused, not overwhelming)
-        filteredArticles = filteredArticles.slice(0, 15);
-        
-        setArticles(filteredArticles);
-        setTotalResults(data.totalResults);
-        setSourceBreakdown(data.sourceBreakdown || {});
-        
-        // Detect consensus across studies (like Consensus AI)
-        const consensusAnalysis = detectConsensus(filteredArticles);
-        setConsensus(consensusAnalysis);
-        
-        // Generate clinical decision summary
-        const synthesis = synthesizeClinicalEvidence(
-          filteredArticles,
-          query,
-          consensusAnalysis ? {
-            percentage: consensusAnalysis.consensusPercentage,
-            level: consensusAnalysis.consensusLevel === 'Strong Consensus' ? 'strong' :
-                   consensusAnalysis.consensusLevel === 'Moderate Consensus' ? 'moderate' :
-                   consensusAnalysis.consensusLevel === 'Mixed Evidence' ? 'weak' : 'none'
-          } : undefined
-        );
-        setClinicalSynthesis(synthesis);
-        
-        // Generate comprehensive overall summary from top results (OpenEvidence-style)
-        if (filteredArticles && filteredArticles.length > 0) {
-          const topArticles = filteredArticles.slice(0, 5); // Use top 5 for richer summary
-          
-          // Combine summaries with paragraph breaks for readability
-          const combinedSummary = topArticles
-            .map((a: Article, idx: number) => {
-              if (!a.aiSummary) return '';
-              
-              // Add context from each paper
-              const paperContext = `**Study ${idx + 1} (${a.journal}, ${a.published}):** ${a.aiSummary}`;
-              return paperContext;
-            })
-            .filter(Boolean)
-            .join('\n\n'); // Double newline for paragraph separation
-          
-          // Create introductory paragraph
-          const intro = `Based on analysis of ${topArticles.length} high-quality studies including research from ${topArticles.map((a: Article) => a.journal).slice(0, 3).join(', ')}, here are the key findings:\n\n`;
-          
-          setOverallSummary(intro + combinedSummary || 'Based on the current evidence, further research is needed to provide a comprehensive summary.');
-        }
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate synthesis");
       }
-    } catch (error) {
-      console.error('Search error:', error);
+
+      console.log("✅ Synthesis received:", data);
+      setSynthesis(data);
+    } catch (err) {
+      console.error("Synthesis error:", err);
+      setError(err instanceof Error ? err.message : "An error occurred while searching");
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleSource = (source: string) => {
-    setSelectedSources(prev =>
-      prev.includes(source)
-        ? prev.filter(s => s !== source)
-        : [...prev, source]
-    );
+  const handleSuggestedQuery = (suggested: string) => {
+    setQuery(suggested);
   };
 
-  const toggleArticle = (articleId: string) => {
-    setExpandedArticles(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(articleId)) {
-        newSet.delete(articleId);
-      } else {
-        newSet.add(articleId);
-      }
-      return newSet;
-    });
-  };
-
-  const copyToClipboard = async (text: string, id: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedText(id);
-    setTimeout(() => setCopiedText(null), 2000);
-  };
-
-  const handleExport = (format: ExportFormat) => {
-    const formatConfig = exportFormats[format];
-    const timestamp = new Date().toISOString().split('T')[0];
-    const filename = `evidence-search-${timestamp}${formatConfig.extension}`;
-    const content = formatConfig.export(articles);
-    downloadFile(content, filename, formatConfig.mimeType);
-    setShowExportMenu(false);
-  };
-
-  const highlightQuery = (text: string) => {
-    if (!query.trim()) return text;
-    
-    const terms = query.trim().toLowerCase().split(' ').filter(t => t.length > 3);
-    let highlighted = text;
-    
-    terms.forEach(term => {
-      const regex = new RegExp(`(${term})`, 'gi');
-      highlighted = highlighted.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
-    });
-    
-    return highlighted;
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !loading) {
+      handleSearch();
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
-      {/* Hero Header */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Database className="w-8 h-8" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-black">AI-Powered Evidence Search</h1>
-              <p className="text-blue-100 mt-2">
-                Search 170M+ articles from PubMed, CrossRef, Europe PMC & top journals
-              </p>
-            </div>
+            <BookOpen className="w-10 h-10" />
+            <h1 className="text-4xl font-bold">Clinical Evidence Search</h1>
           </div>
-          
-          {/* Source Badges */}
-          <div className="flex flex-wrap gap-3 mt-6">
-            <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
-              PubMed (35M+ citations)
-            </div>
-            <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
-              CrossRef (130M+ articles)
-            </div>
-            <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
-              Europe PMC (8M+ full-text)
-            </div>
-            <div className="px-4 py-2 bg-emerald-500/90 backdrop-blur-md rounded-full text-sm font-black flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              100% FREE APIs
-            </div>
-          </div>
+          <p className="text-blue-100 text-lg max-w-3xl">
+            Search across 35+ million medical articles from PubMed, CrossRef, Europe PMC, and Semantic Scholar. Get
+            instant evidence synthesis with quality scoring and journal tier classification.
+          </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        {/* Search Bar */}
-        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 mb-6">
-          {/* Search Input */}
-          <div className="w-full mb-3 sm:mb-0">
-            <div className="relative">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Box */}
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder='Try "sepsis trials 2024" or "NEJM stroke guidelines"'
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full pl-12 pr-4 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onKeyPress={handleKeyPress}
+                placeholder="Enter clinical question (e.g., treatment for septic shock)"
+                className="w-full pl-12 pr-4 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                disabled={loading}
               />
             </div>
-          </div>
-          
-          {/* Mobile-Friendly Button Row */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-3">
-            {/* Search Button - Full width on mobile */}
             <button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className="w-full sm:flex-1 px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-lg"
             >
-              <Search className="w-5 h-5" />
-              {loading ? 'Searching...' : 'Search Evidence'}
-            </button>
-            
-            {/* Filters Button - Full width on mobile */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="w-full sm:w-auto px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center justify-center gap-2 font-semibold"
-            >
-              <Filter className="w-5 h-5" />
-              Filters
-              <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search className="w-5 h-5" />
+                  Search
+                </>
+              )}
             </button>
           </div>
 
-          {/* Advanced Filters */}
-          {showFilters && (
-            <div className="mt-6 pt-6 border-t border-gray-200 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Sources */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Search Sources
-                </label>
-                <div className="space-y-2">
-                  {[
-                    { id: 'pubmed', label: 'PubMed', count: '35M+' },
-                    { id: 'crossref', label: 'CrossRef', count: '130M+' },
-                    { id: 'europepmc', label: 'Europe PMC', count: '8M+' },
-                  ].map(source => (
-                    <label key={source.id} className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedSources.includes(source.id)}
-                        onChange={() => toggleSource(source.id)}
-                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">{source.label} <span className="text-gray-400">({source.count})</span></span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+          {/* AI Toggle */}
+          <div className="flex items-center gap-3 mb-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={useAI}
+                onChange={(e) => setUseAI(e.target.checked)}
+                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              />
+              <Sparkles className="w-4 h-4 text-yellow-500" />
+              <span className="text-sm text-gray-700">
+                Enable AI Synthesis (requires Ollama - falls back to structured summary if unavailable)
+              </span>
+            </label>
+          </div>
 
-              {/* Journal */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Specific Journal
-                </label>
-                <select
-                  value={selectedJournal}
-                  onChange={(e) => setSelectedJournal(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">All Journals</option>
-                  {POPULAR_JOURNALS.map(journal => (
-                    <option key={journal} value={journal}>{journal}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Article Type */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Article Type
-                </label>
-                <select
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">All Types</option>
-                  {ARTICLE_TYPES.map(type => (
-                    <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Date Range */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  From Date
-                </label>
-                <input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  To Date
-                </label>
-                <input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Sort */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Sort By
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="relevance">Relevance</option>
-                  <option value="date">Newest First</option>
-                  <option value="citations">Most Cited</option>
-                  <option value="quality">⭐ Best Quality First</option>
-                </select>
-              </div>
-
-              {/* Quality Filter */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Minimum Quality Score
-                </label>
-                <select
-                  value={minQualityScore}
-                  onChange={(e) => setMinQualityScore(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="0">All Quality (0+)</option>
-                  <option value="6.0">Moderate+ (6.0+)</option>
-                  <option value="7.5">High+ (7.5+)</option>
-                  <option value="8.5">Excellent (8.5+)</option>
-                  <option value="9.0">Outstanding (9.0+)</option>
-                </select>
-              </div>
-
-              {/* Checkboxes */}
-              <div className="md:col-span-2 lg:col-span-3 flex flex-wrap gap-6">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showHighQualityOnly}
-                    onChange={(e) => setShowHighQualityOnly(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <span className="text-sm font-semibold text-blue-700">⭐ Enhanced Quality Filter (6.0+ minimum enforced)</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={openAccessOnly}
-                    onChange={(e) => setOpenAccessOnly(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">Open Access Only</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={hasAbstract}
-                    onChange={(e) => setHasAbstract(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">Has Abstract</span>
-                </label>
-              </div>
-            </div>
-          )}
+          {/* Suggested Queries */}
+          <div className="flex flex-wrap gap-2">
+            <span className="text-sm text-gray-600 font-medium">Suggested queries:</span>
+            {suggestedQueries.map((suggested) => (
+              <button
+                key={suggested}
+                onClick={() => handleSuggestedQuery(suggested)}
+                disabled={loading}
+                className="text-sm px-3 py-1 bg-blue-50 text-blue-700 rounded-full hover:bg-blue-100 transition-colors disabled:opacity-50"
+              >
+                {suggested}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Results Stats */}
-        {totalResults > 0 && !loading && (
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-6 flex-wrap">
-                <span className="text-lg font-semibold text-gray-900">
-                  {totalResults.toLocaleString()} total results
-                </span>
-                {Object.entries(sourceBreakdown).map(([source, count]) => (
-                  <span key={source} className="text-sm text-gray-600">
-                    {source}: <span className="font-semibold">{count.toLocaleString()}</span>
-                  </span>
-                ))}
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-8">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-red-800 mb-1">Search Error</h3>
+                <p className="text-red-700">{error}</p>
               </div>
-              <div className="flex items-center gap-4">
-                {showHighQualityOnly && (
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold flex items-center gap-1">
-                    <Award className="w-4 h-4" />
-                    High-Quality Filter: {minQualityScore}+
-                  </span>
-                )}
-                <span className="text-sm text-gray-500">
-                  Showing {articles.length} articles
-                </span>
+            </div>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {synthesis && !loading && (
+          <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg mb-8">
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-green-800 mb-1">
+                  {synthesis.metadata.usedAI ? "✓ AI Synthesis Generated" : "✓ Structured Summary Generated"}
+                </h3>
+                <p className="text-green-700">
+                  Analyzed {synthesis.metadata.articlesAnalyzed} high-quality articles from top medical journals
+                </p>
               </div>
             </div>
           </div>
         )}
 
         {/* Results */}
-        {loading ? (
-          <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600 font-semibold">Searching across all databases...</p>
-            <p className="text-sm text-gray-500 mt-2">This may take a few seconds</p>
-          </div>
-        ) : articles.length === 0 && query ? (
-          <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-            <BookOpen className="w-20 h-20 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No results found</h3>
-            <p className="text-gray-600">Try adjusting your search query or filters</p>
-          </div>
-        ) : (
-          <div className="space-y-6 pb-12">
-            {/* OpenEvidence-Style: Overall Summary First */}
-            {overallSummary && articles.length > 0 && (
-              <div className="bg-white rounded-xl shadow-lg border-2 border-blue-200 p-8">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-7 h-7 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-1">Evidence Summary</h2>
-                    <p className="text-sm text-gray-500">Comprehensive analysis of {articles.length} peer-reviewed sources</p>
-                  </div>
-                </div>
-
-                {/* Consensus Indicator (like Consensus AI) */}
-                {consensus && (
-                  <div className={`mb-6 p-4 rounded-lg border-2 ${getConsensusColor(consensus.consensusLevel)}`}>
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Award className="w-5 h-5" />
-                          <span className="font-bold text-lg">{consensus.consensusLevel}</span>
-                          <span className="text-2xl font-black">{consensus.consensusPercentage}%</span>
-                        </div>
-                        <p className="text-sm font-medium">{consensus.consensusStatement}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs font-semibold uppercase tracking-wider mb-1">Confidence</div>
-                        <div className="text-lg font-bold">{consensus.confidenceLevel}</div>
-                      </div>
-                    </div>
-                    
-                    {/* Study breakdown */}
-                    <div className="flex gap-4 text-sm">
-                      <span className="flex items-center gap-1">
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <strong>{consensus.agreementCount}</strong> supporting
-                      </span>
-                      {consensus.disagreementCount > 0 && (
-                        <span className="flex items-center gap-1">
-                          <span className="w-4 h-4 rounded-full bg-red-500"></span>
-                          <strong>{consensus.disagreementCount}</strong> conflicting
-                        </span>
-                      )}
-                      {consensus.uncertainCount > 0 && (
-                        <span className="flex items-center gap-1">
-                          <span className="w-4 h-4 rounded-full bg-gray-400"></span>
-                          <strong>{consensus.uncertainCount}</strong> inconclusive
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Clinical Action Panel - Evidence-Based Recommendation */}
-                {clinicalSynthesis && (
-                  <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-xl p-6 shadow-lg">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${
-                          clinicalSynthesis.recommendationStrength === 'strong' 
-                            ? 'bg-green-100 text-green-700'
-                            : clinicalSynthesis.recommendationStrength === 'weak'
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          <Sparkles className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900">Clinical Recommendation</h3>
-                          <p className="text-sm text-gray-600">Evidence-based decision support</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                          clinicalSynthesis.recommendationStrength === 'strong'
-                            ? 'bg-green-200 text-green-900'
-                            : clinicalSynthesis.recommendationStrength === 'weak'
-                            ? 'bg-yellow-200 text-yellow-900'
-                            : clinicalSynthesis.recommendationStrength === 'conditional'
-                            ? 'bg-blue-200 text-blue-900'
-                            : 'bg-gray-200 text-gray-900'
-                        }`}>
-                          {clinicalSynthesis.recommendationStrength}
-                        </div>
-                        <div className="mt-1 text-xs text-gray-600">
-                          {clinicalSynthesis.evidenceQuality} quality evidence
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Line Recommendation */}
-                    <div className="bg-white rounded-lg p-4 mb-4 border-l-4 border-blue-500">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
-                        Bottom Line
-                      </div>
-                      <p className="text-lg font-semibold text-gray-900 leading-relaxed">
-                        {clinicalSynthesis.bottomLine}
-                      </p>
-                    </div>
-
-                    {/* Key Clinical Details */}
-                    {(clinicalSynthesis.keyDetails.timing || clinicalSynthesis.keyDetails.dosing || clinicalSynthesis.keyDetails.duration) && (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                        {clinicalSynthesis.keyDetails.timing && (
-                          <div className="bg-white rounded-lg p-3 border border-blue-200">
-                            <div className="text-xs font-semibold text-gray-500 mb-1">Timing</div>
-                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.timing}</div>
-                          </div>
-                        )}
-                        {clinicalSynthesis.keyDetails.dosing && (
-                          <div className="bg-white rounded-lg p-3 border border-blue-200">
-                            <div className="text-xs font-semibold text-gray-500 mb-1">Dosing</div>
-                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.dosing}</div>
-                          </div>
-                        )}
-                        {clinicalSynthesis.keyDetails.duration && (
-                          <div className="bg-white rounded-lg p-3 border border-blue-200">
-                            <div className="text-xs font-semibold text-gray-500 mb-1">Duration</div>
-                            <div className="text-sm font-medium text-gray-900">{clinicalSynthesis.keyDetails.duration}</div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* When to Use / When to Avoid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      {clinicalSynthesis.whenToUse.length > 0 && (
-                        <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            <div className="text-xs font-semibold text-green-900 uppercase tracking-wider">
-                              When to Use
-                            </div>
-                          </div>
-                          <ul className="space-y-1">
-                            {clinicalSynthesis.whenToUse.map((item, idx) => (
-                              <li key={idx} className="text-sm text-green-900 flex items-start gap-2">
-                                <span className="text-green-600 mt-0.5">•</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {clinicalSynthesis.whenToAvoid.length > 0 && (
-                        <div className="bg-red-50 rounded-lg p-3 border border-red-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-red-600 text-lg font-bold">⚠</span>
-                            <div className="text-xs font-semibold text-red-900 uppercase tracking-wider">
-                              When to Avoid
-                            </div>
-                          </div>
-                          <ul className="space-y-1">
-                            {clinicalSynthesis.whenToAvoid.map((item, idx) => (
-                              <li key={idx} className="text-sm text-red-900 flex items-start gap-2">
-                                <span className="text-red-600 mt-0.5">•</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Evidence Basis */}
-                    <div className="flex items-center justify-between bg-white rounded-lg p-3 border border-blue-200">
-                      <div className="flex gap-6 text-sm">
-                        <div>
-                          <span className="text-gray-600">Evidence: </span>
-                          <span className="font-semibold text-gray-900">
-                            {clinicalSynthesis.evidenceBasis.totalStudies} studies
-                          </span>
-                        </div>
-                        {clinicalSynthesis.evidenceBasis.rcts > 0 && (
-                          <div>
-                            <span className="text-gray-600">RCTs: </span>
-                            <span className="font-semibold text-gray-900">{clinicalSynthesis.evidenceBasis.rcts}</span>
-                          </div>
-                        )}
-                        {clinicalSynthesis.evidenceBasis.metaAnalyses > 0 && (
-                          <div>
-                            <span className="text-gray-600">Meta-analyses: </span>
-                            <span className="font-semibold text-gray-900">{clinicalSynthesis.evidenceBasis.metaAnalyses}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs text-gray-500">Confidence</div>
-                        <div className="text-lg font-bold text-blue-600">{clinicalSynthesis.confidence}%</div>
-                      </div>
-                    </div>
-
-                    {/* Limitations */}
-                    {clinicalSynthesis.limitations.length > 0 && (
-                      <div className="mt-3 bg-yellow-50 rounded-lg p-3 border border-yellow-200">
-                        <div className="text-xs font-semibold text-yellow-900 uppercase tracking-wider mb-1">
-                          Important Limitations
-                        </div>
-                        <ul className="space-y-1">
-                          {clinicalSynthesis.limitations.map((limitation, idx) => (
-                            <li key={idx} className="text-xs text-yellow-900 flex items-start gap-2">
-                              <span className="text-yellow-600 mt-0.5">•</span>
-                              <span>{limitation}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                <div className="prose prose-lg max-w-none">
-                  {/* Render paragraphs with proper formatting */}
-                  {overallSummary.split('\n\n').map((paragraph, idx) => {
-                    // Check if paragraph contains markdown bold
-                    const parts = paragraph.split(/(\*\*.*?\*\*)/g);
-                    
-                    return (
-                      <p key={idx} className="text-gray-800 leading-relaxed text-base mb-4 last:mb-0">
-                        {parts.map((part, partIdx) => {
-                          if (part.startsWith('**') && part.endsWith('**')) {
-                            // Render bold text
-                            return (
-                              <strong key={partIdx} className="font-bold text-gray-900">
-                                {part.slice(2, -2)}
-                              </strong>
-                            );
-                          }
-                          return <span key={partIdx}>{part}</span>;
-                        })}
-                      </p>
-                    );
-                  })}
-                </div>
-
-                {/* Summary Actions */}
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(overallSummary);
-                      setCopiedText('summary');
-                      setTimeout(() => setCopiedText(null), 2000);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium text-gray-700"
-                  >
-                    {copiedText === 'summary' ? (
-                      <>
-                        <Check className="w-4 h-4 text-green-600" />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        Copy Summary
-                      </>
-                    )}
-                  </button>
-                  
-                  {/* Export Dropdown */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setShowExportMenu(!showExportMenu)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors text-sm font-medium shadow-sm"
-                    >
-                      <FileDown className="w-4 h-4" />
-                      Export Citations
-                      <ChevronDown className={`w-4 h-4 transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    {showExportMenu && (
-                      <div className="absolute top-full mt-2 left-0 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[240px] z-50">
-                        <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase border-b border-gray-100">
-                          Choose Format
-                        </div>
-                        {(Object.keys(exportFormats) as ExportFormat[]).map(format => {
-                          const config = exportFormats[format];
-                          return (
-                            <button
-                              key={format}
-                              onClick={() => handleExport(format)}
-                              className="w-full px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3 text-left"
-                            >
-                              <span className="text-2xl">{config.icon}</span>
-                              <div className="flex-1">
-                                <div className="font-semibold text-gray-900 text-sm">{config.name}</div>
-                                <div className="text-xs text-gray-500">{config.description}</div>
-                              </div>
-                              <Download className="w-4 h-4 text-gray-400" />
-                            </button>
-                          );
-                        })}
-                        <div className="px-4 py-2 text-xs text-gray-400 border-t border-gray-100 mt-1">
-                          Exporting {articles.length} {articles.length === 1 ? 'article' : 'articles'}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* OpenEvidence-Style: References Section */}
-            <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200">
-              <button
-                onClick={() => setShowReferences(!showReferences)}
-                className="w-full px-8 py-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div className="text-left">
-                    <h2 className="text-xl font-bold text-gray-900">References</h2>
-                    <p className="text-sm text-gray-500">{articles.length} articles found</p>
-                  </div>
-                </div>
-                {showReferences ? (
-                  <ChevronUp className="w-6 h-6 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-6 h-6 text-gray-400" />
-                )}
-              </button>
-
-              {showReferences && (
-                <div className="border-t border-gray-200 divide-y divide-gray-200">
-                  {articles.map((article, index) => {
-                    const isExpanded = expandedArticles.has(article.id);
-                    
-                    return (
-                      <div key={article.id} className="hover:bg-gray-50 transition-colors">
-                        {/* Reference Header - Always Visible */}
-                        <div className="px-8 py-6">
-                          <div className="flex items-start gap-4">
-                            {/* Number Badge */}
-                            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center text-sm font-bold text-blue-700">
-                              {index + 1}
-                            </div>
-
-                            <div className="flex-1">
-                              {/* Journal Badge & Quality Score */}
-                              <div className="mb-3 flex flex-wrap items-center gap-2">
-                                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
-                                  {article.journal}
-                                </span>
-                                {article.isOpenAccess && (
-                                  <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">
-                                    Open Access
-                                  </span>
-                                )}
-                                {/* Quality Score Badge */}
-                                {article.qualityScore && (
-                                  <div className="flex items-center gap-2">
-                                    <div className={`px-3 py-1 rounded-full text-xs font-bold border ${getQualityColor(article.qualityScore.overallScore).bg} ${getQualityColor(article.qualityScore.overallScore).text} ${getQualityColor(article.qualityScore.overallScore).border}`}>
-                                      ⭐ {article.qualityScore.overallScore}/10 - {article.qualityScore.grade} Quality
-                                    </div>
-                                    <div className="group relative">
-                                      <div className="w-16 bg-gray-200 rounded-full h-2 cursor-help">
-                                        <div 
-                                          className={`h-2 rounded-full ${
-                                            article.qualityScore.overallScore >= 7.5 ? 'bg-green-500' :
-                                            article.qualityScore.overallScore >= 5.5 ? 'bg-blue-500' :
-                                            article.qualityScore.overallScore >= 3.5 ? 'bg-yellow-500' :
-                                            'bg-orange-500'
-                                          }`}
-                                          style={{ width: `${article.qualityScore.overallScore * 10}%` }}
-                                        />
-                                      </div>
-                                      {/* Tooltip */}
-                                      <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-10 w-72 bg-gray-900 text-white text-xs rounded-lg shadow-lg p-4">
-                                        <div className="font-bold mb-2">Evidence Quality Breakdown:</div>
-                                        <div className="space-y-1">
-                                          <div>📊 Study: {article.qualityScore.studyDesign.type}</div>
-                                          <div>👥 Sample: {article.qualityScore.sampleSize.n ? `n=${article.qualityScore.sampleSize.n.toLocaleString()}` : 'Unknown'} ({article.qualityScore.sampleSize.category})</div>
-                                          <div>📰 Journal: {article.qualityScore.journalQuality.tier} Tier</div>
-                                          <div>⚠️ Risk of Bias: {article.qualityScore.riskOfBias}</div>
-                                          {article.qualityScore.methodologyFactors.randomization && <div>✓ Randomized</div>}
-                                          {article.qualityScore.methodologyFactors.blinding && <div>✓ Blinded</div>}
-                                          {article.qualityScore.methodologyFactors.multiCenter && <div>✓ Multi-center</div>}
-                                        </div>
-                                        <div className="mt-2 pt-2 border-t border-gray-700 text-gray-300">
-                                          GRADE: {article.qualityScore.grade}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Title */}
-                              <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">
-                                {article.title}
-                              </h3>
-
-                              {/* Authors & Date */}
-                              <p className="text-sm text-gray-600 mb-3">
-                                {article.authors.slice(0, 3).join(', ')}
-                                {article.authors.length > 3 && ', et al.'}
-                                {' • '}
-                                <span className="text-gray-500">{article.published}</span>
-                                {article.abstract && (
-                                  <>
-                                    {' • '}
-                                    <span className={`${getReadingTimeCategory(calculateReadingTime(article.abstract).minutes).color} font-medium`}>
-                                      {getReadingTimeCategory(calculateReadingTime(article.abstract).minutes).icon} {calculateReadingTime(article.abstract).formattedTime} read
-                                    </span>
-                                  </>
-                                )}
-                              </p>
-
-                              {/* Action Buttons */}
-                              <div className="flex flex-wrap items-center gap-2">
-                                <button
-                                  onClick={() => toggleArticle(article.id)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                                >
-                                  {isExpanded ? (
-                                    <>
-                                      <ChevronUp className="w-4 h-4" />
-                                      Hide
-                                    </>
-                                  ) : (
-                                    <>
-                                      <ChevronDown className="w-4 h-4" />
-                                      Show Details
-                                    </>
-                                  )}
-                                </button>
-                                
-                                {article.doi && (
-                                  <a
-                                    href={`https://doi.org/${article.doi}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
-                                  >
-                                    <Link2 className="w-4 h-4" />
-                                    View Article
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Expandable Details */}
-                        {isExpanded && (
-                          <div className="px-8 pb-6 border-t border-gray-200 bg-gray-50">
-                            <div className="pt-6 space-y-6">
-                              {/* AI Summary */}
-                              {article.aiSummary && (
-                                <div>
-                                  <div className="flex items-center justify-between mb-3">
-                                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                      <Sparkles className="w-4 h-4 text-blue-600" />
-                                      AI Summary
-                                    </h4>
-                                    <button
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(article.aiSummary || '');
-                                        setCopiedText(article.id + '-summary');
-                                        setTimeout(() => setCopiedText(null), 2000);
-                                      }}
-                                      className="text-xs text-gray-600 hover:text-gray-900 flex items-center gap-1"
-                                    >
-                                      {copiedText === article.id + '-summary' ? (
-                                        <>
-                                          <Check className="w-3 h-3 text-green-600" />
-                                          Copied
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Copy className="w-3 h-3" />
-                                          Copy
-                                        </>
-                                      )}
-                                    </button>
-                                  </div>
-                                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
-                                    <p className="text-sm text-gray-800 leading-relaxed">
-                                      {article.aiSummary}
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Key Findings */}
-                              {article.keyFindings && article.keyFindings.length > 0 && (
-                                <div>
-                                  <h4 className="text-sm font-bold text-gray-900 mb-3">Key Findings</h4>
-                                  <ul className="space-y-2">
-                                    {article.keyFindings.map((finding, idx) => (
-                                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                                        <span dangerouslySetInnerHTML={{ __html: highlightQuery(finding) }} />
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-
-                              {/* Full Abstract */}
-                              {article.abstract && (
-                                <div>
-                                  <div className="flex items-center justify-between mb-3">
-                                    <h4 className="text-sm font-bold text-gray-900">Abstract</h4>
-                                    <button
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(article.abstract || '');
-                                        setCopiedText(article.id + '-abstract');
-                                        setTimeout(() => setCopiedText(null), 2000);
-                                      }}
-                                      className="text-xs text-gray-600 hover:text-gray-900 flex items-center gap-1"
-                                    >
-                                      {copiedText === article.id + '-abstract' ? (
-                                        <>
-                                          <Check className="w-3 h-3 text-green-600" />
-                                          Copied
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Copy className="w-3 h-3" />
-                                          Copy
-                                        </>
-                                      )}
-                                    </button>
-                                  </div>
-                                  <p 
-                                    className="text-sm text-gray-700 leading-relaxed"
-                                    dangerouslySetInnerHTML={{ __html: highlightQuery(article.abstract) }}
-                                  />
-                                </div>
-                              )}
-
-                              {/* Citation Info */}
-                              {article.citationCount > 0 && (
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                  <Award className="w-4 h-4 text-orange-600" />
-                                  <span>Cited {article.citationCount} times</span>
-                                </div>
-                              )}
-
-                              {/* Related Studies */}
-                              {(() => {
-                                const relatedStudies = findRelatedStudies(article, articles, 5);
-                                if (relatedStudies.length === 0) return null;
-
-                                return (
-                                  <div className="border-t border-gray-200 pt-4">
-                                    <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                      <Link2 className="w-4 h-4 text-indigo-600" />
-                                      Related Studies ({relatedStudies.length})
-                                    </h4>
-                                    <div className="space-y-3">
-                                      {relatedStudies.map((related, idx) => (
-                                        <div
-                                          key={related.article.id}
-                                          className={`p-3 rounded-lg border ${getSimilarityColor(related.similarityScore).bg} ${getSimilarityColor(related.similarityScore).border}`}
-                                        >
-                                          <div className="flex items-start justify-between gap-2 mb-2">
-                                            <div className="flex-1 min-w-0">
-                                              <button
-                                                onClick={() => {
-                                                  // Scroll to the related article
-                                                  const element = document.getElementById(related.article.id);
-                                                  element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                                  // Expand it
-                                                  toggleArticle(related.article.id);
-                                                }}
-                                                className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline text-left"
-                                              >
-                                                {related.article.title}
-                                              </button>
-                                            </div>
-                                            <span className={`flex-shrink-0 text-xs font-bold ${getSimilarityColor(related.similarityScore).text}`}>
-                                              {formatSimilarityPercentage(related.similarityScore)}
-                                            </span>
-                                          </div>
-                                          <div className="flex items-center gap-2 text-xs text-gray-600">
-                                            <span>{related.article.journal}</span>
-                                            <span>•</span>
-                                            <span>{related.article.published}</span>
-                                            {related.article.citationCount > 0 && (
-                                              <>
-                                                <span>•</span>
-                                                <span>{related.article.citationCount} citations</span>
-                                              </>
-                                            )}
-                                          </div>
-                                          {related.matchingKeywords.length > 0 && (
-                                            <div className="mt-2 flex flex-wrap gap-1">
-                                              {related.matchingKeywords.map((kw, kwIdx) => (
-                                                <span
-                                                  key={kwIdx}
-                                                  className="px-2 py-0.5 bg-white rounded text-xs text-gray-600 border border-gray-200"
-                                                >
-                                                  {kw}
-                                                </span>
-                                              ))}
-                                            </div>
-                                          )}
-                                          <div className="mt-2 text-xs text-gray-500 italic">
-                                            {related.reason}
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                );
-                              })()}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+        {synthesis && (
+          <>
+            <div className="mb-4 text-sm text-gray-600">
+              Debug: Synthesis has {synthesis.sections.length} sections and {synthesis.references.length} references
             </div>
+            <ClinicalSynthesisView synthesis={synthesis} />
+          </>
+        )}
+
+        {/* Empty State */}
+        {!synthesis && !loading && !error && (
+          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Search Medical Literature</h3>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Enter a clinical question to search across millions of peer-reviewed articles. Get instant evidence
+              synthesis with quality scores, journal badges, and clickable references.
+            </p>
           </div>
         )}
+      </div>
+
+      {/* Footer Info */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-blue-50 rounded-lg p-6">
+          <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+            <Sparkles className="w-5 h-5" />
+            What makes this search different?
+          </h3>
+          <div className="grid md:grid-cols-3 gap-4 text-sm text-blue-800">
+            <div>
+              <strong className="block mb-1">🎯 Quality Filtering</strong>
+              Only shows high-quality evidence from peer-reviewed journals with progressive filtering
+            </div>
+            <div>
+              <strong className="block mb-1">🏅 Journal Tiers</strong>
+              Color-coded badges: 🔵 Tier 1 (NEJM, Lancet), 🔴 Tier 2 (specialty), 🟢 Tier 3 (other)
+            </div>
+            <div>
+              <strong className="block mb-1">🔗 Clickable Sources</strong>
+              Click any journal badge to open the original article (DOI/PubMed links)
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

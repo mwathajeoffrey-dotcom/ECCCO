@@ -7,17 +7,20 @@
 ### 1. ⏱️ Adjustable Time Per Question (Create Quiz)
 
 **Feature:**
+
 - Enhanced time selector with both slider and number input
 - Range: 5 seconds to 180 seconds (3 minutes)
 - Visual indicator: ⚡ Fast / 🎯 Normal / 🧠 Thorough
 
 **Implementation:**
+
 - Slider control for quick selection
 - Number input for precise control
 - Real-time preview of selection
 - 5-second increments on slider
 
 **User Experience:**
+
 ```
 Create Quiz → Quiz Settings
 ├─ Time Per Question slider (5-180s)
@@ -33,17 +36,20 @@ Create Quiz → Quiz Settings
 ### 2. ⏰ Live Countdown Timer (Host Screen)
 
 **Feature:**
+
 - Real-time countdown displayed prominently on host screen
 - Visual feedback with color changes
 - Progress bar showing time remaining
 - Animated pulse when time is running low
 
 **Visual Indicators:**
+
 - **Green** (>10s): Normal time remaining
 - **Orange** (6-10s): Warning - time running low
 - **Red** (<5s): Critical - time almost up + pulse animation
 
 **Display:**
+
 ```
 ┌─────────────────────┐
 │ Time Remaining      │
@@ -58,16 +64,19 @@ Create Quiz → Quiz Settings
 ### 3. 🚀 Auto-Advance to Next Question
 
 **Feature:**
+
 - Automatically moves to next question when:
   1. **Timer reaches 0** (time expired)
   2. **All participants submit** their answers
 
 **Behavior:**
+
 - Time expires → Immediate auto-advance
 - All submitted → 2-second delay (shows completion) → auto-advance
 - Prevents host from needing to manually click "Next"
 
 **Logic:**
+
 ```javascript
 if (timeLeft === 0) {
   → Auto-advance immediately
@@ -84,6 +93,7 @@ if (submittedCount === totalParticipants) {
 ### 4. 📊 Live Participant Submission Tracking
 
 **Feature:**
+
 - Real-time counter showing how many participants have submitted
 - Visual indicator for each participant
 - Updates live as participants answer
@@ -92,6 +102,7 @@ if (submittedCount === totalParticipants) {
 **Display Components:**
 
 #### Submission Counter Card:
+
 ```
 ┌─────────────────────┐
 │ Submissions         │
@@ -102,6 +113,7 @@ if (submittedCount === totalParticipants) {
 ```
 
 #### Individual Tracking:
+
 - **Green bar**: Participant has submitted
 - **Gray bar**: Participant hasn't submitted yet
 - **CheckCircle**: All participants submitted (animated bounce)
@@ -113,13 +125,16 @@ if (submittedCount === totalParticipants) {
 ### Files Modified:
 
 #### `/src/app/quiz-arena/create/page.tsx`
+
 **Changes:**
+
 - Enhanced time selector with slider (5-180 seconds)
 - Added number input for precise control
 - Visual feedback based on time selection
 - Dark mode support
 
 **Code:**
+
 ```tsx
 <input
   type="range"
@@ -133,7 +148,9 @@ if (submittedCount === totalParticipants) {
 ```
 
 #### `/src/app/quiz-arena/host/[sessionId]/page.tsx`
+
 **State Added:**
+
 ```tsx
 const [timeLeft, setTimeLeft] = useState(0);
 const [isTimerActive, setIsTimerActive] = useState(false);
@@ -142,7 +159,9 @@ const timerRef = useRef<NodeJS.Timeout | null>(null);
 ```
 
 **Effects Added:**
+
 1. **Countdown Timer Effect:**
+
    - Decrements `timeLeft` every second
    - Auto-advances when reaches 0
    - Cleans up timeout on unmount
@@ -153,7 +172,9 @@ const timerRef = useRef<NodeJS.Timeout | null>(null);
    - Updates `submittedCount` in real-time
 
 **UI Components Added:**
+
 1. **Live Timer Card:**
+
    - Large countdown display
    - Color-coded (green/orange/red)
    - Progress bar visualization
@@ -172,6 +193,7 @@ const timerRef = useRef<NodeJS.Timeout | null>(null);
 ### Host Experience:
 
 #### 1. Create Quiz:
+
 ```
 Set time per question → Slide to 30 seconds
                       → See "🎯 Normal"
@@ -179,6 +201,7 @@ Set time per question → Slide to 30 seconds
 ```
 
 #### 2. Start Quiz:
+
 ```
 Click "Start Quiz" → Timer starts at 30s
                    → Countdown begins: 30...29...28...
@@ -186,6 +209,7 @@ Click "Start Quiz" → Timer starts at 30s
 ```
 
 #### 3. During Question:
+
 ```
 Participants answer → Counter updates: 1/5...2/5...3/5
                    → Timer continues: 25...24...23...
@@ -193,6 +217,7 @@ Participants answer → Counter updates: 1/5...2/5...3/5
 ```
 
 #### 4. Auto-Advance (Option A - Time Expires):
+
 ```
 Timer reaches 0 → Auto-advance to next question
                 → Timer resets to 30s
@@ -200,6 +225,7 @@ Timer reaches 0 → Auto-advance to next question
 ```
 
 #### 5. Auto-Advance (Option B - All Submit):
+
 ```
 Last participant submits → Counter shows: 5/5 ✓
                         → Wait 2 seconds
@@ -214,16 +240,19 @@ Last participant submits → Counter shows: 5/5 ✓
 ### Color Coding:
 
 **Timer States:**
+
 - `timeLeft > 10`: Green border, green text, green bar
 - `timeLeft <= 10`: Orange border, orange text, orange bar
 - `timeLeft <= 5`: Red border, red text, red bar + pulse
 
 **Submission States:**
+
 - Not submitted: Gray bar
 - Submitted: Green bar
 - All complete: Green bars + animated checkmark
 
 ### Layout:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                 HOST SCREEN                      │
@@ -247,11 +276,12 @@ Last participant submits → Counter shows: 5/5 ✓
 ## Technical Details
 
 ### Timer Logic:
+
 ```typescript
 useEffect(() => {
   if (isTimerActive && timeLeft > 0) {
     timerRef.current = setTimeout(() => {
-      setTimeLeft(prev => prev - 1);
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
   } else if (timeLeft === 0 && isTimerActive) {
     handleNextQuestion(); // Auto-advance
@@ -261,23 +291,28 @@ useEffect(() => {
 ```
 
 ### Submission Tracking:
+
 ```typescript
 useEffect(() => {
-  const currentAnswers = session.answers?.filter(
-    (a) => a.questionIndex === session.currentQuestion
-  ) || [];
-  
+  const currentAnswers =
+    session.answers?.filter(
+      (a) => a.questionIndex === session.currentQuestion
+    ) || [];
+
   setSubmittedCount(currentAnswers.length);
-  
+
   // Auto-advance if all submitted
-  if (participants.length > 0 && 
-      currentAnswers.length === participants.length) {
+  if (
+    participants.length > 0 &&
+    currentAnswers.length === participants.length
+  ) {
     setTimeout(() => handleNextQuestion(), 2000);
   }
 }, [session]);
 ```
 
 ### Handlers Updated:
+
 ```typescript
 const handleStartQuiz = async () => {
   // Start quiz via API
@@ -302,6 +337,7 @@ const handleNextQuestion = async () => {
 ## Benefits
 
 ### For Hosts:
+
 ✅ **Hands-free operation** - Auto-advance eliminates manual clicking
 ✅ **Better timing control** - Adjust time per question from 5s to 3 minutes
 ✅ **Live visibility** - See exactly who has submitted
@@ -309,12 +345,14 @@ const handleNextQuestion = async () => {
 ✅ **Engagement tracking** - Know when all participants are ready
 
 ### For Participants:
+
 ✅ **Fair timing** - Everyone gets same amount of time
 ✅ **No waiting** - Auto-advance when everyone's done
 ✅ **Clear deadlines** - Timer creates urgency
 ✅ **Smooth flow** - No awkward pauses waiting for host
 
 ### For Overall Experience:
+
 ✅ **Professional feel** - Like Kahoot or Quizizz
 ✅ **Better pacing** - Automatic transitions keep energy high
 ✅ **Reduced errors** - No forgetting to advance questions
@@ -325,6 +363,7 @@ const handleNextQuestion = async () => {
 ## Testing Checklist
 
 ### Timer Tests:
+
 - [ ] Timer counts down correctly (1 per second)
 - [ ] Timer shows correct initial value
 - [ ] Timer changes color at 10s (orange)
@@ -333,6 +372,7 @@ const handleNextQuestion = async () => {
 - [ ] Progress bar accurately reflects time remaining
 
 ### Submission Tests:
+
 - [ ] Counter starts at 0/N
 - [ ] Counter increments when participant answers
 - [ ] Individual bars turn green when submitted
@@ -341,6 +381,7 @@ const handleNextQuestion = async () => {
 - [ ] Works with different participant counts
 
 ### Auto-Advance Tests:
+
 - [ ] Advances when timer reaches 0
 - [ ] Advances when all participants submit
 - [ ] Timer resets after advancing
@@ -349,6 +390,7 @@ const handleNextQuestion = async () => {
 - [ ] Can manually advance with "Next" button
 
 ### Time Selector Tests (Create):
+
 - [ ] Slider works (5-180 range)
 - [ ] Number input works
 - [ ] Both stay in sync
@@ -360,6 +402,7 @@ const handleNextQuestion = async () => {
 ## Example Scenarios
 
 ### Scenario 1: Fast Quiz (10s per question)
+
 ```
 Host sets: 10 seconds
 Quiz starts: 10...9...8... (⚡ Fast)
@@ -368,6 +411,7 @@ Timer hits 0 → Auto-advance
 ```
 
 ### Scenario 2: All Participants Submit Early
+
 ```
 Time remaining: 25s
 Submissions: 5/8...6/8...7/8...8/8 ✓
@@ -376,6 +420,7 @@ Auto-advance to next question
 ```
 
 ### Scenario 3: Mixed - Some Submit, Time Expires
+
 ```
 Time: 30...25...20...
 Submissions: 3/10...5/10...7/10
@@ -384,6 +429,7 @@ Auto-advance (only 7/10 submitted)
 ```
 
 ### Scenario 4: Thorough Quiz (2 minute questions)
+
 ```
 Host sets: 120 seconds (🧠 Thorough)
 Complex question needs time
@@ -396,6 +442,7 @@ Auto-advance (still had 45s remaining)
 ## Status: COMPLETE & READY ✅
 
 All features implemented and tested:
+
 - ✅ Adjustable time (5-180s)
 - ✅ Live countdown timer
 - ✅ Auto-advance on timeout

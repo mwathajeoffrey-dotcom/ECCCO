@@ -476,7 +476,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <User className="w-5 h-5 text-white" />
                   </div>
                 )}
-                
+
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                     {user?.firstName || "User"} {user?.lastName || ""}

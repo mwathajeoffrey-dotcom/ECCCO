@@ -43,14 +43,14 @@ FIRST_TOPIC_ID=$(echo $TOPICS_RESPONSE | grep -o '"id":"[^"]*"' | head -1 | sed 
 
 if [ -n "$FIRST_TOPIC_ID" ]; then
     echo "3️⃣  Testing /api/questions with topicId=$FIRST_TOPIC_ID..."
-    
+
     QUESTIONS_RESPONSE=$(curl -s "$BASE_URL/api/questions?topicId=$FIRST_TOPIC_ID&limit=5")
-    
+
     # Check for success field
     if echo "$QUESTIONS_RESPONSE" | grep -q '"success":true'; then
         QUESTION_COUNT=$(echo $QUESTIONS_RESPONSE | grep -o '"id"' | wc -l)
         echo -e "${GREEN}✅ Questions endpoint working - Found questions${NC}"
-        
+
         # Check if questions have options as arrays
         if echo "$QUESTIONS_RESPONSE" | grep -q '"options":\['; then
             echo -e "${GREEN}✅ Options are properly parsed as arrays${NC}"

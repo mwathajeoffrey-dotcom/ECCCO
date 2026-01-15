@@ -3,18 +3,18 @@
  * Practice Advanced Cardiovascular Life Support questions
  */
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Activity, Heart, Zap, Clock, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from '@/lib/error-messages';
+import { useState, useEffect } from "react";
+import { Activity, Heart, Zap, Clock, CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
 
 interface Question {
   id: string;
-  question: string;  // Changed from 'text' to match API
+  question: string; // Changed from 'text' to match API
   options: string[];
   correctIndex: number;
   explanation?: string;
@@ -28,7 +28,7 @@ interface Question {
 export default function ACLSPracticePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const questionIdParam = searchParams.get('questionId');
+  const questionIdParam = searchParams.get("questionId");
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -40,9 +40,9 @@ export default function ACLSPracticePage() {
 
   useEffect(() => {
     // Load setting from localStorage
-    const setting = localStorage.getItem('showAnswersImmediately');
+    const setting = localStorage.getItem("showAnswersImmediately");
     if (setting !== null) {
-      setShowAnswersImmediately(setting === 'true');
+      setShowAnswersImmediately(setting === "true");
     }
   }, []);
 
@@ -51,11 +51,11 @@ export default function ACLSPracticePage() {
     const fetchQuestions = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/questions?category=ACLS&limit=20');
+        const response = await fetch("/api/questions?category=ACLS&limit=20");
         if (!response.ok) {
           const errorMsg = ERROR_MESSAGES.QUESTIONS_FAILED;
           toast.error(errorMsg.title, { description: errorMsg.message });
-          throw new Error('Failed to fetch questions');
+          throw new Error("Failed to fetch questions");
         }
 
         const data = await response.json();
@@ -74,7 +74,7 @@ export default function ACLSPracticePage() {
           toast.error(errorMsg.title, { description: errorMsg.message });
         }
       } catch (error) {
-        console.error('Error fetching ACLS questions:', error);
+        console.error("Error fetching ACLS questions:", error);
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {
@@ -100,12 +100,12 @@ export default function ACLSPracticePage() {
     const isCorrect = index === currentQuestion.correctIndex;
 
     if (isCorrect) {
-      setScore(prev => ({ correct: prev.correct + 1, total: prev.total + 1 }));
+      setScore((prev) => ({ correct: prev.correct + 1, total: prev.total + 1 }));
       if (showAnswersImmediately) {
         toast.success(SUCCESS_MESSAGES.CORRECT_ANSWER);
       }
     } else {
-      setScore(prev => ({ ...prev, total: prev.total + 1 }));
+      setScore((prev) => ({ ...prev, total: prev.total + 1 }));
       if (showAnswersImmediately) {
         toast.error("Incorrect", { description: "Review the explanation below" });
       }
@@ -128,7 +128,7 @@ export default function ACLSPracticePage() {
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
     } else {
@@ -142,7 +142,7 @@ export default function ACLSPracticePage() {
         duration: 6000,
       });
 
-      setTimeout(() => router.push('/practice'), 2000);
+      setTimeout(() => router.push("/practice"), 2000);
     }
   };
 
@@ -224,7 +224,9 @@ export default function ACLSPracticePage() {
             />
           </div>
           <div className="flex justify-between text-xs text-gray-600 mt-1">
-            <span>Question {currentQuestionIndex + 1} of {questions.length}</span>
+            <span>
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
         </div>
@@ -239,9 +241,7 @@ export default function ACLSPracticePage() {
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-blue-600 font-bold">{currentQuestionIndex + 1}</span>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 flex-1">
-                {currentQuestion.question}
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 flex-1">{currentQuestion.question}</h2>
             </div>
           </div>
 
@@ -252,17 +252,17 @@ export default function ACLSPracticePage() {
               const isCorrect = index === currentQuestion.correctIndex;
               const showResult = showExplanation;
 
-              let optionClass = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50';
+              let optionClass = "border-gray-200 hover:border-blue-300 hover:bg-blue-50";
               if (showResult) {
                 if (isCorrect) {
-                  optionClass = 'border-green-500 bg-green-50';
+                  optionClass = "border-green-500 bg-green-50";
                 } else if (isSelected && !isCorrect) {
-                  optionClass = 'border-red-500 bg-red-50';
+                  optionClass = "border-red-500 bg-red-50";
                 } else {
-                  optionClass = 'border-gray-200 opacity-60';
+                  optionClass = "border-gray-200 opacity-60";
                 }
               } else if (isSelected) {
-                optionClass = 'border-blue-500 bg-blue-50';
+                optionClass = "border-blue-500 bg-blue-50";
               }
 
               return (
@@ -271,21 +271,15 @@ export default function ACLSPracticePage() {
                   onClick={() => handleAnswerSelect(index)}
                   disabled={showExplanation}
                   className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${optionClass} ${
-                    showExplanation ? 'cursor-default' : 'cursor-pointer'
+                    showExplanation ? "cursor-default" : "cursor-pointer"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-white border-2 border-gray-300 flex items-center justify-center flex-shrink-0">
-                      {showResult && isCorrect && (
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                      )}
-                      {showResult && isSelected && !isCorrect && (
-                        <XCircle className="w-5 h-5 text-red-600" />
-                      )}
+                      {showResult && isCorrect && <CheckCircle className="w-5 h-5 text-green-600" />}
+                      {showResult && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-600" />}
                       {!showResult && (
-                        <span className="text-gray-600 font-semibold">
-                          {String.fromCharCode(65 + index)}
-                        </span>
+                        <span className="text-gray-600 font-semibold">{String.fromCharCode(65 + index)}</span>
                       )}
                     </div>
                     <span className="text-gray-900">{option}</span>

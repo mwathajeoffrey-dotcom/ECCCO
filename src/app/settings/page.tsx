@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
 import {
   User,
   Bell,
@@ -19,10 +19,10 @@ import {
   Sun,
   Moon,
   Monitor,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
   const [saved, setSaved] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -33,13 +33,13 @@ export default function SettingsPage() {
   }, []);
 
   const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'practice', label: 'Practice Settings', icon: Database },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'privacy', label: 'Privacy & Security', icon: Lock },
-    { id: 'appearance', label: 'Appearance', icon: Palette },
-    { id: 'data', label: 'Data & Storage', icon: Database },
-    { id: 'language', label: 'Language & Region', icon: Globe },
+    { id: "profile", label: "Profile", icon: User },
+    { id: "practice", label: "Practice Settings", icon: Database },
+    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "privacy", label: "Privacy & Security", icon: Lock },
+    { id: "appearance", label: "Appearance", icon: Palette },
+    { id: "data", label: "Data & Storage", icon: Database },
+    { id: "language", label: "Language & Region", icon: Globe },
   ];
 
   const handleSave = () => {
@@ -48,9 +48,9 @@ export default function SettingsPage() {
   };
 
   const themeOptions = [
-    { id: 'light', label: 'Light', icon: Sun, description: 'Light theme for daytime use' },
-    { id: 'dark', label: 'Dark', icon: Moon, description: 'Dark theme for night shifts' },
-    { id: 'system', label: 'System', icon: Monitor, description: 'Match your device settings' },
+    { id: "light", label: "Light", icon: Sun, description: "Light theme for daytime use" },
+    { id: "dark", label: "Dark", icon: Moon, description: "Dark theme for night shifts" },
+    { id: "system", label: "System", icon: Monitor, description: "Match your device settings" },
   ];
 
   return (
@@ -87,8 +87,8 @@ export default function SettingsPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                       activeTab === tab.id
-                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -104,7 +104,7 @@ export default function SettingsPage() {
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
               {/* Profile Settings */}
-              {activeTab === 'profile' && (
+              {activeTab === "profile" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Profile Information</h2>
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="text"
-                        defaultValue={''}
+                        defaultValue={""}
                         placeholder="Your full name"
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -130,7 +130,7 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="email"
-                        defaultValue={''}
+                        defaultValue={""}
                         placeholder="your.email@example.com"
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -162,7 +162,7 @@ export default function SettingsPage() {
               )}
 
               {/* Practice Settings */}
-              {activeTab === 'practice' && (
+              {activeTab === "practice" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Practice Preferences</h2>
@@ -174,15 +174,17 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="font-semibold text-gray-900 dark:text-white">Show Answers Immediately</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Show correct answer and explanation right after selecting an option</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Show correct answer and explanation right after selecting an option
+                          </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
-                          <input 
-                            type="checkbox" 
-                            className="sr-only peer" 
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
                             defaultChecked
                             onChange={(e) => {
-                              localStorage.setItem('showAnswersImmediately', e.target.checked.toString());
+                              localStorage.setItem("showAnswersImmediately", e.target.checked.toString());
                             }}
                           />
                           <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -194,7 +196,9 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="font-semibold text-gray-900 dark:text-white">Shuffle Questions</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Randomize question order in practice sessions</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Randomize question order in practice sessions
+                          </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -207,7 +211,9 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="font-semibold text-gray-900 dark:text-white">Auto-advance to Next Question</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Automatically show next question after viewing explanation</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Automatically show next question after viewing explanation
+                          </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input type="checkbox" className="sr-only peer" />
@@ -217,7 +223,9 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50">
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Default Questions Per Session</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+                        Default Questions Per Session
+                      </h3>
                       <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         <option>10 questions</option>
                         <option>20 questions</option>
@@ -231,7 +239,7 @@ export default function SettingsPage() {
               )}
 
               {/* Notifications Settings */}
-              {activeTab === 'notifications' && (
+              {activeTab === "notifications" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Notification Preferences</h2>
@@ -240,13 +248,16 @@ export default function SettingsPage() {
 
                   <div className="space-y-4">
                     {[
-                      { label: 'Email Notifications', description: 'Receive updates via email' },
-                      { label: 'Push Notifications', description: 'Get browser push notifications' },
-                      { label: 'Practice Reminders', description: 'Daily practice reminders' },
-                      { label: 'Progress Updates', description: 'Weekly progress summaries' },
-                      { label: 'New Content Alerts', description: 'Notifications for new questions and trials' },
+                      { label: "Email Notifications", description: "Receive updates via email" },
+                      { label: "Push Notifications", description: "Get browser push notifications" },
+                      { label: "Practice Reminders", description: "Daily practice reminders" },
+                      { label: "Progress Updates", description: "Weekly progress summaries" },
+                      { label: "New Content Alerts", description: "Notifications for new questions and trials" },
                     ].map((item) => (
-                      <div key={item.label} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                      <div
+                        key={item.label}
+                        className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50"
+                      >
                         <div>
                           <h3 className="font-semibold text-gray-900 dark:text-white">{item.label}</h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
@@ -262,7 +273,7 @@ export default function SettingsPage() {
               )}
 
               {/* Privacy Settings */}
-              {activeTab === 'privacy' && (
+              {activeTab === "privacy" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Privacy & Security</h2>
@@ -282,7 +293,9 @@ export default function SettingsPage() {
 
                     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50">
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Two-Factor Authentication</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Add an extra layer of security to your account</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        Add an extra layer of security to your account
+                      </p>
                       <button className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                         Enable 2FA
                       </button>
@@ -290,8 +303,13 @@ export default function SettingsPage() {
 
                     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50">
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Data Privacy</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Control how your data is used and shared</p>
-                      <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        Control how your data is used and shared
+                      </p>
+                      <Link
+                        href="/privacy"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium"
+                      >
                         View Privacy Policy →
                       </Link>
                     </div>
@@ -300,7 +318,7 @@ export default function SettingsPage() {
               )}
 
               {/* Appearance Settings */}
-              {activeTab === 'appearance' && (
+              {activeTab === "appearance" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Appearance</h2>
@@ -311,33 +329,40 @@ export default function SettingsPage() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Theme</label>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {mounted && themeOptions.map((option) => {
-                          const Icon = option.icon;
-                          const isActive = theme === option.id;
-                          return (
-                            <button
-                              key={option.id}
-                              onClick={() => setTheme(option.id)}
-                              className={`p-4 border-2 rounded-lg transition-all text-left ${
-                                isActive
-                                  ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/30'
-                                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3 mb-2">
-                                <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'}`} />
-                                <div className="font-semibold text-gray-900 dark:text-white">{option.label}</div>
-                                {isActive && <Check className="w-5 h-5 text-blue-600 dark:text-blue-400 ml-auto" />}
-                              </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">{option.description}</p>
-                            </button>
-                          );
-                        })}
+                        {mounted &&
+                          themeOptions.map((option) => {
+                            const Icon = option.icon;
+                            const isActive = theme === option.id;
+                            return (
+                              <button
+                                key={option.id}
+                                onClick={() => setTheme(option.id)}
+                                className={`p-4 border-2 rounded-lg transition-all text-left ${
+                                  isActive
+                                    ? "border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800"
+                                }`}
+                              >
+                                <div className="flex items-center gap-3 mb-2">
+                                  <Icon
+                                    className={`w-5 h-5 ${
+                                      isActive ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400"
+                                    }`}
+                                  />
+                                  <div className="font-semibold text-gray-900 dark:text-white">{option.label}</div>
+                                  {isActive && <Check className="w-5 h-5 text-blue-600 dark:text-blue-400 ml-auto" />}
+                                </div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">{option.description}</p>
+                              </button>
+                            );
+                          })}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Font Size</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Font Size
+                      </label>
                       <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         <option>Small</option>
                         <option>Medium</option>
@@ -349,7 +374,7 @@ export default function SettingsPage() {
               )}
 
               {/* Data & Storage Settings */}
-              {activeTab === 'data' && (
+              {activeTab === "data" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Data & Storage</h2>
@@ -360,7 +385,7 @@ export default function SettingsPage() {
               )}
 
               {/* Language & Region Settings */}
-              {activeTab === 'language' && (
+              {activeTab === "language" && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Language & Region</h2>
@@ -379,7 +404,7 @@ export default function SettingsPage() {
                       Changes saved successfully
                     </span>
                   ) : (
-                    'Make changes and save'
+                    "Make changes and save"
                   )}
                 </p>
                 <button

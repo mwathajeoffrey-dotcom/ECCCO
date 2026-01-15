@@ -1,19 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import {
-  StickyNote,
-  FileText,
-  Trash2,
-  Edit,
-  Search,
-  Filter,
-  Calendar,
-  Tag,
-  BookOpen,
-  Plus,
-} from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { StickyNote, FileText, Trash2, Edit, Search, Filter, Calendar, Tag, BookOpen, Plus } from "lucide-react";
 
 interface Note {
   id: string;
@@ -28,51 +17,53 @@ interface Note {
 }
 
 export default function NotesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   // Mock data - replace with actual data from your backend
   const mockNotes: Note[] = [
     {
-      id: '1',
-      title: 'ACLS Algorithm Notes',
-      content: 'Key points to remember: VF/VT - shock first, then CPR. PEA/Asystole - CPR first, identify reversible causes...',
-      questionId: 'q123',
-      questionText: 'What is the first step in managing VF?',
-      category: 'ACLS',
-      tags: ['cardiac arrest', 'algorithms', 'important'],
-      createdAt: new Date('2024-12-15'),
-      updatedAt: new Date('2024-12-15'),
+      id: "1",
+      title: "ACLS Algorithm Notes",
+      content:
+        "Key points to remember: VF/VT - shock first, then CPR. PEA/Asystole - CPR first, identify reversible causes...",
+      questionId: "q123",
+      questionText: "What is the first step in managing VF?",
+      category: "ACLS",
+      tags: ["cardiac arrest", "algorithms", "important"],
+      createdAt: new Date("2024-12-15"),
+      updatedAt: new Date("2024-12-15"),
     },
     {
-      id: '2',
-      title: 'Sepsis Management',
-      content: 'Remember the hour-1 bundle: measure lactate, obtain blood cultures before antibiotics, administer broad-spectrum...',
-      category: 'Emergency Medicine',
-      tags: ['sepsis', 'protocols', 'critical'],
-      createdAt: new Date('2024-12-14'),
-      updatedAt: new Date('2024-12-18'),
+      id: "2",
+      title: "Sepsis Management",
+      content:
+        "Remember the hour-1 bundle: measure lactate, obtain blood cultures before antibiotics, administer broad-spectrum...",
+      category: "Emergency Medicine",
+      tags: ["sepsis", "protocols", "critical"],
+      createdAt: new Date("2024-12-14"),
+      updatedAt: new Date("2024-12-18"),
     },
   ];
 
   const [notes, setNotes] = useState<Note[]>(mockNotes);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const categories = ['all', 'ACLS', 'PALS', 'Emergency Medicine', 'Critical Care', 'Other'];
+  const categories = ["all", "ACLS", "PALS", "Emergency Medicine", "Critical Care", "Other"];
 
   const filteredNotes = notes.filter((note) => {
     const matchesSearch =
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
       note.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesCategory = selectedCategory === 'all' || note.category === selectedCategory;
-    
+
+    const matchesCategory = selectedCategory === "all" || note.category === selectedCategory;
+
     return matchesSearch && matchesCategory;
   });
 
   const deleteNote = (noteId: string) => {
-    if (confirm('Are you sure you want to delete this note?')) {
+    if (confirm("Are you sure you want to delete this note?")) {
       setNotes(notes.filter((note) => note.id !== noteId));
     }
   };
@@ -89,7 +80,7 @@ export default function NotesPage() {
                 My Notes
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                {filteredNotes.length} {filteredNotes.length === 1 ? 'note' : 'notes'} found
+                {filteredNotes.length} {filteredNotes.length === 1 ? "note" : "notes"} found
               </p>
             </div>
             <button
@@ -148,12 +139,12 @@ export default function NotesPage() {
                 {/* Note Header */}
                 <div className="p-4 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 dark:from-blue-900/20 to-white dark:to-gray-800">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex-1 pr-2">
-                      {note.title}
-                    </h3>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex-1 pr-2">{note.title}</h3>
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => {/* Edit functionality */}}
+                        onClick={() => {
+                          /* Edit functionality */
+                        }}
                         className="p-1.5 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
                         title="Edit note"
                       >
@@ -168,7 +159,7 @@ export default function NotesPage() {
                       </button>
                     </div>
                   </div>
-                  
+
                   {/* Category Badge */}
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md text-xs font-medium">
                     <Tag className="w-3 h-3" />
@@ -178,9 +169,7 @@ export default function NotesPage() {
 
                 {/* Note Content */}
                 <div className="p-4">
-                  <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-4 mb-3">
-                    {note.content}
-                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-4 mb-3">{note.content}</p>
 
                   {/* Linked Question */}
                   {note.questionId && note.questionText && (
@@ -213,9 +202,7 @@ export default function NotesPage() {
                   {/* Date Info */}
                   <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>
-                      Updated {note.updatedAt.toLocaleDateString()}
-                    </span>
+                    <span>Updated {note.updatedAt.toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
@@ -228,14 +215,14 @@ export default function NotesPage() {
               <StickyNote className="w-10 h-10 text-blue-600 dark:text-blue-400" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {searchQuery || selectedCategory !== 'all' ? 'No Notes Found' : 'No Notes Yet'}
+              {searchQuery || selectedCategory !== "all" ? "No Notes Found" : "No Notes Yet"}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-              {searchQuery || selectedCategory !== 'all'
-                ? 'Try adjusting your search or filter criteria.'
-                : 'Start taking notes while studying to keep track of important concepts and insights.'}
+              {searchQuery || selectedCategory !== "all"
+                ? "Try adjusting your search or filter criteria."
+                : "Start taking notes while studying to keep track of important concepts and insights."}
             </p>
-            {!searchQuery && selectedCategory === 'all' && (
+            {!searchQuery && selectedCategory === "all" && (
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -270,7 +257,7 @@ export default function NotesPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {notes.filter(n => n.questionId).length}
+                  {notes.filter((n) => n.questionId).length}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Linked to Questions</p>
               </div>
@@ -284,7 +271,7 @@ export default function NotesPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {[...new Set(notes.flatMap(n => n.tags))].length}
+                  {[...new Set(notes.flatMap((n) => n.tags))].length}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Unique Tags</p>
               </div>
@@ -303,7 +290,12 @@ export default function NotesPage() {
                 onClick={() => setShowCreateModal(false)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  className="w-6 h-6 text-gray-600 dark:text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -312,9 +304,7 @@ export default function NotesPage() {
             <div className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Note Title *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Note Title *</label>
                 <input
                   type="text"
                   placeholder="e.g., ACLS Algorithm Notes"
@@ -324,9 +314,7 @@ export default function NotesPage() {
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Category
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
                 <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                   <option>ACLS</option>
                   <option>PALS</option>
@@ -338,9 +326,7 @@ export default function NotesPage() {
 
               {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Content *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Content *</label>
                 <textarea
                   rows={8}
                   placeholder="Start typing your notes..."
@@ -387,7 +373,7 @@ export default function NotesPage() {
               <button
                 onClick={() => {
                   // TODO: Implement save functionality
-                  alert('Note creation will be implemented with database integration');
+                  alert("Note creation will be implemented with database integration");
                   setShowCreateModal(false);
                 }}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

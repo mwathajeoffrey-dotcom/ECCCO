@@ -14,9 +14,7 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return (
-      <div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
-    );
+    return <div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />;
   }
 
   return (
@@ -51,11 +49,7 @@ export function ThemeToggleCompact() {
       aria-label="Toggle theme"
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {theme === "dark" ? (
-        <Sun className="w-4 h-4 text-yellow-400" />
-      ) : (
-        <Moon className="w-4 h-4 text-gray-700" />
-      )}
+      {theme === "dark" ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-gray-700" />}
     </button>
   );
 }

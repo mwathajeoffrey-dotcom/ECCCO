@@ -7,6 +7,7 @@
 #### On Mobile (Phone/Tablet < 768px)
 
 **Bottom of Screen:**
+
 ```
 ┌─────────────────────────────────────────────┐
 │                                             │
@@ -20,6 +21,7 @@
 ```
 
 **When you tap "Menu":**
+
 ```
   ┌────────────────────┐
   │ 👤 Your Name       │ ← Drawer slides in from left
@@ -39,6 +41,7 @@
 ```
 
 **Top-Right Corner:**
+
 - ❌ **NO floating practice button** (hidden on mobile)
 
 ---
@@ -46,12 +49,14 @@
 #### On Desktop (Computer >= 768px)
 
 **Top-Left Corner:**
+
 ```
 ⚡ ← Quick Practice button HERE
    (Hover to see tooltip)
 ```
 
 **Bottom of Screen:**
+
 - ❌ **NO bottom navigation bar** (hidden on desktop)
 
 ---
@@ -61,16 +66,19 @@
 ### Mobile Test (Use your phone or Chrome DevTools)
 
 1. **Open on mobile device** or:
+
    - Press `F12` (Chrome DevTools)
    - Press `Cmd+Shift+M` (Mac) or `Ctrl+Shift+M` (Windows)
    - Select "iPhone 14 Pro" from device list
 
 2. **Check Bottom Navigation:**
+
    - Scroll to bottom of page
    - You should see: **Menu | Practice | Exam | Quiz | Profile**
    - All 5 items should be visible and tappable
 
 3. **Test Menu Button:**
+
    - Tap the **Menu** button (☰ icon)
    - Drawer should slide in from left
    - Your profile should show at top
@@ -83,10 +91,12 @@
 ### Desktop Test
 
 1. **Switch to desktop view:**
+
    - Close DevTools device emulation
    - Or set width to 1440px or wider
 
 2. **Check Top-Left Corner:**
+
    - You should see: **⚡ Quick Practice button**
    - Button should have blue-purple gradient
    - Hover to see tooltip on right side
@@ -102,18 +112,23 @@
 ### Issue: Bottom nav not showing on mobile
 
 **Try this:**
+
 1. Hard refresh: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
 2. Open DevTools Console (F12)
 3. Run this:
+
 ```javascript
 // Check if element exists
-const nav = document.querySelector('nav[aria-label="Mobile bottom navigation"]');
-console.log('Bottom nav found:', !!nav);
-console.log('Bottom nav display:', window.getComputedStyle(nav)?.display);
-console.log('Window width:', window.innerWidth);
+const nav = document.querySelector(
+  'nav[aria-label="Mobile bottom navigation"]'
+);
+console.log("Bottom nav found:", !!nav);
+console.log("Bottom nav display:", window.getComputedStyle(nav)?.display);
+console.log("Window width:", window.innerWidth);
 ```
 
 **Expected output:**
+
 - Bottom nav found: `true`
 - Bottom nav display: `flex` (on mobile) or `none` (on desktop)
 - Window width: Your screen width in pixels
@@ -123,26 +138,30 @@ console.log('Window width:', window.innerWidth);
 ### Issue: Floating button still on top-right (should be top-left)
 
 **Check this:**
+
 1. Open DevTools Console
 2. Run:
+
 ```javascript
 const btn = document.querySelector('a[aria-label*="Quick Practice"]');
 const styles = window.getComputedStyle(btn);
-console.log('Button position:', {
+console.log("Button position:", {
   top: styles.top,
   left: styles.left,
   right: styles.right,
-  display: styles.display
+  display: styles.display,
 });
 ```
 
 **Expected output (desktop):**
+
 - top: `24px`
-- left: `24px`  ← Should be LEFT, not right!
+- left: `24px` ← Should be LEFT, not right!
 - right: `auto`
 - display: `flex`
 
 **Expected output (mobile):**
+
 - display: `none`
 
 ---
@@ -152,6 +171,7 @@ console.log('Button position:', {
 After deployment completes (~2-3 minutes), verify:
 
 ### Mobile (<768px)
+
 - [ ] Bottom navigation visible
 - [ ] 5 items: Menu, Practice, Exam, Quiz, Profile
 - [ ] Menu button opens drawer
@@ -160,6 +180,7 @@ After deployment completes (~2-3 minutes), verify:
 - [ ] No floating button visible
 
 ### Desktop (>=768px)
+
 - [ ] Bottom navigation hidden
 - [ ] Floating button at TOP-LEFT corner
 - [ ] Button has gradient and glow
@@ -173,15 +194,18 @@ After deployment completes (~2-3 minutes), verify:
 If navigation still not showing correctly:
 
 1. **Clear all site data:**
+
    - DevTools → Application tab
    - Clear storage → Clear site data
    - Hard refresh (Cmd+Shift+R)
 
 2. **Try incognito mode:**
+
    - Rules out browser extensions/cache
    - Cmd+Shift+N (Mac) or Ctrl+Shift+N (Windows)
 
 3. **Check Vercel deployment:**
+
    - Visit: https://vercel.com/[your-project]/deployments
    - Verify latest commit deployed successfully
    - Check deployment logs for errors
@@ -204,5 +228,5 @@ If you need help, screenshot:
 
 ---
 
-**Deployment should complete in ~2-3 minutes from now!**  
+**Deployment should complete in ~2-3 minutes from now!**
 Refresh your browser after that and test! 🚀
