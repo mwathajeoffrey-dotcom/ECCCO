@@ -115,12 +115,7 @@ export function analyzeQuery(query: string): QueryAnalysis {
   }
 
   if (lowerQuery.includes("foot")) {
-    suggestions.push(
-      "diabetic foot infection",
-      "foot ulcer treatment",
-      "lower extremity wounds",
-      "podiatric care"
-    );
+    suggestions.push("diabetic foot infection", "foot ulcer treatment", "lower extremity wounds", "podiatric care");
   }
 
   // Create broadened query
@@ -206,7 +201,10 @@ export function expandQueryForSearch(query: string): string {
 /**
  * Get search suggestions for when search fails
  */
-export function getSearchSuggestions(query: string, errorType: "no_results" | "low_quality"): {
+export function getSearchSuggestions(
+  query: string,
+  errorType: "no_results" | "low_quality"
+): {
   message: string;
   suggestions: string[];
   tips: string[];
@@ -216,10 +214,10 @@ export function getSearchSuggestions(query: string, errorType: "no_results" | "l
   if (errorType === "no_results") {
     return {
       message: `No results found for "${query}". Try these related searches:`,
-      suggestions: analysis.suggestions.length > 0 ? analysis.suggestions : [
-        analysis.broadenedQuery,
-        ...generateAlternativeQueries(query).slice(0, 4),
-      ],
+      suggestions:
+        analysis.suggestions.length > 0
+          ? analysis.suggestions
+          : [analysis.broadenedQuery, ...generateAlternativeQueries(query).slice(0, 4)],
       tips: [
         "Try using broader terms (e.g., 'diabetes' instead of 'diabetic foot management')",
         "Use medical synonyms (e.g., 'myocardial infarction' or 'MI' or 'heart attack')",
@@ -230,10 +228,7 @@ export function getSearchSuggestions(query: string, errorType: "no_results" | "l
   } else {
     return {
       message: `Limited high-quality results for "${query}". Try these alternatives:`,
-      suggestions: [
-        analysis.broadenedQuery,
-        ...analysis.suggestions.slice(0, 3),
-      ],
+      suggestions: [analysis.broadenedQuery, ...analysis.suggestions.slice(0, 3)],
       tips: [
         "Broaden your search terms",
         "Try synonyms or related conditions",

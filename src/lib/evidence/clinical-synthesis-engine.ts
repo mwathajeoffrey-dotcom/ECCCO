@@ -169,8 +169,14 @@ export async function generateClinicalSynthesis(
         const groqAvailable = isGroqAvailable();
         const meditronAvailable = await isMeditronAvailable();
 
+        console.log(`[Evidence Synthesis] 🔍 AI Check:`);
+        console.log(`  - Groq Available: ${groqAvailable}`);
+        console.log(`  - GROQ_API_KEY exists: ${!!process.env.GROQ_API_KEY}`);
+        console.log(`  - GROQ_API_KEY length: ${process.env.GROQ_API_KEY?.length || 0}`);
+        console.log(`  - Meditron Available: ${meditronAvailable}`);
+
         if (groqAvailable) {
-          console.log("[Evidence Synthesis] Using Groq AI for synthesis");
+          console.log("[Evidence Synthesis] ✅ Using Groq AI for synthesis");
           sections = await generateGroqSynthesis(query, sortedArticles as any, references);
           usedAI = true;
         } else if (meditronAvailable) {
@@ -178,12 +184,14 @@ export async function generateClinicalSynthesis(
           sections = await generateAISynthesis(query, sortedArticles as any, references);
           usedAI = true;
         } else {
-          console.warn("No AI available (tried Groq, Meditron), falling back to structured summary");
+          console.warn("[Evidence Synthesis] ⚠️ No AI available (tried Groq, Meditron), falling back to structured summary");
           console.warn("Get free Groq API key at: https://console.groq.com");
+          console.warn("Add to .env.local: GROQ_API_KEY=your_key_here");
           sections = await generateStructuredSummary(query, sortedArticles as any, references);
         }
-      } catch (error) {
-        console.error("AI synthesis failed, using fallback:", error);
+      } catch (error: any) {
+        console.error("[Evidence Synthesis] ❌ AI synthesis failed:", error?.message || error);
+        console.error("Falling back to structured summary");
         sections = await generateStructuredSummary(query, sortedArticles as any, references);
       }
     } else {
@@ -323,7 +331,7 @@ REMEMBER: You are writing a TREATMENT PROTOCOL, not a literature review!`;
 High-Quality Evidence (Guidelines, Meta-Analyses, Major RCTs):
 ${evidenceContext}
 
-TASK: Write clinical treatment protocols that tell physicians EXACTLY what to do. 
+TASK: Write clinical treatment protocols that tell physicians EXACTLY what to do.
 
 REQUIREMENTS:
 - 3-4 clinical sections with clear headings (## Initial Management, ## Drug Therapy, etc.)
@@ -480,7 +488,8 @@ function parseParagraphs(text: string, references: Reference[]): ClinicalParagra
       const refNum = parseInt(match[1]);
       const ref = references[refNum - 1];
 
-      if (ref) {
+      // Only add citation if reference exists and has required properties
+      if (ref && ref.id && ref.journal) {
         citations.push({
           position: match.index,
           journalBadge: getJournalBadge(ref.journal),
@@ -488,6 +497,8 @@ function parseParagraphs(text: string, references: Reference[]): ClinicalParagra
           referenceIds: [ref.id],
           color: getJournalColor(ref.journal),
         });
+      } else {
+        console.warn(`[Parse Citations] Reference ${refNum} not found or missing data. Total refs: ${references.length}`);
       }
     }
 
