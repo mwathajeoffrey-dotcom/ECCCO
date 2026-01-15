@@ -121,8 +121,10 @@ export async function POST(request: NextRequest) {
         maxArticles,
       });
     } catch (error: any) {
+      console.error("[Synthesis Generation Error]", error.message);
+      
       // If synthesis fails due to quality filters, provide suggestions
-      if (error.message?.includes("Insufficient evidence")) {
+      if (error.message?.includes("Insufficient evidence") || error.message?.includes("quality")) {
         const suggestions = getSearchSuggestions(query, "low_quality");
         const alternatives = generateAlternativeQueries(query);
 
@@ -139,7 +141,23 @@ export async function POST(request: NextRequest) {
           { status: 404 }
         );
       }
-      throw error; // Re-throw other errors
+      
+      // If it's an AI error, try falling back to structured summary
+      if (error.message?.includes("AI") || error.message?.includes("Groq") || error.message?.includes("rate limit")) {
+        console.warn("[Evidence Synthesis] AI failed, retrying with structured summary...");
+        try {
+          synthesis = await generateClinicalSynthesis(query, searchResults, {
+            minQualityScore,
+            useAI: false, // Force fallback to structured summary
+            maxArticles,
+          });
+        } catch (fallbackError: any) {
+          console.error("[Fallback Synthesis Error]", fallbackError);
+          throw fallbackError;
+        }
+      } else {
+        throw error; // Re-throw other errors
+      }
     }
 
     console.log(
@@ -177,6 +195,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(synthesisWithMeta, { status: 200 });
   } catch (error: any) {
     console.error("[Evidence Synthesis Error]", error);
+    console.error("[Error Stack]", error.stack);
+    console.error("[Error Details]", {
+      message: error.message,
+      name: error.name,
+      code: error.code,
+    });
 
     // Handle specific error types
     if (error.message?.includes("Insufficient high-quality evidence")) {

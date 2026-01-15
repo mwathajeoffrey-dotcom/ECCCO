@@ -76,8 +76,32 @@ export async function callGroq(
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Groq API error (${response.status}): ${error}`);
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: errorText };
+      }
+      
+      // Handle rate limiting
+      if (response.status === 429) {
+        console.error("[Groq] Rate limit exceeded. Please wait a moment and try again.");
+        throw new Error("AI synthesis temporarily unavailable (rate limit). Please try again in a moment.");
+      }
+      
+      // Handle invalid API key
+      if (response.status === 401) {
+        console.error("[Groq] Invalid API key.");
+        throw new Error("AI configuration error. Please contact support.");
+      }
+      
+      console.error("[Groq] API error:", {
+        status: response.status,
+        error: errorData,
+      });
+      
+      throw new Error(`Groq API error (${response.status}): ${errorData.error?.message || errorText}`);
     }
 
     const data: GroqResponse = await response.json();
