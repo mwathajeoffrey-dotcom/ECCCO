@@ -92,38 +92,39 @@ export async function generateClinicalSynthesis(
   const { minQualityScore = 75, useAI = true, maxArticles = 15 } = options || {};
 
   // Step 1: Filter for clinical-grade evidence
+  // Step 1: Filter for clinical quality with SAFETY THRESHOLDS
   const clinicalArticles = filterForClinicalUse(articles as any, {
-    minScore: minQualityScore,
-    maxTier: 3, // Accept tier 3 journals
-    maxAge: 15, // Last 15 years
-    requireAbstract: false, // Don't require abstract
+    minScore: Math.max(minQualityScore, 50), // SAFETY: Never go below 50/100
+    maxTier: 2, // SAFETY: Only tier 1 & 2 journals for clinical decisions
+    maxAge: 10, // Last 10 years for current evidence
+    requireAbstract: true, // SAFETY: Must have abstract for quality verification
   });
 
-  if (clinicalArticles.length < 1) {
-    // If still not enough, try with even more lenient criteria
-    const lenientArticles = filterForClinicalUse(articles as any, {
-      minScore: 30, // Very lenient
-      maxTier: 3, // Accept tier 3 (max allowed)
-      maxAge: 20, // 20 years
-      requireAbstract: false,
-    });
+  console.log(`[Quality Filter] Found ${clinicalArticles.length} high-quality articles (min score: 50, tier 1-2 only)`);
 
-    if (lenientArticles.length < 1) {
-      throw new Error(
-        `Insufficient evidence. Found ${lenientArticles.length} articles, need at least 1. Try a broader query or different search terms.`
-      );
-    }
-
-    // Use lenient results
-    console.log(
-      `Using lenient filter: ${lenientArticles.length} articles (original filter found ${clinicalArticles.length})`
+  // CRITICAL SAFETY CHECK: Require minimum evidence for clinical recommendations
+  if (clinicalArticles.length < 3) {
+    console.warn(`[SAFETY WARNING] Only ${clinicalArticles.length} high-quality articles found`);
+    console.warn(`[SAFETY WARNING] Need at least 3 articles from reputable sources for clinical recommendations`);
+    
+    throw new Error(
+      `🚨 SAFETY: Insufficient evidence for clinical recommendations.\n\n` +
+      `Found: ${clinicalArticles.length} high-quality articles\n` +
+      `Required: At least 3 articles from tier 1-2 journals\n\n` +
+      `This prevents displaying unreliable or dangerous medical advice.\n\n` +
+      `Try:\n` +
+      `• Broader search terms (e.g., "pneumonia treatment" not "specific drug name")\n` +
+      `• More common clinical terminology\n` +
+      `• Check spelling and medical term accuracy`
     );
-    return await continueWithArticles(lenientArticles);
   }
 
-  async function continueWithArticles(filteredArticles: any[]): Promise<ClinicalSynthesis> {
-    // Step 2: Sort by evidence type priority, then quality
-    const qualityScored = filteredArticles.map((a) => ({
+  console.log(`[Safety Check] ✅ PASSED: ${clinicalArticles.length} articles meet safety thresholds`);
+
+  console.log(`[Safety Check] ✅ PASSED: ${clinicalArticles.length} articles meet safety thresholds`);
+
+  // Step 2: Sort by evidence type priority, then quality
+  const qualityScored = clinicalArticles.map((a) => ({
       ...a,
       _quality: calculateClinicalQuality(a as any),
       _evidenceType: getEvidenceTypePriority(a),
@@ -217,9 +218,6 @@ export async function generateClinicalSynthesis(
       references,
       metadata,
     };
-  }
-
-  return await continueWithArticles(clinicalArticles);
 }
 
 /**
