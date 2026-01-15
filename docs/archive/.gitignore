@@ -1,0 +1,8 @@
+# Archived Documentation - Do Not Track
+# These files are kept locally for reference but not committed to git
+
+deployment-logs/
+feature-logs/
+fix-logs/
+guides/
+misc/
