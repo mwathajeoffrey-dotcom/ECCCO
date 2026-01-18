@@ -61,6 +61,8 @@ export interface SynthesisMetadata {
   avgQualityScore: number;
   lastUpdated: string;
   usedAI: boolean;
+  isResearchSummary?: boolean; // Flag for lower-quality research summaries
+  warning?: string; // Quality warning message
 }
 
 export interface ArticleInput {

@@ -123,26 +123,57 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
       console.error("[Synthesis Generation Error]", error.message);
       
-      // If synthesis fails due to quality filters, provide suggestions AND articles
+      // If synthesis fails due to quality filters, generate a RESEARCH SUMMARY instead
+      // This provides value while being transparent about quality limitations
       if (error.message?.includes("Insufficient evidence") || error.message?.includes("quality")) {
+        console.log("[Evidence Synthesis] Quality threshold not met, generating research summary instead...");
+        
         const suggestions = getSearchSuggestions(query, "low_quality");
         const alternatives = generateAlternativeQueries(query);
 
-        // Return the articles that were found (even though they don't meet strict thresholds)
-        // This allows users to see what was available
-        return NextResponse.json(
-          {
-            error: "Insufficient high-quality evidence",
-            message: `Found ${searchResults.length} articles, but not enough meet quality standards for clinical use.`,
+        // Generate a research summary (not clinical synthesis) from available articles
+        // This is less strict and provides educational/informational value
+        let researchSummary;
+        try {
+          researchSummary = await generateClinicalSynthesis(query, searchResults, {
+            minQualityScore: 30, // Lower threshold for research summary (not clinical use)
+            useAI,
+            maxArticles: 10,
+          });
+          
+          // Mark this as a research summary, not clinical synthesis
+          researchSummary.metadata = {
+            ...researchSummary.metadata,
+            isResearchSummary: true,
+            warning: "This is a research summary based on available literature, not a clinical synthesis. Does not meet strict quality thresholds for clinical decision-making.",
+          };
+          
+          return NextResponse.json({
+            ...researchSummary,
+            isResearchSummary: true,
+            qualityWarning: `Found ${searchResults.length} articles, but only ${researchSummary.metadata.articlesAnalyzed} met minimum quality for research summary. Does not meet strict clinical standards (minimum 3 high-quality Tier 1-2 articles).`,
             suggestions: alternatives.slice(0, 5),
             tips: suggestions.tips,
-            originalQuery: query,
-            articlesFound: searchResults.length,
-            articles: searchResults.slice(0, 10), // Return up to 10 articles for review
-            tryBroaderSearch: true,
-          },
-          { status: 200 } // Changed to 200 so we can show the articles
-        );
+          });
+          
+        } catch (summaryError: any) {
+          console.error("[Research Summary Error]", summaryError);
+          
+          // If even research summary fails, return articles for manual review
+          return NextResponse.json(
+            {
+              error: "Insufficient high-quality evidence",
+              message: `Found ${searchResults.length} articles, but not enough meet quality standards for clinical use.`,
+              suggestions: alternatives.slice(0, 5),
+              tips: suggestions.tips,
+              originalQuery: query,
+              articlesFound: searchResults.length,
+              articles: searchResults.slice(0, 10),
+              tryBroaderSearch: true,
+            },
+            { status: 200 }
+          );
+        }
       }
       
       // If it's an AI error, try falling back to structured summary

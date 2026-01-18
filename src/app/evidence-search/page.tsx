@@ -22,6 +22,8 @@ export default function EvidenceSearchPage() {
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<ErrorWithSuggestions | null>(null);
   const [useAI, setUseAI] = useState(true);
+  const [isResearchSummary, setIsResearchSummary] = useState(false);
+  const [qualityWarning, setQualityWarning] = useState<string | null>(null);
 
   const suggestedQueries = [
     "treatment for uncomplicated malaria",
@@ -38,6 +40,8 @@ export default function EvidenceSearchPage() {
     setError(null);
     setErrorDetails(null);
     setSynthesis(null);
+    setIsResearchSummary(false);
+    setQualityWarning(null);
 
     try {
       const response = await fetch("/api/evidence/synthesize", {
@@ -61,6 +65,15 @@ export default function EvidenceSearchPage() {
         } else {
           throw new Error(data.error || "Failed to generate synthesis");
         }
+        return;
+      }
+
+      // Check if we got a research summary (lower quality, not clinical grade)
+      if (data.isResearchSummary) {
+        console.log("⚠️ Research summary received (not clinical grade)");
+        setSynthesis(data);
+        setIsResearchSummary(true);
+        setQualityWarning(data.qualityWarning);
         return;
       }
 
@@ -312,8 +325,26 @@ export default function EvidenceSearchPage() {
           </div>
         )}
 
-        {/* Success Message */}
-        {synthesis && !loading && (
+        {/* Research Summary Warning (when quality threshold not met) */}
+        {synthesis && !loading && isResearchSummary && (
+          <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-amber-900 mb-1">⚠️ Research Summary (Not Clinical Grade)</h3>
+                <p className="text-amber-800 mb-2">{qualityWarning}</p>
+                <p className="text-sm text-amber-700">
+                  This summary is for educational/informational purposes only. It does not meet our strict quality
+                  thresholds for clinical decision-making. For clinical use, try a broader search or consult
+                  specialized databases.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Message (Clinical Grade) */}
+        {synthesis && !loading && !isResearchSummary && (
           <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg mb-8">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
