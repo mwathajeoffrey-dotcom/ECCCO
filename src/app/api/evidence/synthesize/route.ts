@@ -123,22 +123,25 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
       console.error("[Synthesis Generation Error]", error.message);
       
-      // If synthesis fails due to quality filters, provide suggestions
+      // If synthesis fails due to quality filters, provide suggestions AND articles
       if (error.message?.includes("Insufficient evidence") || error.message?.includes("quality")) {
         const suggestions = getSearchSuggestions(query, "low_quality");
         const alternatives = generateAlternativeQueries(query);
 
+        // Return the articles that were found (even though they don't meet strict thresholds)
+        // This allows users to see what was available
         return NextResponse.json(
           {
             error: "Insufficient high-quality evidence",
-            message: `Found ${searchResults.length} articles, but not enough meet quality standards.`,
+            message: `Found ${searchResults.length} articles, but not enough meet quality standards for clinical use.`,
             suggestions: alternatives.slice(0, 5),
             tips: suggestions.tips,
             originalQuery: query,
             articlesFound: searchResults.length,
+            articles: searchResults.slice(0, 10), // Return up to 10 articles for review
             tryBroaderSearch: true,
           },
-          { status: 404 }
+          { status: 200 } // Changed to 200 so we can show the articles
         );
       }
       

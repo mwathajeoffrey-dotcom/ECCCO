@@ -12,6 +12,7 @@ interface ErrorWithSuggestions {
   tips?: string[];
   expandedTerms?: string[];
   articlesFound?: number;
+  articles?: any[]; // Articles that were found but didn't meet quality threshold
 }
 
 export default function EvidenceSearchPage() {
@@ -60,6 +61,13 @@ export default function EvidenceSearchPage() {
         } else {
           throw new Error(data.error || "Failed to generate synthesis");
         }
+        return;
+      }
+
+      // Check if we got an error response with articles (quality threshold not met)
+      if (data.error && data.articles) {
+        setErrorDetails(data);
+        setError(data.message || data.error);
         return;
       }
 
@@ -216,11 +224,90 @@ export default function EvidenceSearchPage() {
                 {/* Articles Found Info */}
                 {errorDetails?.articlesFound !== undefined && errorDetails.articlesFound > 0 && (
                   <div className="mt-3 text-sm text-red-600">
-                    📊 Found {errorDetails.articlesFound} articles, but not enough met quality standards for clinical
+                    📊 Found {errorDetails.articlesFound} article{errorDetails.articlesFound !== 1 ? 's' : ''}, but not enough met quality standards for clinical
                     use.
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Display articles that were found but didn't meet strict quality threshold */}
+        {errorDetails?.articles && errorDetails.articles.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8">
+            <div className="flex items-start gap-3 mb-4">
+              <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-amber-900 mb-1">
+                  Articles Found ({errorDetails.articles.length})
+                </h3>
+                <p className="text-sm text-amber-800">
+                  These articles were found but don't meet our strict quality thresholds (minimum 3 high-quality
+                  articles from Tier 1-2 journals). Review them for reference, but be aware they may not represent
+                  strong clinical consensus.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {errorDetails.articles.map((article: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="bg-white rounded-lg p-4 border border-amber-200 hover:border-amber-300 transition-colors"
+                >
+                  <h4 className="font-medium text-gray-900 mb-2 leading-snug">{article.title || "Untitled"}</h4>
+
+                  <p className="text-sm text-gray-600 mb-2">
+                    {article.authors?.slice(0, 3).join(", ")}
+                    {article.authors?.length > 3 && " et al."} •{" "}
+                    <span className="font-medium">{article.journal || "Unknown Journal"}</span> •{" "}
+                    {article.published?.split("-")[0] || "Unknown Year"}
+                  </p>
+
+                  {article.abstract && (
+                    <p className="text-sm text-gray-700 line-clamp-2 mb-2">{article.abstract}</p>
+                  )}
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {article.citationCount !== undefined && (
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                        {article.citationCount} citations
+                      </span>
+                    )}
+
+                    {article.doi && (
+                      <a
+                        href={`https://doi.org/${article.doi}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs hover:bg-blue-200 transition-colors"
+                      >
+                        View Article →
+                      </a>
+                    )}
+
+                    {!article.doi && article.url && (
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs hover:bg-blue-200 transition-colors"
+                      >
+                        View Article →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 p-3 bg-amber-100 rounded-lg">
+              <p className="text-xs text-amber-900">
+                <strong>⚠️ Patient Safety Notice:</strong> These results don't meet our strict evidence-based
+                medicine standards (minimum 3 articles, quality score ≥50, Tier 1-2 journals, last 10 years). For
+                clinical decisions, consider broadening your search or consulting specialized databases.
+              </p>
             </div>
           </div>
         )}
