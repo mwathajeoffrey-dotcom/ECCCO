@@ -50,6 +50,7 @@ export interface Reference {
   url: string;
   qualityScore: number;
   evidenceLevel: string;
+  citationCount?: number; // For "Highly Cited" badge
 }
 
 export interface SynthesisMetadata {
@@ -155,6 +156,7 @@ export async function generateClinicalSynthesis(
       url: (article as any).url || "",
       qualityScore: article._quality.totalScore,
       evidenceLevel: inferEvidenceLevel(article as any),
+      citationCount: (article as any).citationCount || 0,
     }));
 
     // Step 4: Check if AI is available and requested
@@ -328,8 +330,27 @@ ${evidenceContext}
 
 TASK: Write clinical treatment protocols that tell physicians EXACTLY what to do.
 
+SECTION HEADINGS - Make them SPECIFIC to the query topic:
+✅ GOOD (query-specific):
+- "Berlin Criteria for ARDS Diagnosis" (not "Diagnostic Criteria")
+- "Septic Shock Initial Resuscitation" (not "Initial Management")
+- "STEMI Antiplatelet Therapy" (not "Drug Therapy")
+- "CAP Risk Stratification" (not "Assessment")
+
+❌ BAD (generic):
+- "Summary" / "Overview" / "Background"
+- "Treatment" / "Management" / "Therapy"
+- "Diagnosis" / "Assessment" / "Evaluation"
+
+GENERATE 3-4 SECTIONS WITH HEADINGS LIKE:
+- "## [Specific Topic] Diagnostic Criteria" (for diagnostic queries)
+- "## [Specific Topic] Initial Management Protocol" (for treatment queries)
+- "## [Drug/Intervention] Dosing and Administration" (for therapy queries)
+- "## [Condition] Risk Stratification" (for prognosis queries)
+- "## Performance and Limitations" (for validation/accuracy queries)
+
 REQUIREMENTS:
-- 3-4 clinical sections with clear headings (## Initial Management, ## Drug Therapy, etc.)
+- Each section heading MUST include the specific topic from the query
 - Each paragraph must start with action verbs (Administer, Give, Monitor, etc.)
 - Include specific drug names, dosages, routes, and timing
 - State WHO gets the treatment ("For patients with STEMI...", "In septic shock...")

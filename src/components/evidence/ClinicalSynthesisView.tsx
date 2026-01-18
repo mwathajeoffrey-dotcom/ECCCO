@@ -228,6 +228,55 @@ function ReferencesSection({
 }
 
 /**
+ * Get study type badges (Consensus-style)
+ */
+function getStudyBadges(reference: Reference) {
+  const badges: Array<{ icon: string; text: string; color: string }> = [];
+
+  // Determine journal tier based on quality score and journal name
+  const journalLower = reference.journal.toLowerCase();
+  const isTier1 =
+    journalLower.includes("nejm") ||
+    journalLower.includes("new england journal") ||
+    journalLower.includes("lancet") ||
+    journalLower.includes("jama") ||
+    journalLower.includes("bmj") ||
+    journalLower.includes("nature medicine") ||
+    journalLower.includes("annals of internal medicine") ||
+    reference.qualityScore >= 85;
+
+  // Rigorous Journal badge (Tier 1)
+  if (isTier1) {
+    badges.push({ icon: "⭐", text: "RIGOROUS JOURNAL", color: "bg-blue-100 text-blue-800 border-blue-200" });
+  }
+
+  // Highly Cited badge (500+ citations OR high quality score as proxy)
+  const citationCount = reference.citationCount || 0;
+  if (citationCount >= 500 || (citationCount >= 100 && reference.qualityScore >= 80)) {
+    badges.push({ icon: "📊", text: "HIGHLY CITED", color: "bg-purple-100 text-purple-800 border-purple-200" });
+  }
+
+  // Study type badges based on evidence level
+  if (reference.evidenceLevel === "1") {
+    badges.push({
+      icon: "📋",
+      text: "SYSTEMATIC REVIEW",
+      color: "bg-green-100 text-green-800 border-green-200",
+    });
+  } else if (reference.evidenceLevel === "2") {
+    badges.push({ icon: "🔬", text: "RCT", color: "bg-indigo-100 text-indigo-800 border-indigo-200" });
+  }
+
+  // Recent publication badge (last 2 years)
+  const currentYear = new Date().getFullYear();
+  if (currentYear - reference.year <= 2) {
+    badges.push({ icon: "🆕", text: "RECENT", color: "bg-red-100 text-red-800 border-red-200" });
+  }
+
+  return badges;
+}
+
+/**
  * Individual reference card with metadata
  */
 function ReferenceCard({ reference }: { reference: Reference }) {
@@ -240,25 +289,46 @@ function ReferenceCard({ reference }: { reference: Reference }) {
   };
 
   const qualityBadge = getQualityBadge(reference.qualityScore);
+  const studyBadges = getStudyBadges(reference);
 
   return (
     <div className="reference-card bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
+          {/* Consensus-style prominent badges */}
+          {studyBadges.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              {studyBadges.map((badge, idx) => (
+                <span
+                  key={idx}
+                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${badge.color}`}
+                >
+                  {badge.icon} {badge.text}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* Title */}
           <h4 className="font-medium text-gray-900 leading-snug">{reference.title}</h4>
 
-          {/* Authors and journal */}
+          {/* Authors, journal, and citation count */}
           <p className="text-sm text-gray-600">
-            {reference.authors.slice(0, 3).join(", ")}
-            {reference.authors.length > 3 && ", et al."}
-            {" • "}
-            <span className="font-medium">{reference.journal}</span>
-            {" • "}
             {reference.year}
+            {reference.citationCount && reference.citationCount > 0 && (
+              <>
+                {" · "}
+                <span className="font-medium">{reference.citationCount} citations</span>
+              </>
+            )}
+            {" · "}
+            {reference.authors.slice(0, 3).join(", ")}
+            {reference.authors.length > 3 && " et al."}
+            {" · "}
+            <span className="font-medium">{reference.journal}</span>
           </p>
 
-          {/* Badges */}
+          {/* Secondary badges (quality, evidence level, links) */}
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`px-2 py-1 rounded-md text-xs font-medium ${qualityBadge.color}`}>
               {qualityBadge.text} ({reference.qualityScore}/100)

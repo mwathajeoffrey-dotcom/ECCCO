@@ -1,5 +1,6 @@
 # 🔍 Smart Search Enhancement - Query Expansion & Suggestions
-**Date**: January 15, 2026  
+
+**Date**: January 15, 2026
 **Feature**: Intelligent search with automatic query expansion and helpful suggestions
 
 ---
@@ -9,6 +10,7 @@
 **User reported issue**: Searches like "diabetic foot management" were failing with unhelpful error messages saying "Failed to generate synthesis."
 
 ### Root Causes Identified
+
 1. **Too specific queries** - Limited results from medical databases
 2. **Strict quality filters** - Rejected many potentially useful articles
 3. **No query expansion** - Missed synonyms and related medical terms
@@ -53,14 +55,17 @@ analyzeQuery("diabetic foot management") returns:
 Built-in knowledge of medical synonyms and abbreviations:
 
 **Diabetes Terms**:
+
 - diabetes → "diabetes mellitus", "DM", "hyperglycemia"
 - diabetic foot → "diabetic foot ulcer", "DFU", "diabetic neuropathy"
 
 **Emergency Conditions**:
+
 - sepsis → "septic shock", "severe sepsis", "septicemia", "SIRS"
 - MI → "myocardial infarction", "heart attack", "AMI"
 
 **Procedures**:
+
 - management → "treatment", "therapy", "intervention", "care"
 - diagnosis → "diagnostic", "assessment", "evaluation"
 
@@ -89,6 +94,7 @@ Step 3: Try broadened query (remove specific terms)
 Instead of generic errors, users now see:
 
 **When no results found**:
+
 ```
 ❌ Search Error
 
@@ -108,6 +114,7 @@ Try these related searches:
 ```
 
 **When quality too low**:
+
 ```
 ❌ Search Error
 
@@ -127,6 +134,7 @@ Try these alternatives:
 ### 5. **Interactive Suggestions**
 
 Suggestions are **clickable buttons** that:
+
 - Pre-fill the search box
 - Clear the error
 - Ready for user to click search again
@@ -138,30 +146,35 @@ Suggestions are **clickable buttons** that:
 ### Core Capabilities
 
 ✅ **Query Analysis**
+
 - Detects medical concepts
 - Finds synonyms
 - Identifies abbreviations
 - Suggests alternatives
 
 ✅ **Auto-Expansion**
+
 - Adds medical synonyms
 - Includes abbreviations
 - Uses OR operators for broad coverage
 - Maintains clinical relevance
 
 ✅ **Progressive Search**
+
 - 3-tier fallback strategy
 - Original → Expanded → Broadened
 - Maximizes chance of finding results
 - Logs each attempt for debugging
 
 ✅ **Smart Suggestions**
+
 - Context-aware alternatives
 - Based on detected medical concepts
 - Clickable for one-click retry
 - Up to 5 relevant suggestions
 
 ✅ **Search Tips**
+
 - Actionable advice
 - Specific to the error type
 - Helps users learn better search techniques
@@ -174,6 +187,7 @@ Suggestions are **clickable buttons** that:
 ### New Files Created
 
 **`/src/lib/evidence/query-expansion.ts`** (300+ lines)
+
 - `analyzeQuery()` - Extract medical concepts
 - `expandQueryForSearch()` - Create expanded OR query
 - `generateAlternativeQueries()` - Suggest alternatives
@@ -184,12 +198,14 @@ Suggestions are **clickable buttons** that:
 ### Modified Files
 
 **`/src/app/api/evidence/synthesize/route.ts`**
+
 - Import query expansion module
 - 3-tier progressive search
 - Enhanced error responses with suggestions
 - Better logging for debugging
 
 **`/src/app/evidence-search/page.tsx`**
+
 - New `ErrorWithSuggestions` interface
 - `errorDetails` state for rich error data
 - Enhanced error display with clickable suggestions
@@ -201,6 +217,7 @@ Suggestions are **clickable buttons** that:
 ## 🎨 User Experience Improvements
 
 ### Before
+
 ```
 User searches: "diabetic foot management"
 System: ❌ "Failed to generate synthesis"
@@ -208,18 +225,20 @@ User: 🤷‍♂️ What now?
 ```
 
 ### After
+
 ```
 User searches: "diabetic foot management"
 
 System tries:
 1. "diabetic foot management" → 0 results
-2. Expanded query → 0 results  
+2. Expanded query → 0 results
 3. Broadened to "diabetic foot" → 45 results! ✅
 
 Shows synthesis with references
 ```
 
 ### If Search Fails
+
 ```
 ❌ No articles found
 
@@ -245,19 +264,23 @@ Try these related searches:
 ## 📚 Medical Knowledge Database
 
 ### Condition Synonyms (20+ conditions)
+
 - Diabetes, Sepsis, Pneumonia, Hypertension
 - Stroke, MI, Shock, Trauma
 - COPD, CHF, PE, DVT, etc.
 
 ### Procedure Terms
+
 - Management, Diagnosis, Treatment
 - Therapy, Intervention, Care, Assessment
 
 ### Abbreviations (15+ common)
+
 - MI, CVA, DM, HTN, CHF, COPD
 - DFU, CAD, PE, DVT, ARDS, etc.
 
 ### Body Parts & Systems
+
 - Foot → lower extremity, pedal, podiatric
 - More can be added as needed
 
@@ -266,6 +289,7 @@ Try these related searches:
 ## 🚀 Benefits
 
 ### For Users
+
 ✅ **Higher success rate** - Progressive search tries multiple strategies
 ✅ **Better guidance** - Specific suggestions instead of generic errors
 ✅ **Learn as you go** - Tips help users improve their searches
@@ -273,6 +297,7 @@ Try these related searches:
 ✅ **Transparent process** - See what the system tried
 
 ### For the System
+
 ✅ **More robust** - Handles edge cases gracefully
 ✅ **Better logging** - Track search attempts and expansions
 ✅ **Extendable** - Easy to add more medical terms
@@ -283,6 +308,7 @@ Try these related searches:
 ## 📈 Example Use Cases
 
 ### Case 1: Diabetic Foot Management
+
 ```
 Input: "diabetic foot management"
 
@@ -295,6 +321,7 @@ Result: Synthesis with 8 high-quality articles
 ```
 
 ### Case 2: MI Treatment
+
 ```
 Input: "MI treatment"
 
@@ -308,6 +335,7 @@ Result: 52 articles found, 12 high-quality ✅
 ```
 
 ### Case 3: Very Specific Query
+
 ```
 Input: "use of norepinephrine in pediatric septic shock"
 
@@ -326,6 +354,7 @@ Suggestions shown:
 ## 🧪 Testing
 
 ### Build Status
+
 ```bash
 ✓ Compiled successfully in 43s
 ✓ 0 TypeScript errors
@@ -334,6 +363,7 @@ Suggestions shown:
 ```
 
 ### Verified Working
+
 - Query analysis
 - Medical term detection
 - Synonym expansion
@@ -346,18 +376,21 @@ Suggestions shown:
 ## 🎯 Next Steps (Future Enhancements)
 
 ### Short-term
+
 - [ ] Add more medical terms (cardiology, neurology, etc.)
 - [ ] Track successful search patterns
 - [ ] Learn from user behavior
 - [ ] Add specialty-specific synonyms
 
 ### Medium-term
+
 - [ ] Autocomplete with suggestions
 - [ ] Search history
 - [ ] Popular searches
 - [ ] Related topics sidebar
 
 ### Long-term
+
 - [ ] AI-powered query understanding
 - [ ] Natural language processing
 - [ ] User feedback on suggestions
@@ -368,11 +401,13 @@ Suggestions shown:
 ## 📝 How It Works
 
 ### 1. User Enters Query
+
 ```javascript
-"diabetic foot management"
+"diabetic foot management";
 ```
 
 ### 2. System Analyzes
+
 ```javascript
 {
   concepts: ["diabetic", "foot", "diabetic foot"],
@@ -382,6 +417,7 @@ Suggestions shown:
 ```
 
 ### 3. Progressive Search
+
 ```
 Try 1: Original query
 Try 2: Expanded query (with OR operators)
@@ -389,6 +425,7 @@ Try 3: Broadened query (remove specifics)
 ```
 
 ### 4. Results or Suggestions
+
 ```
 Success: Show synthesis
 Failure: Show clickable suggestions + tips
@@ -399,15 +436,19 @@ Failure: Show clickable suggestions + tips
 ## 🏆 Impact
 
 ### Problem: Users getting frustrated with failed searches
+
 **Solution**: Smart query expansion + helpful suggestions
 
-### Problem: No guidance when search fails  
+### Problem: No guidance when search fails
+
 **Solution**: Specific, actionable suggestions + tips
 
 ### Problem: Missing results due to terminology
+
 **Solution**: Medical synonym database + auto-expansion
 
 ### Problem: One-shot search with no fallback
+
 **Solution**: 3-tier progressive search strategy
 
 ---
@@ -426,6 +467,6 @@ Failure: Show clickable suggestions + tips
 
 ---
 
-**Feature Completed**: January 15, 2026  
-**Build Status**: ✅ PASSING  
+**Feature Completed**: January 15, 2026
+**Build Status**: ✅ PASSING
 **Ready for**: Testing → Deployment → Production
