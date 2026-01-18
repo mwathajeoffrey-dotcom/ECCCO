@@ -91,52 +91,49 @@ export async function generateClinicalSynthesis(
 ): Promise<ClinicalSynthesis> {
   const { minQualityScore = 75, useAI = true, maxArticles = 15 } = options || {};
 
-  // Step 1: Filter for clinical-grade evidence
-  // Step 1: Filter for clinical quality with SAFETY THRESHOLDS
+  // PATIENT SAFETY: Strict minimum requirements for clinical recommendations
+  const MINIMUM_ARTICLES_FOR_CLINICAL_USE = 3; // At least 3 quality articles
+  const MINIMUM_QUALITY_SCORE = 50; // At least "Good" quality
+  const MAXIMUM_TIER = 2; // Only Tier 1-2 journals (JAMA, NEJM, Lancet, specialty journals)
+  const MAXIMUM_AGE_YEARS = 10; // Last 10 years for current evidence
+
+  // Step 1: Filter for clinical-grade evidence with STRICT safety thresholds
   const clinicalArticles = filterForClinicalUse(articles as any, {
-    minScore: Math.max(minQualityScore, 50), // SAFETY: Never go below 50/100
-    maxTier: 2, // SAFETY: Only tier 1 & 2 journals for clinical decisions
-    maxAge: 10, // Last 10 years for current evidence
-    requireAbstract: true, // SAFETY: Must have abstract for quality verification
+    minScore: Math.max(minQualityScore, MINIMUM_QUALITY_SCORE), // Never go below 50
+    maxTier: MAXIMUM_TIER, // Only Tier 1-2
+    maxAge: MAXIMUM_AGE_YEARS,
+    requireAbstract: true, // MUST have abstract for verification
   });
 
-  console.log(`[Quality Filter] Found ${clinicalArticles.length} high-quality articles (min score: 50, tier 1-2 only)`);
-
-  // CRITICAL SAFETY CHECK: Require minimum evidence for clinical recommendations
-  if (clinicalArticles.length < 3) {
-    console.warn(`[SAFETY WARNING] Only ${clinicalArticles.length} high-quality articles found`);
-    console.warn(`[SAFETY WARNING] Need at least 3 articles from reputable sources for clinical recommendations`);
-    
+  // PATIENT SAFETY CHECK: Ensure minimum article count
+  if (clinicalArticles.length < MINIMUM_ARTICLES_FOR_CLINICAL_USE) {
+    // DO NOT show single-article recommendations - patient safety risk!
     throw new Error(
-      `🚨 SAFETY: Insufficient evidence for clinical recommendations.\n\n` +
-      `Found: ${clinicalArticles.length} high-quality articles\n` +
-      `Required: At least 3 articles from tier 1-2 journals\n\n` +
-      `This prevents displaying unreliable or dangerous medical advice.\n\n` +
-      `Try:\n` +
-      `• Broader search terms (e.g., "pneumonia treatment" not "specific drug name")\n` +
-      `• More common clinical terminology\n` +
-      `• Check spelling and medical term accuracy`
+      `Insufficient high-quality evidence for safe clinical recommendations. ` +
+      `Found ${clinicalArticles.length} high-quality article(s), but need at least ${MINIMUM_ARTICLES_FOR_CLINICAL_USE} from top-tier journals. ` +
+      `This ensures recommendations are based on reliable, peer-reviewed evidence rather than single studies. ` +
+      `Try a broader search term or consult specialized medical databases.`
     );
   }
 
-  console.log(`[Safety Check] ✅ PASSED: ${clinicalArticles.length} articles meet safety thresholds`);
-
-  console.log(`[Safety Check] ✅ PASSED: ${clinicalArticles.length} articles meet safety thresholds`);
+  console.log(
+    `✅ SAFETY CHECK PASSED: ${clinicalArticles.length} high-quality articles (minimum: ${MINIMUM_ARTICLES_FOR_CLINICAL_USE})`
+  );
 
   // Step 2: Sort by evidence type priority, then quality
   const qualityScored = clinicalArticles.map((a) => ({
-      ...a,
-      _quality: calculateClinicalQuality(a as any),
-      _evidenceType: getEvidenceTypePriority(a),
-    }));
+    ...a,
+    _quality: calculateClinicalQuality(a as any),
+    _evidenceType: getEvidenceTypePriority(a),
+  }));
 
-    const sortedArticles = qualityScored
-      .sort((a, b) => {
-        // First: Evidence type (meta-analysis/guideline > RCT > other)
-        if (a._evidenceType !== b._evidenceType) {
-          return b._evidenceType - a._evidenceType; // Higher = better
-        }
-        // Second: Journal tier
+  const sortedArticles = qualityScored
+    .sort((a, b) => {
+      // First: Evidence type (meta-analysis/guideline > RCT > other)
+      if (a._evidenceType !== b._evidenceType) {
+        return b._evidenceType - a._evidenceType; // Higher = better
+      }
+      // Second: Journal tier
         if (a._quality.tier !== b._quality.tier) {
           return a._quality.tier - b._quality.tier; // Lower tier number = better
         }
