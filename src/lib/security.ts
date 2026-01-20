@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextApiRequest, NextApiResponse } from 'next'
 // JWT authentication removed - using Clerk instead
 
@@ -136,7 +137,7 @@ export async function requireRole(req: NextApiRequest, res: NextApiResponse, all
   // and admin/developer checks in src/lib/auth/admin.ts and src/lib/auth/developer.ts
   // This function is deprecated - use Clerk's auth() and check roles directly
   
-  console.warn(
+  logger.warn(
     'requireRole() is deprecated. Use Clerk auth() with admin.ts/developer.ts helpers instead.'
   );
   
@@ -181,9 +182,9 @@ export function auditLog(action: string, userId?: string, metadata?: object) {
   
   // In production, send to external logging service
   if (process.env.NODE_ENV === 'production') {
-    console.log('AUDIT:', JSON.stringify(logEntry))
+    logger.debug('AUDIT:', JSON.stringify(logEntry))
   } else {
-    console.log('AUDIT:', logEntry)
+    logger.debug('AUDIT:', logEntry)
   }
 }
 
@@ -192,7 +193,7 @@ export function handleError(error: any, req: NextApiRequest, res: NextApiRespons
   const isDevelopment = process.env.NODE_ENV === 'development'
   
   // Log the full error for debugging
-  console.error('API Error:', {
+  logger.error('API Error:', {
     message: error.message,
     stack: isDevelopment ? error.stack : undefined,
     url: req.url,

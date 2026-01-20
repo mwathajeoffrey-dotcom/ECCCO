@@ -1,19 +1,20 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/database/prisma-client';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('📡 Fetching modules with topics...');
-    console.log('🔗 DATABASE_URL configured:', !!process.env.DATABASE_URL);
-    console.log('🔗 ACCELERATE_URL configured:', !!process.env.ACCELERATE_URL);
-    console.log('🔗 Environment:', process.env.NODE_ENV);
+    logger.debug('📡 Fetching modules with topics...');
+    logger.debug('🔗 DATABASE_URL configured:', !!process.env.DATABASE_URL);
+    logger.debug('🔗 ACCELERATE_URL configured:', !!process.env.ACCELERATE_URL);
+    logger.debug('🔗 Environment:', process.env.NODE_ENV);
     
     // Test database connection first
     try {
       await prisma.$queryRaw`SELECT 1 as test`;
-      console.log('✅ Database connection test successful');
+      logger.debug('✅ Database connection test successful');
     } catch (connError) {
-      console.error('❌ Database connection test failed:', connError);
+      logger.error('❌ Database connection test failed:', connError);
       throw connError;
     }
 
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    console.log(`✅ Found ${modules.length} modules with topics`);
+    logger.debug(`✅ Found ${modules.length} modules with topics`);
 
     return NextResponse.json({
       success: true,
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error fetching modules:', error);
+    logger.error('❌ Error fetching modules:', error);
     
     return NextResponse.json({
       success: false,

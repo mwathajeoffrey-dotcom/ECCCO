@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import {
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('PubMed API error:', error);
+    logger.error('PubMed API error:', error);
     return NextResponse.json(
       {
         success: false,
@@ -170,7 +171,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('PubMed fetch error:', error);
+    logger.error('PubMed fetch error:', error);
     return NextResponse.json(
       {
         success: false,

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface MetricsData {
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       dbStatus = 'error';
       dbResponseTime = Date.now() - dbStartTime;
-      console.error('Database health check failed:', error);
+      logger.error('Database health check failed:', error);
     }
     
     // Calculate cache ratio
@@ -118,7 +119,7 @@ export async function GET(request: NextRequest) {
     
   } catch (error) {
     metrics.requests.errors++;
-    console.error('Metrics endpoint error:', error);
+    logger.error('Metrics endpoint error:', error);
     
     return NextResponse.json(
       {

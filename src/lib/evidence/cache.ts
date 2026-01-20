@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Evidence Synthesis Caching Layer
  *
@@ -17,15 +18,15 @@ if (hasKvEnv) {
     // Try to use Vercel KV
     const kvModule = await import("@vercel/kv");
     kv = kvModule.kv;
-    console.log("[Cache] ✅ Using Vercel KV for distributed caching");
+    logger.debug("[Cache] ✅ Using Vercel KV for distributed caching");
   } catch (error) {
     useInMemoryCache = true;
-    console.log("[Cache] ⚠️ Vercel KV import failed, using in-memory cache");
+    logger.debug("[Cache] ⚠️ Vercel KV import failed, using in-memory cache");
   }
 } else {
   // Use in-memory cache if no environment variables
   useInMemoryCache = true;
-  console.log("[Cache] 💾 Using in-memory cache (Vercel KV not configured)");
+  logger.debug("[Cache] 💾 Using in-memory cache (Vercel KV not configured)");
 }
 
 if (useInMemoryCache) {
@@ -73,24 +74,24 @@ export async function getCachedSynthesis(query: string): Promise<any | null> {
     const cached = (await kv.get(cacheKey)) as CacheEntry | null;
 
     if (!cached) {
-      console.log(`[Cache] MISS - No cached result for: "${query}"`);
+      logger.debug(`[Cache] MISS - No cached result for: "${query}"`);
       return null;
     }
 
     // Check if cache is still fresh
     const now = Date.now();
     if (now > cached.expiresAt) {
-      console.log(`[Cache] EXPIRED - Cached result too old for: "${query}"`);
+      logger.debug(`[Cache] EXPIRED - Cached result too old for: "${query}"`);
       await kv.del(cacheKey); // Clean up expired entry
       return null;
     }
 
     const ageMinutes = Math.round((now - cached.timestamp) / 1000 / 60);
-    console.log(`[Cache] ⚡ HIT - Using cached result from ${ageMinutes} minutes ago for: "${query}"`);
+    logger.debug(`[Cache] ⚡ HIT - Using cached result from ${ageMinutes} minutes ago for: "${query}"`);
 
     return cached.synthesis;
   } catch (error) {
-    console.error("[Cache] Error reading from cache:", error);
+    logger.error("[Cache] Error reading from cache:", error);
     return null; // Fail gracefully
   }
 }
@@ -117,9 +118,9 @@ export async function cacheSynthesis(query: string, synthesis: any): Promise<voi
       ex: CACHE_TTL_DAYS * 24 * 60 * 60, // Auto-expire in Redis
     });
 
-    console.log(`[Cache] STORED - Cached synthesis for: "${query}" (expires in ${CACHE_TTL_DAYS} days)`);
+    logger.debug(`[Cache] STORED - Cached synthesis for: "${query}" (expires in ${CACHE_TTL_DAYS} days)`);
   } catch (error) {
-    console.error("[Cache] Error writing to cache:", error);
+    logger.error("[Cache] Error writing to cache:", error);
     // Don't throw - caching failure shouldn't break the app
   }
 }
@@ -133,9 +134,9 @@ export async function invalidateCache(query: string): Promise<void> {
     const cacheKey = `${CACHE_PREFIX}${normalizedQuery}`;
 
     await kv.del(cacheKey);
-    console.log(`[Cache] INVALIDATED - Removed cache for: "${query}"`);
+    logger.debug(`[Cache] INVALIDATED - Removed cache for: "${query}"`);
   } catch (error) {
-    console.error("[Cache] Error invalidating cache:", error);
+    logger.error("[Cache] Error invalidating cache:", error);
   }
 }
 
@@ -163,7 +164,7 @@ export async function getCacheStats(): Promise<{
       queries,
     };
   } catch (error) {
-    console.error("[Cache] Error getting cache stats:", error);
+    logger.error("[Cache] Error getting cache stats:", error);
     return { totalEntries: 0, queries: [] };
   }
 }
@@ -182,10 +183,10 @@ export async function clearAllCache(): Promise<number> {
     // Delete all cache entries
     await Promise.all(keys.map((key: string) => kv.del(key)));
 
-    console.log(`[Cache] CLEARED - Removed ${keys.length} cached entries`);
+    logger.debug(`[Cache] CLEARED - Removed ${keys.length} cached entries`);
     return keys.length;
   } catch (error) {
-    console.error("[Cache] Error clearing cache:", error);
+    logger.error("[Cache] Error clearing cache:", error);
     return 0;
   }
 }

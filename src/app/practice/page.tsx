@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,7 +22,7 @@ export default function PracticePage() {
         const data = await response.json();
         setTopics(data);
       } catch (error) {
-        console.error("Error fetching topics:", error);
+        logger.error("Error fetching topics:", error);
       }
     };
 

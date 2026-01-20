@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Centralized Configuration & Environment Variable Validation
  * 
@@ -84,9 +85,9 @@ export function validateEnv() {
     return env;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('❌ Environment Variable Validation Failed:');
+      logger.error('❌ Environment Variable Validation Failed:');
       error.errors.forEach(err => {
-        console.error(`  - ${err.path.join('.')}: ${err.message}`);
+        logger.error(`  - ${err.path.join('.')}: ${err.message}`);
       });
       throw new Error('Invalid environment configuration');
     }

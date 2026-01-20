@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
       message: "Exam results saved successfully",
     });
   } catch (error) {
-    console.error("Error saving exam results:", error);
+    logger.error("Error saving exam results:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Clinical Decision Support Engine
  *
@@ -44,7 +45,7 @@ export async function generateDecisionSupport(
   patientContext?: PatientContext
 ): Promise<DecisionTree> {
   if (!isGroqAvailable()) {
-    console.warn("[Decision Support] Groq API not available, returning basic structure");
+    logger.warn("[Decision Support] Groq API not available, returning basic structure");
     return generateBasicDecisionTree(synthesis, patientContext);
   }
 
@@ -52,7 +53,7 @@ export async function generateDecisionSupport(
     const decisionTree = await generateAIDecisionTree(synthesis, patientContext);
     return decisionTree;
   } catch (error) {
-    console.error("[Decision Support] AI generation failed:", error);
+    logger.error("[Decision Support] AI generation failed:", error);
     return generateBasicDecisionTree(synthesis, patientContext);
   }
 }
@@ -141,8 +142,8 @@ Generate ONLY valid JSON, no markdown formatting.`;
 
     return parsed as DecisionTree;
   } catch (parseError) {
-    console.error("[Decision Support] Failed to parse AI response, using fallback");
-    console.error("AI Response:", response);
+    logger.error("[Decision Support] Failed to parse AI response, using fallback");
+    logger.error("AI Response:", response);
     return generateBasicDecisionTree(synthesis, patientContext);
   }
 }

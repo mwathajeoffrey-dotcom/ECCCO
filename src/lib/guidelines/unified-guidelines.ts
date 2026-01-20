@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Unified Clinical Guidelines Search
  * Combines NICE, WHO, and AHA guidelines into single searchable interface
@@ -109,7 +110,7 @@ async function searchNICESource(
       total: result.totalResults,
     };
   } catch (error) {
-    console.error('NICE source error:', error);
+    logger.error('NICE source error:', error);
     return { source: 'nice', guidelines: [], total: 0 };
   }
 }
@@ -135,7 +136,7 @@ async function searchWHOSource(
       total: result.totalResults,
     };
   } catch (error) {
-    console.error('WHO source error:', error);
+    logger.error('WHO source error:', error);
     return { source: 'who', guidelines: [], total: 0 };
   }
 }
@@ -160,7 +161,7 @@ async function searchAHASource(
       total: result.totalResults,
     };
   } catch (error) {
-    console.error('AHA source error:', error);
+    logger.error('AHA source error:', error);
     return { source: 'aha', guidelines: [], total: 0 };
   }
 }

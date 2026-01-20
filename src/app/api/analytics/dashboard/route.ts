@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma-client';
 
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[Analytics Dashboard API] Error:', error);
+    logger.error('[Analytics Dashboard API] Error:', error);
     
     return NextResponse.json({
       success: false,
@@ -157,7 +158,7 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    console.log('[Analytics Dashboard API] Database unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    logger.debug('[Analytics Dashboard API] Database unavailable:', error instanceof Error ? error.message : 'Unknown error');
     return false;
   } finally {
     await prisma.$disconnect();

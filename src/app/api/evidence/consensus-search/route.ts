@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { searchAllSources, type UnifiedArticle } from "@/lib/evidence/unified-search";
 import { callGroq } from "@/lib/ai/groq-client";
@@ -95,10 +96,10 @@ export async function POST(request: NextRequest) {
     // Remove potentially harmful characters while preserving medical terms
     const cleanQuery = sanitizedQuery.replace(/[<>\"]/g, "");
 
-    console.log(`[Consensus Search] Query: "${cleanQuery}"`);
+    logger.debug(`[Consensus Search] Query: "${cleanQuery}"`);
 
     // Step 1: Search medical databases
-    console.log("[Step 1/3] Searching medical databases...");
+    logger.debug("[Step 1/3] Searching medical databases...");
     const searchResults = await searchAllSources({
       query: cleanQuery,
       maxResults: 20,
@@ -125,7 +126,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log(`[Step 1/3] Found ${searchResults.articles.length} articles`);
+    logger.debug(`[Step 1/3] Found ${searchResults.articles.length} articles`);
 
     // Step 2: PRIORITIZE HIGH-QUALITY SOURCES FOR CLINICAL DECISIONS
     // Calculate quality scores and sort articles
@@ -173,7 +174,7 @@ export async function POST(request: NextRequest) {
     const highQualitySources = articlesWithScores.filter((a) => a.qualityScore >= 80);
     const supplementarySources = articlesWithScores.filter((a) => a.qualityScore < 80);
 
-    console.log(
+    logger.debug(
       `[Quality Filter] ${highQualitySources.length} high-quality sources (score ≥80), ${supplementarySources.length} supplementary`
     );
 
@@ -231,7 +232,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Step 3: Generate CLINICAL-GRADE summary with Groq AI
-    console.log("[Step 2/3] Generating clinical evidence synthesis...");
+    logger.debug("[Step 2/3] Generating clinical evidence synthesis...");
 
     // Prioritize high-quality sources in AI context - USE FULL ABSTRACTS
     // Filter out unknown journals and low-quality sources
@@ -426,7 +427,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
       });
     } catch (error) {
       // Enhanced error handling with specific error types
-      console.error("[Groq] AI generation failed:", error);
+      logger.error("[Groq] AI generation failed:", error);
 
       let errorMessage = "Evidence synthesis temporarily unavailable";
       let keyPointsGuidance: string[] = [];
@@ -445,7 +446,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
             "Review source abstracts for detailed evidence",
             "Retry in 30-60 seconds for AI-generated summary",
           ];
-          console.warn("[Groq] Rate limit reached - user can still access source articles");
+          logger.warn("[Groq] Rate limit reached - user can still access source articles");
         } else if (errorStr.includes("timeout") || errorStr.includes("timed out")) {
           // Request timed out
           errorMessage =
@@ -456,7 +457,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
             "Try narrowing your query for faster synthesis",
             "All source articles available below with full abstracts",
           ];
-          console.warn("[Groq] Timeout - query may be too broad or complex");
+          logger.warn("[Groq] Timeout - query may be too broad or complex");
         } else if (errorStr.includes("network") || errorStr.includes("fetch") || errorStr.includes("connection")) {
           // Network/connection error
           errorMessage =
@@ -467,7 +468,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
             "Refresh page or retry in a moment",
             "Source articles and abstracts available below",
           ];
-          console.error("[Groq] Network error - connectivity issue with Groq API");
+          logger.error("[Groq] Network error - connectivity issue with Groq API");
         } else {
           // Generic API error
           errorMessage =
@@ -478,7 +479,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
             "Full abstracts and citations available below",
             "Try again in a few moments for AI-generated summary",
           ];
-          console.error("[Groq] API error:", error.message);
+          logger.error("[Groq] API error:", error.message);
         }
       }
 
@@ -494,7 +495,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
       } high-quality medical sources found. Review full details below.`;
     }
 
-    console.log("[Step 3/3] Parsing AI response...");
+    logger.debug("[Step 3/3] Parsing AI response...");
 
     // Parse AI response into structured format
     const sections = parseAIResponse(aiResponse);
@@ -511,7 +512,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
       metaAnalyses: highQualitySources.filter((s) => s.article.type.toLowerCase().includes("meta-analysis")).length,
     };
 
-    console.log(
+    logger.debug(
       `[Quality] ${qualityMetadata.highQualitySources} high-quality sources: ${qualityMetadata.tier1Journals} Tier 1 journals, ${qualityMetadata.guidelines} guidelines, ${qualityMetadata.metaAnalyses} meta-analyses`
     );
 
@@ -528,7 +529,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Consensus search error:", error);
+    logger.error("Consensus search error:", error);
     return NextResponse.json(
       {
         error: "Search failed",

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -136,13 +137,13 @@ export default function HostQuizPage() {
 
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
-        console.error("Session has no questions:", data);
+        logger.error("Session has no questions:", data);
         setError("This quiz has no questions configured.");
         setLoading(false);
         return;
       }
 
-      console.log("Host session loaded:", {
+      logger.debug("Host session loaded:", {
         id: data.id,
         status: data.status,
         questionCount: data.questions.length,
@@ -155,7 +156,7 @@ export default function HostQuizPage() {
       setParticipants(data.participants || []);
       setLoading(false);
     } catch (err) {
-      console.error("Error fetching session:", err);
+      logger.error("Error fetching session:", err);
       setError("Failed to load quiz session");
       setLoading(false);
     }
@@ -193,7 +194,7 @@ export default function HostQuizPage() {
         }
       }
     } catch (err) {
-      console.error("Error starting quiz:", err);
+      logger.error("Error starting quiz:", err);
     }
   };
 
@@ -216,7 +217,7 @@ export default function HostQuizPage() {
         }
       }
     } catch (err) {
-      console.error("Error moving to next question:", err);
+      logger.error("Error moving to next question:", err);
     }
   };
 
@@ -231,7 +232,7 @@ export default function HostQuizPage() {
           fetchSession();
         }
       } catch (err) {
-        console.error("Error ending quiz:", err);
+        logger.error("Error ending quiz:", err);
       }
     }
   };

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * PubMed Integration Library
  * Interfaces with NCBI E-utilities API to search and fetch research papers
@@ -102,7 +103,7 @@ export async function searchPubMed(params: PubMedSearchParams): Promise<PubMedSe
       retstart,
     };
   } catch (error) {
-    console.error("PubMed search error:", error);
+    logger.error("PubMed search error:", error);
     throw new Error(`Failed to search PubMed: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
@@ -152,7 +153,7 @@ async function fetchPubMedBatch(pmids: string[]): Promise<PubMedArticle[]> {
     const xmlText = await response.text();
     return parseArticlesFromXML(xmlText);
   } catch (error) {
-    console.error("PubMed fetch error:", error);
+    logger.error("PubMed fetch error:", error);
     throw new Error(`Failed to fetch PubMed articles: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
@@ -178,7 +179,7 @@ function parseArticlesFromXML(xmlText: string): PubMedArticle[] {
       }
     }
   } catch (error) {
-    console.error("XML parsing error:", error);
+    logger.error("XML parsing error:", error);
   }
 
   return articles;
@@ -254,7 +255,7 @@ function parseArticle(xml: string): PubMedArticle | null {
       url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
     };
   } catch (error) {
-    console.error("Error parsing article:", error);
+    logger.error("Error parsing article:", error);
     return null;
   }
 }

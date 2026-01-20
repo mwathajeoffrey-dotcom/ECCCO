@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Centralized error handling and logging system
 export enum LogLevel {
   ERROR = 0,
@@ -91,14 +92,14 @@ class Logger {
       this.sendToExternalLogger(entry);
     }
     
-    console.error(this.formatLog(entry));
+    logger.error(this.formatLog(entry));
   }
 
   warn(message: string, metadata?: Record<string, any>) {
     if (!this.shouldLog(LogLevel.WARN)) return;
     
     const entry = this.createLogEntry(LogLevel.WARN, message, undefined, metadata);
-    console.warn(this.formatLog(entry));
+    logger.warn(this.formatLog(entry));
   }
 
   info(message: string, metadata?: Record<string, any>) {
@@ -112,7 +113,7 @@ class Logger {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
     
     const entry = this.createLogEntry(LogLevel.DEBUG, message, undefined, metadata);
-    console.log(this.formatLog(entry));
+    logger.debug(this.formatLog(entry));
   }
 
   private async sendToExternalLogger(entry: LogEntry) {

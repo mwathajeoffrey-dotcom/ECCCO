@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Semantic Scholar API Integration
  * FREE API with AI-powered features for academic paper search
@@ -138,7 +139,7 @@ export async function searchSemanticScholar(
       offset: data.offset || 0,
     };
   } catch (error) {
-    console.error('Semantic Scholar search error:', error);
+    logger.error('Semantic Scholar search error:', error);
     throw error;
   }
 }
@@ -191,7 +192,7 @@ export async function getPaperById(
     
     return await response.json();
   } catch (error) {
-    console.error('Semantic Scholar paper lookup error:', error);
+    logger.error('Semantic Scholar paper lookup error:', error);
     return null;
   }
 }
@@ -234,7 +235,7 @@ export async function getRecommendedPapers(
     const data = await response.json();
     return data.recommendedPapers || [];
   } catch (error) {
-    console.error('Semantic Scholar recommendations error:', error);
+    logger.error('Semantic Scholar recommendations error:', error);
     return [];
   }
 }
@@ -278,7 +279,7 @@ export async function getCitingPapers(
       total: data.total || 0,
     };
   } catch (error) {
-    console.error('Semantic Scholar citations error:', error);
+    logger.error('Semantic Scholar citations error:', error);
     return { papers: [], total: 0 };
   }
 }
@@ -321,7 +322,7 @@ export async function getReferencedPapers(
       total: data.total || 0,
     };
   } catch (error) {
-    console.error('Semantic Scholar references error:', error);
+    logger.error('Semantic Scholar references error:', error);
     return { papers: [], total: 0 };
   }
 }
@@ -371,7 +372,7 @@ export async function searchInfluentialPapers(
       total: influential.length,
     };
   } catch (error) {
-    console.error('Semantic Scholar influential search error:', error);
+    logger.error('Semantic Scholar influential search error:', error);
     return { papers: [], total: 0 };
   }
 }
@@ -440,7 +441,7 @@ export async function getBulkPapers(
     const papers = await response.json();
     return papers.filter((p: any) => p !== null);
   } catch (error) {
-    console.error('Semantic Scholar bulk lookup error:', error);
+    logger.error('Semantic Scholar bulk lookup error:', error);
     return [];
   }
 }

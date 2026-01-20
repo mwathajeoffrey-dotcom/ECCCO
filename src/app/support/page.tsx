@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState } from "react";
@@ -42,7 +43,7 @@ export default function SupportPage() {
     setError("");
 
     try {
-      console.log("[Support Form] Submitting feedback...");
+      logger.debug("[Support Form] Submitting feedback...");
 
       // Check if online before attempting submission
       if (!navigator.onLine) {
@@ -59,16 +60,16 @@ export default function SupportPage() {
         }),
       });
 
-      console.log("[Support Form] Response status:", response.status);
+      logger.debug("[Support Form] Response status:", response.status);
 
       const data = await response.json();
-      console.log("[Support Form] Response data:", data);
+      logger.debug("[Support Form] Response data:", data);
 
       if (!response.ok) {
         throw new Error(data.error || data.details || "Failed to submit feedback");
       }
 
-      console.log("[Support Form] Feedback submitted successfully!");
+      logger.debug("[Support Form] Feedback submitted successfully!");
       setSubmitted(true);
       setFormData({
         userName: "",
@@ -79,7 +80,7 @@ export default function SupportPage() {
         message: "",
       });
     } catch (err) {
-      console.error("[Support Form] Submission error:", err);
+      logger.error("[Support Form] Submission error:", err);
 
       // Provide user-friendly error messages
       let errorMessage = "Failed to submit feedback. Please try again.";

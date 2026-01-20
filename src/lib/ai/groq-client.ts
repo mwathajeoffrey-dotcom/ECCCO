@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Groq AI Client
  * Fast, free LLM inference API with medical capabilities
@@ -86,17 +87,17 @@ export async function callGroq(
 
       // Handle rate limiting
       if (response.status === 429) {
-        console.error("[Groq] Rate limit exceeded. Please wait a moment and try again.");
+        logger.error("[Groq] Rate limit exceeded. Please wait a moment and try again.");
         throw new Error("AI synthesis temporarily unavailable (rate limit). Please try again in a moment.");
       }
 
       // Handle invalid API key
       if (response.status === 401) {
-        console.error("[Groq] Invalid API key.");
+        logger.error("[Groq] Invalid API key.");
         throw new Error("AI configuration error. Please contact support.");
       }
 
-      console.error("[Groq] API error:", {
+      logger.error("[Groq] API error:", {
         status: response.status,
         error: errorData,
       });
@@ -112,11 +113,11 @@ export async function callGroq(
 
     const content = data.choices[0].message.content;
 
-    console.log(`[Groq] Generated ${data.usage.completion_tokens} tokens in response`);
+    logger.debug(`[Groq] Generated ${data.usage.completion_tokens} tokens in response`);
 
     return content;
   } catch (error) {
-    console.error("[Groq] API call failed:", error);
+    logger.error("[Groq] API call failed:", error);
     throw error;
   }
 }
@@ -166,7 +167,7 @@ export async function listGroqModels(): Promise<string[]> {
     const data = await response.json();
     return data.data?.map((model: any) => model.id) || [];
   } catch (error) {
-    console.error("[Groq] Failed to list models:", error);
+    logger.error("[Groq] Failed to list models:", error);
     return [];
   }
 }

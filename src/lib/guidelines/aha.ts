@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // AHA Guidelines with Direct PDF Links to Flowchart Algorithms
 // Links to actual AHA algorithm PDFs and flowcharts
 
@@ -44,7 +45,7 @@ export async function searchAHAGuidelines(
       totalResults: filtered.length
     };
   } catch (error) {
-    console.error('Error searching AHA guidelines:', error);
+    logger.error('Error searching AHA guidelines:', error);
     return { guidelines: [], totalResults: 0 };
   }
 }

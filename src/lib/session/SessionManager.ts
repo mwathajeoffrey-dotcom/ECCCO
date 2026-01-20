@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Session Management Utilities
  * Handles anonymous user tracking and session persistence
@@ -100,7 +101,7 @@ export class SessionManager {
       
       return await response.json();
     } catch (error) {
-      console.error('Failed to record exam session:', error);
+      logger.error('Failed to record exam session:', error);
       throw error;
     }
   }
@@ -129,7 +130,7 @@ export class SessionManager {
       
       return result.data;
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
+      logger.error('Failed to fetch dashboard data:', error);
       throw error;
     }
   }

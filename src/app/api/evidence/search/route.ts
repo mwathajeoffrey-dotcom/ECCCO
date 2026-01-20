@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { 
   searchAllSources, 
@@ -100,7 +101,7 @@ export async function GET(request: NextRequest) {
       sourceBreakdown: 'sourceBreakdown' in result ? result.sourceBreakdown : {},
     });
   } catch (error) {
-    console.error('Evidence search error:', error);
+    logger.error('Evidence search error:', error);
     return NextResponse.json(
       { 
         error: 'Failed to search evidence',
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
       sourceBreakdown: result.sourceBreakdown,
     });
   } catch (error) {
-    console.error('Evidence batch search error:', error);
+    logger.error('Evidence batch search error:', error);
     return NextResponse.json(
       { error: 'Failed to search evidence' },
       { status: 500 }

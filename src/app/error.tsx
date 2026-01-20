@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useEffect } from 'react';
@@ -12,7 +13,7 @@ interface ErrorPageProps {
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
     // Log error to console in development
-    console.error('App Error:', error);
+    logger.error('App Error:', error);
     
     // In production, log to error reporting service
     if (process.env.NODE_ENV === 'production') {

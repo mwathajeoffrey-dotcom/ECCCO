@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
 
     return NextResponse.json(updatedSession);
   } catch (error) {
-    console.error("Error ending quiz:", error);
+    logger.error("Error ending quiz:", error);
     return NextResponse.json({ error: "Failed to end quiz" }, { status: 500 });
   }
 }

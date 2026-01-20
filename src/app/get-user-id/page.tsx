@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useEffect, useState } from "react";
@@ -24,7 +25,7 @@ export default function GetUserIdPage() {
         setUserId(data.userId);
       }
     } catch (error) {
-      console.error("Failed to fetch user ID:", error);
+      logger.error("Failed to fetch user ID:", error);
     }
   };
 

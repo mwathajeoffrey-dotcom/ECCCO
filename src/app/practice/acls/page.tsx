@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * ACLS Practice Page
  * Practice Advanced Cardiovascular Life Support questions
@@ -74,7 +75,7 @@ export default function ACLSPracticePage() {
           toast.error(errorMsg.title, { description: errorMsg.message });
         }
       } catch (error) {
-        console.error("Error fetching ACLS questions:", error);
+        logger.error("Error fetching ACLS questions:", error);
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {

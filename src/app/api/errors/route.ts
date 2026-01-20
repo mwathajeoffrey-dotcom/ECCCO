@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
@@ -42,9 +43,9 @@ export async function POST(request: NextRequest) {
 
     // Log error based on severity
     if (errorReport.severity === 'critical' || errorReport.severity === 'high') {
-      console.error('Critical/High severity error:', enhancedReport);
+      logger.error('Critical/High severity error:', enhancedReport);
     } else {
-      console.warn('Error reported:', enhancedReport);
+      logger.warn('Error reported:', enhancedReport);
     }
 
     // In production, you would typically:
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Failed to process error report:', error);
+    logger.error('Failed to process error report:', error);
     
     return NextResponse.json(
       { error: 'Failed to process error report' },

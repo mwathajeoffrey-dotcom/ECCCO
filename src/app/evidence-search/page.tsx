@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -63,7 +64,7 @@ export default function EvidenceSearchPage() {
       try {
         setSearchHistory(JSON.parse(saved));
       } catch (e) {
-        console.error("Failed to load search history:", e);
+        logger.error("Failed to load search history:", e);
       }
     }
   }, []);

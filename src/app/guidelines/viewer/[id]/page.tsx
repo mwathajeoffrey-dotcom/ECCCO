@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -90,7 +91,7 @@ export default function GuidelineViewerPage() {
           url: window.location.href
         });
       } catch (error) {
-        console.log('Share cancelled');
+        logger.debug('Share cancelled');
       }
     } else {
       // Fallback: copy to clipboard

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
@@ -77,7 +78,7 @@ export async function GET() {
       profile: user?.UserProfile,
     });
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    logger.error("Error fetching profile:", error);
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
 }
@@ -158,7 +159,7 @@ export async function PUT(request: Request) {
       profile,
     });
   } catch (error) {
-    console.error("Error updating profile:", error);
+    logger.error("Error updating profile:", error);
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }

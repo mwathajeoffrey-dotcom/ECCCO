@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * ECCCO Analytics System v2.0 - Production Ready
  *
@@ -71,7 +72,7 @@ class ECCCOAnalyticsV2 {
    */
   async initialize(): Promise<void> {
     if (typeof window === "undefined") {
-      console.log("[Analytics] Server-side initialization - skipping localStorage");
+      logger.debug("[Analytics] Server-side initialization - skipping localStorage");
       this.isInitialized = true;
       return;
     }
@@ -86,9 +87,9 @@ class ECCCOAnalyticsV2 {
       }
 
       this.isInitialized = true;
-      console.log(`[Analytics] Initialized with ${this.sessions.length} sessions`);
+      logger.debug(`[Analytics] Initialized with ${this.sessions.length} sessions`);
     } catch (error) {
-      console.error("[Analytics] Initialization error:", error);
+      logger.error("[Analytics] Initialization error:", error);
       this.isInitialized = true; // Continue anyway
     }
   }
@@ -141,9 +142,9 @@ class ECCCOAnalyticsV2 {
       // Try to sync with server
       await this.syncSessionToServer(session);
 
-      console.log(`[Analytics] Recorded exam completion: ${topicName} - ${score}%`);
+      logger.debug(`[Analytics] Recorded exam completion: ${topicName} - ${score}%`);
     } catch (error) {
-      console.error("[Analytics] Failed to record exam completion:", error);
+      logger.error("[Analytics] Failed to record exam completion:", error);
     }
   }
 
@@ -256,7 +257,7 @@ class ECCCOAnalyticsV2 {
         localStorage.setItem("eccco_session_id", this.sessionId);
       }
     } catch (error) {
-      console.error("[Analytics] Failed to load local sessions:", error);
+      logger.error("[Analytics] Failed to load local sessions:", error);
     }
   }
 
@@ -267,7 +268,7 @@ class ECCCOAnalyticsV2 {
       localStorage.setItem("eccco_analytics_sessions", JSON.stringify(this.sessions));
       localStorage.setItem("eccco_session_id", this.sessionId);
     } catch (error) {
-      console.error("[Analytics] Failed to save local sessions:", error);
+      logger.error("[Analytics] Failed to save local sessions:", error);
     }
   }
 
@@ -280,12 +281,12 @@ class ECCCOAnalyticsV2 {
       });
 
       if (response.ok) {
-        console.log("[Analytics] Session synced to server successfully");
+        logger.debug("[Analytics] Session synced to server successfully");
       } else {
-        console.log("[Analytics] Server sync failed, session stored locally");
+        logger.debug("[Analytics] Server sync failed, session stored locally");
       }
     } catch (error) {
-      console.log("[Analytics] Server sync failed, session stored locally:", error);
+      logger.debug("[Analytics] Server sync failed, session stored locally:", error);
     }
   }
 
@@ -296,11 +297,11 @@ class ECCCOAnalyticsV2 {
         const data = await response.json();
         if (data.success && data.sessions) {
           // Merge server sessions with local sessions
-          console.log("[Analytics] Synced with server data");
+          logger.debug("[Analytics] Synced with server data");
         }
       }
     } catch (error) {
-      console.log("[Analytics] Server sync unavailable, using local data only");
+      logger.debug("[Analytics] Server sync unavailable, using local data only");
     }
   }
 

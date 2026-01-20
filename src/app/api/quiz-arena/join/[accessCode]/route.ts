@@ -102,7 +102,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ ac
       nickname: participant.nickname,
     });
   } catch (error) {
-    console.error("Error joining session:", error);
+    logger.error("Error joining session:", error);
     return NextResponse.json({ error: "Failed to join session" }, { status: 500 });
   }
 }

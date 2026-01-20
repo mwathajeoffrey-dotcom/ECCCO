@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState } from 'react';
@@ -70,7 +71,7 @@ export default function GuidelinesSearchPage() {
       const data = await response.json();
       setResults(data);
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
     }
     setLoading(false);
   };

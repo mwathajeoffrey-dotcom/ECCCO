@@ -1,0 +1,567 @@
+/* ECCCO Answer Visibility Fix - FORCE OVERRIDE ALL TAILWIND CLASSES */
+/* These styles FORCE maximum contrast and override all Tailwind CSS classes */
+
+/* NUCLEAR OPTION - FORCE ALL ANSWER ELEMENTS TO BE VISIBLE */
+button[class*="answer"],
+button[class*="option"],
+div[class*="answer"] button,
+div[class*="option"] button,
+[class*="text-gray"],
+[class*="text-sm"],
+[class*="text-base"],
+span[class*="text-"],
+div[class*="text-"] {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 20px !important;
+  background-color: inherit !important;
+}
+
+/* FORCE ANSWER OPTION VISIBILITY WITH ENHANCED BACKGROUND COLORS */
+.answer-option-default,
+button.answer-option-default,
+[class*="answer-option"],
+button[class*="answer"],
+button[class*="w-full"][class*="text-left"],
+button[class*="rounded-xl"][class*="border"],
+button {
+  background: linear-gradient(145deg, #f0f9ff, #e0f2fe) !important;
+  border: 5px solid #1e293b !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  min-height: 90px !important;
+  padding: 28px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 16px -2px rgb(0 0 0 / 0.4) !important;
+  font-size: 20px !important;
+  line-height: 1.6 !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+/* OVERRIDE ALL TAILWIND TEXT CLASSES */
+.text-gray-600,
+.text-gray-700,
+.text-gray-800,
+.text-gray-900,
+.text-sm,
+.text-base,
+.text-lg,
+span.text-gray-600,
+span.text-gray-700,
+span.text-gray-800,
+span.text-gray-900,
+span.text-sm,
+span.text-base,
+span.text-lg {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 20px !important;
+}
+
+/* FORCE ANSWER BADGE VISIBILITY */
+.answer-badge,
+span.answer-badge,
+[class*="answer-badge"],
+span[class*="badge"],
+span[class*="inline-flex"],
+span[class*="w-8"],
+span[class*="h-8"],
+span[class*="rounded-full"] {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 24px !important;
+  flex-shrink: 0 !important;
+  font-size: 20px !important;
+  border: 4px solid #333333 !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+/* FORCE ANSWER TEXT VISIBILITY - OVERRIDE TAILWIND */
+.answer-text,
+span.answer-text,
+[class*="answer-text"],
+span[class*="text-"],
+span[class*="leading-relaxed"],
+span[class*="flex-1"],
+.leading-relaxed,
+.flex-1 {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 21px !important;
+  line-height: 1.8 !important;
+  flex: 1 !important;
+  text-shadow: none !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+/* ULTRA-SPECIFIC SELECTORS TO OVERRIDE TAILWIND */
+button[class*="w-full"][class*="text-left"] span[class*="text-"],
+button[class*="rounded-xl"] span[class*="text-"],
+div[class*="flex"] span[class*="text-"],
+button span.text-sm,
+button span.text-base,
+button span[class*="leading-relaxed"],
+button span[class*="flex-1"] {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 21px !important;
+}
+
+/* ENHANCED HOVER STATES */
+button:hover,
+button:hover span,
+button:hover .answer-text,
+button:hover [class*="text-"] {
+  color: #000000 !important;
+  background: linear-gradient(145deg, #fef3c7, #fde68a) !important;
+}
+
+/* OVERRIDE ALL POSSIBLE TAILWIND TEXT CLASSES */
+[class*="text-gray"],
+[class*="text-slate"],
+[class*="text-zinc"],
+[class*="text-neutral"],
+[class*="text-stone"] {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+/* SELECTED STATE OVERRIDES */
+button[class*="blue"],
+button[class*="selected"],
+button[class*="from-blue"] {
+  background: linear-gradient(145deg, #dbeafe, #bfdbfe) !important;
+  border: 6px solid #1d4ed8 !important;
+  color: #1e40af !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 0 8px #93c5fd, 0 12px 20px -2px rgb(0 0 0 / 0.4) !important;
+}
+
+button[class*="blue"] span,
+button[class*="selected"] span,
+button[class*="from-blue"] span {
+  color: #1e40af !important;
+  font-weight: 900 !important;
+  font-size: 21px !important;
+}
+
+/* FORCE ALL BUTTONS TO HAVE PROPER STYLING */
+button[class*="answer"],
+button[class*="option"],
+button[class*="w-full"],
+button[class*="rounded"],
+button[class*="border"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  width: 100% !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+}
+
+/* GLOBAL FONT WEIGHT OVERRIDE */
+* {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* ULTIMATE OVERRIDE - APPLY TO ALL ELEMENTS IN QUESTION AREAS */
+div[class*="space-y"] *,
+div[class*="gap-"] *,
+button *,
+span * {
+  color: inherit !important;
+  font-weight: inherit !important;
+  font-size: inherit !important;
+}
+
+/* ABSOLUTE FINAL OVERRIDE - NUCLEAR OPTION */
+span[class*="text-"],
+.text-sm,
+.text-base,
+.text-lg,
+.text-xl,
+.text-gray-900,
+.text-gray-800,
+.text-gray-700,
+.text-gray-600,
+.text-blue-900,
+.leading-relaxed,
+.flex-1,
+.font-bold,
+.font-medium {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 22px !important;
+  line-height: 1.7 !important;
+}
+
+/* ULTRA-ENHANCED HOVER STATES */
+.answer-option-default:hover,
+button.answer-option-default:hover,
+button[class*="answer"]:hover {
+  background: linear-gradient(145deg, #fef3c7, #fde68a) !important;
+  border-color: #d97706 !important;
+  transform: scale(1.03) !important;
+  box-shadow: 0 16px 24px -4px rgb(217 119 6 / 0.4) !important;
+  transition: all 0.2s ease !important;
+}
+
+.answer-option-default:hover .answer-badge {
+  background-color: #d97706 !important;
+  transform: scale(1.15) !important;
+  border-color: #f59e0b !important;
+}
+
+.answer-option-default:hover .answer-text {
+  color: #1e40af !important;
+  font-weight: 900 !important;
+}
+
+/* ULTRA-ENHANCED SELECTED STATE */
+.answer-option-selected,
+button.answer-option-selected,
+[class*="selected"] .answer-option-default,
+button[class*="selected"] {
+  background: linear-gradient(145deg, #dbeafe, #bfdbfe) !important;
+  border: 5px solid #1d4ed8 !important;
+  color: #1e40af !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 0 8px #93c5fd, 0 12px 20px -2px rgb(0 0 0 / 0.3) !important;
+}
+
+.answer-option-selected .answer-badge {
+  background-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+  border-color: #3b82f6 !important;
+  font-weight: 900 !important;
+}
+
+.answer-option-selected .answer-text {
+  color: #1e40af !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 3px rgba(30, 64, 175, 0.4) !important;
+}
+
+/* FORCE BUTTON RESETS FOR ALL BROWSERS */
+button[class*="answer-option"],
+.answer-option-default,
+.answer-option-selected,
+.answer-option-correct,
+.answer-option-incorrect,
+button[class*="answer"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* DESKTOP-SPECIFIC ULTRA-HIGH CONTRAST */
+@media (min-width: 768px) {
+  .answer-option-default,
+  .answer-option-selected,
+  .answer-option-correct,
+  .answer-option-incorrect,
+  button[class*="answer"] {
+    font-size: 20px !important;
+    min-height: 90px !important;
+    padding: 28px !important;
+    border-width: 5px !important;
+  }
+  
+  .answer-badge {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 20px !important;
+    margin-right: 24px !important;
+    font-weight: 900 !important;
+    border-width: 4px !important;
+  }
+  
+  .answer-text {
+    font-size: 21px !important;
+    line-height: 1.8 !important;
+    font-weight: 900 !important;
+  }
+}
+
+/* FORCE HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  .answer-option-default {
+    border-width: 6px !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 900 !important;
+  }
+  
+  .answer-badge {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 4px solid #000000 !important;
+    font-weight: 900 !important;
+  }
+  
+  .answer-text {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    text-shadow: none !important;
+  }
+}
+
+/* DARK MODE ULTRA-HIGH CONTRAST */
+@media (prefers-color-scheme: dark) {
+  .answer-option-default {
+    background-color: #1f2937 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    border-width: 4px !important;
+  }
+  
+  .answer-badge {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+  }
+  
+  .answer-text {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+    font-weight: 900 !important;
+  }
+}
+
+/* CORRECT/INCORRECT ULTRA-HIGH CONTRAST */
+.answer-option-correct,
+button.answer-option-correct,
+[class*="correct"] {
+  background: linear-gradient(145deg, #dcfce7, #bbf7d0) !important;
+  border: 5px solid #059669 !important;
+  color: #064e3b !important;
+  box-shadow: 0 0 0 8px #86efac, 0 12px 20px -2px rgb(0 0 0 / 0.3) !important;
+}
+
+.answer-option-incorrect,
+button.answer-option-incorrect,
+[class*="incorrect"] {
+  background: linear-gradient(145deg, #fef2f2, #fecaca) !important;
+  border: 5px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  box-shadow: 0 0 0 8px #fca5a5, 0 12px 20px -2px rgb(0 0 0 / 0.3) !important;
+}
+
+/* CROSS-BROWSER FONT RENDERING */
+* {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* FORCE VISIBILITY FOR ALL QUESTION ELEMENTS */
+div[class*="question"] *,
+div[class*="answer"] *,
+div[class*="option"] *,
+button[class*="answer"] *,
+button[class*="option"] * {
+  color: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* Device-specific fixes */
+@media (max-width: 768px) {
+  .answer-option-default {
+    padding: 20px !important;
+    font-size: 16px !important;
+  }
+  
+  .answer-badge {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 16px !important;
+  }
+  
+  .answer-text {
+    font-size: 16px !important;
+  }
+}
+
+/* High DPI displays fix */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .answer-option-default {
+    border-width: 3px !important;
+  }
+  
+  .answer-text {
+    font-weight: 900 !important;
+  }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  .answer-option-default {
+    background-color: #ffffff !important;
+    border-color: #374151 !important;
+    color: #111827 !important;
+  }
+}
+
+/* Print media fix */
+@media print {
+  .answer-option-default {
+    background-color: #ffffff !important;
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+  }
+}
+
+/* Force visibility for WebKit browsers */
+@supports (-webkit-appearance: none) {
+  .answer-option-default {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-color: #ffffff !important;
+    border: 3px solid #1f2937 !important;
+    color: #111827 !important;
+  }
+}
+
+/* Force visibility for Firefox */
+@-moz-document url-prefix() {
+  .answer-option-default {
+    background-color: #ffffff !important;
+    border: 3px solid #1f2937 !important;
+    color: #111827 !important;
+  }
+}
+
+/* Correct answers with ultra-high contrast */
+.answer-option-correct,
+button.answer-option-correct,
+[class*="correct"] {
+  background: linear-gradient(145deg, #dcfce7, #bbf7d0) !important;
+  border: 4px solid #059669 !important;
+  color: #064e3b !important;
+  box-shadow: 0 0 0 6px #86efac, 0 8px 16px -2px rgb(0 0 0 / 0.2) !important;
+}
+
+.answer-option-correct .answer-badge {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+}
+
+.answer-option-correct .answer-text {
+  color: #064e3b !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 3px rgba(6, 78, 59, 0.3) !important;
+}
+
+/* Incorrect answers with ultra-high contrast */
+.answer-option-incorrect,
+button.answer-option-incorrect,
+[class*="incorrect"] {
+  background: linear-gradient(145deg, #fef2f2, #fecaca) !important;
+  border: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  box-shadow: 0 0 0 6px #fca5a5, 0 8px 16px -2px rgb(0 0 0 / 0.2) !important;
+}
+
+.answer-option-incorrect .answer-badge {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+.answer-option-incorrect .answer-text {
+  color: #7f1d1d !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 3px rgba(127, 29, 29, 0.3) !important;
+}
+
+/* Force button resets for maximum compatibility */
+button[class*="answer-option"],
+.answer-option-default,
+.answer-option-selected,
+.answer-option-correct,
+.answer-option-incorrect {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Desktop-specific enhancements for maximum contrast */
+@media (min-width: 768px) {
+  .answer-option-default,
+  .answer-option-selected,
+  .answer-option-correct,
+  .answer-option-incorrect {
+    font-size: 18px !important;
+    min-height: 80px !important;
+    padding: 24px !important;
+    border-width: 4px !important;
+  }
+  
+  .answer-badge {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+    margin-right: 20px !important;
+    font-weight: 900 !important;
+  }
+  
+  .answer-text {
+    font-size: 19px !important;
+    line-height: 1.7 !important;
+    font-weight: 900 !important;
+  }
+}
+
+/* High contrast mode for better accessibility */
+@media (prefers-contrast: high) {
+  .answer-option-default {
+    border-width: 5px !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 900 !important;
+  }
+  
+  .answer-badge {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 3px solid #000000 !important;
+    font-weight: 900 !important;
+  }
+  
+  .answer-text {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    text-shadow: none !important;
+  }
+}

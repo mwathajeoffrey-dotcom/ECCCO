@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Performance monitoring and metrics collection
 export class PerformanceMonitor {
   private static instance: PerformanceMonitor;
@@ -69,7 +70,7 @@ export function withTiming<T>(
     
     // Log slow operations in production
     if (process.env.NODE_ENV === 'production' && duration > 1000) {
-      console.warn(`Slow operation detected: ${endpoint} took ${duration}ms`);
+      logger.warn(`Slow operation detected: ${endpoint} took ${duration}ms`);
     }
   });
 }
@@ -98,7 +99,7 @@ export function trackWebVitals() {
     try {
       const lcpObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          console.log('LCP:', entry);
+          logger.debug('LCP:', entry);
         }
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -110,7 +111,7 @@ export function trackWebVitals() {
     try {
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          console.log('FID:', entry);
+          logger.debug('FID:', entry);
         }
       });
       fidObserver.observe({ entryTypes: ['first-input'] });
@@ -123,7 +124,7 @@ export function trackWebVitals() {
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (!(entry as any).hadRecentInput) {
-            console.log('CLS:', entry);
+            logger.debug('CLS:', entry);
           }
         }
       });

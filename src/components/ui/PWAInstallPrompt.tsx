@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -54,7 +55,7 @@ export default function PWAInstallPrompt() {
       const { outcome } = await deferredPrompt.userChoice;
       
       if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
+        logger.debug('User accepted the install prompt');
       }
       
       setDeferredPrompt(null);

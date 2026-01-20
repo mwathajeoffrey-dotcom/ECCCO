@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * WHO Guidelines API Integration
  * FREE API for international health guidelines
@@ -55,7 +56,7 @@ export async function searchWHOGuidelines(
       totalResults: filtered.length,
     };
   } catch (error) {
-    console.error('WHO search error:', error);
+    logger.error('WHO search error:', error);
     return { guidelines: [], totalResults: 0 };
   }
 }

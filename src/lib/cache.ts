@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Cache utilities for production optimization
 type CacheOptions = {
   ttl?: number; // Time to live in milliseconds
@@ -200,7 +201,7 @@ export function logBundleMetrics() {
       const navigation = performance.getEntriesByType('navigation')[0] as any;
       const resources = performance.getEntriesByType('resource');
       
-      console.log('Page Load Metrics:', {
+      logger.debug('Page Load Metrics:', {
         domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
         pageLoad: navigation.loadEventEnd - navigation.loadEventStart,
         totalResources: resources.length,

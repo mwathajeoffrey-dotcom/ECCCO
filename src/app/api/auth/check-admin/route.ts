@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from "next/server";
 import { getAdminStatus } from "@/lib/auth/admin";
 
@@ -18,7 +19,7 @@ export async function GET() {
       error: status.error,
     });
   } catch (error) {
-    console.error("Error checking admin status:", error);
+    logger.error("Error checking admin status:", error);
     return NextResponse.json(
       {
         isAdmin: false,

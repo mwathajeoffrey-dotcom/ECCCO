@@ -1,9 +1,10 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server';
 
 // Simple database connection test
 export async function GET() {
   try {
-    console.log('🔧 Testing DATABASE_URL...');
+    logger.debug('🔧 Testing DATABASE_URL...');
     
     // Parse the DATABASE_URL
     const databaseUrl = process.env.DATABASE_URL;
@@ -11,7 +12,7 @@ export async function GET() {
       throw new Error('DATABASE_URL not configured');
     }
     
-    console.log('Database URL prefix:', databaseUrl.substring(0, 30) + '...');
+    logger.debug('Database URL prefix:', databaseUrl.substring(0, 30) + '...');
     
     // Just test URL parsing first
     const url = new URL(databaseUrl);
@@ -29,7 +30,7 @@ export async function GET() {
     });
 
   } catch (error) {
-    console.error('❌ Test failed:', error);
+    logger.error('❌ Test failed:', error);
     
     return NextResponse.json({
       success: false,

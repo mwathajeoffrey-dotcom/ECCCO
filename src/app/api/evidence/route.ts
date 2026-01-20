@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { PrismaClient } from '@prisma/client';
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    console.error('Error fetching evidence references:', error);
+    logger.error('Error fetching evidence references:', error);
     return NextResponse.json(
       { error: 'Failed to fetch references' },
       { status: 500 }
@@ -180,7 +181,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(parsed, { status: 201 });
   } catch (error) {
-    console.error('Error creating evidence reference:', error);
+    logger.error('Error creating evidence reference:', error);
     return NextResponse.json(
       { error: 'Failed to create reference' },
       { status: 500 }
@@ -240,7 +241,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    console.error('Error updating evidence reference:', error);
+    logger.error('Error updating evidence reference:', error);
     return NextResponse.json({ error: 'Failed to update reference' }, { status: 500 });
   }
 }
@@ -276,7 +277,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting evidence reference:', error);
+    logger.error('Error deleting evidence reference:', error);
     return NextResponse.json({ error: 'Failed to delete reference' }, { status: 500 });
   }
 }

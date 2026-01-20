@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -53,12 +54,12 @@ export default function BookmarksPage() {
       }
 
       const data = await response.json();
-      console.log("📚 Fetched bookmarks:", data);
+      logger.debug("📚 Fetched bookmarks:", data);
       if (data.success && data.bookmarks) {
         setBookmarks(data.bookmarks);
       }
     } catch (error) {
-      console.error("Failed to fetch bookmarks:", error);
+      logger.error("Failed to fetch bookmarks:", error);
       const errorMsg = getErrorFromFetch(error);
       toast.error(errorMsg.title, { description: errorMsg.message });
     } finally {
@@ -82,7 +83,7 @@ export default function BookmarksPage() {
         toast.error(errorMsg.title, { description: errorMsg.message });
       }
     } catch (error) {
-      console.error("Failed to delete bookmark:", error);
+      logger.error("Failed to delete bookmark:", error);
       const errorMsg = getErrorFromFetch(error);
       toast.error(errorMsg.title, { description: errorMsg.message });
     }

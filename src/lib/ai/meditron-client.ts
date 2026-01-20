@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Meditron AI Integration for Clinical Evidence Synthesis
  * Medical-specific LLM for generating OpenEvidence-style summaries
@@ -69,7 +70,7 @@ export async function callMeditron(prompt: string, config: Partial<MeditronConfi
     const data: MeditronResponse = await response.json();
     return data.response;
   } catch (error) {
-    console.error("Meditron call failed:", error);
+    logger.error("Meditron call failed:", error);
     throw new Error("Failed to generate clinical synthesis. Ensure Ollama is running with Meditron model.");
   }
 }

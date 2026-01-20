@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
@@ -10,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("[Dashboard API] Fetching exam sessions for user:", userId);
+    logger.debug("[Dashboard API] Fetching exam sessions for user:", userId);
 
     // Get user exam sessions directly with Clerk userId
     let examSessions;
@@ -19,9 +20,9 @@ export async function GET() {
         where: { userId },
         orderBy: { createdAt: "desc" },
       });
-      console.log("[Dashboard API] Found", examSessions.length, "exam sessions");
+      logger.debug("[Dashboard API] Found", examSessions.length, "exam sessions");
     } catch (dbError) {
-      console.error("[Dashboard API] Database error fetching exam sessions:", dbError);
+      logger.error("[Dashboard API] Database error fetching exam sessions:", dbError);
       throw new Error(`Database error: ${dbError instanceof Error ? dbError.message : "Unknown DB error"}`);
     }
 
@@ -53,7 +54,7 @@ export async function GET() {
 
     // Get all unique topic IDs
     const topicIds = [...new Set(examSessions.map((session: any) => session.topicId))];
-    console.log("[Dashboard API] Found", topicIds.length, "unique topics");
+    logger.debug("[Dashboard API] Found", topicIds.length, "unique topics");
 
     // Fetch topics to get their names (only if we have topic IDs)
     let topics;
@@ -66,9 +67,9 @@ export async function GET() {
               },
             })
           : [];
-      console.log("[Dashboard API] Fetched", topics.length, "topic records");
+      logger.debug("[Dashboard API] Fetched", topics.length, "topic records");
     } catch (dbError) {
-      console.error("[Dashboard API] Database error fetching topics:", dbError);
+      logger.error("[Dashboard API] Database error fetching topics:", dbError);
       throw new Error(
         `Database error fetching topics: ${dbError instanceof Error ? dbError.message : "Unknown DB error"}`
       );
@@ -104,7 +105,7 @@ export async function GET() {
         }
       } catch (e) {
         // If JSON parsing fails, skip this session
-        console.error("Failed to parse session questions:", e);
+        logger.error("Failed to parse session questions:", e);
       }
     });
 
@@ -167,7 +168,7 @@ export async function GET() {
           }
         }
       } catch (e) {
-        console.error("Failed to parse session questions for topic:", e);
+        logger.error("Failed to parse session questions for topic:", e);
       }
 
       if (session.createdAt > topic.lastAttempted) {
@@ -208,9 +209,9 @@ export async function GET() {
       topicPerformance: performanceByTopic,
     });
   } catch (error) {
-    console.error("Error fetching user stats:", error);
-    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
-    console.error("Error details:", JSON.stringify(error, null, 2));
+    logger.error("Error fetching user stats:", error);
+    logger.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
+    logger.error("Error details:", JSON.stringify(error, null, 2));
     return NextResponse.json(
       {
         error: "Internal server error",

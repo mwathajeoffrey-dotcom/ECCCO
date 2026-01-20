@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from "next/server";
 import { isDeveloper } from "@/lib/auth/developer";
 
@@ -16,7 +17,7 @@ export async function GET() {
       isDeveloper: hasDeveloperAccess,
     });
   } catch (error) {
-    console.error("Error checking developer status:", error);
+    logger.error("Error checking developer status:", error);
     return NextResponse.json(
       {
         isDeveloper: false,

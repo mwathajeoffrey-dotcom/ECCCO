@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/database/prisma";
 
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
       rating,
     });
   } catch (error) {
-    console.error("Error fetching rating:", error);
+    logger.error("Error fetching rating:", error);
     return NextResponse.json(
       {
         success: false,
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log("⭐ Created/Updated rating:", rating);
+    logger.debug("⭐ Created/Updated rating:", rating);
 
     return NextResponse.json({
       success: true,
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
       data: rating,
     });
   } catch (error) {
-    console.error("Error saving rating:", error);
+    logger.error("Error saving rating:", error);
     return NextResponse.json({ success: false, message: "Failed to save rating" }, { status: 500 });
   }
 }
@@ -123,14 +124,14 @@ export async function DELETE(request: NextRequest) {
       },
     });
 
-    console.log("🗑️ Deleted rating:", { userId, questionId });
+    logger.debug("🗑️ Deleted rating:", { userId, questionId });
 
     return NextResponse.json({
       success: true,
       message: "Rating deleted",
     });
   } catch (error) {
-    console.error("Error deleting rating:", error);
+    logger.error("Error deleting rating:", error);
 
     // If rating doesn't exist, still return success
     if (error instanceof Error && error.message.includes("Record to delete does not exist")) {

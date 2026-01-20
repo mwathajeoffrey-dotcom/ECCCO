@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -153,7 +154,7 @@ export default function ModuleSelectionPage() {
       setLoading(true);
       const response = await fetch('/api/modules');
       if (!response.ok) {
-        console.log('API request failed, keeping static modules');
+        logger.debug('API request failed, keeping static modules');
         setError(null); // Keep static modules, no error shown
         return;
       }
@@ -162,11 +163,11 @@ export default function ModuleSelectionPage() {
         setModules(result.data);
         setError(null);
       } else {
-        console.log('Using static modules - API returned no data');
+        logger.debug('Using static modules - API returned no data');
         setError(null); // Keep static modules
       }
     } catch (error) {
-      console.log('Network error, keeping static modules');
+      logger.debug('Network error, keeping static modules');
       setError(null); // Keep static modules, no error shown
     } finally {
       setLoading(false);

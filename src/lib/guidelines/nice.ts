@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * NICE Guidelines API Integration
  * FREE API for UK clinical guidelines
@@ -66,7 +67,7 @@ export async function searchNICEGuidelines(
       totalResults: typeFiltered.length,
     };
   } catch (error) {
-    console.error('NICE search error:', error);
+    logger.error('NICE search error:', error);
     return { guidelines: [], totalResults: 0 };
   }
 }
@@ -79,7 +80,7 @@ export async function getNICEGuidelineDetails(id: string): Promise<NICEGuideline
     const mockGuidelines = getMockNICEGuidelines();
     return mockGuidelines.find(g => g.id === id) || null;
   } catch (error) {
-    console.error('NICE guideline fetch error:', error);
+    logger.error('NICE guideline fetch error:', error);
     return null;
   }
 }

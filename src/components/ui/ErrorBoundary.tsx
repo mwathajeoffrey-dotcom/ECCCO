@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { Component, ReactNode } from 'react';
@@ -34,7 +35,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      logger.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
     // In production, you might want to log to an error reporting service
@@ -137,7 +138,7 @@ export function withErrorBoundary<T extends object>(
 export function useErrorHandler() {
   return (error: Error, errorInfo?: string) => {
     // Log error
-    console.error('Manual error report:', error);
+    logger.error('Manual error report:', error);
     
     // In production, send to error reporting service
     if (process.env.NODE_ENV === 'production') {

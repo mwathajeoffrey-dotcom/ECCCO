@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * CrossRef API Integration
  * FREE API for accessing 130M+ articles from all major publishers
@@ -151,7 +152,7 @@ export async function searchCrossRef(
       totalResults: data.message['total-results'] || 0,
     };
   } catch (error) {
-    console.error('CrossRef search error:', error);
+    logger.error('CrossRef search error:', error);
     throw error;
   }
 }
@@ -199,7 +200,7 @@ export async function getArticleByDOI(doi: string): Promise<CrossRefArticle | nu
       subject: item.subject || [],
     };
   } catch (error) {
-    console.error('CrossRef DOI lookup error:', error);
+    logger.error('CrossRef DOI lookup error:', error);
     return null;
   }
 }

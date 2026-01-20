@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState } from "react";
@@ -48,7 +49,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
       });
 
       if (response.ok) {
-        console.log("📊 Rating submitted successfully");
+        logger.debug("📊 Rating submitted successfully");
         setSubmitted(true);
 
         // Reset submitted state after 3 seconds to allow re-rating
@@ -57,7 +58,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
         throw new Error("Failed to submit rating");
       }
     } catch (error) {
-      console.error("Error submitting rating:", error);
+      logger.error("Error submitting rating:", error);
       alert("Failed to submit rating");
     } finally {
       setLoading(false);
@@ -79,14 +80,14 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
       });
 
       if (response.ok) {
-        console.log("👍 Quick feedback submitted");
+        logger.debug("👍 Quick feedback submitted");
         setSubmitted(true);
 
         // Reset submitted state after 3 seconds
         setTimeout(() => setSubmitted(false), 3000);
       }
     } catch (error) {
-      console.error("Error submitting feedback:", error);
+      logger.error("Error submitting feedback:", error);
     } finally {
       setLoading(false);
     }

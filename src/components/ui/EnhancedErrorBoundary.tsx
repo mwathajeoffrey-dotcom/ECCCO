@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { Component, ReactNode } from 'react';
@@ -75,7 +76,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     }
 
     // Log the error to console
-    console.error('Component Error:', {
+    logger.error('Component Error:', {
       componentName,
       error,
       props: this.props,
@@ -90,9 +91,9 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     // Log error details
     if (process.env.NODE_ENV === 'development') {
       console.group(`🚨 Error in ${componentName}`);
-      console.error('Error:', error);
-      console.error('Error Info:', errorInfo);
-      console.error('Component Stack:', errorInfo.componentStack);
+      logger.error('Error:', error);
+      logger.error('Error Info:', errorInfo);
+      logger.error('Component Stack:', errorInfo.componentStack);
       console.groupEnd();
     }
   }
@@ -269,8 +270,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                 {isDevelopment && (
                   <button
                     onClick={() => {
-                      console.log('Error State:', this.state);
-                      console.log('Props:', this.props);
+                      logger.debug('Error State:', this.state);
+                      logger.debug('Props:', this.props);
                     }}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                   >

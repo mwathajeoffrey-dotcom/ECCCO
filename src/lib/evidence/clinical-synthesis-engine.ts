@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Clinical Evidence Synthesis Engine
  * Generates OpenEvidence-style multi-paragraph summaries with inline citations
@@ -119,7 +120,7 @@ export async function generateClinicalSynthesis(
     );
   }
 
-  console.log(
+  logger.debug(
     `✅ SAFETY CHECK PASSED: ${clinicalArticles.length} high-quality articles (minimum: ${MINIMUM_ARTICLES_FOR_CLINICAL_USE})`
   );
 
@@ -171,31 +172,31 @@ export async function generateClinicalSynthesis(
       const groqAvailable = isGroqAvailable();
       const meditronAvailable = await isMeditronAvailable();
 
-      console.log(`[Evidence Synthesis] 🔍 AI Check:`);
-      console.log(`  - Groq Available: ${groqAvailable}`);
-      console.log(`  - GROQ_API_KEY exists: ${!!process.env.GROQ_API_KEY}`);
-      console.log(`  - GROQ_API_KEY length: ${process.env.GROQ_API_KEY?.length || 0}`);
-      console.log(`  - Meditron Available: ${meditronAvailable}`);
+      logger.debug(`[Evidence Synthesis] 🔍 AI Check:`);
+      logger.debug(`  - Groq Available: ${groqAvailable}`);
+      logger.debug(`  - GROQ_API_KEY exists: ${!!process.env.GROQ_API_KEY}`);
+      logger.debug(`  - GROQ_API_KEY length: ${process.env.GROQ_API_KEY?.length || 0}`);
+      logger.debug(`  - Meditron Available: ${meditronAvailable}`);
 
       if (groqAvailable) {
-        console.log("[Evidence Synthesis] ✅ Using Groq AI for synthesis");
+        logger.debug("[Evidence Synthesis] ✅ Using Groq AI for synthesis");
         sections = await generateGroqSynthesis(query, sortedArticles as any, references);
         usedAI = true;
       } else if (meditronAvailable) {
-        console.log("[Evidence Synthesis] Using Meditron AI for synthesis");
+        logger.debug("[Evidence Synthesis] Using Meditron AI for synthesis");
         sections = await generateAISynthesis(query, sortedArticles as any, references);
         usedAI = true;
       } else {
-        console.warn(
+        logger.warn(
           "[Evidence Synthesis] ⚠️ No AI available (tried Groq, Meditron), falling back to structured summary"
         );
-        console.warn("Get free Groq API key at: https://console.groq.com");
-        console.warn("Add to .env.local: GROQ_API_KEY=your_key_here");
+        logger.warn("Get free Groq API key at: https://console.groq.com");
+        logger.warn("Add to .env.local: GROQ_API_KEY=your_key_here");
         sections = await generateStructuredSummary(query, sortedArticles as any, references);
       }
     } catch (error: any) {
-      console.error("[Evidence Synthesis] ❌ AI synthesis failed:", error?.message || error);
-      console.error("Falling back to structured summary");
+      logger.error("[Evidence Synthesis] ❌ AI synthesis failed:", error?.message || error);
+      logger.error("Falling back to structured summary");
       sections = await generateStructuredSummary(query, sortedArticles as any, references);
     }
   } else {
@@ -253,19 +254,19 @@ async function generateGroqSynthesis(
       let contentToAnalyze = article.abstract || "Not available";
 
       if (article.pmcid) {
-        console.log(`[Groq Synthesis] Fetching full text for PMC${article.pmcid}...`);
+        logger.debug(`[Groq Synthesis] Fetching full text for PMC${article.pmcid}...`);
         const fullText = await fetchFullText(article.pmcid);
 
         if (fullText?.results) {
           // Use Results section (best for dosing, outcomes, protocols)
           contentToAnalyze = fullText.results.slice(0, 1500); // More text for guidelines/meta-analyses
-          console.log(`[Groq Synthesis] Using RESULTS section for PMC${article.pmcid}`);
+          logger.debug(`[Groq Synthesis] Using RESULTS section for PMC${article.pmcid}`);
         } else if (fullText?.discussion) {
           contentToAnalyze = fullText.discussion.slice(0, 1500);
-          console.log(`[Groq Synthesis] Using DISCUSSION section for PMC${article.pmcid}`);
+          logger.debug(`[Groq Synthesis] Using DISCUSSION section for PMC${article.pmcid}`);
         } else if (fullText?.methods) {
           contentToAnalyze = fullText.methods.slice(0, 1200);
-          console.log(`[Groq Synthesis] Using METHODS section for PMC${article.pmcid}`);
+          logger.debug(`[Groq Synthesis] Using METHODS section for PMC${article.pmcid}`);
         }
       }
 
@@ -370,12 +371,12 @@ DO NOT write research summaries or study descriptions. Write treatment protocols
       model: "llama-3.3-70b-versatile",
     });
 
-    console.log(`[Groq] Synthesis generated: ${aiResponse.length} characters`);
+    logger.debug(`[Groq] Synthesis generated: ${aiResponse.length} characters`);
 
     // Parse AI response into structured sections
     return parseSynthesisResponse(aiResponse, references);
   } catch (error) {
-    console.error("[Groq] Synthesis failed:", error);
+    logger.error("[Groq] Synthesis failed:", error);
     throw error;
   }
 }
@@ -518,7 +519,7 @@ function parseParagraphs(text: string, references: Reference[]): ClinicalParagra
           color: getJournalColor(ref.journal),
         });
       } else {
-        console.warn(
+        logger.warn(
           `[Parse Citations] Reference ${refNum} not found or missing data. Total refs: ${references.length}`
         );
       }
@@ -688,21 +689,21 @@ async function extractClinicalInsights(articles: any[], references: Reference[])
     // Try to fetch full-text from Europe PMC if PMCID available
     let fullTextSections = null;
     if (article.pmcid) {
-      console.log(`Fetching full text for PMC${article.pmcid}...`);
+      logger.debug(`Fetching full text for PMC${article.pmcid}...`);
       try {
         fullTextSections = await fetchFullText(article.pmcid);
         if (fullTextSections) {
-          console.log(`✓ Full text retrieved for PMC${article.pmcid}`);
+          logger.debug(`✓ Full text retrieved for PMC${article.pmcid}`);
         }
       } catch (error) {
-        console.error(`Failed to fetch full text for PMC${article.pmcid}:`, error);
+        logger.error(`Failed to fetch full text for PMC${article.pmcid}:`, error);
       }
     }
 
     // Analyze full-text Results section if available (best for specific dosing)
     let textToAnalyze = abstract;
     if (fullTextSections?.results) {
-      console.log(`Using full-text RESULTS section for PMC${article.pmcid}`);
+      logger.debug(`Using full-text RESULTS section for PMC${article.pmcid}`);
       textToAnalyze = fullTextSections.results;
     } else if (fullTextSections?.discussion) {
       // Discussion often has clinical recommendations

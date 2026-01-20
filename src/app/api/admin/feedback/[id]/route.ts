@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { requireAdmin } from "@/lib/auth/admin";
@@ -35,7 +36,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     return NextResponse.json(feedback);
   } catch (error) {
-    console.error("Error updating feedback:", error);
+    logger.error("Error updating feedback:", error);
     return NextResponse.json({ error: "Failed to update feedback" }, { status: 500 });
   }
 }
@@ -59,7 +60,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting feedback:", error);
+    logger.error("Error deleting feedback:", error);
     return NextResponse.json({ error: "Failed to delete feedback" }, { status: 500 });
   }
 }

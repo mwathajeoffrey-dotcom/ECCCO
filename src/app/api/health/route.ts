@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // ECCCO Platform Health Check API
 // app/api/health/route.ts
 
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
     })
     
   } catch (error) {
-    console.error('Health check failed:', error)
+    logger.error('Health check failed:', error)
     
     return NextResponse.json({
       status: 'unhealthy',
@@ -79,7 +80,7 @@ async function checkDatabase(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`
     return true
   } catch (error) {
-    console.error('Database health check failed:', error)
+    logger.error('Database health check failed:', error)
     return false
   }
 }
@@ -93,7 +94,7 @@ function checkMemory(): boolean {
   const memoryUsagePercent = (heapUsedMB / heapTotalMB) * 100
   
   if (memoryUsagePercent > 90) {
-    console.warn(`High memory usage: ${memoryUsagePercent.toFixed(2)}%`)
+    logger.warn(`High memory usage: ${memoryUsagePercent.toFixed(2)}%`)
     return false
   }
   

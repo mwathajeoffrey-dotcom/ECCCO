@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Rate limiting middleware for API routes
 import { NextRequest } from 'next/server';
 
@@ -74,7 +75,7 @@ export function rateLimit(options: RateLimitOptions) {
       return null; // Allow request
 
     } catch (error) {
-      console.error('Rate limiting error:', error);
+      logger.error('Rate limiting error:', error);
       return null; // Allow request on error
     }
   };

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -58,7 +59,7 @@ export async function recordConsent(request: NextRequest) {
 
     // In production, this would be stored in your database
     // For demo purposes, we'll simulate the storage
-    console.log('[Privacy API] Consent recorded:', consentRecord);
+    logger.debug('[Privacy API] Consent recorded:', consentRecord);
 
     // Log audit event
     const auditEvent = {
@@ -74,7 +75,7 @@ export async function recordConsent(request: NextRequest) {
     };
 
     // Store audit event (in production, this would go to your audit log system)
-    console.log('[Privacy API] Audit event:', auditEvent);
+    logger.debug('[Privacy API] Audit event:', auditEvent);
 
     return NextResponse.json({
       success: true,
@@ -83,7 +84,7 @@ export async function recordConsent(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[Privacy API] Consent recording failed:', error);
+    logger.error('[Privacy API] Consent recording failed:', error);
     return NextResponse.json(
       { error: 'Failed to record consent' },
       { status: 500 }
@@ -135,7 +136,7 @@ export async function exportUserData(request: NextRequest) {
     return new NextResponse(formattedData, { headers });
 
   } catch (error) {
-    console.error('[Privacy API] Data export failed:', error);
+    logger.error('[Privacy API] Data export failed:', error);
     return NextResponse.json(
       { error: 'Failed to export data' },
       { status: 500 }
@@ -184,7 +185,7 @@ export async function deleteUserData(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[Privacy API] Data deletion failed:', error);
+    logger.error('[Privacy API] Data deletion failed:', error);
     return NextResponse.json(
       { error: 'Failed to delete data' },
       { status: 500 }
@@ -216,7 +217,7 @@ export async function generateComplianceReport(request: NextRequest) {
     return NextResponse.json(report);
 
   } catch (error) {
-    console.error('[Privacy API] Compliance report generation failed:', error);
+    logger.error('[Privacy API] Compliance report generation failed:', error);
     return NextResponse.json(
       { error: 'Failed to generate compliance report' },
       { status: 500 }
@@ -409,7 +410,7 @@ function logAuditEvent(
   };
 
   // In production, this would be stored in your audit log system
-  console.log('[Privacy API] Audit event logged:', auditEvent);
+  logger.debug('[Privacy API] Audit event logged:', auditEvent);
 }
 
 // Route handlers

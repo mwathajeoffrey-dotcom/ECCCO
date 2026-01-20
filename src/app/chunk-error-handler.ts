@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Auto-reload on chunk load errors
 if (typeof window !== "undefined") {
   window.addEventListener("error", (event) => {
@@ -7,7 +8,7 @@ if (typeof window !== "undefined") {
       event.message?.includes("ChunkLoadError") ||
       event.message?.includes("Loading chunk")
     ) {
-      console.warn("Chunk load error detected - reloading page to get latest version...");
+      logger.warn("Chunk load error detected - reloading page to get latest version...");
       // Wait a bit to avoid reload loop
       setTimeout(() => {
         window.location.reload();

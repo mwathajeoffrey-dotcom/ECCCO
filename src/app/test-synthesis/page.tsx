@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState } from "react";
@@ -20,7 +21,7 @@ export default function TestSynthesisPage() {
     setSynthesis(null);
 
     try {
-      console.log("Searching for:", query);
+      logger.debug("Searching for:", query);
 
       const response = await fetch("/api/evidence/synthesize", {
         method: "POST",
@@ -39,10 +40,10 @@ export default function TestSynthesisPage() {
       }
 
       const data = await response.json();
-      console.log("Synthesis received:", data);
+      logger.debug("Synthesis received:", data);
       setSynthesis(data);
     } catch (err: any) {
-      console.error("Search error:", err);
+      logger.error("Search error:", err);
       setError(err.message);
     } finally {
       setLoading(false);

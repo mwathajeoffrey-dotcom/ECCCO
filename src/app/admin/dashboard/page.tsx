@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
       setIsAdmin(true);
       await fetchDashboardStats();
     } catch (err) {
-      console.error("Admin check failed:", err);
+      logger.error("Admin check failed:", err);
       window.location.href = "/login?redirect=/admin/dashboard";
     } finally {
       setLoading(false);
@@ -82,7 +83,7 @@ export default function AdminDashboard() {
         systemHealth: "healthy",
       });
     } catch (err) {
-      console.error("Failed to fetch stats:", err);
+      logger.error("Failed to fetch stats:", err);
     }
   };
 

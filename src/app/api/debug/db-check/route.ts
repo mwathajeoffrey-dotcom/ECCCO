@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma-client';
 
@@ -49,7 +50,7 @@ export async function GET() {
     });
     
   } catch (error) {
-    console.error('Database check error:', error);
+    logger.error('Database check error:', error);
     
     // Parse Prisma errors
     let errorDetails = 'Unknown error';

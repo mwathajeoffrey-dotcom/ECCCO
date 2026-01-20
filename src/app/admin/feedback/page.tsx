@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -65,7 +66,7 @@ export default function AdminFeedbackPage() {
       setIsAdmin(true);
       await fetchFeedback();
     } catch (err) {
-      console.error('Admin check failed:', err);
+      logger.error('Admin check failed:', err);
       window.location.href = '/login?redirect=/admin/feedback';
     } finally {
       setLoading(false);
@@ -81,7 +82,7 @@ export default function AdminFeedbackPage() {
       setFeedbackList(data);
       setFilteredFeedback(data);
     } catch (err) {
-      console.error('Failed to fetch feedback:', err);
+      logger.error('Failed to fetch feedback:', err);
     }
   };
 

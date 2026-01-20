@@ -1,13 +1,14 @@
+import { logger } from '@/lib/logger';
 // Analytics service stub - to be implemented
 export const analytics = {
   initialize: async () => {
-    console.log('📊 Analytics initialized');
+    logger.debug('📊 Analytics initialized');
     return Promise.resolve();
   },
   
   track: (event: string, properties?: any) => {
     if (typeof window !== 'undefined') {
-      console.log('📊 Analytics:', event, properties);
+      logger.debug('📊 Analytics:', event, properties);
     }
   },
   

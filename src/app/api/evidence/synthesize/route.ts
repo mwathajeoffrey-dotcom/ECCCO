@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * API Route: Evidence Synthesis
  * POST /api/evidence/synthesize
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
       const cached = await getCachedSynthesis(cacheKey);
       if (cached) {
         const duration = Date.now() - startTime;
-        console.log(`[Evidence Synthesis] Returned cached result in ${duration}ms ⚡`);
+        logger.debug(`[Evidence Synthesis] Returned cached result in ${duration}ms ⚡`);
         return NextResponse.json(
           {
             ...cached,
@@ -62,22 +63,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Analyze query and expand for better coverage
-    console.log(`[Evidence Synthesis] Analyzing query: "${query}"`);
+    logger.debug(`[Evidence Synthesis] Analyzing query: "${query}"`);
     const queryAnalysis = analyzeQuery(query);
-    console.log(
+    logger.debug(
       `[Evidence Synthesis] Found ${queryAnalysis.medicalConcepts.length} medical concepts, ${queryAnalysis.expandedTerms.length} expanded terms`
     );
 
     // Step 3: Try original query first
-    console.log(`[Evidence Synthesis] Searching for: "${query}"${patientContext ? " (patient-specific)" : ""}`);
+    logger.debug(`[Evidence Synthesis] Searching for: "${query}"${patientContext ? " (patient-specific)" : ""}`);
     let searchResponse = await searchStrategicEvidence(query, maxArticles * 2);
     let searchResults = searchResponse.articles || [];
 
     // Step 4: If no results, try expanded query
     if (searchResults.length === 0 && queryAnalysis.expandedTerms.length > 1) {
-      console.log(`[Evidence Synthesis] No results found, trying expanded query...`);
+      logger.debug(`[Evidence Synthesis] No results found, trying expanded query...`);
       const expandedQuery = expandQueryForSearch(query);
-      console.log(`[Evidence Synthesis] Expanded query: "${expandedQuery}"`);
+      logger.debug(`[Evidence Synthesis] Expanded query: "${expandedQuery}"`);
 
       searchResponse = await searchStrategicEvidence(expandedQuery, maxArticles * 2);
       searchResults = searchResponse.articles || [];
@@ -85,8 +86,8 @@ export async function POST(request: NextRequest) {
 
     // Step 5: If still no results, try broadened query
     if (searchResults.length === 0 && queryAnalysis.broadenedQuery !== query) {
-      console.log(`[Evidence Synthesis] Still no results, trying broadened query...`);
-      console.log(`[Evidence Synthesis] Broadened query: "${queryAnalysis.broadenedQuery}"`);
+      logger.debug(`[Evidence Synthesis] Still no results, trying broadened query...`);
+      logger.debug(`[Evidence Synthesis] Broadened query: "${queryAnalysis.broadenedQuery}"`);
 
       searchResponse = await searchStrategicEvidence(queryAnalysis.broadenedQuery, maxArticles * 2);
       searchResults = searchResponse.articles || [];
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`[Evidence Synthesis] Found ${searchResults.length} articles, generating synthesis...`);
+    logger.debug(`[Evidence Synthesis] Found ${searchResults.length} articles, generating synthesis...`);
 
     // Step 7: Generate clinical synthesis
     let synthesis;
@@ -121,12 +122,12 @@ export async function POST(request: NextRequest) {
         maxArticles,
       });
     } catch (error: any) {
-      console.error("[Synthesis Generation Error]", error.message);
+      logger.error("[Synthesis Generation Error]", error.message);
 
       // If synthesis fails due to quality filters, generate a RESEARCH SUMMARY instead
       // This provides value while being transparent about quality limitations
       if (error.message?.includes("Insufficient evidence") || error.message?.includes("quality")) {
-        console.log("[Evidence Synthesis] Quality threshold not met, generating research summary instead...");
+        logger.debug("[Evidence Synthesis] Quality threshold not met, generating research summary instead...");
 
         const suggestions = getSearchSuggestions(query, "low_quality");
         const alternatives = generateAlternativeQueries(query);
@@ -157,7 +158,7 @@ export async function POST(request: NextRequest) {
             tips: suggestions.tips,
           });
         } catch (summaryError: any) {
-          console.error("[Research Summary Error]", summaryError);
+          logger.error("[Research Summary Error]", summaryError);
 
           // If even research summary fails, return articles for manual review
           return NextResponse.json(
@@ -178,7 +179,7 @@ export async function POST(request: NextRequest) {
 
       // If it's an AI error, try falling back to structured summary
       if (error.message?.includes("AI") || error.message?.includes("Groq") || error.message?.includes("rate limit")) {
-        console.warn("[Evidence Synthesis] AI failed, retrying with structured summary...");
+        logger.warn("[Evidence Synthesis] AI failed, retrying with structured summary...");
         try {
           synthesis = await generateClinicalSynthesis(query, searchResults, {
             minQualityScore,
@@ -186,7 +187,7 @@ export async function POST(request: NextRequest) {
             maxArticles,
           });
         } catch (fallbackError: any) {
-          console.error("[Fallback Synthesis Error]", fallbackError);
+          logger.error("[Fallback Synthesis Error]", fallbackError);
           throw fallbackError;
         }
       } else {
@@ -194,16 +195,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(
+    logger.debug(
       `[Evidence Synthesis] Generated synthesis with ${synthesis.sections.length} sections, ${synthesis.references.length} references`
     );
 
     // Step 8: Generate clinical decision support if requested
     let decisionTree = undefined;
     if (includeDecisionSupport) {
-      console.log("[Decision Support] Generating clinical protocol...");
+      logger.debug("[Decision Support] Generating clinical protocol...");
       decisionTree = await generateDecisionSupport(synthesis, patientContext as PatientContext);
-      console.log(`[Decision Support] Generated protocol with ${decisionTree.steps.length} steps`);
+      logger.debug(`[Decision Support] Generated protocol with ${decisionTree.steps.length} steps`);
     }
 
     // Step 5: Cache the result for future requests
@@ -221,16 +222,16 @@ export async function POST(request: NextRequest) {
 
     // Cache asynchronously (don't wait) - use custom cache key with patient context
     cacheSynthesis(cacheKey, synthesisWithMeta).catch((err) =>
-      console.error("[Cache] Failed to cache synthesis:", err)
+      logger.error("[Cache] Failed to cache synthesis:", err)
     );
 
-    console.log(`[Evidence Synthesis] Complete in ${duration}ms`);
+    logger.debug(`[Evidence Synthesis] Complete in ${duration}ms`);
 
     return NextResponse.json(synthesisWithMeta, { status: 200 });
   } catch (error: any) {
-    console.error("[Evidence Synthesis Error]", error);
-    console.error("[Error Stack]", error.stack);
-    console.error("[Error Details]", {
+    logger.error("[Evidence Synthesis Error]", error);
+    logger.error("[Error Stack]", error.stack);
+    logger.error("[Error Details]", {
       message: error.message,
       name: error.name,
       code: error.code,

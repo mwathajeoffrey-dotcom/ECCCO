@@ -345,3 +345,74 @@ model Answer {
   @@index([questionIndex])
 }
 
+// ============================================
+// CONTENT VERSIONING & AUDIT LOGGING
+// For healthcare compliance and content tracking
+// ============================================
+
+model ContentVersion {
+  id              String   @id
+  resourceType    String   // 'question', 'evidence', 'topic', etc.
+  resourceId      String   // ID of the resource being versioned
+  version         Int      // Version number (1, 2, 3, etc.)
+  content         String   // JSON snapshot of the content at this version
+  changes         String?  // Description of what changed
+  changedBy       String   // User ID who made the change
+  changeReason    String?  // Reason for the change
+  isActive        Boolean  @default(false) // Only one version should be active
+  createdAt       DateTime @default(now())
+
+  @@unique([resourceType, resourceId, version])
+  @@index([resourceType])
+  @@index([resourceId])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([changedBy])
+}
+
+model AuditLog {
+  id             String   @id
+  action         String   // Action performed (e.g., 'user.login', 'content.update')
+  userId         String?  // User who performed the action
+  userEmail      String?  // Email for easier searching
+  resourceType   String?  // Type of resource affected
+  resourceId     String?  // ID of resource affected
+  details        String?  // JSON with additional details
+  ipAddress      String?  // IP address of the request
+  userAgent      String?  // Browser/device info
+  success        Boolean  // Whether action was successful
+  errorMessage   String?  // Error message if failed
+  timestamp      DateTime @default(now())
+
+  @@index([action])
+  @@index([userId])
+  @@index([userEmail])
+  @@index([resourceType])
+  @@index([timestamp])
+  @@index([success])
+}
+
+model CitationVerification {
+  id              String   @id
+  evidenceId      String   // Reference to EvidenceReference
+  pmid            String?  // PubMed ID
+  doi             String?  // Digital Object Identifier
+  url             String?  // Original URL
+  status          String   @default("pending") // pending, verified, broken, retracted
+  lastChecked     DateTime @default(now())
+  isRetracted     Boolean  @default(false)
+  retractionNote  String?
+  responseCode    Int?     // HTTP response code
+  errorMessage    String?
+  verifiedBy      String?  // User or system that verified
+  nextCheckDate   DateTime? // When to check next
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+
+  @@index([evidenceId])
+  @@index([status])
+  @@index([lastChecked])
+  @@index([isRetracted])
+  @@index([nextCheckDate])
+}
+

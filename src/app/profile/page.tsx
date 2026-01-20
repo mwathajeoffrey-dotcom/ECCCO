@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -73,7 +74,7 @@ export default function ProfilePage() {
         });
       }
     } catch (error) {
-      console.error("Failed to load profile:", error);
+      logger.error("Failed to load profile:", error);
     } finally {
       setLoading(false);
     }
@@ -102,7 +103,7 @@ export default function ProfilePage() {
         setMessage({ type: "error", text: "Failed to update profile" });
       }
     } catch (error) {
-      console.error("Failed to save profile:", error);
+      logger.error("Failed to save profile:", error);
       setMessage({ type: "error", text: "An error occurred" });
     } finally {
       setSaving(false);

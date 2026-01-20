@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { searchAllGuidelines } from '@/lib/guidelines/unified-guidelines';
 
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
       ...result,
     });
   } catch (error) {
-    console.error('Guidelines search error:', error);
+    logger.error('Guidelines search error:', error);
     return NextResponse.json(
       { success: false, error: 'Search failed. Please try again.' },
       { status: 500 }
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
       ...result,
     });
   } catch (error) {
-    console.error('Guidelines search error:', error);
+    logger.error('Guidelines search error:', error);
     return NextResponse.json(
       { success: false, error: 'Search failed. Please try again.' },
       { status: 500 }

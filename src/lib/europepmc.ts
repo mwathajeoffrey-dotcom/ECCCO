@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Europe PMC API Integration
  * FREE API for open access biomedical literature
@@ -114,7 +115,7 @@ export async function searchEuropePMC(
       hasNextPage: data.nextCursorMark !== undefined,
     };
   } catch (error) {
-    console.error("Europe PMC search error:", error);
+    logger.error("Europe PMC search error:", error);
     throw error;
   }
 }
@@ -226,7 +227,7 @@ export async function getArticleById(
       source: item.source || "MED",
     };
   } catch (error) {
-    console.error("Europe PMC article lookup error:", error);
+    logger.error("Europe PMC article lookup error:", error);
     return null;
   }
 }
@@ -298,7 +299,7 @@ export async function fetchFullText(pmcid: string): Promise<{
     });
 
     if (!response.ok) {
-      console.log(`Full text not available for PMC${cleanPmcid}`);
+      logger.debug(`Full text not available for PMC${cleanPmcid}`);
       return null;
     }
 
@@ -339,7 +340,7 @@ export async function fetchFullText(pmcid: string): Promise<{
 
     return sections;
   } catch (error) {
-    console.error(`Error fetching full text for PMC${pmcid}:`, error);
+    logger.error(`Error fetching full text for PMC${pmcid}:`, error);
     return null;
   }
 }

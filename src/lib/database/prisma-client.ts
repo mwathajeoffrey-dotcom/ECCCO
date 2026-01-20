@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
@@ -17,10 +18,10 @@ function createPrismaClient() {
     process.env.NODE_ENV === 'production';
 
   if (useAccelerate) {
-    console.log('🚀 Using Prisma Accelerate for enhanced performance');
+    logger.debug('🚀 Using Prisma Accelerate for enhanced performance');
     return baseClient.$extends(withAccelerate());
   } else {
-    console.log('🔧 Using local Prisma client');
+    logger.debug('🔧 Using local Prisma client');
     return baseClient;
   }
 }

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Enhanced Analytics Dashboard Component
  * Advanced analytics visualization with PALS-specific insights
@@ -33,7 +34,7 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
         const data = await enhancedAnalytics.generateEnhancedAnalytics();
         setAnalytics(data);
       } catch (error) {
-        console.error('Failed to load enhanced analytics:', error);
+        logger.error('Failed to load enhanced analytics:', error);
       } finally {
         setLoading(false);
       }

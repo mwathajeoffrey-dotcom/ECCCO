@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -81,7 +82,7 @@ export default function UserManagement() {
       setIsAdmin(true);
       await loadUsers();
     } catch (err) {
-      console.error("Admin check failed:", err);
+      logger.error("Admin check failed:", err);
       window.location.href = "/login?redirect=/admin/users";
     }
   };
@@ -97,7 +98,7 @@ export default function UserManagement() {
         setSummary(data.summary);
       }
     } catch (err) {
-      console.error("Failed to load users:", err);
+      logger.error("Failed to load users:", err);
     } finally {
       setLoading(false);
     }

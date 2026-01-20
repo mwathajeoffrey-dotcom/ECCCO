@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Medical Unit Conversion Utilities for ECCCO Platform
 export interface UnitConversion {
   value: number;
@@ -120,7 +121,7 @@ export class MedicalUnitConverter {
         try {
           this.userPreferences = JSON.parse(saved);
         } catch (e) {
-          console.warn('Failed to parse unit preferences');
+          logger.warn('Failed to parse unit preferences');
         }
       }
     }

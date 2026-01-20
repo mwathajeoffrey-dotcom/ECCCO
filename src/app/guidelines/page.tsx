@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -519,7 +520,7 @@ export function GuidelineManagementPage() {
       setReport(mockReport);
       setOutdatedQuestions(mockOutdatedQuestions);
     } catch (error) {
-      console.error("Error loading guideline data:", error);
+      logger.error("Error loading guideline data:", error);
     }
   }, []);
 

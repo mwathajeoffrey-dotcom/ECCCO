@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { strict as assert } from 'assert';
 import { safeParseJson } from '../route';
 
@@ -8,7 +9,7 @@ function run() {
   assert.deepEqual(safeParseJson(undefined, { foo: 'bar' } as any), { foo: 'bar' });
   assert.deepEqual(safeParseJson('{"x":1}', {} as any), { x: 1 });
   assert.deepEqual(safeParseJson('invalid', []), []);
-  console.log('safeParseJson tests passed');
+  logger.debug('safeParseJson tests passed');
 }
 
 run();

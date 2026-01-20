@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Data Protection and Privacy Compliance Service
  * 
@@ -115,7 +116,7 @@ class DataProtectionService {
     // Load existing consent records
     await this.loadConsentRecords();
     
-    console.log('[DataProtection] Service initialized');
+    logger.debug('[DataProtection] Service initialized');
   }
 
   /**
@@ -176,7 +177,7 @@ class DataProtectionService {
       'medium'
     );
 
-    console.log(`[DataProtection] Consent recorded: ${consentType} - ${granted}`);
+    logger.debug(`[DataProtection] Consent recorded: ${consentType} - ${granted}`);
   }
 
   public async getConsent(userId: string, consentType: ConsentRecord['consentType']): Promise<boolean> {
@@ -305,7 +306,7 @@ class DataProtectionService {
         { cleanedCount, timestamp: now },
         'low'
       );
-      console.log(`[DataProtection] Cleaned up ${cleanedCount} expired data items`);
+      logger.debug(`[DataProtection] Cleaned up ${cleanedCount} expired data items`);
     }
   }
 
@@ -361,7 +362,7 @@ class DataProtectionService {
       'high'
     );
 
-    console.log(`[DataProtection] All data deleted for user: ${userId}`);
+    logger.debug(`[DataProtection] All data deleted for user: ${userId}`);
   }
 
   private async deleteUserProfile(userId: string): Promise<void> {
@@ -587,7 +588,7 @@ class DataProtectionService {
 
   private async loadConsentRecords(): Promise<void> {
     // Load existing consent records on initialization
-    console.log('[DataProtection] Consent records loaded');
+    logger.debug('[DataProtection] Consent records loaded');
   }
 
   /**

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -72,7 +73,7 @@ export default function DashboardPage() {
       }
     } catch (error) {
       // Network or other error
-      console.error('Dashboard error:', error);
+      logger.error('Dashboard error:', error);
       setDashboardData({
         hasData: false,
         totalExams: 0,

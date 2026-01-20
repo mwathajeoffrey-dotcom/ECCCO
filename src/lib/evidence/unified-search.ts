@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Unified Evidence Search
  * Combines multiple FREE APIs for comprehensive article search
@@ -246,7 +247,7 @@ async function searchPubMedSource(
       total: searchResult.count,
     };
   } catch (error) {
-    console.error("PubMed search error:", error);
+    logger.error("PubMed search error:", error);
     return { source: "pubmed", articles: [], total: 0 };
   }
 }
@@ -274,7 +275,7 @@ async function searchCrossRefSource(
       total: result.totalResults,
     };
   } catch (error) {
-    console.error("CrossRef search error:", error);
+    logger.error("CrossRef search error:", error);
     return { source: "crossref", articles: [], total: 0 };
   }
 }
@@ -299,7 +300,7 @@ async function searchEuropePMCSource(
       total: result.totalResults,
     };
   } catch (error) {
-    console.error("Europe PMC search error:", error);
+    logger.error("Europe PMC search error:", error);
     return { source: "europepmc", articles: [], total: 0 };
   }
 }
@@ -335,7 +336,7 @@ async function searchSemanticScholarSource(
       total: result.total,
     };
   } catch (error) {
-    console.error("Semantic Scholar search error:", error);
+    logger.error("Semantic Scholar search error:", error);
     return { source: "semanticscholar", articles: [], total: 0 };
   }
 }
@@ -466,7 +467,7 @@ export async function searchStrategicEvidence(
     general: 0,
   };
 
-  console.log("[Strategic Search] Phase 1: Searching for GUIDELINES...");
+  logger.debug("[Strategic Search] Phase 1: Searching for GUIDELINES...");
   // Phase 1: Search for clinical practice guidelines (highest priority)
   try {
     const guidelineResult = await searchPubMed({
@@ -480,13 +481,13 @@ export async function searchStrategicEvidence(
       const articles = await fetchPubMedArticles(guidelineResult.pmids);
       allArticles.push(...articles.map(convertPubMedArticle));
       sourceBreakdown.guidelines = guidelineResult.count;
-      console.log(`[Strategic Search] Found ${guidelineResult.pmids.length} guidelines`);
+      logger.debug(`[Strategic Search] Found ${guidelineResult.pmids.length} guidelines`);
     }
   } catch (error) {
-    console.error("[Strategic Search] Guideline search failed:", error);
+    logger.error("[Strategic Search] Guideline search failed:", error);
   }
 
-  console.log("[Strategic Search] Phase 2: Searching for META-ANALYSES...");
+  logger.debug("[Strategic Search] Phase 2: Searching for META-ANALYSES...");
   // Phase 2: Search for meta-analyses
   if (allArticles.length < maxResults) {
     try {
@@ -501,14 +502,14 @@ export async function searchStrategicEvidence(
         const articles = await fetchPubMedArticles(metaResult.pmids);
         allArticles.push(...articles.map(convertPubMedArticle));
         sourceBreakdown.metaAnalyses = metaResult.count;
-        console.log(`[Strategic Search] Found ${metaResult.pmids.length} meta-analyses`);
+        logger.debug(`[Strategic Search] Found ${metaResult.pmids.length} meta-analyses`);
       }
     } catch (error) {
-      console.error("[Strategic Search] Meta-analysis search failed:", error);
+      logger.error("[Strategic Search] Meta-analysis search failed:", error);
     }
   }
 
-  console.log("[Strategic Search] Phase 3: Searching for SYSTEMATIC REVIEWS...");
+  logger.debug("[Strategic Search] Phase 3: Searching for SYSTEMATIC REVIEWS...");
   // Phase 3: Search for systematic reviews
   if (allArticles.length < maxResults) {
     try {
@@ -523,14 +524,14 @@ export async function searchStrategicEvidence(
         const articles = await fetchPubMedArticles(reviewResult.pmids);
         allArticles.push(...articles.map(convertPubMedArticle));
         sourceBreakdown.systematicReviews = reviewResult.count;
-        console.log(`[Strategic Search] Found ${reviewResult.pmids.length} systematic reviews`);
+        logger.debug(`[Strategic Search] Found ${reviewResult.pmids.length} systematic reviews`);
       }
     } catch (error) {
-      console.error("[Strategic Search] Systematic review search failed:", error);
+      logger.error("[Strategic Search] Systematic review search failed:", error);
     }
   }
 
-  console.log("[Strategic Search] Phase 4: Searching for RCTs...");
+  logger.debug("[Strategic Search] Phase 4: Searching for RCTs...");
   // Phase 4: Search for major RCTs
   if (allArticles.length < maxResults) {
     try {
@@ -545,16 +546,16 @@ export async function searchStrategicEvidence(
         const articles = await fetchPubMedArticles(rctResult.pmids);
         allArticles.push(...articles.map(convertPubMedArticle));
         sourceBreakdown.rcts = rctResult.count;
-        console.log(`[Strategic Search] Found ${rctResult.pmids.length} RCTs`);
+        logger.debug(`[Strategic Search] Found ${rctResult.pmids.length} RCTs`);
       }
     } catch (error) {
-      console.error("[Strategic Search] RCT search failed:", error);
+      logger.error("[Strategic Search] RCT search failed:", error);
     }
   }
 
   // Phase 5: If still not enough, do general high-quality search
   if (allArticles.length < 10) {
-    console.log("[Strategic Search] Phase 5: General high-quality search...");
+    logger.debug("[Strategic Search] Phase 5: General high-quality search...");
     try {
       const generalResult = await searchAllSources({
         query,
@@ -565,23 +566,23 @@ export async function searchStrategicEvidence(
 
       allArticles.push(...generalResult.articles);
       sourceBreakdown.general = generalResult.totalResults;
-      console.log(`[Strategic Search] Added ${generalResult.articles.length} general articles`);
+      logger.debug(`[Strategic Search] Added ${generalResult.articles.length} general articles`);
     } catch (error) {
-      console.error("[Strategic Search] General search failed:", error);
+      logger.error("[Strategic Search] General search failed:", error);
     }
   }
 
   // Deduplicate
-  console.log(`[Strategic Search] Before deduplication: ${allArticles.length} articles`);
+  logger.debug(`[Strategic Search] Before deduplication: ${allArticles.length} articles`);
   const deduplicatedArticles = deduplicateArticles(allArticles);
-  console.log(`[Strategic Search] After deduplication: ${deduplicatedArticles.length} articles`);
+  logger.debug(`[Strategic Search] After deduplication: ${deduplicatedArticles.length} articles`);
 
   const totalResults = Object.values(sourceBreakdown).reduce((sum, count) => sum + count, 0);
 
   const finalArticles = deduplicatedArticles.slice(0, maxResults);
-  console.log(`[Strategic Search] Final selection: ${finalArticles.length} articles (max: ${maxResults})`);
-  console.log(`[Strategic Search] Complete: ${deduplicatedArticles.length} unique articles from ${totalResults} total`);
-  console.log("[Strategic Search] Breakdown:", sourceBreakdown);
+  logger.debug(`[Strategic Search] Final selection: ${finalArticles.length} articles (max: ${maxResults})`);
+  logger.debug(`[Strategic Search] Complete: ${deduplicatedArticles.length} unique articles from ${totalResults} total`);
+  logger.debug("[Strategic Search] Breakdown:", sourceBreakdown);
 
   return {
     articles: finalArticles,

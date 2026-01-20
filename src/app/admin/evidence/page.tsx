@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -109,7 +110,7 @@ export default function AdminEvidencePage() {
       
       setIsAdmin(true);
     } catch (err) {
-      console.error('Admin check failed:', err);
+      logger.error('Admin check failed:', err);
       window.location.href = '/login?redirect=/admin/evidence';
     }
   };

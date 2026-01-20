@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 /**
@@ -95,12 +96,12 @@ export default function LearningAnalyticsDashboard() {
       if (result.success) {
         setData(result.data);
       } else {
-        console.error('Failed to load analytics data:', result.error);
+        logger.error('Failed to load analytics data:', result.error);
         // Generate mock data for demonstration
         setData(generateMockData());
       }
     } catch (error) {
-      console.error('Error loading analytics data:', error);
+      logger.error('Error loading analytics data:', error);
       // Generate mock data for demonstration
       setData(generateMockData());
     } finally {

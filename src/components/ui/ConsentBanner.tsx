@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -43,7 +44,7 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
         setShowBanner(true);
       }
     } catch (error) {
-      console.error('Failed to check consent status:', error);
+      logger.error('Failed to check consent status:', error);
       setShowBanner(true);
     }
   };
@@ -108,7 +109,7 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
       }
 
     } catch (error) {
-      console.error('Failed to record consents:', error);
+      logger.error('Failed to record consents:', error);
     } finally {
       setLoading(false);
     }
@@ -116,12 +117,12 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
 
   const initializeAnalytics = () => {
     // Initialize analytics services
-    console.log('[Consent] Analytics initialized');
+    logger.debug('[Consent] Analytics initialized');
   };
 
   const initializeMarketing = () => {
     // Initialize marketing services
-    console.log('[Consent] Marketing initialized');
+    logger.debug('[Consent] Marketing initialized');
   };
 
   if (!showBanner) return null;

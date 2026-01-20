@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -113,7 +114,7 @@ export default function RootLayout({
                 event.message?.includes('Loading chunk') ||
                 event.message?.includes('Failed to load chunk')
               ) {
-                console.warn('Chunk load error detected - reloading to get latest version...');
+                logger.warn('Chunk load error detected - reloading to get latest version...');
                 setTimeout(() => window.location.reload(), 100);
               }
             });

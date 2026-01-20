@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/database/prisma";
 
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    console.log("📚 Fetching bookmarks for user:", userId, "- Found:", bookmarks.length);
+    logger.debug("📚 Fetching bookmarks for user:", userId, "- Found:", bookmarks.length);
 
     return NextResponse.json({
       success: true,
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
       count: bookmarks.length,
     });
   } catch (error) {
-    console.error("Error fetching bookmarks:", error);
+    logger.error("Error fetching bookmarks:", error);
     return NextResponse.json(
       {
         success: false,
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log("� Created/Updated bookmark:", bookmark);
+    logger.debug("� Created/Updated bookmark:", bookmark);
 
     return NextResponse.json({
       success: true,
@@ -86,7 +87,7 @@ export async function POST(request: NextRequest) {
       data: bookmark,
     });
   } catch (error) {
-    console.error("Error creating bookmark:", error);
+    logger.error("Error creating bookmark:", error);
     return NextResponse.json({ success: false, message: "Failed to create bookmark" }, { status: 500 });
   }
 }
@@ -115,7 +116,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
-    console.log("📝 Updated bookmark notes:", bookmark);
+    logger.debug("📝 Updated bookmark notes:", bookmark);
 
     return NextResponse.json({
       success: true,
@@ -123,7 +124,7 @@ export async function PATCH(request: NextRequest) {
       data: bookmark,
     });
   } catch (error) {
-    console.error("Error updating notes:", error);
+    logger.error("Error updating notes:", error);
     return NextResponse.json({ success: false, message: "Failed to update notes" }, { status: 500 });
   }
 }
@@ -148,14 +149,14 @@ export async function DELETE(request: NextRequest) {
       },
     });
 
-    console.log("🗑️ Deleted bookmark:", { userId, questionId });
+    logger.debug("🗑️ Deleted bookmark:", { userId, questionId });
 
     return NextResponse.json({
       success: true,
       message: "Bookmark deleted",
     });
   } catch (error) {
-    console.error("Error deleting bookmark:", error);
+    logger.error("Error deleting bookmark:", error);
 
     // If bookmark doesn't exist, still return success
     if (error instanceof Error && error.message.includes("Record to delete does not exist")) {

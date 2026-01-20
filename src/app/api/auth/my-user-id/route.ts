@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
@@ -40,7 +41,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error getting user ID:", error);
+    logger.error("Error getting user ID:", error);
     return NextResponse.json(
       {
         error: "Failed to get user ID",

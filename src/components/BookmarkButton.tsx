@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Bookmark Button Component
 "use client";
 
@@ -59,7 +60,7 @@ export default function BookmarkButton({
         if (res.ok) setIsBookmarked(true);
       }
     } catch (e) {
-      console.error("Error toggling bookmark", e);
+      logger.error("Error toggling bookmark", e);
       alert("Failed to update bookmark");
     } finally {
       setLoading(false);
@@ -88,7 +89,7 @@ export default function BookmarkButton({
         }
       }
     } catch (e) {
-      console.error("Error saving notes", e);
+      logger.error("Error saving notes", e);
       alert("Failed to save notes");
     } finally {
       setLoading(false);

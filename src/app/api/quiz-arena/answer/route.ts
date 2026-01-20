@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
       correctAnswer: currentQuestion.correctIndex,
     });
   } catch (error) {
-    console.error("Error submitting answer:", error);
+    logger.error("Error submitting answer:", error);
     return NextResponse.json({ error: "Failed to submit answer" }, { status: 500 });
   }
 }

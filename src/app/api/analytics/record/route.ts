@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { ExamSession } from "@/lib/analytics/analytics-v2";
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     const isDatabaseAvailable = await checkDatabaseConnection();
 
     if (!isDatabaseAvailable) {
-      console.log("[Analytics API] Database unavailable, accepting session locally");
+      logger.debug("[Analytics API] Database unavailable, accepting session locally");
       return NextResponse.json({
         success: true,
         message: "Session recorded locally",
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log(`[Analytics API] Session recorded: ${sessionData.topicId} - ${sessionData.score}%`);
+    logger.debug(`[Analytics API] Session recorded: ${sessionData.topicId} - ${sessionData.score}%`);
 
     return NextResponse.json({
       success: true,
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
       storageMode: "database",
     });
   } catch (error) {
-    console.error("[Analytics API] Error recording session:", error);
+    logger.error("[Analytics API] Error recording session:", error);
 
     return NextResponse.json(
       {
@@ -77,7 +78,7 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    console.log(
+    logger.debug(
       "[Analytics API] Database connection failed:",
       error instanceof Error ? error.message : "Unknown error"
     );

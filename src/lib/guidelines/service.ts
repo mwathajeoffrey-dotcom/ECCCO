@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Medical Guidelines and References Management
  * 
@@ -552,7 +553,7 @@ class GuidelinesService {
       });
 
     } catch (error) {
-      console.error('Error loading user data:', error);
+      logger.error('Error loading user data:', error);
     }
   }
 

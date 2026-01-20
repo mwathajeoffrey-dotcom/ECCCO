@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ export default function EvidencePage() {
       const data = await response.json();
       setEvidence(data.references || []);
     } catch (error) {
-      console.error('Error fetching evidence:', error);
+      logger.error('Error fetching evidence:', error);
     } finally {
       setLoading(false);
     }

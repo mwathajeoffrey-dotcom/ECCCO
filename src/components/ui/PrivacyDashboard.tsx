@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -29,7 +30,7 @@ export function PrivacyDashboard({ userId, onSettingsChange }: PrivacyDashboardP
       setSettings(privacySettings);
       setConsents(userConsents);
     } catch (error) {
-      console.error('Failed to load privacy data:', error);
+      logger.error('Failed to load privacy data:', error);
     } finally {
       setLoading(false);
     }
@@ -45,7 +46,7 @@ export function PrivacyDashboard({ userId, onSettingsChange }: PrivacyDashboardP
       await dataProtection.updatePrivacySettings(userId, updatedSettings);
       onSettingsChange?.(updatedSettings);
     } catch (error) {
-      console.error('Failed to update privacy settings:', error);
+      logger.error('Failed to update privacy settings:', error);
     }
   };
 
@@ -63,7 +64,7 @@ export function PrivacyDashboard({ userId, onSettingsChange }: PrivacyDashboardP
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export data:', error);
+      logger.error('Failed to export data:', error);
     }
   };
 
@@ -77,7 +78,7 @@ export function PrivacyDashboard({ userId, onSettingsChange }: PrivacyDashboardP
       alert('All your data has been deleted successfully.');
       // Redirect to home or logout
     } catch (error) {
-      console.error('Failed to delete data:', error);
+      logger.error('Failed to delete data:', error);
       alert('Failed to delete data. Please try again.');
     }
   };
@@ -278,7 +279,7 @@ function ConsentManagementTab({
       const updatedConsents = await dataProtection.getUserConsents(userId);
       onConsentsChange(updatedConsents);
     } catch (error) {
-      console.error('Failed to revoke consent:', error);
+      logger.error('Failed to revoke consent:', error);
     }
   };
 
@@ -415,7 +416,7 @@ function AuditLogTab({ userId }: { userId: string }) {
       const logs = dataProtection.getAuditLogs(userId);
       setAuditLogs(logs.slice(0, 50)); // Show recent 50 logs
     } catch (error) {
-      console.error('Failed to load audit logs:', error);
+      logger.error('Failed to load audit logs:', error);
     } finally {
       setLoading(false);
     }

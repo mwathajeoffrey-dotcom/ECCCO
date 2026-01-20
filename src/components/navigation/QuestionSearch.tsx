@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -38,7 +39,7 @@ export default function QuestionSearch({ onSelect }: QuestionSearchProps) {
           throw new Error('Failed to fetch questions');
         }
         const data = await response.json();
-        console.log('📊 API Response:', data);
+        logger.debug('📊 API Response:', data);
         
         // The API returns 'questions' not 'data'
         const questionsList = data.questions || [];
@@ -52,11 +53,11 @@ export default function QuestionSearch({ onSelect }: QuestionSearchProps) {
             if (q.category) topicsSet.add(q.category);
           });
           const topics = Array.from(topicsSet).sort();
-          console.log('📚 Extracted topics:', topics.length, topics);
+          logger.debug('📚 Extracted topics:', topics.length, topics);
           setAvailableTopics(topics);
         }
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        logger.error('Error fetching questions:', error);
         // Keep empty array on error
       } finally {
         setIsLoading(false);

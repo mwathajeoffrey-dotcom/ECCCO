@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -87,7 +88,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           setIsDeveloper(devData.isDeveloper);
         }
       } catch (error) {
-        console.error("Error checking roles:", error);
+        logger.error("Error checking roles:", error);
       } finally {
         setRolesLoading(false);
       }

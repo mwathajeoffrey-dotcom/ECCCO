@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 "use client";
 
 import { useState, useEffect } from "react";
@@ -90,7 +91,7 @@ export default function ExamInterface() {
         await analytics.initialize();
         analytics.trackPageView("/exam", "Exam Topics Selection");
       } catch (error) {
-        console.error("Error fetching topics:", error);
+        logger.error("Error fetching topics:", error);
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {
@@ -211,9 +212,9 @@ export default function ExamInterface() {
         description: `${questionsArray.length} questions loaded. Good luck!`,
       });
     } catch (error) {
-      console.error("Error fetching questions:", error);
-      console.error("Topic ID attempted:", topicId);
-      console.error("Full error details:", {
+      logger.error("Error fetching questions:", error);
+      logger.error("Topic ID attempted:", topicId);
+      logger.error("Full error details:", {
         message: error instanceof Error ? error.message : "Unknown error",
         topicId,
         timestamp: new Date().toISOString(),
@@ -486,7 +487,7 @@ export default function ExamInterface() {
 
         generateExamPDF(examResults);
       } catch (error) {
-        console.error("Error generating PDF:", error);
+        logger.error("Error generating PDF:", error);
         alert(
           "Sorry, there was an error generating the PDF. Please try again or contact support if the issue persists."
         );
