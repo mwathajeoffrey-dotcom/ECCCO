@@ -15,6 +15,7 @@
 - [x] Database migrations (ContentVersion, AuditLog, CitationVerification)
 - [x] **Task 2: Command Palette** (Jan 20, 2026) - Full implementation with 20+ commands, fuzzy search, keyboard navigation
 - [x] **Task 3: Keyboard Shortcuts Modal** (Jan 20, 2026) - Shift+? modal showing all shortcuts, integrated with Command Palette
+- [x] **Task 4.5: Sign-In Menu Fix** (Jan 20, 2026) - Fixed non-functional dropdown navigation using Next.js router
 
 ---
 
@@ -106,21 +107,20 @@ model UserNote {
 }
 ```
 
-### Task 4.5: Fix Sign-In Menu Functionality 🆕
-- [ ] Fix Header.tsx sign-in button clicks (not navigating to /auth/signin)
-- [ ] Replace custom handleSignIn() logic with proper Clerk navigation
-- [ ] Test "Continue with Google" button
-- [ ] Test "Create Account" button
-- [ ] Verify dropdown closes after click
-- [ ] Test on mobile and desktop
+### Task 4.5: Fix Sign-In Menu Functionality ✅ COMPLETE
+- [x] Fix Header.tsx sign-in button clicks (not navigating to /auth/signin)
+- [x] Replace custom handleSignIn() logic with proper Clerk navigation
+- [x] Test "Continue with Google" button
+- [x] Test "Create Account" button
+- [x] Verify dropdown closes after click
+- [x] Test on mobile and desktop
 - **Priority**: HIGH (User-facing bug)
 - **Effort**: 30 minutes - 1 hour
-- **Assignee**: _________
-- **Due Date**: Today
-- **Dependencies**: None
-- **Files to Modify**:
-  - `src/components/layout/Header.tsx`
-- **Issue**: Sign-in dropdown menu buttons don't properly navigate to auth page
+- **Status**: ✅ COMPLETED (Jan 20, 2026)
+- **Commit**: 2045c2d
+- **Files Modified**:
+  - `src/components/layout/Header.tsx` (replaced window.location with useRouter)
+- **Impact**: Fixed critical authentication flow bug
 
 ### Task 5: Cleanup Temporary Scripts
 - [ ] Create archive directory: `mkdir -p scripts/archived/logger-fixes`
