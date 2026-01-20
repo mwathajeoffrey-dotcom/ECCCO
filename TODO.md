@@ -14,6 +14,7 @@
 - [x] Redis integration complete
 - [x] Database migrations (ContentVersion, AuditLog, CitationVerification)
 - [x] **Task 2: Command Palette** (Jan 20, 2026) - Full implementation with 20+ commands, fuzzy search, keyboard navigation
+- [x] **Task 3: Keyboard Shortcuts Modal** (Jan 20, 2026) - Shift+? modal showing all shortcuts, integrated with Command Palette
 
 ---
 
@@ -52,21 +53,23 @@
 - **Files Modified**:
   - `src/app/layout.tsx` (added CommandPaletteProvider)
 
-### Task 3: Keyboard Shortcuts Modal
-- [ ] Create modal state management in layout
-- [ ] Connect `KeyboardShortcutsHelp` component to Shift+? trigger
-- [ ] Add close on Escape key
-- [ ] Add close on backdrop click
-- [ ] Test modal appearance
-- [ ] Verify all shortcuts listed correctly
+### Task 3: Keyboard Shortcuts Modal ✅ COMPLETE
+- [x] Create modal state management in layout
+- [x] Connect `KeyboardShortcutsHelp` component to Shift+? trigger
+- [x] Add close on Escape key
+- [x] Add close on backdrop click
+- [x] Test modal appearance
+- [x] Verify all shortcuts listed correctly
 - **Priority**: HIGH
 - **Effort**: 2-3 hours
-- **Assignee**: _________
-- **Due Date**: _________
-- **Dependencies**: None
-- **Files to Modify**:
-  - `src/app/layout.tsx`
-  - `src/lib/services/keyboard-shortcuts.tsx`
+- **Status**: ✅ COMPLETED (Jan 20, 2026)
+- **Commit**: 175b064
+- **Files Created**:
+  - `src/components/ui/keyboard-shortcuts-modal.tsx`
+  - `src/components/providers/keyboard-shortcuts-provider.tsx`
+- **Files Modified**:
+  - `src/app/layout.tsx` (added KeyboardShortcutsProvider)
+  - `src/components/ui/command-palette.tsx` (added Show Shortcuts command)
 
 ### Task 4: Notes Save Functionality
 - [ ] Design Prisma schema for UserNote model
