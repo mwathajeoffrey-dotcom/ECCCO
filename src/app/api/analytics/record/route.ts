@@ -79,8 +79,8 @@ async function checkDatabaseConnection(): Promise<boolean> {
     return true;
   } catch (error) {
     logger.debug(
-      "[Analytics API] Database connection failed:",
-      error instanceof Error ? error.message : "Unknown error"
+      "[Analytics API] Database connection failed",
+      { error: error instanceof Error ? error.message : "Unknown error" }
     );
     return false;
   } finally {

@@ -479,7 +479,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
             "Full abstracts and citations available below",
             "Try again in a few moments for AI-generated summary",
           ];
-          logger.error("[Groq] API error:", error.message);
+          logger.error("[Groq] API error", error instanceof Error ? error : new Error(String(error)));
         }
       }
 

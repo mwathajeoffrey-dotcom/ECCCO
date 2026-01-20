@@ -286,7 +286,9 @@ class ECCCOAnalyticsV2 {
         logger.debug("[Analytics] Server sync failed, session stored locally");
       }
     } catch (error) {
-      logger.debug("[Analytics] Server sync failed, session stored locally:", error);
+      logger.debug("[Analytics] Server sync failed, session stored locally", {
+        error: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 

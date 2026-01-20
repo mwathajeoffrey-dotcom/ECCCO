@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    logger.debug("📚 Fetching bookmarks for user:", userId, "- Found:", bookmarks.length);
+    logger.debug("📚 Fetching bookmarks for user", { userId, count: bookmarks.length });
 
     return NextResponse.json({
       success: true,

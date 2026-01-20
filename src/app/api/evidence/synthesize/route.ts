@@ -230,11 +230,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(synthesisWithMeta, { status: 200 });
   } catch (error: any) {
     logger.error("[Evidence Synthesis Error]", error instanceof Error ? error : new Error(String(error)));
-    logger.error("[Error Stack]", error.stack);
-    logger.error("[Error Details]", {
-      message: error.message,
-      name: error.name,
-      code: error.code,
+    logger.error("[Error Stack]", error instanceof Error ? error : undefined, {
+      stack: error?.stack
+    });
+    logger.error("[Error Details]", error instanceof Error ? error : undefined, {
+      message: error?.message,
+      name: error?.name,
+      code: error?.code,
     });
 
     // Handle specific error types

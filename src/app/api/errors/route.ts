@@ -43,9 +43,15 @@ export async function POST(request: NextRequest) {
 
     // Log error based on severity
     if (errorReport.severity === 'critical' || errorReport.severity === 'high') {
-      logger.error('Critical/High severity error:', enhancedReport);
+      const error = errorReport.stack 
+        ? new Error(errorReport.message)
+        : undefined;
+      if (error && errorReport.stack) {
+        error.stack = errorReport.stack;
+      }
+      logger.error('Critical/High severity error', error, enhancedReport as Record<string, any>);
     } else {
-      logger.warn('Error reported:', enhancedReport);
+      logger.warn('Error reported', enhancedReport as Record<string, any>);
     }
 
     // In production, you would typically:

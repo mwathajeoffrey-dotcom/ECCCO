@@ -76,7 +76,9 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    logger.debug('[Analytics Sync API] Database unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    logger.debug('[Analytics Sync API] Database unavailable', { 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
     return false;
   } finally {
     await prisma.$disconnect();

@@ -12,7 +12,7 @@ export async function GET() {
       throw new Error('DATABASE_URL not configured');
     }
     
-    logger.debug('Database URL prefix:', databaseUrl.substring(0, 30) + '...');
+    logger.debug('Database URL prefix', { prefix: databaseUrl.substring(0, 30) + '...' });
     
     // Just test URL parsing first
     const url = new URL(databaseUrl);

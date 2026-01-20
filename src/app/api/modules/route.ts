@@ -5,16 +5,16 @@ import prisma from '@/lib/database/prisma-client';
 export async function GET(request: NextRequest) {
   try {
     logger.debug('📡 Fetching modules with topics...');
-    logger.debug('🔗 DATABASE_URL configured:', !!process.env.DATABASE_URL);
-    logger.debug('🔗 ACCELERATE_URL configured:', !!process.env.ACCELERATE_URL);
-    logger.debug('🔗 Environment:', process.env.NODE_ENV);
+    logger.debug('🔗 DATABASE_URL configured', { configured: !!process.env.DATABASE_URL });
+    logger.debug('🔗 ACCELERATE_URL configured', { configured: !!process.env.ACCELERATE_URL });
+    logger.debug('🔗 Environment', { env: process.env.NODE_ENV });
     
     // Test database connection first
     try {
       await prisma.$queryRaw`SELECT 1 as test`;
       logger.debug('✅ Database connection test successful');
     } catch (connError) {
-      logger.error('❌ Database connection test failed:', connError);
+      logger.error('❌ Database connection test failed', connError instanceof Error ? connError : new Error(String(connError)));
       throw connError;
     }
 
