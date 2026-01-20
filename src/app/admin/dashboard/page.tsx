@@ -30,6 +30,19 @@ interface DashboardStats {
   quizzesCompleted: number;
   feedbackMessages: number;
   systemHealth: "healthy" | "warning" | "error";
+  recentUsers?: number;
+  recentActivity?: number;
+  avgQuestionsPerUser?: number;
+}
+
+interface DashboardData {
+  stats: DashboardStats;
+  growth?: {
+    usersByDay: Array<{ date: Date; count: number }>;
+  };
+  activity?: {
+    topQuestions: Array<{ questionId: string; attempts: number }>;
+  };
 }
 
 export default function AdminDashboard() {
@@ -38,11 +51,14 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
     activeToday: 0,
-    totalQuestions: 5247,
-    totalReferences: 30,
+    totalQuestions: 0,
+    totalReferences: 0,
     quizzesCompleted: 0,
     feedbackMessages: 0,
     systemHealth: "healthy",
+    recentUsers: 0,
+    recentActivity: 0,
+    avgQuestionsPerUser: 0,
   });
 
   useEffect(() => {
@@ -71,19 +87,36 @@ export default function AdminDashboard() {
 
   const fetchDashboardStats = async () => {
     try {
-      // This would fetch real stats from your API
-      // For now, using placeholder data
-      setStats({
-        totalUsers: 156,
-        activeToday: 23,
-        totalQuestions: 5247,
-        totalReferences: 30,
-        quizzesCompleted: 1203,
-        feedbackMessages: 12,
-        systemHealth: "healthy",
+      const response = await fetch("/api/admin/dashboard");
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch stats: ${response.statusText}`);
+      }
+
+      const data: DashboardData = await response.json();
+      
+      setStats(data.stats);
+      
+      logger.info("Dashboard stats loaded", {
+        totalUsers: data.stats.totalUsers,
+        activeToday: data.stats.activeToday,
+        systemHealth: data.stats.systemHealth,
       });
     } catch (err) {
       logger.error("Failed to fetch stats:", err instanceof Error ? err : new Error(String(err)));
+      // Set fallback stats in case of error
+      setStats({
+        totalUsers: 0,
+        activeToday: 0,
+        totalQuestions: 0,
+        totalReferences: 0,
+        quizzesCompleted: 0,
+        feedbackMessages: 0,
+        systemHealth: "error",
+        recentUsers: 0,
+        recentActivity: 0,
+        avgQuestionsPerUser: 0,
+      });
     }
   };
 
@@ -185,9 +218,11 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
-              <span className="text-sm text-green-600 font-medium">+12 this week</span>
+              <span className="text-sm text-green-600 font-medium">
+                +{stats.recentUsers || 0} this week
+              </span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-900">{stats.totalUsers}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{stats.totalUsers.toLocaleString()}</h3>
             <p className="text-gray-600 text-sm mt-1">Total Users</p>
             <p className="text-gray-500 text-xs mt-2">{stats.activeToday} active today</p>
           </div>
@@ -197,11 +232,13 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-purple-600" />
               </div>
-              <span className="text-sm text-green-600 font-medium">+5 new</span>
+              <span className="text-sm text-blue-600 font-medium">
+                {stats.avgQuestionsPerUser || 0}/user avg
+              </span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-900">{stats.totalQuestions}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{stats.totalQuestions.toLocaleString()}</h3>
             <p className="text-gray-600 text-sm mt-1">Practice Questions</p>
-            <p className="text-gray-500 text-xs mt-2">Across 15 topics</p>
+            <p className="text-gray-500 text-xs mt-2">Available in database</p>
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -209,9 +246,9 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
                 <FileText className="w-6 h-6 text-emerald-600" />
               </div>
-              <span className="text-sm text-green-600 font-medium">+2 recent</span>
+              <span className="text-sm text-blue-600 font-medium">Evidence-based</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-900">{stats.totalReferences}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{stats.totalReferences.toLocaleString()}</h3>
             <p className="text-gray-600 text-sm mt-1">Evidence References</p>
             <p className="text-gray-500 text-xs mt-2">Published & curated</p>
           </div>
