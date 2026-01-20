@@ -32,11 +32,20 @@ declare global {
       // Node
       NODE_ENV: 'development' | 'production' | 'test';
       
+      // Next.js Runtime
+      NEXT_RUNTIME?: 'nodejs' | 'edge';
+      
+      // CI/CD
+      CI?: string;
+      
       // Vercel
       VERCEL?: string;
       VERCEL_ENV?: 'development' | 'preview' | 'production';
       VERCEL_URL?: string;
       VERCEL_OIDC_TOKEN?: string;
+      VERCEL_GIT_COMMIT_SHA?: string;
+      VERCEL_GIT_COMMIT_MESSAGE?: string;
+      VERCEL_GIT_COMMIT_AUTHOR_NAME?: string;
     }
   }
 }

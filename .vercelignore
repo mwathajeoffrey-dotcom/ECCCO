@@ -15,3 +15,15 @@ yarn-error.log*
 *.tar.gz
 prisma/dev.db*
 .git
+
+# Backups and test files
+backups/
+*.log
+test-*.js
+verify-*.js
+cleanup-*.js
+fix-*.js
+fix-*.py
+fix-*.sh
+build-output.log
+.env.local.new
