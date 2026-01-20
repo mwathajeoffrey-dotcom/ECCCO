@@ -1,4 +1,3 @@
-import { logger } from '@/lib/logger';
 // Centralized error handling and logging system
 export enum LogLevel {
   ERROR = 0,

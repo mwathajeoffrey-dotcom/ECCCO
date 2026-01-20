@@ -2,10 +2,41 @@ import { logger } from '@/lib/logger';
 /**
  * Caching Service with Redis Support
  * Improves performance by caching API responses and database queries
- * Uses Vercel KV (Redis) for distributed caching in serverless environment
+ * Uses Redis for distributed caching in serverless environment
  */
 
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
+
+// Create Redis client
+let redis: Redis | null = null;
+
+function getRedisClient(): Redis | null {
+  if (redis) return redis;
+  
+  if (process.env.REDIS_URL) {
+    try {
+      redis = new Redis(process.env.REDIS_URL, {
+        maxRetriesPerRequest: 3,
+        enableReadyCheck: false,
+        lazyConnect: true,
+      });
+      
+      redis.on('error', (err: unknown) => {
+        logger.error('Redis connection error', err instanceof Error ? err : new Error(String(err)));
+      });
+      
+      return redis;
+    } catch (error) {
+      logger.warn('Failed to create Redis client, using in-memory cache', { 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      return null;
+    }
+  }
+  
+  logger.warn('REDIS_URL not configured, using in-memory cache');
+  return null;
+}
 
 export interface CacheOptions {
   /**
@@ -48,30 +79,39 @@ export async function setCache<T>(
   const { ttl = 3600, namespace = 'default', tags = [] } = options;
   
   const cacheKey = namespace ? `${namespace}:${key}` : key;
+  const client = getRedisClient();
+  
+  if (!client) {
+    // Fallback to in-memory cache or skip
+    logger.debug('Redis not available, skipping cache set');
+    return;
+  }
   
   try {
+    const serialized = JSON.stringify(value);
+    
     // Store the value with TTL
     if (ttl > 0) {
-      await kv.set(cacheKey, value, { ex: ttl });
+      await client.set(cacheKey, serialized, 'EX', ttl);
     } else {
-      await kv.set(cacheKey, value);
+      await client.set(cacheKey, serialized);
     }
     
     // Store tags for selective invalidation
     if (tags.length > 0) {
       const tagKey = `tags:${cacheKey}`;
-      await kv.set(tagKey, tags, { ex: ttl });
+      await client.set(tagKey, JSON.stringify(tags), 'EX', ttl);
       
       // Add key to each tag's set
       for (const tag of tags) {
-        await kv.sadd(`tag:${tag}`, cacheKey);
+        await client.sadd(`tag:${tag}`, cacheKey);
         if (ttl > 0) {
-          await kv.expire(`tag:${tag}`, ttl);
+          await client.expire(`tag:${tag}`, ttl);
         }
       }
     }
   } catch (error) {
-    logger.error('Cache set error:', error);
+    logger.error('Cache set error', error instanceof Error ? error : new Error('Unknown error'));
     // Don't throw - caching failures shouldn't break the app
   }
 }
@@ -96,12 +136,18 @@ export async function getCache<T>(
   namespace: string = 'default'
 ): Promise<T | null> {
   const cacheKey = namespace ? `${namespace}:${key}` : key;
+  const client = getRedisClient();
+  
+  if (!client) {
+    return null;
+  }
   
   try {
-    const value = await kv.get<T>(cacheKey);
-    return value;
+    const value = await client.get(cacheKey);
+    if (!value) return null;
+    return JSON.parse(value) as T;
   } catch (error) {
-    logger.error('Cache get error:', error);
+    logger.error('Cache get error:', error instanceof Error ? error : new Error('Unknown error'));
     return null;
   }
 }
@@ -117,21 +163,25 @@ export async function deleteCache(
   namespace: string = 'default'
 ): Promise<void> {
   const cacheKey = namespace ? `${namespace}:${key}` : key;
+  const client = getRedisClient();
+  
+  if (!client) return;
   
   try {
-    await kv.del(cacheKey);
+    await client.del(cacheKey);
     
     // Also delete associated tags
     const tagKey = `tags:${cacheKey}`;
-    const tags = await kv.get<string[]>(tagKey);
-    if (tags) {
+    const tagsStr = await client.get(tagKey);
+    if (tagsStr) {
+      const tags = JSON.parse(tagsStr) as string[];
       for (const tag of tags) {
-        await kv.srem(`tag:${tag}`, cacheKey);
+        await client.srem(`tag:${tag}`, cacheKey);
       }
-      await kv.del(tagKey);
+      await client.del(tagKey);
     }
   } catch (error) {
-    logger.error('Cache delete error:', error);
+    logger.error('Cache delete error:', error instanceof Error ? error : new Error('Unknown error'));
   }
 }
 
@@ -147,19 +197,23 @@ export async function deleteCache(
  * ```
  */
 export async function invalidateCacheByTag(tag: string): Promise<void> {
+  const client = getRedisClient();
+  
+  if (!client) return;
+  
   try {
     const tagKey = `tag:${tag}`;
-    const keys = await kv.smembers(tagKey);
+    const keys = await client.smembers(tagKey);
     
     if (keys && keys.length > 0) {
       // Delete all keys with this tag
-      await Promise.all(keys.map(key => kv.del(key)));
+      await Promise.all(keys.map((key: string) => client.del(key)));
       
       // Delete the tag set itself
-      await kv.del(tagKey);
+      await client.del(tagKey);
     }
   } catch (error) {
-    logger.error('Cache invalidation error:', error);
+    logger.error('Cache invalidation error:', error instanceof Error ? error : new Error('Unknown error'));
   }
 }
 
@@ -289,6 +343,6 @@ export async function clearAllCaches(): Promise<void> {
       logger.debug(`Clearing cache namespace: ${namespace}`);
     }
   } catch (error) {
-    logger.error('Failed to clear caches:', error);
+    logger.error('Failed to clear caches:', error instanceof Error ? error : new Error('Unknown error'));
   }
 }

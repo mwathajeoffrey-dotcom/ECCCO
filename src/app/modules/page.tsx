@@ -1,5 +1,6 @@
-import { logger } from '@/lib/logger';
 'use client';
+
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import { BookOpen, Baby, User, ChevronRight, Clock, Target, BarChart, Stethoscope, Heart, Brain, Activity, Loader2, AlertCircle } from 'lucide-react';

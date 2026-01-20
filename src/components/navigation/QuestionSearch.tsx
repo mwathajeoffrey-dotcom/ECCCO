@@ -1,5 +1,6 @@
-import { logger } from '@/lib/logger';
 'use client';
+
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect, useRef } from 'react';
 import { Search, FileText, Tag, ChevronRight, Loader2, ChevronDown } from 'lucide-react';

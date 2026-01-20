@@ -1,5 +1,6 @@
-import { logger } from '@/lib/logger';
 'use client';
+
+import { logger } from '@/lib/logger';
 
 import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone, Monitor } from 'lucide-react';

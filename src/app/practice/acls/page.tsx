@@ -1,10 +1,10 @@
+"use client";
 import { logger } from '@/lib/logger';
 /**
  * ACLS Practice Page
  * Practice Advanced Cardiovascular Life Support questions
  */
 
-"use client";
 
 import { useState, useEffect } from "react";
 import { Activity, Heart, Zap, Clock, CheckCircle, XCircle, ArrowRight } from "lucide-react";

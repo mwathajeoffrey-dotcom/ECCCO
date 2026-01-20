@@ -1,6 +1,6 @@
+"use client";
 import { logger } from '@/lib/logger';
 // Bookmark Button Component
-"use client";
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";

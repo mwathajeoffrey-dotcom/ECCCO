@@ -1,12 +1,12 @@
-import { logger } from '@/lib/logger';
+'use client';
+
 /**
  * Enhanced Analytics Dashboard Component
  * Advanced analytics visualization with PALS-specific insights
  */
 
-'use client';
-
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { 
   TrendingUp, 
   Target, 
@@ -34,7 +34,7 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
         const data = await enhancedAnalytics.generateEnhancedAnalytics();
         setAnalytics(data);
       } catch (error) {
-        logger.error('Failed to load enhanced analytics:', error);
+        logger.error('Failed to load enhanced analytics', error instanceof Error ? error : new Error('Unknown error'));
       } finally {
         setLoading(false);
       }

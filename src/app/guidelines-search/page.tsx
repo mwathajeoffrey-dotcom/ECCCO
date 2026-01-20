@@ -1,5 +1,6 @@
-import { logger } from '@/lib/logger';
 'use client';
+
+import { logger } from '@/lib/logger';
 
 import { useState } from 'react';
 import { Search, FileText, Download, ExternalLink, Filter, BookOpen, Heart, Globe, ChevronDown, ChevronUp, Activity, Pill, Clock, AlertCircle } from 'lucide-react';

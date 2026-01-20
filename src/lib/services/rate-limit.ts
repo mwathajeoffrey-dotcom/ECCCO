@@ -2,10 +2,41 @@ import { logger } from '@/lib/logger';
 /**
  * Rate Limiting Service with Redis Support
  * Prevents API abuse and DDoS attacks in serverless environment
- * Uses Vercel KV (Redis) for distributed rate limiting
+ * Uses Redis for distributed rate limiting
  */
 
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
+
+// Create Redis client
+let redis: Redis | null = null;
+
+function getRedisClient(): Redis | null {
+  if (redis) return redis;
+  
+  if (process.env.REDIS_URL) {
+    try {
+      redis = new Redis(process.env.REDIS_URL, {
+        maxRetriesPerRequest: 3,
+        enableReadyCheck: false,
+        lazyConnect: true,
+      });
+      
+      redis.on('error', (err: unknown) => {
+        logger.error('Redis connection error', err instanceof Error ? err : new Error(String(err)));
+      });
+      
+      return redis;
+    } catch (error) {
+      logger.warn('Failed to create Redis client for rate limiting', { 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      return null;
+    }
+  }
+  
+  logger.warn('REDIS_URL not configured, rate limiting disabled');
+  return null;
+}
 
 export interface RateLimitConfig {
   /**
@@ -87,6 +118,7 @@ export async function checkRateLimit(
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
   const { limit, window, identifier, namespace = 'global' } = config;
+  const client = getRedisClient();
   
   // Create unique key for this rate limit
   const key = `ratelimit:${namespace}:${identifier}`;
@@ -97,13 +129,24 @@ export async function checkRateLimit(
   // Calculate reset time (start of next window)
   const resetAt = now + window;
   
+  // If Redis not available, allow the request
+  if (!client) {
+    return {
+      allowed: true,
+      remaining: limit,
+      limit,
+      resetAt,
+      current: 0,
+    };
+  }
+  
   try {
     // Use Redis INCR for atomic counter increment
-    const current = await kv.incr(key);
+    const current = await client.incr(key);
     
     // Set expiry on first request
     if (current === 1) {
-      await kv.expire(key, window);
+      await client.expire(key, window);
     }
     
     const allowed = current <= limit;
@@ -119,7 +162,7 @@ export async function checkRateLimit(
   } catch (error) {
     // Fallback: Allow request if Redis is unavailable
     // Log error for monitoring
-    logger.error('Rate limit check failed:', error);
+    logger.error('Rate limit check failed:', error instanceof Error ? error : new Error('Unknown error'));
     
     return {
       allowed: true,
@@ -143,11 +186,14 @@ export async function resetRateLimit(
   namespace: string = 'global'
 ): Promise<void> {
   const key = `ratelimit:${namespace}:${identifier}`;
+  const client = getRedisClient();
+  
+  if (!client) return;
   
   try {
-    await kv.del(key);
+    await client.del(key);
   } catch (error) {
-    logger.error('Failed to reset rate limit:', error);
+    logger.error('Failed to reset rate limit:', error instanceof Error ? error : new Error('Unknown error'));
     throw error;
   }
 }
@@ -166,9 +212,19 @@ export async function getRateLimitStatus(
   limit: number
 ): Promise<Pick<RateLimitResult, 'current' | 'remaining' | 'limit'>> {
   const key = `ratelimit:${namespace}:${identifier}`;
+  const client = getRedisClient();
+  
+  if (!client) {
+    return {
+      current: 0,
+      remaining: limit,
+      limit,
+    };
+  }
   
   try {
-    const current = (await kv.get<number>(key)) || 0;
+    const currentStr = await client.get(key);
+    const current = currentStr ? parseInt(currentStr, 10) : 0;
     const remaining = Math.max(0, limit - current);
     
     return {
@@ -177,7 +233,7 @@ export async function getRateLimitStatus(
       limit,
     };
   } catch (error) {
-    logger.error('Failed to get rate limit status:', error);
+    logger.error('Failed to get rate limit status:', error instanceof Error ? error : new Error('Unknown error'));
     return {
       current: 0,
       remaining: limit,
