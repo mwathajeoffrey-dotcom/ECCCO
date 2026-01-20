@@ -15,6 +15,7 @@
 - [x] Database migrations (ContentVersion, AuditLog, CitationVerification)
 - [x] **Task 2: Command Palette** (Jan 20, 2026) - Full implementation with 20+ commands, fuzzy search, keyboard navigation
 - [x] **Task 3: Keyboard Shortcuts Modal** (Jan 20, 2026) - Shift+? modal showing all shortcuts, integrated with Command Palette
+- [x] **Task 4: Notes Save Functionality** (Jan 20, 2026) - Database-backed notes with autosave, CRUD API, save status indicator
 - [x] **Task 4.5: Sign-In Menu Fix** (Jan 20, 2026) - Fixed non-functional dropdown navigation using Next.js router
 - [x] **CSP Authentication Fix** (Jan 20, 2026) - CRITICAL: Fixed Content Security Policy blocking Clerk auth in production
 - [x] **Task 5: Cleanup Scripts** (Jan 20, 2026) - Archived 30+ temporary scripts into organized structure
@@ -74,25 +75,36 @@
   - `src/app/layout.tsx` (added KeyboardShortcutsProvider)
   - `src/components/ui/command-palette.tsx` (added Show Shortcuts command)
 
-### Task 4: Notes Save Functionality
-- [ ] Design Prisma schema for UserNote model
-- [ ] Create migration file
-- [ ] Run migration: `npx prisma migrate dev --name add-user-notes`
-- [ ] Generate Prisma client: `npx prisma generate`
-- [ ] Create API route: `/src/app/api/notes/route.ts`
-  - [ ] GET - fetch user notes
-  - [ ] POST - create note
-  - [ ] PATCH - update note
-  - [ ] DELETE - delete note
-- [ ] Add autosave logic with debounce (500ms)
-- [ ] Add sync status indicator (Saving..., Saved)
-- [ ] Handle offline scenarios
-- [ ] Test CRUD operations
+### Task 4: Notes Save Functionality ✅ COMPLETE
+- [x] Design Prisma schema for UserNote model
+- [x] Create migration file
+- [x] Run migration: `npx prisma migrate dev --name add-user-notes`
+- [x] Generate Prisma client: `npx prisma generate`
+- [x] Create API route: `/src/app/api/notes/route.ts`
+  - [x] GET - fetch user notes
+  - [x] POST - create note
+  - [x] PATCH - update note
+  - [x] DELETE - delete note
+- [x] Add autosave logic with debounce (500ms)
+- [x] Add sync status indicator (Saving..., Saved)
+- [x] Handle offline scenarios
+- [x] Test CRUD operations
 - **Priority**: HIGH
 - **Effort**: 3-4 hours
-- **Assignee**: _________
-- **Due Date**: _________
-- **Dependencies**: Database access
+- **Status**: ✅ COMPLETED (Jan 20, 2026)
+- **Commit**: 48f27e5
+- **Files Created**:
+  - `src/app/api/notes/route.ts` (GET, POST)
+  - `src/app/api/notes/[id]/route.ts` (PATCH, DELETE)
+- **Files Modified**:
+  - `prisma/schema.prisma` (added UserNote model)
+  - `src/app/notes/page.tsx` (replaced mock data with API integration)
+- **Features Implemented**:
+  - Full CRUD operations with database persistence
+  - Autosave with 500ms debounce for seamless UX
+  - Real-time save status indicator (Saving.../Saved)
+  - Edit modal with form validation
+  - User authentication and authorization
 - **Schema Addition**:
 ```prisma
 model UserNote {
