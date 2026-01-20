@@ -137,7 +137,7 @@ export default function HostQuizPage() {
 
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
-        logger.error("Session has no questions:", data);
+        logger.error("Session has no questions", data instanceof Error ? data : new Error(String(data)));
         setError("This quiz has no questions configured.");
         setLoading(false);
         return;
@@ -156,7 +156,7 @@ export default function HostQuizPage() {
       setParticipants(data.participants || []);
       setLoading(false);
     } catch (err) {
-      logger.error("Error fetching session:", err);
+      logger.error("Error fetching session:", err instanceof Error ? err : new Error(String(err)));
       setError("Failed to load quiz session");
       setLoading(false);
     }
@@ -194,7 +194,7 @@ export default function HostQuizPage() {
         }
       }
     } catch (err) {
-      logger.error("Error starting quiz:", err);
+      logger.error("Error starting quiz:", err instanceof Error ? err : new Error(String(err)));
     }
   };
 
@@ -217,7 +217,7 @@ export default function HostQuizPage() {
         }
       }
     } catch (err) {
-      logger.error("Error moving to next question:", err);
+      logger.error("Error moving to next question:", err instanceof Error ? err : new Error(String(err)));
     }
   };
 
@@ -232,7 +232,7 @@ export default function HostQuizPage() {
           fetchSession();
         }
       } catch (err) {
-        logger.error("Error ending quiz:", err);
+        logger.error("Error ending quiz:", err instanceof Error ? err : new Error(String(err)));
       }
     }
   };

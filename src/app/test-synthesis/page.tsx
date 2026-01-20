@@ -21,7 +21,7 @@ export default function TestSynthesisPage() {
     setSynthesis(null);
 
     try {
-      logger.debug("Searching for:", query);
+      logger.debug("Searching for", { value: query });
 
       const response = await fetch("/api/evidence/synthesize", {
         method: "POST",
@@ -40,10 +40,10 @@ export default function TestSynthesisPage() {
       }
 
       const data = await response.json();
-      logger.debug("Synthesis received:", data);
+      logger.debug("Synthesis received", { value: data });
       setSynthesis(data);
     } catch (err: any) {
-      logger.error("Search error:", err);
+      logger.error("Search error:", err instanceof Error ? err : new Error(String(err)));
       setError(err.message);
     } finally {
       setLoading(false);

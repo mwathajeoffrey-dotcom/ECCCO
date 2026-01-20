@@ -182,9 +182,9 @@ export function auditLog(action: string, userId?: string, metadata?: object) {
   
   // In production, send to external logging service
   if (process.env.NODE_ENV === 'production') {
-    logger.debug('AUDIT:', JSON.stringify(logEntry))
+    logger.debug('AUDIT:', { data: JSON.parse(JSON.stringify(logEntry)) })
   } else {
-    logger.debug('AUDIT:', logEntry)
+    logger.debug('AUDIT', { value: logEntry })
   }
 }
 

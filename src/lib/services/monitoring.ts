@@ -53,7 +53,6 @@ class MonitoringService {
     if (this.isProduction) {
       Sentry.metrics.distribution(name, value, {
         unit,
-        tags,
       });
     }
   }
@@ -95,7 +94,6 @@ class MonitoringService {
     if (this.isProduction) {
       Sentry.metrics.distribution(`web-vital.${name.toLowerCase()}`, value, {
         unit: 'millisecond',
-        tags: { rating },
       });
     }
   }
@@ -210,11 +208,9 @@ class MonitoringService {
     });
     
     if (this.isProduction) {
-      Sentry.metrics.increment('cache.operation', 1, {
-        tags: {
-          result: hit ? 'hit' : 'miss',
-          namespace,
-        },
+      // Sentry metrics API - using gauge instead of increment
+      Sentry.metrics.gauge('cache.operation', hit ? 1 : 0, {
+        unit: 'none',
       });
     }
   }

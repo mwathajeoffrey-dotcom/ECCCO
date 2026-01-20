@@ -33,7 +33,7 @@ export async function GET() {
   } catch (error) {
     // Check for specific database errors
     if (error instanceof Prisma.PrismaClientInitializationError) {
-      logger.error("Database connection failed in topics API", error);
+      logger.error("Database connection failed in topics API", error instanceof Error ? error : new Error(String(error)));
       return NextResponse.json({ error: "Database temporarily unavailable" }, { status: 503 });
     }
 

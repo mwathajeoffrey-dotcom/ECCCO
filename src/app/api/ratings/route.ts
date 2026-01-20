@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.debug("⭐ Created/Updated rating:", rating);
+    logger.debug("⭐ Created/Updated rating", { rating });
 
     return NextResponse.json({
       success: true,

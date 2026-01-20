@@ -8,15 +8,17 @@ import React from 'react';
 
 interface SkeletonProps {
   className?: string;
+  style?: React.CSSProperties;
 }
 
 /**
  * Base Skeleton component
  */
-export function Skeleton({ className = '' }: SkeletonProps) {
+export function Skeleton({ className = '', style }: SkeletonProps) {
   return (
     <div
       className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`}
+      style={style}
       role="status"
       aria-label="Loading..."
     />

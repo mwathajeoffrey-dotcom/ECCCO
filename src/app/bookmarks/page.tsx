@@ -54,7 +54,7 @@ export default function BookmarksPage() {
       }
 
       const data = await response.json();
-      logger.debug("📚 Fetched bookmarks:", data);
+      logger.debug("📚 Fetched bookmarks", { value: data });
       if (data.success && data.bookmarks) {
         setBookmarks(data.bookmarks);
       }

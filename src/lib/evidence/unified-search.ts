@@ -582,7 +582,7 @@ export async function searchStrategicEvidence(
   const finalArticles = deduplicatedArticles.slice(0, maxResults);
   logger.debug(`[Strategic Search] Final selection: ${finalArticles.length} articles (max: ${maxResults})`);
   logger.debug(`[Strategic Search] Complete: ${deduplicatedArticles.length} unique articles from ${totalResults} total`);
-  logger.debug("[Strategic Search] Breakdown:", sourceBreakdown);
+  logger.debug("[Strategic Search] Breakdown", { value: sourceBreakdown });
 
   return {
     articles: finalArticles,

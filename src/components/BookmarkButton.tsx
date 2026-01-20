@@ -60,7 +60,7 @@ export default function BookmarkButton({
         if (res.ok) setIsBookmarked(true);
       }
     } catch (e) {
-      logger.error("Error toggling bookmark", e);
+      logger.error("Error toggling bookmark", e instanceof Error ? e : new Error(String(e)));
       alert("Failed to update bookmark");
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ export default function BookmarkButton({
         }
       }
     } catch (e) {
-      logger.error("Error saving notes", e);
+      logger.error("Error saving notes", e instanceof Error ? e : new Error(String(e)));
       alert("Failed to save notes");
     } finally {
       setLoading(false);

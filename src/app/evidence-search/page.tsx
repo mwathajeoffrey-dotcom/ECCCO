@@ -64,7 +64,7 @@ export default function EvidenceSearchPage() {
       try {
         setSearchHistory(JSON.parse(saved));
       } catch (e) {
-        logger.error("Failed to load search history:", e);
+        logger.error("Failed to load search history:", e instanceof Error ? e : new Error(String(e)));
       }
     }
   }, []);

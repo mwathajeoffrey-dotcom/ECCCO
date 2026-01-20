@@ -99,7 +99,7 @@ export default function PlayQuizPage() {
 
       // Validate session data
       if (!data.questions || data.questions.length === 0) {
-        logger.error("Session has no questions:", data);
+        logger.error("Session has no questions", data instanceof Error ? data : new Error(String(data)));
         const errorMsg = ERROR_MESSAGES.NO_QUESTIONS;
         toast.error(errorMsg.title, { description: errorMsg.message });
         setError("This quiz has no questions. Please contact the host.");
@@ -131,7 +131,7 @@ export default function PlayQuizPage() {
 
       setLoading(false);
     } catch (err) {
-      logger.error("Error fetching session:", err);
+      logger.error("Error fetching session:", err instanceof Error ? err : new Error(String(err)));
       const errorMsg = getErrorFromFetch(err);
       if (!error) {
         // Only show toast on initial error
@@ -167,7 +167,7 @@ export default function PlayQuizPage() {
         toast.error(errorMsg.title, { description: data.error || errorMsg.message });
       }
     } catch (err) {
-      logger.error("Error joining quiz:", err);
+      logger.error("Error joining quiz:", err instanceof Error ? err : new Error(String(err)));
       const errorMsg = getErrorFromFetch(err);
       toast.error(errorMsg.title, { description: errorMsg.message });
     }
@@ -217,7 +217,7 @@ export default function PlayQuizPage() {
         toast.error(errorMsg.title, { description: errorMsg.message });
       }
     } catch (err) {
-      logger.error("Error submitting answer:", err);
+      logger.error("Error submitting answer:", err instanceof Error ? err : new Error(String(err)));
       const errorMsg = getErrorFromFetch(err);
       toast.error(errorMsg.title, { description: errorMsg.message });
     }

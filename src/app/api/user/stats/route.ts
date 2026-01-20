@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    logger.debug("[Dashboard API] Fetching exam sessions for user:", userId);
+    logger.debug("[Dashboard API] Fetching exam sessions for user", { userId });
 
     // Get user exam sessions directly with Clerk userId
     let examSessions;
@@ -20,9 +20,9 @@ export async function GET() {
         where: { userId },
         orderBy: { createdAt: "desc" },
       });
-      logger.debug("[Dashboard API] Found", examSessions.length, "exam sessions");
+      logger.debug("[Dashboard API] Found exam sessions", { count: examSessions.length });
     } catch (dbError) {
-      logger.error("[Dashboard API] Database error fetching exam sessions:", dbError);
+      logger.error("[Dashboard API] Database error fetching exam sessions", dbError instanceof Error ? dbError : new Error(String(dbError)));
       throw new Error(`Database error: ${dbError instanceof Error ? dbError.message : "Unknown DB error"}`);
     }
 
@@ -54,7 +54,7 @@ export async function GET() {
 
     // Get all unique topic IDs
     const topicIds = [...new Set(examSessions.map((session: any) => session.topicId))];
-    logger.debug("[Dashboard API] Found", topicIds.length, "unique topics");
+    logger.debug("[Dashboard API] Found unique topics", { count: topicIds.length });
 
     // Fetch topics to get their names (only if we have topic IDs)
     let topics;
@@ -67,9 +67,9 @@ export async function GET() {
               },
             })
           : [];
-      logger.debug("[Dashboard API] Fetched", topics.length, "topic records");
+      logger.debug("[Dashboard API] Fetched topic records", { count: topics.length });
     } catch (dbError) {
-      logger.error("[Dashboard API] Database error fetching topics:", dbError);
+      logger.error("[Dashboard API] Database error fetching topics", dbError instanceof Error ? dbError : new Error(String(dbError)));
       throw new Error(
         `Database error fetching topics: ${dbError instanceof Error ? dbError.message : "Unknown DB error"}`
       );
@@ -105,7 +105,7 @@ export async function GET() {
         }
       } catch (e) {
         // If JSON parsing fails, skip this session
-        logger.error("Failed to parse session questions:", e);
+        logger.error("Failed to parse session questions", e instanceof Error ? e : new Error(String(e)));
       }
     });
 
@@ -168,7 +168,7 @@ export async function GET() {
           }
         }
       } catch (e) {
-        logger.error("Failed to parse session questions for topic:", e);
+        logger.error("Failed to parse session questions for topic", e instanceof Error ? e : new Error(String(e)));
       }
 
       if (session.createdAt > topic.lastAttempted) {
@@ -209,9 +209,9 @@ export async function GET() {
       topicPerformance: performanceByTopic,
     });
   } catch (error) {
-    logger.error("Error fetching user stats:", error);
-    logger.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
-    logger.error("Error details:", JSON.stringify(error, null, 2));
+    logger.error("Error fetching user stats", error instanceof Error ? error : new Error(String(error)));
+    logger.debug("Error stack", { stack: error instanceof Error ? error.stack : "No stack trace" });
+    logger.debug("Error details", { details: JSON.stringify(error, null, 2) });
     return NextResponse.json(
       {
         error: "Internal server error",

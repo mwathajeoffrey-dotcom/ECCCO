@@ -407,7 +407,7 @@ model CitationVerification {
   verifiedBy      String?  // User or system that verified
   nextCheckDate   DateTime? // When to check next
   createdAt       DateTime @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime @updatedAt
 
   @@index([evidenceId])
   @@index([status])

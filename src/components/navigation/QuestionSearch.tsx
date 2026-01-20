@@ -40,7 +40,7 @@ export default function QuestionSearch({ onSelect }: QuestionSearchProps) {
           throw new Error('Failed to fetch questions');
         }
         const data = await response.json();
-        logger.debug('📊 API Response:', data);
+        logger.debug('📊 API Response', { value: data });
         
         // The API returns 'questions' not 'data'
         const questionsList = data.questions || [];
@@ -54,7 +54,7 @@ export default function QuestionSearch({ onSelect }: QuestionSearchProps) {
             if (q.category) topicsSet.add(q.category);
           });
           const topics = Array.from(topicsSet).sort();
-          logger.debug('📚 Extracted topics:', topics.length, topics);
+          logger.debug('📚 Extracted topics', { count: topics.length, topics });
           setAvailableTopics(topics);
         }
       } catch (error) {

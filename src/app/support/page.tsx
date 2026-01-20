@@ -60,10 +60,10 @@ export default function SupportPage() {
         }),
       });
 
-      logger.debug("[Support Form] Response status:", response.status);
+      logger.debug("[Support Form] Response status", { value: response.status });
 
       const data = await response.json();
-      logger.debug("[Support Form] Response data:", data);
+      logger.debug("[Support Form] Response data", { value: data });
 
       if (!response.ok) {
         throw new Error(data.error || data.details || "Failed to submit feedback");
@@ -80,7 +80,7 @@ export default function SupportPage() {
         message: "",
       });
     } catch (err) {
-      logger.error("[Support Form] Submission error:", err);
+      logger.error("[Support Form] Submission error:", err instanceof Error ? err : new Error(String(err)));
 
       // Provide user-friendly error messages
       let errorMessage = "Failed to submit feedback. Please try again.";

@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    logger.debug("� Created/Updated bookmark:", bookmark);
+    logger.debug("� Created/Updated bookmark", { value: bookmark });
 
     return NextResponse.json({
       success: true,
@@ -116,7 +116,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
-    logger.debug("📝 Updated bookmark notes:", bookmark);
+    logger.debug("📝 Updated bookmark notes", { value: bookmark });
 
     return NextResponse.json({
       success: true,

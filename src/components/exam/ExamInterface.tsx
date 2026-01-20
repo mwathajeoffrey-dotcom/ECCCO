@@ -212,9 +212,9 @@ export default function ExamInterface() {
         description: `${questionsArray.length} questions loaded. Good luck!`,
       });
     } catch (error) {
-      logger.error("Error fetching questions:", error instanceof Error ? error : new Error(String(error)));
-      logger.error("Topic ID attempted:", topicId);
-      logger.error("Full error details:", {
+      logger.error("Error fetching questions", error instanceof Error ? error : new Error(String(error)));
+      logger.debug("Topic ID attempted", { topicId });
+      logger.debug("Full error details", {
         message: error instanceof Error ? error.message : "Unknown error",
         topicId,
         timestamp: new Date().toISOString(),

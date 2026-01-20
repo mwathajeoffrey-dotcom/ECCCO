@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     // Check for specific database errors
     if (error instanceof Prisma.PrismaClientInitializationError) {
-      logger.error("Database connection failed in questions API", error);
+      logger.error("Database connection failed in questions API", error instanceof Error ? error : new Error(String(error)));
       return NextResponse.json(
         { success: false, error: "Database temporarily unavailable. Please try again." },
         { status: 503 }

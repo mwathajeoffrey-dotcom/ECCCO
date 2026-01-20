@@ -8,7 +8,7 @@ export const analytics = {
   
   track: (event: string, properties?: any) => {
     if (typeof window !== 'undefined') {
-      logger.debug('📊 Analytics:', event, properties);
+      logger.debug('📊 Analytics', { event, properties });
     }
   },
   

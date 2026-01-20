@@ -99,7 +99,7 @@ export function trackWebVitals() {
     try {
       const lcpObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          logger.debug('LCP:', entry);
+          logger.debug('LCP', { value: entry });
         }
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -111,7 +111,7 @@ export function trackWebVitals() {
     try {
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          logger.debug('FID:', entry);
+          logger.debug('FID', { value: entry });
         }
       });
       fidObserver.observe({ entryTypes: ['first-input'] });
@@ -124,7 +124,7 @@ export function trackWebVitals() {
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (!(entry as any).hadRecentInput) {
-            logger.debug('CLS:', entry);
+            logger.debug('CLS', { value: entry });
           }
         }
       });

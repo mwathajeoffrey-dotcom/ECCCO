@@ -77,9 +77,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     }
 
     // Log the error to console
-    logger.error('Component Error:', {
+    logger.error('Component Error', error instanceof Error ? error : new Error(String(error)), {
       componentName,
-      error,
       props: this.props,
       errorInfo: errorInfo.componentStack,
       retryCount: this.state.retryCount,
@@ -93,7 +92,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     if (process.env.NODE_ENV === 'development') {
       console.group(`🚨 Error in ${componentName}`);
       logger.error('Error:', error instanceof Error ? error : new Error(String(error)));
-      logger.error('Error Info:', errorInfo);
+      logger.error('Error Info', errorInfo instanceof Error ? errorInfo : new Error(String(errorInfo)));
       logger.error('Component Stack:', errorInfo.componentStack);
       console.groupEnd();
     }
@@ -271,8 +270,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                 {isDevelopment && (
                   <button
                     onClick={() => {
-                      logger.debug('Error State:', this.state);
-                      logger.debug('Props:', this.props);
+                      logger.debug('Error State', { value: this.state });
+                      logger.debug('Props', { value: this.props });
                     }}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                   >

@@ -1,4 +1,3 @@
-import { logger } from '@/lib/logger';
 /**
  * Structured Logger Service
  * Replaces console.log with proper logging that includes context, levels, and timestamps

@@ -143,7 +143,7 @@ Generate ONLY valid JSON, no markdown formatting.`;
     return parsed as DecisionTree;
   } catch (parseError) {
     logger.error("[Decision Support] Failed to parse AI response, using fallback");
-    logger.error("AI Response:", response);
+    logger.debug("AI Response", { response });
     return generateBasicDecisionTree(synthesis, patientContext);
   }
 }

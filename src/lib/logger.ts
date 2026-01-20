@@ -81,8 +81,25 @@ class Logger {
     return formatted;
   }
 
-  error(message: string, error?: Error, metadata?: Record<string, any>) {
+  error(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
+    
+    // Handle console.log-style arguments for backward compatibility
+    let error: Error | undefined;
+    let metadata: Record<string, any> | undefined;
+    
+    if (args.length > 0) {
+      if (args[0] instanceof Error) {
+        error = args[0];
+        metadata = args[1];
+      } else if (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0])) {
+        metadata = args[0];
+      } else {
+        // Convert remaining args to metadata
+        error = args[0] instanceof Error ? args[0] : undefined;
+        metadata = { args: args.filter((arg, i) => i === 0 ? !(arg instanceof Error) : true) };
+      }
+    }
     
     const entry = this.createLogEntry(LogLevel.ERROR, message, error, metadata);
     
@@ -91,28 +108,46 @@ class Logger {
       this.sendToExternalLogger(entry);
     }
     
-    logger.error(this.formatLog(entry));
+    console.error(this.formatLog(entry));
   }
 
-  warn(message: string, metadata?: Record<string, any>) {
+  warn(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.WARN)) return;
     
+    const metadata = args.length > 0 
+      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
+          ? args[0] 
+          : { args })
+      : undefined;
+    
     const entry = this.createLogEntry(LogLevel.WARN, message, undefined, metadata);
-    logger.warn(this.formatLog(entry));
+    console.warn(this.formatLog(entry));
   }
 
-  info(message: string, metadata?: Record<string, any>) {
+  info(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.INFO)) return;
+    
+    const metadata = args.length > 0 
+      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
+          ? args[0] 
+          : { args })
+      : undefined;
     
     const entry = this.createLogEntry(LogLevel.INFO, message, undefined, metadata);
     console.info(this.formatLog(entry));
   }
 
-  debug(message: string, metadata?: Record<string, any>) {
+  debug(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
     
+    const metadata = args.length > 0 
+      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
+          ? args[0] 
+          : { args })
+      : undefined;
+    
     const entry = this.createLogEntry(LogLevel.DEBUG, message, undefined, metadata);
-    logger.debug(this.formatLog(entry));
+    console.log(this.formatLog(entry));
   }
 
   private async sendToExternalLogger(entry: LogEntry) {

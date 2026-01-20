@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (error instanceof Prisma.PrismaClientInitializationError) {
-      logger.error("Database connection failed in feedback API", error);
+      logger.error("Database connection failed in feedback API", error instanceof Error ? error : new Error(String(error)));
       return NextResponse.json({ error: "Database temporarily unavailable. Please try again." }, { status: 503 });
     }
 

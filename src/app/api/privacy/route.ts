@@ -59,7 +59,7 @@ export async function recordConsent(request: NextRequest) {
 
     // In production, this would be stored in your database
     // For demo purposes, we'll simulate the storage
-    logger.debug('[Privacy API] Consent recorded:', consentRecord);
+    logger.debug('[Privacy API] Consent recorded', { consentRecord });
 
     // Log audit event
     const auditEvent = {
@@ -75,7 +75,7 @@ export async function recordConsent(request: NextRequest) {
     };
 
     // Store audit event (in production, this would go to your audit log system)
-    logger.debug('[Privacy API] Audit event:', auditEvent);
+    logger.debug('[Privacy API] Audit event', { auditEvent });
 
     return NextResponse.json({
       success: true,
@@ -410,7 +410,7 @@ function logAuditEvent(
   };
 
   // In production, this would be stored in your audit log system
-  logger.debug('[Privacy API] Audit event logged:', auditEvent);
+  logger.debug('[Privacy API] Audit event logged', { auditEvent });
 }
 
 // Route handlers
