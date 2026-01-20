@@ -427,7 +427,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
       });
     } catch (error) {
       // Enhanced error handling with specific error types
-      logger.error("[Groq] AI generation failed:", error);
+      logger.error("[Groq] AI generation failed:", error instanceof Error ? error : new Error(String(error)));
 
       let errorMessage = "Evidence synthesis temporarily unavailable";
       let keyPointsGuidance: string[] = [];
@@ -529,7 +529,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
 
     return NextResponse.json(result);
   } catch (error) {
-    logger.error("Consensus search error:", error);
+    logger.error("Consensus search error:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         error: "Search failed",

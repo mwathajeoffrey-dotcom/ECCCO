@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       storageMode: "database",
     });
   } catch (error) {
-    logger.error("[Analytics API] Error recording session:", error);
+    logger.error("[Analytics API] Error recording session:", error instanceof Error ? error : new Error(String(error)));
 
     return NextResponse.json(
       {

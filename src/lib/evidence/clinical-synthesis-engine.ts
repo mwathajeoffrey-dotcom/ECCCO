@@ -376,7 +376,7 @@ DO NOT write research summaries or study descriptions. Write treatment protocols
     // Parse AI response into structured sections
     return parseSynthesisResponse(aiResponse, references);
   } catch (error) {
-    logger.error("[Groq] Synthesis failed:", error);
+    logger.error("[Groq] Synthesis failed:", error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }
@@ -696,7 +696,7 @@ async function extractClinicalInsights(articles: any[], references: Reference[])
           logger.debug(`✓ Full text retrieved for PMC${article.pmcid}`);
         }
       } catch (error) {
-        logger.error(`Failed to fetch full text for PMC${article.pmcid}:`, error);
+        logger.error(`Failed to fetch full text for PMC${article.pmcid}:`, error instanceof Error ? error : new Error(String(error)));
       }
     }
 

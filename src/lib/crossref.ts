@@ -152,7 +152,7 @@ export async function searchCrossRef(
       totalResults: data.message['total-results'] || 0,
     };
   } catch (error) {
-    logger.error('CrossRef search error:', error);
+    logger.error('CrossRef search error:', error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }
@@ -200,7 +200,7 @@ export async function getArticleByDOI(doi: string): Promise<CrossRefArticle | nu
       subject: item.subject || [],
     };
   } catch (error) {
-    logger.error('CrossRef DOI lookup error:', error);
+    logger.error('CrossRef DOI lookup error:', error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }

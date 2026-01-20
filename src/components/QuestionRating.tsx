@@ -58,7 +58,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
         throw new Error("Failed to submit rating");
       }
     } catch (error) {
-      logger.error("Error submitting rating:", error);
+      logger.error("Error submitting rating:", error instanceof Error ? error : new Error(String(error)));
       alert("Failed to submit rating");
     } finally {
       setLoading(false);
@@ -87,7 +87,7 @@ export default function QuestionRating({ questionId }: QuestionRatingProps) {
         setTimeout(() => setSubmitted(false), 3000);
       }
     } catch (error) {
-      logger.error("Error submitting feedback:", error);
+      logger.error("Error submitting feedback:", error instanceof Error ? error : new Error(String(error)));
     } finally {
       setLoading(false);
     }

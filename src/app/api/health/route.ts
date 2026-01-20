@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     })
     
   } catch (error) {
-    logger.error('Health check failed:', error)
+    logger.error('Health check failed:', error instanceof Error ? error : new Error(String(error)))
     
     return NextResponse.json({
       status: 'unhealthy',
@@ -80,7 +80,7 @@ async function checkDatabase(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`
     return true
   } catch (error) {
-    logger.error('Database health check failed:', error)
+    logger.error('Database health check failed:', error instanceof Error ? error : new Error(String(error)))
     return false
   }
 }

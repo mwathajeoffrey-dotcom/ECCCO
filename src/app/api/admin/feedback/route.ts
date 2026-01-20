@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(feedback);
   } catch (error) {
-    logger.error("Error fetching feedback:", error);
+    logger.error("Error fetching feedback:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to fetch feedback" }, { status: 500 });
   }
 }

@@ -19,7 +19,7 @@ export async function GET() {
       error: status.error,
     });
   } catch (error) {
-    logger.error("Error checking admin status:", error);
+    logger.error("Error checking admin status:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         isAdmin: false,

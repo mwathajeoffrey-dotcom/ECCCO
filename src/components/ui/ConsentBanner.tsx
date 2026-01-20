@@ -44,7 +44,7 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
         setShowBanner(true);
       }
     } catch (error) {
-      logger.error('Failed to check consent status:', error);
+      logger.error('Failed to check consent status:', error instanceof Error ? error : new Error(String(error)));
       setShowBanner(true);
     }
   };
@@ -109,7 +109,7 @@ export function ConsentBanner({ userId, onConsentChange }: ConsentBannerProps) {
       }
 
     } catch (error) {
-      logger.error('Failed to record consents:', error);
+      logger.error('Failed to record consents:', error instanceof Error ? error : new Error(String(error)));
     } finally {
       setLoading(false);
     }

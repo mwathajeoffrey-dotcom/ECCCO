@@ -23,7 +23,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
     if (process.env.NODE_ENV === 'production') {
       Sentry.captureException(error);
     } else {
-      logger.error('Global Error:', error);
+      logger.error('Global Error:', error instanceof Error ? error : new Error(String(error)));
     }
   }, [error]);
 

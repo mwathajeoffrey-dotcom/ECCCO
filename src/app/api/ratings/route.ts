@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       rating,
     });
   } catch (error) {
-    logger.error("Error fetching rating:", error);
+    logger.error("Error fetching rating:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         success: false,
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       data: rating,
     });
   } catch (error) {
-    logger.error("Error saving rating:", error);
+    logger.error("Error saving rating:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ success: false, message: "Failed to save rating" }, { status: 500 });
   }
 }
@@ -131,7 +131,7 @@ export async function DELETE(request: NextRequest) {
       message: "Rating deleted",
     });
   } catch (error) {
-    logger.error("Error deleting rating:", error);
+    logger.error("Error deleting rating:", error instanceof Error ? error : new Error(String(error)));
 
     // If rating doesn't exist, still return success
     if (error instanceof Error && error.message.includes("Record to delete does not exist")) {

@@ -553,7 +553,7 @@ class GuidelinesService {
       });
 
     } catch (error) {
-      logger.error('Error loading user data:', error);
+      logger.error('Error loading user data:', error instanceof Error ? error : new Error(String(error)));
     }
   }
 

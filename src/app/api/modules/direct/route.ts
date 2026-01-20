@@ -30,7 +30,7 @@ export async function GET() {
     });
 
   } catch (error) {
-    logger.error('❌ Test failed:', error);
+    logger.error('❌ Test failed:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json({
       success: false,

@@ -115,7 +115,7 @@ export async function searchEuropePMC(
       hasNextPage: data.nextCursorMark !== undefined,
     };
   } catch (error) {
-    logger.error("Europe PMC search error:", error);
+    logger.error("Europe PMC search error:", error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }
@@ -227,7 +227,7 @@ export async function getArticleById(
       source: item.source || "MED",
     };
   } catch (error) {
-    logger.error("Europe PMC article lookup error:", error);
+    logger.error("Europe PMC article lookup error:", error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }
@@ -340,7 +340,7 @@ export async function fetchFullText(pmcid: string): Promise<{
 
     return sections;
   } catch (error) {
-    logger.error(`Error fetching full text for PMC${pmcid}:`, error);
+    logger.error(`Error fetching full text for PMC${pmcid}:`, error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }

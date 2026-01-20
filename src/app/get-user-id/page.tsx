@@ -25,7 +25,7 @@ export default function GetUserIdPage() {
         setUserId(data.userId);
       }
     } catch (error) {
-      logger.error("Failed to fetch user ID:", error);
+      logger.error("Failed to fetch user ID:", error instanceof Error ? error : new Error(String(error)));
     }
   };
 

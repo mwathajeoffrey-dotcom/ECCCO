@@ -91,7 +91,7 @@ export default function ExamInterface() {
         await analytics.initialize();
         analytics.trackPageView("/exam", "Exam Topics Selection");
       } catch (error) {
-        logger.error("Error fetching topics:", error);
+        logger.error("Error fetching topics:", error instanceof Error ? error : new Error(String(error)));
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {
@@ -212,7 +212,7 @@ export default function ExamInterface() {
         description: `${questionsArray.length} questions loaded. Good luck!`,
       });
     } catch (error) {
-      logger.error("Error fetching questions:", error);
+      logger.error("Error fetching questions:", error instanceof Error ? error : new Error(String(error)));
       logger.error("Topic ID attempted:", topicId);
       logger.error("Full error details:", {
         message: error instanceof Error ? error.message : "Unknown error",
@@ -487,7 +487,7 @@ export default function ExamInterface() {
 
         generateExamPDF(examResults);
       } catch (error) {
-        logger.error("Error generating PDF:", error);
+        logger.error("Error generating PDF:", error instanceof Error ? error : new Error(String(error)));
         alert(
           "Sorry, there was an error generating the PDF. Please try again or contact support if the issue persists."
         );

@@ -88,7 +88,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           setIsDeveloper(devData.isDeveloper);
         }
       } catch (error) {
-        logger.error("Error checking roles:", error);
+        logger.error("Error checking roles:", error instanceof Error ? error : new Error(String(error)));
       } finally {
         setRolesLoading(false);
       }

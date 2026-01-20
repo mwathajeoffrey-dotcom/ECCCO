@@ -117,7 +117,7 @@ export async function callGroq(
 
     return content;
   } catch (error) {
-    logger.error("[Groq] API call failed:", error);
+    logger.error("[Groq] API call failed:", error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }
@@ -167,7 +167,7 @@ export async function listGroqModels(): Promise<string[]> {
     const data = await response.json();
     return data.data?.map((model: any) => model.id) || [];
   } catch (error) {
-    logger.error("[Groq] Failed to list models:", error);
+    logger.error("[Groq] Failed to list models:", error instanceof Error ? error : new Error(String(error)));
     return [];
   }
 }

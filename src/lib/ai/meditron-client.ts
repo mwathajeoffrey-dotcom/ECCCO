@@ -70,7 +70,7 @@ export async function callMeditron(prompt: string, config: Partial<MeditronConfi
     const data: MeditronResponse = await response.json();
     return data.response;
   } catch (error) {
-    logger.error("Meditron call failed:", error);
+    logger.error("Meditron call failed:", error instanceof Error ? error : new Error(String(error)));
     throw new Error("Failed to generate clinical synthesis. Ensure Ollama is running with Meditron model.");
   }
 }

@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('PubMed API error:', error);
+    logger.error('PubMed API error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         success: false,
@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    logger.error('PubMed fetch error:', error);
+    logger.error('PubMed fetch error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         success: false,

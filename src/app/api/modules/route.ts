@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('❌ Error fetching modules:', error);
+    logger.error('❌ Error fetching modules:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json({
       success: false,

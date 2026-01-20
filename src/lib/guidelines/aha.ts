@@ -45,7 +45,7 @@ export async function searchAHAGuidelines(
       totalResults: filtered.length
     };
   } catch (error) {
-    logger.error('Error searching AHA guidelines:', error);
+    logger.error('Error searching AHA guidelines:', error instanceof Error ? error : new Error(String(error)));
     return { guidelines: [], totalResults: 0 };
   }
 }

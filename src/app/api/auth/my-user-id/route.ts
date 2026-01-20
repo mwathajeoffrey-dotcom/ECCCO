@@ -41,7 +41,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    logger.error("Error getting user ID:", error);
+    logger.error("Error getting user ID:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         error: "Failed to get user ID",

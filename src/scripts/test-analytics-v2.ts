@@ -94,7 +94,7 @@ async function testAnalyticsSystem() {
     return true;
     
   } catch (error) {
-    logger.error('❌ Analytics V2 Test Failed:', error);
+    logger.error('❌ Analytics V2 Test Failed:', error instanceof Error ? error : new Error(String(error)));
     return false;
   }
 }

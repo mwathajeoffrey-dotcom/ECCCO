@@ -520,7 +520,7 @@ export function GuidelineManagementPage() {
       setReport(mockReport);
       setOutdatedQuestions(mockOutdatedQuestions);
     } catch (error) {
-      logger.error("Error loading guideline data:", error);
+      logger.error("Error loading guideline data:", error instanceof Error ? error : new Error(String(error)));
     }
   }, []);
 

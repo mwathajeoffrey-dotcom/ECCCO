@@ -62,7 +62,7 @@ export default function AdminDashboard() {
       setIsAdmin(true);
       await fetchDashboardStats();
     } catch (err) {
-      logger.error("Admin check failed:", err);
+      logger.error("Admin check failed:", err instanceof Error ? err : new Error(String(err)));
       window.location.href = "/login?redirect=/admin/dashboard";
     } finally {
       setLoading(false);
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
         systemHealth: "healthy",
       });
     } catch (err) {
-      logger.error("Failed to fetch stats:", err);
+      logger.error("Failed to fetch stats:", err instanceof Error ? err : new Error(String(err)));
     }
   };
 

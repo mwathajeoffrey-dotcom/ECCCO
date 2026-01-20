@@ -222,14 +222,14 @@ export async function POST(request: NextRequest) {
 
     // Cache asynchronously (don't wait) - use custom cache key with patient context
     cacheSynthesis(cacheKey, synthesisWithMeta).catch((err) =>
-      logger.error("[Cache] Failed to cache synthesis:", err)
+      logger.error("[Cache] Failed to cache synthesis:", err instanceof Error ? err : new Error(String(err)))
     );
 
     logger.debug(`[Evidence Synthesis] Complete in ${duration}ms`);
 
     return NextResponse.json(synthesisWithMeta, { status: 200 });
   } catch (error: any) {
-    logger.error("[Evidence Synthesis Error]", error);
+    logger.error("[Evidence Synthesis Error]", error instanceof Error ? error : new Error(String(error)));
     logger.error("[Error Stack]", error.stack);
     logger.error("[Error Details]", {
       message: error.message,

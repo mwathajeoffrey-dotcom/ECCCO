@@ -139,7 +139,7 @@ export function withErrorBoundary<T extends object>(
 export function useErrorHandler() {
   return (error: Error, errorInfo?: string) => {
     // Log error
-    logger.error('Manual error report:', error);
+    logger.error('Manual error report:', error instanceof Error ? error : new Error(String(error)));
     
     // In production, send to error reporting service
     if (process.env.NODE_ENV === 'production') {

@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       correctAnswer: currentQuestion.correctIndex,
     });
   } catch (error) {
-    logger.error("Error submitting answer:", error);
+    logger.error("Error submitting answer:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to submit answer" }, { status: 500 });
   }
 }

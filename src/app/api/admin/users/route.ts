@@ -143,7 +143,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    logger.error("Error fetching users:", error);
+    logger.error("Error fetching users:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 }

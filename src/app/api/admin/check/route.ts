@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       error: null,
     });
   } catch (error) {
-    logger.error('Admin check error:', error);
+    logger.error('Admin check error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         isAdmin: false,

@@ -78,7 +78,7 @@ export async function GET() {
       profile: user?.UserProfile,
     });
   } catch (error) {
-    logger.error("Error fetching profile:", error);
+    logger.error("Error fetching profile:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
 }
@@ -159,7 +159,7 @@ export async function PUT(request: Request) {
       profile,
     });
   } catch (error) {
-    logger.error("Error updating profile:", error);
+    logger.error("Error updating profile:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }

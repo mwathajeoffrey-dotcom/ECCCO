@@ -101,7 +101,7 @@ export class SessionManager {
       
       return await response.json();
     } catch (error) {
-      logger.error('Failed to record exam session:', error);
+      logger.error('Failed to record exam session:', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }
@@ -130,7 +130,7 @@ export class SessionManager {
       
       return result.data;
     } catch (error) {
-      logger.error('Failed to fetch dashboard data:', error);
+      logger.error('Failed to fetch dashboard data:', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }

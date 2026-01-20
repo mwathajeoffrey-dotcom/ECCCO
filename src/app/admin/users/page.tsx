@@ -82,7 +82,7 @@ export default function UserManagement() {
       setIsAdmin(true);
       await loadUsers();
     } catch (err) {
-      logger.error("Admin check failed:", err);
+      logger.error("Admin check failed:", err instanceof Error ? err : new Error(String(err)));
       window.location.href = "/login?redirect=/admin/users";
     }
   };
@@ -98,7 +98,7 @@ export default function UserManagement() {
         setSummary(data.summary);
       }
     } catch (err) {
-      logger.error("Failed to load users:", err);
+      logger.error("Failed to load users:", err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }

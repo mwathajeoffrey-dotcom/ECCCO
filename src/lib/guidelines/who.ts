@@ -56,7 +56,7 @@ export async function searchWHOGuidelines(
       totalResults: filtered.length,
     };
   } catch (error) {
-    logger.error('WHO search error:', error);
+    logger.error('WHO search error:', error instanceof Error ? error : new Error(String(error)));
     return { guidelines: [], totalResults: 0 };
   }
 }

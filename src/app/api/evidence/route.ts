@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    logger.error('Error fetching evidence references:', error);
+    logger.error('Error fetching evidence references:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to fetch references' },
       { status: 500 }
@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(parsed, { status: 201 });
   } catch (error) {
-    logger.error('Error creating evidence reference:', error);
+    logger.error('Error creating evidence reference:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to create reference' },
       { status: 500 }
@@ -241,7 +241,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    logger.error('Error updating evidence reference:', error);
+    logger.error('Error updating evidence reference:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: 'Failed to update reference' }, { status: 500 });
   }
 }
@@ -277,7 +277,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error('Error deleting evidence reference:', error);
+    logger.error('Error deleting evidence reference:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: 'Failed to delete reference' }, { status: 500 });
   }
 }

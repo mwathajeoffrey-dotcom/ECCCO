@@ -22,7 +22,7 @@ export default function PracticePage() {
         const data = await response.json();
         setTopics(data);
       } catch (error) {
-        logger.error("Error fetching topics:", error);
+        logger.error("Error fetching topics:", error instanceof Error ? error : new Error(String(error)));
       }
     };
 

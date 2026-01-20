@@ -32,7 +32,7 @@ export default function EvidencePage() {
       const data = await response.json();
       setEvidence(data.references || []);
     } catch (error) {
-      logger.error('Error fetching evidence:', error);
+      logger.error('Error fetching evidence:', error instanceof Error ? error : new Error(String(error)));
     } finally {
       setLoading(false);
     }

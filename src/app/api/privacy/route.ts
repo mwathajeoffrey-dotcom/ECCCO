@@ -84,7 +84,7 @@ export async function recordConsent(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('[Privacy API] Consent recording failed:', error);
+    logger.error('[Privacy API] Consent recording failed:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to record consent' },
       { status: 500 }
@@ -136,7 +136,7 @@ export async function exportUserData(request: NextRequest) {
     return new NextResponse(formattedData, { headers });
 
   } catch (error) {
-    logger.error('[Privacy API] Data export failed:', error);
+    logger.error('[Privacy API] Data export failed:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to export data' },
       { status: 500 }
@@ -185,7 +185,7 @@ export async function deleteUserData(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('[Privacy API] Data deletion failed:', error);
+    logger.error('[Privacy API] Data deletion failed:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to delete data' },
       { status: 500 }
@@ -217,7 +217,7 @@ export async function generateComplianceReport(request: NextRequest) {
     return NextResponse.json(report);
 
   } catch (error) {
-    logger.error('[Privacy API] Compliance report generation failed:', error);
+    logger.error('[Privacy API] Compliance report generation failed:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Failed to generate compliance report' },
       { status: 500 }

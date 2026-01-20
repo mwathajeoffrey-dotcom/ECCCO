@@ -103,7 +103,7 @@ export async function searchPubMed(params: PubMedSearchParams): Promise<PubMedSe
       retstart,
     };
   } catch (error) {
-    logger.error("PubMed search error:", error);
+    logger.error("PubMed search error:", error instanceof Error ? error : new Error(String(error)));
     throw new Error(`Failed to search PubMed: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
@@ -153,7 +153,7 @@ async function fetchPubMedBatch(pmids: string[]): Promise<PubMedArticle[]> {
     const xmlText = await response.text();
     return parseArticlesFromXML(xmlText);
   } catch (error) {
-    logger.error("PubMed fetch error:", error);
+    logger.error("PubMed fetch error:", error instanceof Error ? error : new Error(String(error)));
     throw new Error(`Failed to fetch PubMed articles: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
@@ -179,7 +179,7 @@ function parseArticlesFromXML(xmlText: string): PubMedArticle[] {
       }
     }
   } catch (error) {
-    logger.error("XML parsing error:", error);
+    logger.error("XML parsing error:", error instanceof Error ? error : new Error(String(error)));
   }
 
   return articles;
@@ -255,7 +255,7 @@ function parseArticle(xml: string): PubMedArticle | null {
       url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
     };
   } catch (error) {
-    logger.error("Error parsing article:", error);
+    logger.error("Error parsing article:", error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }

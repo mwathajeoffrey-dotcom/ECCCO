@@ -102,7 +102,7 @@ export default function LearningAnalyticsDashboard() {
         setData(generateMockData());
       }
     } catch (error) {
-      logger.error('Error loading analytics data:', error);
+      logger.error('Error loading analytics data:', error instanceof Error ? error : new Error(String(error)));
       // Generate mock data for demonstration
       setData(generateMockData());
     } finally {

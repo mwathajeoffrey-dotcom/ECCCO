@@ -247,7 +247,7 @@ async function searchPubMedSource(
       total: searchResult.count,
     };
   } catch (error) {
-    logger.error("PubMed search error:", error);
+    logger.error("PubMed search error:", error instanceof Error ? error : new Error(String(error)));
     return { source: "pubmed", articles: [], total: 0 };
   }
 }
@@ -275,7 +275,7 @@ async function searchCrossRefSource(
       total: result.totalResults,
     };
   } catch (error) {
-    logger.error("CrossRef search error:", error);
+    logger.error("CrossRef search error:", error instanceof Error ? error : new Error(String(error)));
     return { source: "crossref", articles: [], total: 0 };
   }
 }
@@ -300,7 +300,7 @@ async function searchEuropePMCSource(
       total: result.totalResults,
     };
   } catch (error) {
-    logger.error("Europe PMC search error:", error);
+    logger.error("Europe PMC search error:", error instanceof Error ? error : new Error(String(error)));
     return { source: "europepmc", articles: [], total: 0 };
   }
 }
@@ -336,7 +336,7 @@ async function searchSemanticScholarSource(
       total: result.total,
     };
   } catch (error) {
-    logger.error("Semantic Scholar search error:", error);
+    logger.error("Semantic Scholar search error:", error instanceof Error ? error : new Error(String(error)));
     return { source: "semanticscholar", articles: [], total: 0 };
   }
 }
@@ -484,7 +484,7 @@ export async function searchStrategicEvidence(
       logger.debug(`[Strategic Search] Found ${guidelineResult.pmids.length} guidelines`);
     }
   } catch (error) {
-    logger.error("[Strategic Search] Guideline search failed:", error);
+    logger.error("[Strategic Search] Guideline search failed:", error instanceof Error ? error : new Error(String(error)));
   }
 
   logger.debug("[Strategic Search] Phase 2: Searching for META-ANALYSES...");
@@ -505,7 +505,7 @@ export async function searchStrategicEvidence(
         logger.debug(`[Strategic Search] Found ${metaResult.pmids.length} meta-analyses`);
       }
     } catch (error) {
-      logger.error("[Strategic Search] Meta-analysis search failed:", error);
+      logger.error("[Strategic Search] Meta-analysis search failed:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -527,7 +527,7 @@ export async function searchStrategicEvidence(
         logger.debug(`[Strategic Search] Found ${reviewResult.pmids.length} systematic reviews`);
       }
     } catch (error) {
-      logger.error("[Strategic Search] Systematic review search failed:", error);
+      logger.error("[Strategic Search] Systematic review search failed:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -549,7 +549,7 @@ export async function searchStrategicEvidence(
         logger.debug(`[Strategic Search] Found ${rctResult.pmids.length} RCTs`);
       }
     } catch (error) {
-      logger.error("[Strategic Search] RCT search failed:", error);
+      logger.error("[Strategic Search] RCT search failed:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -568,7 +568,7 @@ export async function searchStrategicEvidence(
       sourceBreakdown.general = generalResult.totalResults;
       logger.debug(`[Strategic Search] Added ${generalResult.articles.length} general articles`);
     } catch (error) {
-      logger.error("[Strategic Search] General search failed:", error);
+      logger.error("[Strategic Search] General search failed:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 

@@ -139,7 +139,7 @@ export async function searchSemanticScholar(
       offset: data.offset || 0,
     };
   } catch (error) {
-    logger.error('Semantic Scholar search error:', error);
+    logger.error('Semantic Scholar search error:', error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }
@@ -192,7 +192,7 @@ export async function getPaperById(
     
     return await response.json();
   } catch (error) {
-    logger.error('Semantic Scholar paper lookup error:', error);
+    logger.error('Semantic Scholar paper lookup error:', error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }
@@ -235,7 +235,7 @@ export async function getRecommendedPapers(
     const data = await response.json();
     return data.recommendedPapers || [];
   } catch (error) {
-    logger.error('Semantic Scholar recommendations error:', error);
+    logger.error('Semantic Scholar recommendations error:', error instanceof Error ? error : new Error(String(error)));
     return [];
   }
 }
@@ -279,7 +279,7 @@ export async function getCitingPapers(
       total: data.total || 0,
     };
   } catch (error) {
-    logger.error('Semantic Scholar citations error:', error);
+    logger.error('Semantic Scholar citations error:', error instanceof Error ? error : new Error(String(error)));
     return { papers: [], total: 0 };
   }
 }
@@ -322,7 +322,7 @@ export async function getReferencedPapers(
       total: data.total || 0,
     };
   } catch (error) {
-    logger.error('Semantic Scholar references error:', error);
+    logger.error('Semantic Scholar references error:', error instanceof Error ? error : new Error(String(error)));
     return { papers: [], total: 0 };
   }
 }
@@ -372,7 +372,7 @@ export async function searchInfluentialPapers(
       total: influential.length,
     };
   } catch (error) {
-    logger.error('Semantic Scholar influential search error:', error);
+    logger.error('Semantic Scholar influential search error:', error instanceof Error ? error : new Error(String(error)));
     return { papers: [], total: 0 };
   }
 }
@@ -441,7 +441,7 @@ export async function getBulkPapers(
     const papers = await response.json();
     return papers.filter((p: any) => p !== null);
   } catch (error) {
-    logger.error('Semantic Scholar bulk lookup error:', error);
+    logger.error('Semantic Scholar bulk lookup error:', error instanceof Error ? error : new Error(String(error)));
     return [];
   }
 }

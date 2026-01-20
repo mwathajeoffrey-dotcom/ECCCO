@@ -89,7 +89,7 @@ class ECCCOAnalyticsV2 {
       this.isInitialized = true;
       logger.debug(`[Analytics] Initialized with ${this.sessions.length} sessions`);
     } catch (error) {
-      logger.error("[Analytics] Initialization error:", error);
+      logger.error("[Analytics] Initialization error:", error instanceof Error ? error : new Error(String(error)));
       this.isInitialized = true; // Continue anyway
     }
   }
@@ -144,7 +144,7 @@ class ECCCOAnalyticsV2 {
 
       logger.debug(`[Analytics] Recorded exam completion: ${topicName} - ${score}%`);
     } catch (error) {
-      logger.error("[Analytics] Failed to record exam completion:", error);
+      logger.error("[Analytics] Failed to record exam completion:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -257,7 +257,7 @@ class ECCCOAnalyticsV2 {
         localStorage.setItem("eccco_session_id", this.sessionId);
       }
     } catch (error) {
-      logger.error("[Analytics] Failed to load local sessions:", error);
+      logger.error("[Analytics] Failed to load local sessions:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -268,7 +268,7 @@ class ECCCOAnalyticsV2 {
       localStorage.setItem("eccco_analytics_sessions", JSON.stringify(this.sessions));
       localStorage.setItem("eccco_session_id", this.sessionId);
     } catch (error) {
-      logger.error("[Analytics] Failed to save local sessions:", error);
+      logger.error("[Analytics] Failed to save local sessions:", error instanceof Error ? error : new Error(String(error)));
     }
   }
 

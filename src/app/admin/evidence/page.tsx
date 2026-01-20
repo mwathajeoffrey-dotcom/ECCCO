@@ -111,7 +111,7 @@ export default function AdminEvidencePage() {
       
       setIsAdmin(true);
     } catch (err) {
-      logger.error('Admin check failed:', err);
+      logger.error('Admin check failed:', err instanceof Error ? err : new Error(String(err)));
       window.location.href = '/login?redirect=/admin/evidence';
     }
   };

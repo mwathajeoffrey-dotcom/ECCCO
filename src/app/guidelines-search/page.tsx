@@ -72,7 +72,7 @@ export default function GuidelinesSearchPage() {
       const data = await response.json();
       setResults(data);
     } catch (error) {
-      logger.error('Search error:', error);
+      logger.error('Search error:', error instanceof Error ? error : new Error(String(error)));
     }
     setLoading(false);
   };

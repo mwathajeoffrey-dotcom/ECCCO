@@ -23,7 +23,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Database test error:', error);
+    logger.error('Database test error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

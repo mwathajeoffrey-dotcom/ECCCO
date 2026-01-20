@@ -110,7 +110,7 @@ async function searchNICESource(
       total: result.totalResults,
     };
   } catch (error) {
-    logger.error('NICE source error:', error);
+    logger.error('NICE source error:', error instanceof Error ? error : new Error(String(error)));
     return { source: 'nice', guidelines: [], total: 0 };
   }
 }
@@ -136,7 +136,7 @@ async function searchWHOSource(
       total: result.totalResults,
     };
   } catch (error) {
-    logger.error('WHO source error:', error);
+    logger.error('WHO source error:', error instanceof Error ? error : new Error(String(error)));
     return { source: 'who', guidelines: [], total: 0 };
   }
 }
@@ -161,7 +161,7 @@ async function searchAHASource(
       total: result.totalResults,
     };
   } catch (error) {
-    logger.error('AHA source error:', error);
+    logger.error('AHA source error:', error instanceof Error ? error : new Error(String(error)));
     return { source: 'aha', guidelines: [], total: 0 };
   }
 }

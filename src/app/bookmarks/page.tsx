@@ -59,7 +59,7 @@ export default function BookmarksPage() {
         setBookmarks(data.bookmarks);
       }
     } catch (error) {
-      logger.error("Failed to fetch bookmarks:", error);
+      logger.error("Failed to fetch bookmarks:", error instanceof Error ? error : new Error(String(error)));
       const errorMsg = getErrorFromFetch(error);
       toast.error(errorMsg.title, { description: errorMsg.message });
     } finally {
@@ -83,7 +83,7 @@ export default function BookmarksPage() {
         toast.error(errorMsg.title, { description: errorMsg.message });
       }
     } catch (error) {
-      logger.error("Failed to delete bookmark:", error);
+      logger.error("Failed to delete bookmark:", error instanceof Error ? error : new Error(String(error)));
       const errorMsg = getErrorFromFetch(error);
       toast.error(errorMsg.title, { description: errorMsg.message });
     }

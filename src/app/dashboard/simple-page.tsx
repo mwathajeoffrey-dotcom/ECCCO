@@ -73,7 +73,7 @@ export default function DashboardPage() {
       }
     } catch (error) {
       // Network or other error
-      logger.error('Dashboard error:', error);
+      logger.error('Dashboard error:', error instanceof Error ? error : new Error(String(error)));
       setDashboardData({
         hasData: false,
         totalExams: 0,

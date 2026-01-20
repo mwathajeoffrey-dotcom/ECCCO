@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('[Analytics Sync API] Error:', error);
+    logger.error('[Analytics Sync API] Error:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json({
       success: false,

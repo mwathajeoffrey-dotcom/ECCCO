@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ se
 
     return NextResponse.json(updatedSession);
   } catch (error) {
-    logger.error("Error ending quiz:", error);
+    logger.error("Error ending quiz:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to end quiz" }, { status: 500 });
   }
 }

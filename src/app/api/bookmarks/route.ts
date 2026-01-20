@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       count: bookmarks.length,
     });
   } catch (error) {
-    logger.error("Error fetching bookmarks:", error);
+    logger.error("Error fetching bookmarks:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         success: false,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       data: bookmark,
     });
   } catch (error) {
-    logger.error("Error creating bookmark:", error);
+    logger.error("Error creating bookmark:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ success: false, message: "Failed to create bookmark" }, { status: 500 });
   }
 }
@@ -124,7 +124,7 @@ export async function PATCH(request: NextRequest) {
       data: bookmark,
     });
   } catch (error) {
-    logger.error("Error updating notes:", error);
+    logger.error("Error updating notes:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ success: false, message: "Failed to update notes" }, { status: 500 });
   }
 }
@@ -156,7 +156,7 @@ export async function DELETE(request: NextRequest) {
       message: "Bookmark deleted",
     });
   } catch (error) {
-    logger.error("Error deleting bookmark:", error);
+    logger.error("Error deleting bookmark:", error instanceof Error ? error : new Error(String(error)));
 
     // If bookmark doesn't exist, still return success
     if (error instanceof Error && error.message.includes("Record to delete does not exist")) {

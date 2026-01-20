@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       dbStatus = 'error';
       dbResponseTime = Date.now() - dbStartTime;
-      logger.error('Database health check failed:', error);
+      logger.error('Database health check failed:', error instanceof Error ? error : new Error(String(error)));
     }
     
     // Calculate cache ratio
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
     
   } catch (error) {
     metrics.requests.errors++;
-    logger.error('Metrics endpoint error:', error);
+    logger.error('Metrics endpoint error:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json(
       {

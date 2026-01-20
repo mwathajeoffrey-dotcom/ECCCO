@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       ...result,
     });
   } catch (error) {
-    logger.error('Guidelines search error:', error);
+    logger.error('Guidelines search error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { success: false, error: 'Search failed. Please try again.' },
       { status: 500 }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       ...result,
     });
   } catch (error) {
-    logger.error('Guidelines search error:', error);
+    logger.error('Guidelines search error:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { success: false, error: 'Search failed. Please try again.' },
       { status: 500 }

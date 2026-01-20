@@ -92,7 +92,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     // Log error details
     if (process.env.NODE_ENV === 'development') {
       console.group(`🚨 Error in ${componentName}`);
-      logger.error('Error:', error);
+      logger.error('Error:', error instanceof Error ? error : new Error(String(error)));
       logger.error('Error Info:', errorInfo);
       logger.error('Component Stack:', errorInfo.componentStack);
       console.groupEnd();

@@ -67,7 +67,7 @@ export async function searchNICEGuidelines(
       totalResults: typeFiltered.length,
     };
   } catch (error) {
-    logger.error('NICE search error:', error);
+    logger.error('NICE search error:', error instanceof Error ? error : new Error(String(error)));
     return { guidelines: [], totalResults: 0 };
   }
 }
@@ -80,7 +80,7 @@ export async function getNICEGuidelineDetails(id: string): Promise<NICEGuideline
     const mockGuidelines = getMockNICEGuidelines();
     return mockGuidelines.find(g => g.id === id) || null;
   } catch (error) {
-    logger.error('NICE guideline fetch error:', error);
+    logger.error('NICE guideline fetch error:', error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }

@@ -75,7 +75,7 @@ export default function ACLSPracticePage() {
           toast.error(errorMsg.title, { description: errorMsg.message });
         }
       } catch (error) {
-        logger.error("Error fetching ACLS questions:", error);
+        logger.error("Error fetching ACLS questions:", error instanceof Error ? error : new Error(String(error)));
         const errorMsg = getErrorFromFetch(error);
         toast.error(errorMsg.title, { description: errorMsg.message });
       } finally {

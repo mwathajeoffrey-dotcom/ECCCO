@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Failed to process error report:', error);
+    logger.error('Failed to process error report:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json(
       { error: 'Failed to process error report' },

@@ -50,7 +50,7 @@ export async function GET() {
     });
     
   } catch (error) {
-    logger.error('Database check error:', error);
+    logger.error('Database check error:', error instanceof Error ? error : new Error(String(error)));
     
     // Parse Prisma errors
     let errorDetails = 'Unknown error';

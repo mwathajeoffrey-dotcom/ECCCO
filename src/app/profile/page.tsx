@@ -74,7 +74,7 @@ export default function ProfilePage() {
         });
       }
     } catch (error) {
-      logger.error("Failed to load profile:", error);
+      logger.error("Failed to load profile:", error instanceof Error ? error : new Error(String(error)));
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ export default function ProfilePage() {
         setMessage({ type: "error", text: "Failed to update profile" });
       }
     } catch (error) {
-      logger.error("Failed to save profile:", error);
+      logger.error("Failed to save profile:", error instanceof Error ? error : new Error(String(error)));
       setMessage({ type: "error", text: "An error occurred" });
     } finally {
       setSaving(false);

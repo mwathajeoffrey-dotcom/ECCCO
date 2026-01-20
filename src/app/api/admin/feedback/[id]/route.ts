@@ -36,7 +36,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     return NextResponse.json(feedback);
   } catch (error) {
-    logger.error("Error updating feedback:", error);
+    logger.error("Error updating feedback:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to update feedback" }, { status: 500 });
   }
 }
@@ -60,7 +60,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error("Error deleting feedback:", error);
+    logger.error("Error deleting feedback:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Failed to delete feedback" }, { status: 500 });
   }
 }

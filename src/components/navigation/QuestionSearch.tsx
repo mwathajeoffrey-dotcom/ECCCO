@@ -58,7 +58,7 @@ export default function QuestionSearch({ onSelect }: QuestionSearchProps) {
           setAvailableTopics(topics);
         }
       } catch (error) {
-        logger.error('Error fetching questions:', error);
+        logger.error('Error fetching questions:', error instanceof Error ? error : new Error(String(error)));
         // Keep empty array on error
       } finally {
         setIsLoading(false);

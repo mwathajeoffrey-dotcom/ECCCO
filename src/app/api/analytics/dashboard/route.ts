@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('[Analytics Dashboard API] Error:', error);
+    logger.error('[Analytics Dashboard API] Error:', error instanceof Error ? error : new Error(String(error)));
     
     return NextResponse.json({
       success: false,
@@ -158,7 +158,9 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    logger.debug('[Analytics Dashboard API] Database unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    logger.debug('[Analytics Dashboard API] Database unavailable', { 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
     return false;
   } finally {
     await prisma.$disconnect();

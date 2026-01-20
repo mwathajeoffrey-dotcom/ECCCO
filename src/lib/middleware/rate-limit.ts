@@ -75,7 +75,7 @@ export function rateLimit(options: RateLimitOptions) {
       return null; // Allow request
 
     } catch (error) {
-      logger.error('Rate limiting error:', error);
+      logger.error('Rate limiting error:', error instanceof Error ? error : new Error(String(error)));
       return null; // Allow request on error
     }
   };

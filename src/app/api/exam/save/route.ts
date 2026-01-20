@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
       message: "Exam results saved successfully",
     });
   } catch (error) {
-    logger.error("Error saving exam results:", error);
+    logger.error("Error saving exam results:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

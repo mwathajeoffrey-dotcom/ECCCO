@@ -17,7 +17,7 @@ export async function GET() {
       isDeveloper: hasDeveloperAccess,
     });
   } catch (error) {
-    logger.error("Error checking developer status:", error);
+    logger.error("Error checking developer status:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       {
         isDeveloper: false,

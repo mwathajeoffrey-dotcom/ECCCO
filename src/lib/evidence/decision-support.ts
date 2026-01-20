@@ -53,7 +53,7 @@ export async function generateDecisionSupport(
     const decisionTree = await generateAIDecisionTree(synthesis, patientContext);
     return decisionTree;
   } catch (error) {
-    logger.error("[Decision Support] AI generation failed:", error);
+    logger.error("[Decision Support] AI generation failed:", error instanceof Error ? error : new Error(String(error)));
     return generateBasicDecisionTree(synthesis, patientContext);
   }
 }

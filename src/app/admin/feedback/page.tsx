@@ -67,7 +67,7 @@ export default function AdminFeedbackPage() {
       setIsAdmin(true);
       await fetchFeedback();
     } catch (err) {
-      logger.error('Admin check failed:', err);
+      logger.error('Admin check failed:', err instanceof Error ? err : new Error(String(err)));
       window.location.href = '/login?redirect=/admin/feedback';
     } finally {
       setLoading(false);
@@ -83,7 +83,7 @@ export default function AdminFeedbackPage() {
       setFeedbackList(data);
       setFilteredFeedback(data);
     } catch (err) {
-      logger.error('Failed to fetch feedback:', err);
+      logger.error('Failed to fetch feedback:', err instanceof Error ? err : new Error(String(err)));
     }
   };
 

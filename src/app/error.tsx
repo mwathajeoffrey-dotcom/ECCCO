@@ -14,7 +14,7 @@ interface ErrorPageProps {
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
     // Log error to console in development
-    logger.error('App Error:', error);
+    logger.error('App Error:', error instanceof Error ? error : new Error(String(error)));
     
     // In production, log to error reporting service
     if (process.env.NODE_ENV === 'production') {

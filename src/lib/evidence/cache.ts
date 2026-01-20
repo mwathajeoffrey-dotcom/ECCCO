@@ -91,7 +91,7 @@ export async function getCachedSynthesis(query: string): Promise<any | null> {
 
     return cached.synthesis;
   } catch (error) {
-    logger.error("[Cache] Error reading from cache:", error);
+    logger.error("[Cache] Error reading from cache:", error instanceof Error ? error : new Error(String(error)));
     return null; // Fail gracefully
   }
 }
@@ -120,7 +120,7 @@ export async function cacheSynthesis(query: string, synthesis: any): Promise<voi
 
     logger.debug(`[Cache] STORED - Cached synthesis for: "${query}" (expires in ${CACHE_TTL_DAYS} days)`);
   } catch (error) {
-    logger.error("[Cache] Error writing to cache:", error);
+    logger.error("[Cache] Error writing to cache:", error instanceof Error ? error : new Error(String(error)));
     // Don't throw - caching failure shouldn't break the app
   }
 }
@@ -136,7 +136,7 @@ export async function invalidateCache(query: string): Promise<void> {
     await kv.del(cacheKey);
     logger.debug(`[Cache] INVALIDATED - Removed cache for: "${query}"`);
   } catch (error) {
-    logger.error("[Cache] Error invalidating cache:", error);
+    logger.error("[Cache] Error invalidating cache:", error instanceof Error ? error : new Error(String(error)));
   }
 }
 
@@ -164,7 +164,7 @@ export async function getCacheStats(): Promise<{
       queries,
     };
   } catch (error) {
-    logger.error("[Cache] Error getting cache stats:", error);
+    logger.error("[Cache] Error getting cache stats:", error instanceof Error ? error : new Error(String(error)));
     return { totalEntries: 0, queries: [] };
   }
 }
@@ -186,7 +186,7 @@ export async function clearAllCache(): Promise<number> {
     logger.debug(`[Cache] CLEARED - Removed ${keys.length} cached entries`);
     return keys.length;
   } catch (error) {
-    logger.error("[Cache] Error clearing cache:", error);
+    logger.error("[Cache] Error clearing cache:", error instanceof Error ? error : new Error(String(error)));
     return 0;
   }
 }
