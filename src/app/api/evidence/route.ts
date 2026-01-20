@@ -1,9 +1,7 @@
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/db';
 
 // Some environments may not have generated Prisma types available during linting
 // so access the model via `any` to avoid compile-time errors while still using runtime client.

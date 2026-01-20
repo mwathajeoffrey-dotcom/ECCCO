@@ -1,16 +1,22 @@
 import { logger } from '@/lib/logger';
 import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
 // Create Prisma client with conditional Accelerate support
 function createPrismaClient() {
-  // Force local database for development
+  // In Prisma 7, we use adapters for database connections
   const isDev = process.env.NODE_ENV === 'development';
-  const datasourceUrl = isDev ? process.env.DATABASE_URL : (process.env.ACCELERATE_URL || process.env.DATABASE_URL);
+  
+  // Create connection pool and adapter
+  const connectionString = process.env.DATABASE_URL;
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
   
   const baseClient = new PrismaClient({
     log: isDev ? ['error', 'warn'] : ['error'],
-    datasourceUrl,
+    adapter,
   });
 
   // Only use Accelerate in production with Accelerate URL
