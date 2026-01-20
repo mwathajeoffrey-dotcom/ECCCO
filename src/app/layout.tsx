@@ -9,6 +9,7 @@ import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/providers/command-palette-provider";
+import { KeyboardShortcutsProvider } from "@/components/providers/keyboard-shortcuts-provider";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import "./globals.css";
@@ -123,15 +124,17 @@ export default function RootLayout({
         </Script>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ClerkProvider>
-            <CommandPaletteProvider>
-              <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
-                <AppLayout>{children}</AppLayout>
-              </ErrorBoundary>
-              <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
-              <PWAInstallPrompt />
-              <DesktopMenuButton />
-              <MobileBottomNav />
-            </CommandPaletteProvider>
+            <KeyboardShortcutsProvider>
+              <CommandPaletteProvider>
+                <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+                  <AppLayout>{children}</AppLayout>
+                </ErrorBoundary>
+                <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
+                <PWAInstallPrompt />
+                <DesktopMenuButton />
+                <MobileBottomNav />
+              </CommandPaletteProvider>
+            </KeyboardShortcutsProvider>
           </ClerkProvider>
         </ThemeProvider>
       </body>

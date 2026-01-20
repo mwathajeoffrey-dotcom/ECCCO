@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { logger } from '@/lib/services/logger';
+import { useKeyboardShortcutsModal } from '@/components/providers/keyboard-shortcuts-provider';
 import {
   Search,
   Home,
@@ -27,6 +28,7 @@ import {
   PlayCircle,
   Award,
   X,
+  Keyboard,
 } from 'lucide-react';
 
 export interface Command {
@@ -46,6 +48,7 @@ interface CommandPaletteProps {
 
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const router = useRouter();
+  const { open: openShortcutsModal } = useKeyboardShortcutsModal();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -203,6 +206,18 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         keywords: ['find', 'query'],
       },
       {
+        id: 'action-shortcuts',
+        label: 'Show Keyboard Shortcuts',
+        description: 'View all available keyboard shortcuts',
+        icon: Keyboard,
+        action: () => {
+          openShortcutsModal();
+          onClose();
+        },
+        category: 'Actions',
+        keywords: ['help', 'keys', 'hotkeys', '?'],
+      },
+      {
         id: 'action-help',
         label: 'Show Help',
         description: 'View keyboard shortcuts and help',
@@ -251,7 +266,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         keywords: ['achievements', 'awards', 'completion'],
       },
     ];
-  }, [router, onClose]);
+  }, [router, onClose, openShortcutsModal]);
 
   // Filter commands based on search query
   const filteredCommands = useMemo(() => {
