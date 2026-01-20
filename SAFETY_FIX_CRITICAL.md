@@ -5,6 +5,7 @@
 ### The Problem (CRITICAL!)
 
 The evidence search was showing **DANGEROUS** medical recommendations based on:
+
 - ❌ **Single articles** (only 1 source!)
 - ❌ **Low quality** scores (30/100 - poor quality!)
 - ❌ **No verification** (no abstract required)
@@ -16,6 +17,7 @@ The evidence search was showing **DANGEROUS** medical recommendations based on:
 **User Query**: "antibiotic choice for pneumonia"
 
 **What System Showed** (BEFORE FIX):
+
 ```
 ✓ Structured Summary Generated
 Analyzed 1 high-quality articles  ← ONLY 1 ARTICLE!!!
@@ -25,7 +27,8 @@ Treatment Recommendations
 Recommended first-line therapy is either voriconazole or isavuconazole.
 ```
 
-**THE PROBLEM**: 
+**THE PROBLEM**:
+
 - **Voriconazole and isavuconazole are ANTIFUNGAL drugs!**
 - **Pneumonia is usually BACTERIAL!**
 - **This could KILL a patient!** 💀
@@ -60,8 +63,8 @@ requireAbstract: true             // MUST have abstract for verification ✅
 if (clinicalArticles.length < 3) {
   throw new Error(
     `Insufficient high-quality evidence for safe clinical recommendations. ` +
-    `Found ${clinicalArticles.length} article(s), but need at least 3 from top-tier journals. ` +
-    `This ensures recommendations are based on reliable, peer-reviewed evidence.`
+      `Found ${clinicalArticles.length} article(s), but need at least 3 from top-tier journals. ` +
+      `This ensures recommendations are based on reliable, peer-reviewed evidence.`
   );
 }
 ```
@@ -71,22 +74,27 @@ if (clinicalArticles.length < 3) {
 ## 🛡️ What This Prevents
 
 ### 1. Single-Article Bias
+
 **Before**: One fringe study could dominate recommendations
 **After**: Requires consensus from multiple high-quality sources
 
 ### 2. Low-Quality Data
+
 **Before**: Poor-quality studies (score 30/100) could be used
 **After**: Only "Good" quality or better (50/100+)
 
 ### 3. Outdated Guidelines
+
 **Before**: Studies from 2006 (20 years old) could be used
 **After**: Only last 10 years (current evidence)
 
 ### 4. Unverified Sources
+
 **Before**: No abstract required - couldn't verify content
 **After**: Abstract REQUIRED for quality verification
 
 ### 5. Low-Tier Journals
+
 **Before**: Any journal (Tier 3 = questionable sources)
 **After**: Only Tier 1-2 (JAMA, NEJM, Lancet, BMJ, specialty journals)
 
@@ -105,9 +113,10 @@ if (clinicalArticles.length < 3) {
 
 ### Scenario 2: Poor Query (Insufficient Quality Evidence)
 
-**Query**: "antibiotic choice for pneumonia" 
+**Query**: "antibiotic choice for pneumonia"
 
-**BEFORE**: 
+**BEFORE**:
+
 ```
 ❌ Shows 1 article with 65% confidence
 ❌ Recommends ANTIFUNGAL for BACTERIAL infection!
@@ -115,6 +124,7 @@ if (clinicalArticles.length < 3) {
 ```
 
 **AFTER**:
+
 ```
 ✅ Shows helpful error:
 "Insufficient high-quality evidence for safe clinical recommendations.
@@ -122,7 +132,7 @@ Found 1 article, but need at least 3 from top-tier journals.
 
 Try:
 - 'pneumonia antibiotics guidelines'
-- 'community-acquired pneumonia treatment'  
+- 'community-acquired pneumonia treatment'
 - 'CAP antibiotic therapy'"
 ```
 
@@ -144,15 +154,18 @@ Try:
 This fix aligns with fundamental medical ethics:
 
 ### 1. **Primum non nocere** (First, do no harm)
+
 - Don't show recommendations that could harm patients
 - Better to show no result than wrong result
 
 ### 2. **Evidence-Based Medicine Standards**
+
 - Requires multiple high-quality sources
 - Recent evidence (last 10 years)
 - Peer-reviewed journals only
 
 ### 3. **Professional Responsibility**
+
 - Only Tier 1-2 journals (professional standards)
 - Quality scoring (50+ minimum)
 - Abstract verification
@@ -201,6 +214,7 @@ curl -X POST http://localhost:3000/api/evidence/synthesize \
 **Lines Changed**: ~90-120
 
 **Key Changes**:
+
 1. Added `MINIMUM_ARTICLES_FOR_CLINICAL_USE = 3`
 2. Added `MINIMUM_QUALITY_SCORE = 50`
 3. Added `MAXIMUM_TIER = 2` (only top journals)
@@ -239,6 +253,7 @@ git push origin main
 ### This is a BREAKING CHANGE (Intentionally!)
 
 **Queries that will now fail**:
+
 - Obscure topics with < 3 quality articles
 - Very specific/rare conditions
 - Non-medical queries
@@ -246,11 +261,13 @@ git push origin main
 **This is BY DESIGN for patient safety!**
 
 Better to show:
+
 ```
 "Insufficient evidence - try broader search"
 ```
 
 Than to show:
+
 ```
 "Based on 1 poor-quality article: [wrong/dangerous advice]"
 ```
@@ -260,11 +277,13 @@ Than to show:
 ## 📊 Expected Metrics Change
 
 ### Before Fix:
+
 - Success rate: ~95% (but included dangerous results)
 - Avg articles: 1-7
 - Avg quality: 30-80
 
 ### After Fix:
+
 - Success rate: ~70-80% (only safe results)
 - Avg articles: 3-7 (minimum 3)
 - Avg quality: 50-80 (minimum "Good")
@@ -276,11 +295,13 @@ Than to show:
 ## 🎯 Summary
 
 ### What Was Wrong:
+
 - System could show medical advice from 1 poor-quality article
 - Could literally recommend wrong drugs (antifungal for bacterial infection!)
 - Violated medical ethics and evidence-based standards
 
 ### What's Fixed:
+
 - Requires minimum 3 high-quality articles
 - Only top-tier journals (JAMA, NEJM, Lancet, etc.)
 - Current evidence (last 10 years)
@@ -288,6 +309,7 @@ Than to show:
 - Abstract verification required
 
 ### Impact:
+
 - ✅ Prevents patient harm
 - ✅ Meets evidence-based medicine standards
 - ✅ Aligns with medical ethics

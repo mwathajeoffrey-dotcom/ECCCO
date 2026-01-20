@@ -1,7 +1,7 @@
 # 🚀 SAFE DEPLOYMENT GUIDE - Evidence Search
 
-**Date**: January 19, 2026  
-**Status**: CRITICAL - Follow steps EXACTLY to avoid corruption  
+**Date**: January 19, 2026
+**Status**: CRITICAL - Follow steps EXACTLY to avoid corruption
 **Time Required**: ~15 minutes
 
 ---
@@ -9,12 +9,14 @@
 ## ⚠️ CRITICAL SAFETY NOTES
 
 **DO NOT**:
+
 - ❌ Delete files before confirming backup
 - ❌ Deploy without testing locally first
 - ❌ Mix old and new code
 - ❌ Skip any verification steps
 
 **DO**:
+
 - ✅ Follow steps in EXACT order
 - ✅ Verify each step before continuing
 - ✅ Keep backups accessible
@@ -25,15 +27,16 @@
 ## 📂 Current File Status
 
 ### ACTIVE Production Files (What's Deployed):
+
 ```
 /src/app/evidence-search/page.tsx
   - Current production UI
   - May be old version on Vercel
-  
+
 /src/app/api/evidence/consensus-search/route.ts
   - NEW implementation with:
     ✅ Rate limiting
-    ✅ Input validation  
+    ✅ Input validation
     ✅ Enhanced error handling
     ✅ Search history support
     ✅ Clickable journal links
@@ -41,6 +44,7 @@
 ```
 
 ### BACKUP Files (Safe):
+
 ```
 /.backup/evidence-search-old/
   - Complete backup of old implementation
@@ -49,6 +53,7 @@
 ```
 
 ### UNUSED Files (Can Delete After Deploy):
+
 ```
 /src/app/evidence-search-new/page.tsx
   - Blank template, not used
@@ -87,6 +92,7 @@ npm run dev
 Open `http://localhost:3000/evidence-search`
 
 **Test these features**:
+
 - [ ] Search works ("sodium bicarbonate in sepsis")
 - [ ] Results appear within 10-15 seconds
 - [ ] Journal names are clickable (blue, underlined)
@@ -124,6 +130,7 @@ git push origin main
 ```
 
 **Verify on GitHub**:
+
 - Go to: `https://github.com/mwathajeoffrey-dotcom/ECCCO`
 - Confirm commit appears
 - ✅ Your code is now backed up on GitHub
@@ -148,6 +155,7 @@ vercel
 **Wait for deployment...**
 
 Expected output:
+
 ```
 ✅ Preview: https://eccco-xxxxx-username.vercel.app
 ```
@@ -161,7 +169,8 @@ Expected output:
 
 **If preview works perfectly**: ✅ Proceed to Step 5
 
-**If preview has issues**: 
+**If preview has issues**:
+
 - Fix locally
 - Re-commit (Step 3)
 - Re-deploy preview (Step 4)
@@ -195,7 +204,8 @@ vercel env add GROQ_API_KEY production
 
 ### Step 6: Deploy to Production 🚀
 
-**FINAL CHECK**: 
+**FINAL CHECK**:
+
 - ✅ Local tests passed (Step 2)
 - ✅ Committed to GitHub (Step 3)
 - ✅ Preview tested and works (Step 4)
@@ -211,6 +221,7 @@ vercel --prod
 ```
 
 Expected output:
+
 ```
 ✅ Production: https://eccco.vercel.app
 ```
@@ -227,6 +238,7 @@ Expected output:
 4. Verify search history persists across page refreshes
 
 **Production Tests**:
+
 - [ ] Search: "sodium bicarbonate in sepsis" → Results appear
 - [ ] Rate limiting: Try 6 searches in 1 minute → 6th should fail with clear message
 - [ ] Input validation: Empty query → Clear error message
@@ -235,6 +247,7 @@ Expected output:
 - [ ] Mobile: Works on iPhone/Android
 
 **If ANY test fails on production**:
+
 - Check Vercel logs: `vercel logs --follow`
 - Identify error
 - Fix locally
@@ -328,6 +341,7 @@ vercel --prod
 ### New Features ✨
 
 1. **Search History Sidebar** (Left side)
+
    - Stores last 20 searches in localStorage
    - Click to re-run searches
    - Timestamps ("2h ago")
@@ -336,17 +350,20 @@ vercel --prod
    - Mobile-responsive
 
 2. **Rate Limiting** (API protection)
+
    - Max 5 searches per minute per IP
    - Clear error message when exceeded
    - Protects Groq API quota
 
 3. **Input Validation** (Security)
+
    - Min 3 characters, max 500
    - Type checking
    - Sanitization (removes <, >, ")
    - Clear error messages
 
 4. **Enhanced Error Handling** (UX)
+
    - Specific messages for different error types:
      - Rate limit errors
      - Timeout errors
@@ -355,6 +372,7 @@ vercel --prod
    - Sources always shown even if AI fails
 
 5. **Clickable Journal Names** (Existing, preserved)
+
    - All journal mentions are clickable
    - Link to original articles
 
@@ -366,6 +384,7 @@ vercel --prod
 ### Files Changed
 
 1. **Frontend**: `/src/app/evidence-search/page.tsx`
+
    - Added search history sidebar
    - Added localStorage integration
    - Added timestamp formatting
@@ -404,11 +423,13 @@ vercel --prod
 **If deployment fails**:
 
 1. **Check Vercel Logs**:
+
    ```bash
    vercel logs --follow
    ```
 
 2. **Check Git Status**:
+
    ```bash
    git status
    git log --oneline -5
@@ -428,6 +449,7 @@ vercel --prod
 ## 🎯 Deployment Summary
 
 **What you're deploying**:
+
 - ✅ Search history sidebar (OpenEvidence-style)
 - ✅ Rate limiting (5 searches/min)
 - ✅ Input validation (3-500 chars)
@@ -435,6 +457,7 @@ vercel --prod
 - ✅ All existing features preserved
 
 **Safety measures in place**:
+
 - ✅ Full backup in `.backup/` folder
 - ✅ Git commit history on GitHub
 - ✅ Vercel deployment history
@@ -448,6 +471,7 @@ vercel --prod
 ## 🚦 GO/NO-GO Decision
 
 **You can deploy if**:
+
 - ✅ Local build succeeds (Step 1)
 - ✅ Local tests pass (Step 2)
 - ✅ Code committed to GitHub (Step 3)
@@ -455,6 +479,7 @@ vercel --prod
 - ✅ Environment variables set (Step 5)
 
 **DO NOT deploy if**:
+
 - ❌ Any test fails
 - ❌ Build errors
 - ❌ Console errors
@@ -495,9 +520,9 @@ vercel --prod
 
 ---
 
-**Created**: January 19, 2026  
-**Purpose**: Safe deployment without corruption  
-**Status**: Ready to execute  
-**Risk**: 🟢 LOW (well-tested, backed up)  
+**Created**: January 19, 2026
+**Purpose**: Safe deployment without corruption
+**Status**: Ready to execute
+**Risk**: 🟢 LOW (well-tested, backed up)
 
 🚀 **Let's deploy safely!**

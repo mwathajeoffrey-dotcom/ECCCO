@@ -31,6 +31,8 @@ next-env.d.ts
 
 # Old documentation (archived)
 .archive/
+.backup/
+backups/database/*.sql*
 .env
 prisma/dev.db
 prisma/dev.db-journal

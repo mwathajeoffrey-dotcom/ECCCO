@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
       });
     } catch (error: any) {
       console.error("[Synthesis Generation Error]", error.message);
-      
+
       // If synthesis fails due to quality filters, generate a RESEARCH SUMMARY instead
       // This provides value while being transparent about quality limitations
       if (error.message?.includes("Insufficient evidence") || error.message?.includes("quality")) {
         console.log("[Evidence Synthesis] Quality threshold not met, generating research summary instead...");
-        
+
         const suggestions = getSearchSuggestions(query, "low_quality");
         const alternatives = generateAlternativeQueries(query);
 
@@ -140,14 +140,15 @@ export async function POST(request: NextRequest) {
             useAI,
             maxArticles: 10,
           });
-          
+
           // Mark this as a research summary, not clinical synthesis
           researchSummary.metadata = {
             ...researchSummary.metadata,
             isResearchSummary: true,
-            warning: "This is a research summary based on available literature, not a clinical synthesis. Does not meet strict quality thresholds for clinical decision-making.",
+            warning:
+              "This is a research summary based on available literature, not a clinical synthesis. Does not meet strict quality thresholds for clinical decision-making.",
           };
-          
+
           return NextResponse.json({
             ...researchSummary,
             isResearchSummary: true,
@@ -155,10 +156,9 @@ export async function POST(request: NextRequest) {
             suggestions: alternatives.slice(0, 5),
             tips: suggestions.tips,
           });
-          
         } catch (summaryError: any) {
           console.error("[Research Summary Error]", summaryError);
-          
+
           // If even research summary fails, return articles for manual review
           return NextResponse.json(
             {
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
           );
         }
       }
-      
+
       // If it's an AI error, try falling back to structured summary
       if (error.message?.includes("AI") || error.message?.includes("Groq") || error.message?.includes("rate limit")) {
         console.warn("[Evidence Synthesis] AI failed, retrying with structured summary...");

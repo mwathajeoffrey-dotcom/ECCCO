@@ -13,6 +13,7 @@ A **left sidebar with search history** that mirrors the OpenEvidence design you 
 ### Key Features Implemented:
 
 #### ✅ 1. Left Sidebar Layout
+
 - **Width**: 288px (w-72) when open, 0px when closed
 - **Smooth transitions**: 300ms animation on open/close
 - **Border**: Right border separating sidebar from main content
@@ -20,6 +21,7 @@ A **left sidebar with search history** that mirrors the OpenEvidence design you 
 - **Positioning**: Fixed height, scrollable content area
 
 #### ✅ 2. Search History Storage
+
 - **localStorage**: Persists across browser sessions
 - **Capacity**: Stores last 20 searches
 - **Auto-save**: Automatically saves on every search
@@ -29,27 +31,30 @@ A **left sidebar with search history** that mirrors the OpenEvidence design you 
 #### ✅ 3. Interactive Features
 
 **Click to Re-run Search**:
+
 ```tsx
-<div onClick={() => handleSearch(item.query)}>
-  {item.query}
-</div>
+<div onClick={() => handleSearch(item.query)}>{item.query}</div>
 ```
+
 - Click any history item to instantly re-run that search
 - Updates the main search input
 - Fetches fresh results
 
 **Delete Individual Items**:
+
 - Trash icon appears on hover
 - Click to remove specific search from history
 - Smooth fade-out animation
 
 **Clear All History**:
+
 - Button at bottom of sidebar
 - Removes all searches
 - Clears localStorage
 - Requires confirmation via UI feedback
 
 #### ✅ 4. Timestamps ("just now", "2h ago", "3d ago")
+
 ```tsx
 const formatTimeAgo = (timestamp: number) => {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
@@ -61,10 +66,11 @@ const formatTimeAgo = (timestamp: number) => {
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d ago`;
   return new Date(timestamp).toLocaleDateString();
-}
+};
 ```
 
 Displays:
+
 - **< 1 minute**: "just now"
 - **< 1 hour**: "15m ago"
 - **< 1 day**: "3h ago"
@@ -74,30 +80,38 @@ Displays:
 #### ✅ 5. Mobile Responsiveness
 
 **Sidebar Behavior**:
+
 - **Desktop (≥1024px)**: Sidebar open by default
 - **Tablet/Mobile (<1024px)**: Sidebar closed by default
 - **Toggle button**: Hamburger menu appears when sidebar is closed
 
 **Mobile Menu**:
+
 ```tsx
-{!sidebarOpen && (
-  <button onClick={() => setSidebarOpen(true)}>
-    <Menu className="w-5 h-5" />
-  </button>
-)}
+{
+  !sidebarOpen && (
+    <button onClick={() => setSidebarOpen(true)}>
+      <Menu className="w-5 h-5" />
+    </button>
+  );
+}
 ```
+
 - Floating button in top-left corner
 - Opens sidebar as overlay
 - X button to close
 
 **Responsive Design**:
+
 - Sidebar width reduces to 0 when closed (not just hidden)
 - Main content expands to fill space
 - Touch-friendly hit targets (minimum 44px)
 - Swipe-to-delete on mobile (via trash button)
 
 #### ✅ 6. Empty State
+
 When no searches yet:
+
 ```
 ┌─────────────────────┐
 │   🕐 (clock icon)   │
@@ -110,18 +124,21 @@ When no searches yet:
 #### ✅ 7. UI/UX Polish
 
 **Visual Feedback**:
+
 - Hover states on all interactive elements
 - Active/focus states for accessibility
 - Loading states during search
 - Error states with clear messages
 
 **Accessibility**:
+
 - Semantic HTML (nav, button, list)
 - ARIA labels on icon buttons
 - Keyboard navigation support
 - Screen reader friendly
 
 **Color Scheme** (matches OpenEvidence style):
+
 - Header: Slate-50 background
 - Items: Hover to Slate-50
 - Text: Slate-800 (primary), Slate-500 (secondary)
@@ -135,18 +152,21 @@ When no searches yet:
 ### `/src/app/evidence-search/page.tsx`
 
 **New Imports**:
+
 ```tsx
 import { useState, useEffect } from "react"; // Added useEffect
 import { ..., Clock, Trash2, X, Menu } from "lucide-react"; // Added icons
 ```
 
 **New State**:
+
 ```tsx
 const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
 const [sidebarOpen, setSidebarOpen] = useState(true);
 ```
 
 **New Interface**:
+
 ```tsx
 interface SearchHistoryItem {
   query: string;
@@ -155,6 +175,7 @@ interface SearchHistoryItem {
 ```
 
 **New Functions**:
+
 1. `useEffect` for loading history from localStorage (lines ~50-58)
 2. `useEffect` for saving history to localStorage (lines ~60-64)
 3. `addToHistory()` - Add search to history with deduplication (lines ~66-76)
@@ -163,27 +184,29 @@ interface SearchHistoryItem {
 6. `formatTimeAgo()` - Format timestamps (lines ~126-136)
 
 **Updated Function**:
+
 ```tsx
 const handleSearch = async (searchQuery?: string) => {
   const queryToSearch = searchQuery || query.trim();
   // ... rest of function
-}
+};
 ```
+
 - Now accepts optional `searchQuery` parameter
 - Allows clicking history items to re-run searches
 
 **New Layout Structure**:
+
 ```tsx
-<div className="flex"> {/* Flexbox container */}
+<div className="flex">
+  {" "}
+  {/* Flexbox container */}
   {/* Left Sidebar */}
-  <div className={`${sidebarOpen ? 'w-72' : 'w-0'} ...`}>
+  <div className={`${sidebarOpen ? "w-72" : "w-0"} ...`}>
     {/* Sidebar content */}
   </div>
-  
   {/* Main Content */}
-  <div className="flex-1">
-    {/* Search interface */}
-  </div>
+  <div className="flex-1">{/* Search interface */}</div>
 </div>
 ```
 
@@ -192,6 +215,7 @@ const handleSearch = async (searchQuery?: string) => {
 ## 🎨 Design Matches OpenEvidence
 
 ### OpenEvidence Sidebar:
+
 - ✅ Left-aligned vertical sidebar
 - ✅ List of previous searches/conversations
 - ✅ Click to reload
@@ -200,6 +224,7 @@ const handleSearch = async (searchQuery?: string) => {
 - ✅ White background with subtle borders
 
 ### Our Implementation:
+
 - ✅ Same left-aligned layout
 - ✅ Search history items in list
 - ✅ Click to re-run search
@@ -208,6 +233,7 @@ const handleSearch = async (searchQuery?: string) => {
 - ✅ Matching color scheme
 
 **Differences** (intentional improvements):
+
 1. **Delete buttons**: We added trash icons to remove individual items
 2. **Clear all**: We added a "Clear All History" button at bottom
 3. **Mobile toggle**: We added hamburger menu for mobile
@@ -218,6 +244,7 @@ const handleSearch = async (searchQuery?: string) => {
 ## 🧪 Testing Checklist
 
 ### Basic Functionality
+
 - [ ] **First search**: Should appear in sidebar immediately
 - [ ] **Second search**: Should appear above first search
 - [ ] **Duplicate search**: Should move to top, not duplicate
@@ -226,11 +253,13 @@ const handleSearch = async (searchQuery?: string) => {
 - [ ] **Clear all**: Should empty sidebar completely
 
 ### LocalStorage Persistence
+
 - [ ] **Refresh page**: History should persist
 - [ ] **Close/reopen browser**: History should persist
 - [ ] **Incognito mode**: Should work but clear on close
 
 ### Timestamps
+
 - [ ] **Immediate search**: Shows "just now"
 - [ ] **Wait 2 minutes**: Shows "2m ago"
 - [ ] **Wait 2 hours**: Shows "2h ago"
@@ -238,6 +267,7 @@ const handleSearch = async (searchQuery?: string) => {
 - [ ] **Next week**: Shows formatted date
 
 ### Mobile/Responsive
+
 - [ ] **Desktop (>1024px)**: Sidebar open by default
 - [ ] **Tablet/Mobile**: Sidebar closed by default
 - [ ] **Hamburger menu**: Opens sidebar
@@ -245,6 +275,7 @@ const handleSearch = async (searchQuery?: string) => {
 - [ ] **Content reflow**: Main content fills space correctly
 
 ### Edge Cases
+
 - [ ] **No searches**: Shows empty state message
 - [ ] **20+ searches**: Only keeps last 20
 - [ ] **Very long query**: Truncates with ellipsis (line-clamp-2)
@@ -252,6 +283,7 @@ const handleSearch = async (searchQuery?: string) => {
 - [ ] **XSS attempt**: Sanitized by input validation
 
 ### Accessibility
+
 - [ ] **Keyboard navigation**: Tab through items
 - [ ] **Enter on history item**: Triggers search
 - [ ] **Screen reader**: Announces buttons and lists
@@ -262,6 +294,7 @@ const handleSearch = async (searchQuery?: string) => {
 ## 💡 How to Use
 
 ### For Clinicians:
+
 1. **Search normally** - Type a clinical question and search
 2. **See history** - Your search appears in left sidebar with timestamp
 3. **Quick re-search** - Click any previous search to run it again
@@ -269,6 +302,7 @@ const handleSearch = async (searchQuery?: string) => {
 5. **Fresh start** - Click "Clear All History" at bottom
 
 ### For Developers:
+
 ```tsx
 // Access search history state
 const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
@@ -291,7 +325,9 @@ formatTimeAgo(1705689600000); // "2h ago"
 ## 🚀 Next Steps
 
 ### Immediate (Before Deployment):
+
 1. **Test all features** (30 minutes)
+
    - Run through checklist above
    - Test on iPhone Safari
    - Test on Android Chrome
@@ -303,27 +339,33 @@ formatTimeAgo(1705689600000); // "2h ago"
    - Ensure animations are smooth
 
 ### Future Enhancements (Optional):
+
 1. **Favorites/Bookmarks** ⭐
+
    - Star icon on history items
    - Separate "Favorites" section at top
    - Persist favorite items permanently
 
 2. **Search Folders/Tags** 📁
+
    - Organize searches by topic
    - e.g., "Sepsis", "Cardiology", "Neurology"
    - Filter history by tag
 
 3. **Export History** 📥
+
    - Download search history as CSV/JSON
    - Useful for research projects
    - Share with colleagues
 
 4. **Search Stats** 📊
+
    - Most searched topics
    - Search frequency graph
    - Time spent researching
 
 5. **Keyboard Shortcuts** ⌨️
+
    - `Ctrl+H` to toggle sidebar
    - `↑/↓` to navigate history
    - `Enter` to re-run selected search
@@ -338,16 +380,19 @@ formatTimeAgo(1705689600000); // "2h ago"
 ## 📊 Performance Impact
 
 ### Memory Usage:
+
 - **localStorage**: ~5KB for 20 searches (negligible)
 - **React state**: ~1KB in memory
 - **Total impact**: < 10KB
 
 ### Load Time:
+
 - **Initial load**: +0ms (localStorage read is instant)
 - **Per search**: +2ms (add to history)
 - **Per delete**: +1ms (remove from history)
 
 ### Rendering:
+
 - **Sidebar**: Renders once on mount
 - **Updates**: Only re-renders on history changes
 - **Animations**: CSS-only (60fps)
@@ -359,6 +404,7 @@ formatTimeAgo(1705689600000); // "2h ago"
 ## 🐛 Known Issues / Limitations
 
 ### Current Limitations:
+
 1. **localStorage only**: History is per-browser, not synced across devices
 2. **No cloud backup**: If user clears browser data, history is lost
 3. **20 item limit**: Older searches are automatically removed
@@ -366,6 +412,7 @@ formatTimeAgo(1705689600000); // "2h ago"
 5. **No grouping**: All searches in one flat list (no folders/tags)
 
 ### Not Bugs (By Design):
+
 - Case-insensitive deduplication (prevents "Sepsis" and "sepsis" both appearing)
 - Newest first (most recent searches at top)
 - Auto-save (no manual save button needed)
@@ -380,6 +427,7 @@ formatTimeAgo(1705689600000); // "2h ago"
 **Status**: ✅ Complete and ready to test
 
 **Key Stats**:
+
 - **Lines of code added**: ~150
 - **New dependencies**: 0 (used existing lucide-react icons)
 - **Breaking changes**: 0 (purely additive)
@@ -411,4 +459,3 @@ formatTimeAgo(1705689600000); // "2h ago"
 │  └──────────────────┘                                         │
 └────────────────────────────────────────────────────────────────┘
 ```
-

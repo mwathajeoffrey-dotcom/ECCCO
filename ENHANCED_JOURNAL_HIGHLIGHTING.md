@@ -1,6 +1,7 @@
 # Enhanced Journal Highlighting - All Mentions Clickable ✅
 
 ## Problem Fixed
+
 **Issue:** Journal names in evidence summary were not all being highlighted/linked
 
 **Root Cause:** Old implementation processed journals sequentially, which could miss occurrences or create conflicts when multiple journals appeared in the same text.
@@ -10,6 +11,7 @@
 ### Complete Rewrite of `highlightJournalNames()` Function
 
 **New Approach:**
+
 1. Build comprehensive journal mapping with ALL variations
 2. Sort by length (longest first) to avoid partial matches
 3. Use single combined regex for all journals
@@ -24,36 +26,36 @@ Now includes ALL common variations:
 
 ```typescript
 // NEJM variations
-'NEJM'
-'New England Journal of Medicine'
-'N Engl J Med'
+"NEJM";
+"New England Journal of Medicine";
+"N Engl J Med";
 
 // JAMA variations
-'JAMA'
-'JAMA Internal Medicine'
+"JAMA";
+"JAMA Internal Medicine";
 
 // Lancet variations
-'The Lancet'
-'Lancet'
-'Lancet Respiratory Medicine'
+"The Lancet";
+"Lancet";
+"Lancet Respiratory Medicine";
 
 // BMJ variations
-'BMJ'
-'British Medical Journal'
+"BMJ";
+"British Medical Journal";
 
 // Critical Care variations
-'Critical Care Medicine'
-'Crit Care Med'
+"Critical Care Medicine";
+"Crit Care Med";
 
 // Other major journals
-'Intensive Care Medicine'
-'Anesthesia and Analgesia'
-'Anesthesia & Analgesia'
-'Cochrane'
-'Cochrane Database of Systematic Reviews'
-'Annals of Internal Medicine'
-'Chest'
-'CHEST'
+"Intensive Care Medicine";
+"Anesthesia and Analgesia";
+"Anesthesia & Analgesia";
+"Cochrane";
+"Cochrane Database of Systematic Reviews";
+"Annals of Internal Medicine";
+"Chest";
+"CHEST";
 ```
 
 **Result:** No matter how AI writes journal name, it gets highlighted!
@@ -61,6 +63,7 @@ Now includes ALL common variations:
 #### 2. **Smart Prioritization** 🎯
 
 Each journal variation has a priority score:
+
 - **Priority 10**: Full official names (e.g., "New England Journal of Medicine")
 - **Priority 9**: Common abbreviations (e.g., "NEJM", "JAMA")
 
@@ -69,6 +72,7 @@ Each journal variation has a priority score:
 #### 3. **Single-Pass Processing** ⚡
 
 **Before:**
+
 ```typescript
 // Loop through each journal
 journalMap.forEach((url, journalName) => {
@@ -79,9 +83,10 @@ journalMap.forEach((url, journalName) => {
 ```
 
 **After:**
+
 ```typescript
 // Build single regex for ALL journals
-const combinedRegex = new RegExp(`\\b(${allJournals})\\b`, 'g');
+const combinedRegex = new RegExp(`\\b(${allJournals})\\b`, "g");
 
 // Find ALL matches in one pass
 while ((match = combinedRegex.exec(text)) !== null) {
@@ -111,8 +116,10 @@ Journals sorted by length (longest first):
 #### 5. **Filter Unknown Journals** 🚫
 
 ```typescript
-if (source.journal.toLowerCase() !== 'unknown' && 
-    source.journal !== 'Unknown Journal') {
+if (
+  source.journal.toLowerCase() !== "unknown" &&
+  source.journal !== "Unknown Journal"
+) {
   // Add to map
 }
 ```
@@ -124,13 +131,15 @@ if (source.journal.toLowerCase() !== 'unknown' &&
 ### Example 1: Multiple Journals in Same Paragraph
 
 **Input Text:**
+
 ```
-The BICAR-ICU trial published in JAMA found no benefit, but 
-a meta-analysis in Anesthesia and Analgesia showed benefit 
+The BICAR-ICU trial published in JAMA found no benefit, but
+a meta-analysis in Anesthesia and Analgesia showed benefit
 in AKI patients. The Lancet also published similar findings.
 ```
 
 **Output:**
+
 - **JAMA** → Clickable blue underlined link
 - **Anesthesia and Analgesia** → Clickable blue underlined link
 - **The Lancet** → Clickable blue underlined link
@@ -140,12 +149,14 @@ in AKI patients. The Lancet also published similar findings.
 ### Example 2: Journal Abbreviations
 
 **Input Text:**
+
 ```
-According to NEJM, balanced crystalloids are preferred. 
+According to NEJM, balanced crystalloids are preferred.
 A study in BMJ confirmed this, and Crit Care Med agreed.
 ```
 
 **Output:**
+
 - **NEJM** → Clickable (links to New England Journal of Medicine article)
 - **BMJ** → Clickable (links to British Medical Journal article)
 - **Crit Care Med** → Clickable (links to Critical Care Medicine article)
@@ -155,12 +166,14 @@ A study in BMJ confirmed this, and Crit Care Med agreed.
 ### Example 3: Full vs Abbreviated Names
 
 **Input Text:**
+
 ```
-The New England Journal of Medicine published the SMART trial. 
+The New England Journal of Medicine published the SMART trial.
 Later, NEJM published a follow-up analysis.
 ```
 
 **Output:**
+
 - **New England Journal of Medicine** → Clickable
 - **NEJM** → Clickable (same article)
 
@@ -169,12 +182,14 @@ Later, NEJM published a follow-up analysis.
 ### Example 4: Nested Journal Names
 
 **Input Text:**
+
 ```
-Lancet Respiratory Medicine published a study on ARDS. 
+Lancet Respiratory Medicine published a study on ARDS.
 The Lancet also covered this topic.
 ```
 
 **Output:**
+
 - **Lancet Respiratory Medicine** → Clickable (full name matched first)
 - **The Lancet** → Clickable (different article)
 
@@ -202,16 +217,17 @@ transition-colors       /* Smooth color transitions */
 
 ```typescript
 // Escape special characters in journal names
-const escapedName = journalName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapedName = journalName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // Build alternation pattern for all journals
 const pattern = `\\b(Journal1|Journal2|Journal3)\\b`;
 
 // Create case-insensitive regex
-const regex = new RegExp(pattern, 'g');
+const regex = new RegExp(pattern, "g");
 ```
 
 **Flags:**
+
 - `g` - Global (find all matches)
 - `\b` - Word boundaries (no partial matches)
 
@@ -219,28 +235,26 @@ const regex = new RegExp(pattern, 'g');
 
 ```typescript
 interface Match {
-  text: string;      // "JAMA"
-  start: number;     // 25
-  end: number;       // 29
-  url: string;       // "https://..."
+  text: string; // "JAMA"
+  start: number; // 25
+  end: number; // 29
+  url: string; // "https://..."
 }
 
 // Build result
-result = [
-  "Text before ",
-  <a href="...">JAMA</a>,
-  " text after"
-]
+result = ["Text before ", <a href="...">JAMA</a>, " text after"];
 ```
 
 ### Performance
 
 **Complexity:**
+
 - Mapping: O(n) where n = number of sources
 - Regex: O(m) where m = text length
 - Total: O(n + m) - Linear time ✅
 
 **Memory:**
+
 - Journal map: ~50-100 entries typically
 - Matches array: ~5-20 matches per paragraph
 - Very efficient! ✅
@@ -248,48 +262,56 @@ result = [
 ## Testing Scenarios
 
 ### ✅ Single Journal
+
 ```
 "Published in JAMA"
 → JAMA is clickable
 ```
 
 ### ✅ Multiple Journals
+
 ```
 "JAMA found X, but Lancet showed Y"
 → Both JAMA and Lancet clickable
 ```
 
 ### ✅ Abbreviations
+
 ```
 "NEJM, BMJ, and JAMA all agree"
 → All three clickable
 ```
 
 ### ✅ Full Names
+
 ```
 "New England Journal of Medicine published..."
 → Full name clickable
 ```
 
 ### ✅ Mixed Format
+
 ```
 "The trial in JAMA and another in New England Journal of Medicine..."
 → Both clickable
 ```
 
 ### ✅ With Citations
+
 ```
 "Published in JAMA ⁽¹⁾"
 → Both JAMA and ⁽¹⁾ clickable independently
 ```
 
 ### ✅ Nested Names
+
 ```
 "Lancet Respiratory Medicine and The Lancet"
 → Both clickable, no conflict
 ```
 
 ### ✅ Unknown Journals
+
 ```
 "Published in Unknown Journal"
 → NOT clickable (filtered out)
@@ -298,15 +320,18 @@ result = [
 ## Integration with Key Points
 
 The same enhanced function now works in:
+
 1. **Detailed Summary** - All journal mentions clickable
 2. **Key Clinical Points** - All journal mentions clickable
 
 **Example Key Point:**
+
 ```
 • Consider if pH ≤7.2 AND AKI; NNT=12 (Anesthesia and Analgesia ⁽⁴⁾)
 ```
 
 **Result:**
+
 - **Anesthesia and Analgesia** → Clickable
 - **⁽⁴⁾** → Clickable
 
@@ -315,6 +340,7 @@ Both work independently! ✅
 ## Comparison: Before vs After
 
 ### Before ❌
+
 ```typescript
 // Sequential processing
 journalMap.forEach((url, journal) => {
@@ -330,11 +356,13 @@ Problems:
 ```
 
 **Result:**
+
 - "Published in JAMA" → ✅ JAMA clickable
 - "JAMA and Lancet" → ❌ Only JAMA clickable (Lancet missed)
 - "The Lancet and NEJM" → ❌ Inconsistent
 
 ### After ✅
+
 ```typescript
 // Single-pass processing
 const allJournals = sortedJournals.map(...).join('|');
@@ -349,6 +377,7 @@ while ((match = regex.exec(text))) {
 ```
 
 **Result:**
+
 - "Published in JAMA" → ✅ JAMA clickable
 - "JAMA and Lancet" → ✅ Both clickable
 - "The Lancet and NEJM" → ✅ Both clickable
@@ -357,24 +386,28 @@ while ((match = regex.exec(text))) {
 ## Edge Cases Handled
 
 ### 1. Journal Name Inside Another Word
+
 ```
-"jamaican patients" 
+"jamaican patients"
 → NOT highlighted (word boundaries prevent it)
 ```
 
 ### 2. Case Variations
+
 ```
 "jama", "JAMA", "Jama"
 → All highlighted (case-insensitive)
 ```
 
 ### 3. Special Characters in Journal Names
+
 ```
 "Anesthesia & Analgesia"
 → Highlighted (& is properly escaped)
 ```
 
 ### 4. Multiple Sources from Same Journal
+
 ```
 Source 1: JAMA article
 Source 2: Another JAMA article
@@ -382,12 +415,14 @@ Source 2: Another JAMA article
 ```
 
 ### 5. No URL Available
+
 ```
 Source without URL
 → Not added to journal map (skipped)
 ```
 
 ### 6. Empty or Unknown Journal
+
 ```
 journal: ""
 journal: "Unknown Journal"
@@ -399,6 +434,7 @@ journal: "Unknown Journal"
 ✅ **Complete and Production-Ready**
 
 **All journal mentions now highlighted:**
+
 - ✅ Multiple journals in same paragraph
 - ✅ Full names and abbreviations
 - ✅ Works in summary and key points

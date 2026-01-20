@@ -1,0 +1,141 @@
+name: 🗄️ Database Backup
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC (adjust timezone as needed)
+    - cron: '0 2 * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      retention_days:
+        description: 'Number of days to retain backup'
+        required: false
+        default: '90'
+
+jobs:
+  backup:
+    name: Create Database Backup
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔧 Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: 📅 Generate backup filename
+        id: filename
+        run: |
+          DATE=$(date +%Y%m%d_%H%M%S)
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+          echo "filename=eccco_backup_${DATE}.sql.gz" >> $GITHUB_OUTPUT
+      
+      - name: 🗄️ Create database backup
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "Creating backup: ${{ steps.filename.outputs.filename }}"
+          pg_dump "$DATABASE_URL" | gzip > "${{ steps.filename.outputs.filename }}"
+          
+          # Show backup info
+          ls -lh "${{ steps.filename.outputs.filename }}"
+          echo "✅ Backup created successfully"
+      
+      - name: 🔍 Verify backup integrity
+        run: |
+          if gunzip -t "${{ steps.filename.outputs.filename }}"; then
+            echo "✅ Backup file is valid"
+          else
+            echo "❌ Backup file is corrupted!"
+            exit 1
+          fi
+      
+      - name: 📊 Generate backup report
+        run: |
+          cat > backup_report.md << EOF
+          # Database Backup Report
+          
+          **Date:** $(date)
+          **Filename:** ${{ steps.filename.outputs.filename }}
+          **Size:** $(du -h "${{ steps.filename.outputs.filename }}" | cut -f1)
+          **Status:** ✅ Success
+          
+          ## Backup Details
+          - Workflow: ${{ github.workflow }}
+          - Run ID: ${{ github.run_id }}
+          - Triggered by: ${{ github.event_name }}
+          
+          ## Next Steps
+          1. Download backup from GitHub Artifacts
+          2. Store securely (recommended: encrypted cloud storage)
+          3. Test restore procedure quarterly
+          
+          ## Restore Instructions
+          \`\`\`bash
+          # Download and decompress
+          gunzip ${{ steps.filename.outputs.filename }}
+          
+          # Restore to database
+          psql \$DATABASE_URL < ${${{ steps.filename.outputs.filename }}%.gz}
+          \`\`\`
+          EOF
+          
+          cat backup_report.md
+      
+      - name: ☁️ Upload backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ steps.filename.outputs.date }}
+          path: |
+            ${{ steps.filename.outputs.filename }}
+            backup_report.md
+          retention-days: ${{ github.event.inputs.retention_days || 90 }}
+          compression-level: 0  # Already compressed with gzip
+      
+      - name: 📢 Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Database backup failed! Please check the logs."
+          echo "Backup date: $(date)"
+          echo "This is a critical failure - investigate immediately!"
+
+  # Optional: Cleanup old artifacts
+  cleanup:
+    name: Cleanup Old Backups
+    runs-on: ubuntu-latest
+    needs: backup
+    if: success()
+    
+    steps:
+      - name: 🧹 Clean old artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            
+            // Keep only last 30 database backups
+            const backupArtifacts = artifacts.data.artifacts
+              .filter(a => a.name.startsWith('database-backup-'))
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            
+            const toDelete = backupArtifacts.slice(30);
+            
+            for (const artifact of toDelete) {
+              console.log(`Deleting old backup: ${artifact.name}`);
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id
+              });
+            }
+            
+            console.log(`Cleaned up ${toDelete.length} old backup(s)`);
+            console.log(`Retained ${Math.min(30, backupArtifacts.length)} recent backup(s)`);

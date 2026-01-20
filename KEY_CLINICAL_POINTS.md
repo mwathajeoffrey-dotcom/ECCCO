@@ -1,12 +1,15 @@
 # Key Clinical Points Feature - Quick Reference ✅
 
 ## Overview
+
 Added a "Key Clinical Points" section after the detailed evidence summary to provide quick, actionable bullet points for bedside decision-making. Each point includes clickable journal links for instant source verification.
 
 ## Problem Solved
+
 **User Need:** "Not every user will have time to read through the whole paragraph evidence summary, but it's important that it remains detailed. We need key learning points in simple sentences for quick reference when making prompt decisions on clinical questions."
 
 **Solution:** Dual presentation format
+
 1. **Detailed Summary** - 3-5 comprehensive paragraphs for in-depth understanding
 2. **Key Clinical Points** - 4-7 bullet points for rapid consultation at bedside
 
@@ -15,12 +18,14 @@ Added a "Key Clinical Points" section after the detailed evidence summary to pro
 ### 1. **Visual Design** 🎨
 
 **Key Points Box:**
+
 - Gradient background: Emerald to teal (`from-emerald-50 to-teal-50`)
 - Bold emerald border (`border-2 border-emerald-200`)
 - Checkmark icon (✓) for visual recognition
 - "Quick Reference" badge for instant identification
 
 **Individual Points:**
+
 - Emerald bullet points (`•`) for visual consistency
 - Each point is a clickable text block
 - Journal names and citations are clickable links
@@ -29,11 +34,13 @@ Added a "Key Clinical Points" section after the detailed evidence summary to pro
 ### 2. **Content Structure** 📋
 
 Each bullet point contains:
+
 ```
 - [Main finding/recommendation] + [specific criteria/numbers] + (Journal ⁽¹⁾)
 ```
 
 **Example:**
+
 ```
 KEY POINTS:
 • Not recommended routinely; no mortality benefit shown in BICAR-ICU trial (JAMA ⁽¹⁾)
@@ -46,11 +53,13 @@ KEY POINTS:
 ### 3. **Clickable Elements** 🔗
 
 **Journal Names:**
+
 - "JAMA" → Clickable link to JAMA article
 - "Anesthesia and Analgesia" → Clickable link to A&A article
 - "Critical Care Medicine" → Clickable link to CCM article
 
 **Superscript Citations:**
+
 - "⁽¹⁾" → Clickable link to source #1
 - "⁽⁴⁾" → Clickable link to source #4
 - All citations link to full articles
@@ -60,6 +69,7 @@ KEY POINTS:
 ### 4. **AI-Generated Content** 🤖
 
 The AI is instructed to create points that:
+
 - ✅ Are max 25 words (concise)
 - ✅ State ONE key finding/recommendation per point
 - ✅ Include specific numbers/criteria (pH ≤7.2, NNT=12, dose)
@@ -67,6 +77,7 @@ The AI is instructed to create points that:
 - ✅ Are actionable for bedside decisions
 
 **AI Instructions:**
+
 ```
 KEY POINTS:
 After the SUMMARY, create a "KEY POINTS:" section with 4-7 bullet points for quick clinical reference.
@@ -83,6 +94,7 @@ Each bullet point should:
 ### Frontend (`/src/app/evidence-search/page.tsx`)
 
 #### Updated Interface:
+
 ```typescript
 interface SearchResult {
   query: string;
@@ -96,31 +108,49 @@ interface SearchResult {
 ```
 
 #### Key Points Rendering (Lines 130-155):
+
 ```tsx
-{result.keyPoints && result.keyPoints.length > 0 && (
-  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-lg p-6">
-    <div className="flex items-center gap-2 mb-4">
-      <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <h3 className="text-lg font-bold text-emerald-900">Key Clinical Points</h3>
-      <span className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-semibold">Quick Reference</span>
+{
+  result.keyPoints && result.keyPoints.length > 0 && (
+    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-lg p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <svg
+          className="w-5 h-5 text-emerald-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <h3 className="text-lg font-bold text-emerald-900">
+          Key Clinical Points
+        </h3>
+        <span className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-semibold">
+          Quick Reference
+        </span>
+      </div>
+      <ul className="space-y-3">
+        {result.keyPoints.map((point, idx) => (
+          <li key={idx} className="flex items-start gap-3 text-slate-800">
+            <span className="text-emerald-600 font-bold mt-0.5">•</span>
+            <span className="flex-1 leading-relaxed">
+              {renderSummaryWithLinks(point, result.sources)}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
-    <ul className="space-y-3">
-      {result.keyPoints.map((point, idx) => (
-        <li key={idx} className="flex items-start gap-3 text-slate-800">
-          <span className="text-emerald-600 font-bold mt-0.5">•</span>
-          <span className="flex-1 leading-relaxed">
-            {renderSummaryWithLinks(point, result.sources)}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+  );
+}
 ```
 
 **Key Features:**
+
 - Uses same `renderSummaryWithLinks()` function for clickable journals and citations
 - Conditional rendering - only shows if keyPoints exist
 - Responsive spacing with `space-y-3` between points
@@ -129,19 +159,22 @@ interface SearchResult {
 ### Backend (`/src/app/api/evidence/consensus-search/route.ts`)
 
 #### Function: `extractKeyPoints()` (Lines 400-418)
+
 ```typescript
 function extractKeyPoints(aiResponse: string): string[] {
   // Look for KEY POINTS section with bullet points
-  const keyPointsMatch = aiResponse.match(/KEY POINTS:\s*\n((?:[-•*]\s+[^\n]+\n?)+)/i);
-  
+  const keyPointsMatch = aiResponse.match(
+    /KEY POINTS:\s*\n((?:[-•*]\s+[^\n]+\n?)+)/i
+  );
+
   if (keyPointsMatch) {
     const pointsText = keyPointsMatch[1];
     // Split by bullet points and clean up
     const points = pointsText
       .split(/\n/)
-      .map(line => line.replace(/^[-•*]\s+/, '').trim())
-      .filter(line => line.length > 0);
-    
+      .map((line) => line.replace(/^[-•*]\s+/, "").trim())
+      .filter((line) => line.length > 0);
+
     return points;
   }
 
@@ -150,6 +183,7 @@ function extractKeyPoints(aiResponse: string): string[] {
 ```
 
 **Process:**
+
 1. Search for "KEY POINTS:" section in AI response
 2. Extract all lines starting with bullets (`-`, `•`, `*`)
 3. Remove bullet characters and trim whitespace
@@ -157,6 +191,7 @@ function extractKeyPoints(aiResponse: string): string[] {
 5. Return array of point strings
 
 #### Updated Response (Lines 338-343):
+
 ```typescript
 const result = {
   query,
@@ -170,6 +205,7 @@ const result = {
 ```
 
 #### Enhanced AI Prompt:
+
 - **Token limit increased**: 5000 → 5500 (to accommodate key points)
 - **Explicit instructions**: Create 4-7 bullet points after summary
 - **Format requirements**: Max 25 words, specific numbers, journal attribution
@@ -178,9 +214,11 @@ const result = {
 ## Use Cases
 
 ### Scenario 1: Busy Emergency Department
+
 **Clinician needs:** Quick answer on sodium bicarbonate for septic shock
 
 **Workflow:**
+
 1. Search "sodium bicarbonate in septic shock"
 2. Scroll to **Key Clinical Points** (skip detailed summary)
 3. Read 5 bullet points in 15 seconds:
@@ -195,9 +233,11 @@ const result = {
 **Time saved:** 2-3 minutes vs reading full paragraphs
 
 ### Scenario 2: Medical Student Learning
+
 **Student needs:** Study key evidence for rounds
 
 **Workflow:**
+
 1. Search "management of ARDS"
 2. Read detailed summary for understanding
 3. Use **Key Clinical Points** as study flashcards
@@ -206,9 +246,11 @@ const result = {
 **Benefit:** Structured learning with instant source access
 
 ### Scenario 3: Attending Physician Teaching
+
 **Teaching scenario:** Bedside teaching on fluid resuscitation
 
 **Workflow:**
+
 1. Pull up evidence search on tablet
 2. Show students **Key Clinical Points**
 3. Click journal links to show original trial data
@@ -219,45 +261,59 @@ const result = {
 ## Content Categories in Key Points
 
 ### 1. **Main Recommendation**
+
 ```
 • Not recommended for general use; no mortality benefit in unselected patients (JAMA ⁽¹⁾)
 ```
+
 Immediately tells clinician what to do/not do
 
 ### 2. **Specific Criteria**
+
 ```
 • Consider if pH ≤7.2 AND AKI stage 2-3; NNT=12 for mortality reduction (Anesthesia and Analgesia ⁽⁴⁾)
 ```
+
 Defines exact patient population
 
 ### 3. **Dosing/Administration**
+
 ```
 • Dose: 4.2% sodium bicarbonate 150mEq IV over 4 hours (JAMA ⁽¹⁾)
 ```
+
 Practical implementation details
 
 ### 4. **Monitoring/Safety**
+
 ```
 • Monitor for hypernatremia, hypocalcemia, metabolic alkalosis (Critical Care Medicine ⁽⁵⁾)
 ```
+
 What to watch for
 
 ### 5. **Evidence Quality**
+
 ```
 • Evidence quality moderate for AKI subgroup, low for general sepsis (Cochrane ⁽⁶⁾)
 ```
+
 Helps assess certainty
 
 ### 6. **Special Populations**
+
 ```
 • Avoid in hyperkalemia or severe alkalosis; use with caution in heart failure (NEJM ⁽³⁾)
 ```
+
 Important contraindications
 
 ### 7. **Alternative Approaches**
+
 ```
 • Balanced crystalloids preferred over normal saline in most critically ill patients (Lancet ⁽⁷⁾)
 ```
+
 Comparative recommendations
 
 ## Enhanced Journal Linking
@@ -267,18 +323,21 @@ Comparative recommendations
 **Implementation:** ✅ Complete
 
 The `renderSummaryWithLinks()` function now:
+
 1. Finds ALL journal name mentions in text
 2. Creates clickable links for each occurrence
 3. Supports multiple journals in same paragraph
 4. Works in both SUMMARY and KEY POINTS sections
 
 **Example:**
+
 ```
-"The BICAR-ICU trial in JAMA found no benefit ⁽¹⁾, but a meta-analysis 
+"The BICAR-ICU trial in JAMA found no benefit ⁽¹⁾, but a meta-analysis
 in Anesthesia and Analgesia showed benefit in AKI patients ⁽⁴⁾."
 ```
 
 Result:
+
 - **JAMA** → Clickable (blue underlined)
 - **Anesthesia and Analgesia** → Clickable (blue underlined)
 - **⁽¹⁾** → Clickable superscript
@@ -289,6 +348,7 @@ All 4 links work independently!
 ## Comparison: Before vs After
 
 ### Before:
+
 ```
 [Long detailed summary paragraph...]
 [Another detailed paragraph...]
@@ -300,12 +360,14 @@ Sources (15)
 ```
 
 **Issue:** Busy clinician has to:
+
 - Read entire summary (2-3 minutes)
 - Extract key points mentally
 - Scroll to sources to verify
 - No quick reference option
 
 ### After: ✅
+
 ```
 [Detailed summary paragraphs for those with time...]
 
@@ -321,6 +383,7 @@ Sources (15)
 ```
 
 **Benefits:**
+
 - ✅ Dual access: Detailed + Quick reference
 - ✅ Time-saving: 15 seconds to scan key points
 - ✅ Instant verification: Click journal names
@@ -331,6 +394,7 @@ Sources (15)
 ## Technical Specifications
 
 ### Response Structure:
+
 ```json
 {
   "query": "sodium bicarbonate in septic shock",
@@ -347,16 +411,19 @@ Sources (15)
 ```
 
 ### Regex Pattern for Extraction:
+
 ```typescript
-/KEY POINTS:\s*\n((?:[-•*]\s+[^\n]+\n?)+)/i
+/KEY POINTS:\s*\n((?:[-•*]\s+[^\n]+\n?)+)/i;
 ```
 
 Matches:
+
 - "KEY POINTS:" header
 - Multiple bullet lines with `-`, `•`, or `*`
 - Captures all point lines
 
 ### Token Budget:
+
 - **Before**: 5000 tokens for summary only
 - **After**: 5500 tokens for summary + key points
 - **Typical usage**: 3500-4500 tokens (well within limit)
@@ -364,6 +431,7 @@ Matches:
 ## Quality Assurance
 
 ### AI Validation Rules:
+
 ✅ Each point must be <25 words
 ✅ Each point must have journal attribution
 ✅ Each point must have citation number
@@ -371,6 +439,7 @@ Matches:
 ✅ Points must be actionable (not just descriptive)
 
 ### Frontend Validation:
+
 ✅ Only render if `keyPoints` array exists and has length >0
 ✅ All journal names must be clickable
 ✅ All citations must be clickable
@@ -378,6 +447,7 @@ Matches:
 ✅ Mobile responsive design
 
 ### User Experience:
+
 ✅ Clear visual distinction (emerald vs blue)
 ✅ "Quick Reference" badge draws attention
 ✅ Checkmark icon suggests verified/approved content
@@ -387,6 +457,7 @@ Matches:
 ## Future Enhancements
 
 ### Potential Additions:
+
 1. **Copy to Clipboard** - One-click copy all key points
 2. **Print View** - Optimized key points for pocket cards
 3. **Favorites** - Save key points to personal library
@@ -396,19 +467,22 @@ Matches:
 7. **Custom Points** - Let users add their own notes
 
 ### Analytics Tracking:
+
 ```typescript
 // Track which format users prefer
-analytics.track('Summary Section Viewed', {
-  section: 'detailed' | 'key-points',
+analytics.track("Summary Section Viewed", {
+  section: "detailed" | "key-points",
   timeSpent: seconds,
-  journalLinksClicked: count
+  journalLinksClicked: count,
 });
 ```
 
 ## Status
+
 ✅ **Complete and production-ready**
 
 Key Clinical Points feature fully implemented with:
+
 - Visual design matching clinical urgency (emerald theme)
 - Clickable journal names and citations throughout
 - AI-generated concise bullet points

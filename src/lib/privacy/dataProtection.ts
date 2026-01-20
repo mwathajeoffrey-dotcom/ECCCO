@@ -93,8 +93,17 @@ class DataProtectionService {
   }
 
   private generateEncryptionKey(): string {
-    // In production, this should come from environment variables
-    return process.env.ENCRYPTION_KEY || 'default-key-for-development-only';
+    const key = process.env.ENCRYPTION_KEY;
+    
+    // CRITICAL: Never use default key in production
+    if (!key && process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'ENCRYPTION_KEY environment variable must be set in production. ' +
+        'Generate a secure key with: openssl rand -base64 32'
+      );
+    }
+    
+    return key || 'development-key-do-not-use-in-production';
   }
 
   private async initializeDataProtection(): Promise<void> {

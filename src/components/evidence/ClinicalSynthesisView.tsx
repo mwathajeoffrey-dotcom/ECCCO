@@ -299,10 +299,7 @@ function ReferenceCard({ reference }: { reference: Reference }) {
           {studyBadges.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap mb-2">
               {studyBadges.map((badge, idx) => (
-                <span
-                  key={idx}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${badge.color}`}
-                >
+                <span key={idx} className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${badge.color}`}>
                   {badge.icon} {badge.text}
                 </span>
               ))}

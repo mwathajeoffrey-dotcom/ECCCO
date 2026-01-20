@@ -12,9 +12,7 @@ export default function EvidenceSearchPage() {
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-5xl font-bold mb-4">Evidence Search</h1>
-          <p className="text-xl text-blue-100">
-            Search medical literature with AI-powered insights
-          </p>
+          <p className="text-xl text-blue-100">Search medical literature with AI-powered insights</p>
         </div>
       </div>
 
@@ -45,9 +43,7 @@ export default function EvidenceSearchPage() {
         </div>
 
         {/* Results will go here */}
-        <div className="text-center text-gray-500 py-12">
-          Ready to search medical literature
-        </div>
+        <div className="text-center text-gray-500 py-12">Ready to search medical literature</div>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@
 ### What We Built
 
 A **Consensus.app-style medical evidence search** that combines:
+
 - **Multi-database search**: PubMed, CrossRef, Europe PMC, Semantic Scholar
 - **AI-powered synthesis**: Groq Llama 3.3 70B for clinical summaries
 - **Structured output**: Sections, subsections, tables, citations
@@ -13,27 +14,32 @@ A **Consensus.app-style medical evidence search** that combines:
 ### Features Implemented
 
 #### 1. **Medical Database Search** ✅
+
 - Searches 4 major medical databases simultaneously
 - Filters by date (last 10 years), requires abstracts
 - Returns unified article format with DOIs, PMIDs, citations
 
 #### 2. **AI Summary Generation** ✅
+
 - Uses Groq API (free tier, Llama 3.3 70B model)
 - Generates Consensus-style structured summaries
 - Creates sections, numbered subsections, and tables
 - Adds superscript citations matching source numbers
 
 #### 3. **Source Quality Badges** ✅
+
 Automatic badge detection:
+
 - ⭐ **RIGOROUS JOURNAL** - Tier 1 journals (NEJM, Lancet, JAMA, BMJ)
 - 📊 **HIGHLY CITED** - >500 citations
-- 📚 **WELL CITED** - >100 citations  
+- 📚 **WELL CITED** - >100 citations
 - 🔓 **OPEN ACCESS** - Free full-text available
 - 📈 **META-ANALYSIS** - Systematic review with meta-analysis
 - 📋 **SYSTEMATIC REVIEW** - Comprehensive literature review
 - 🧪 **RCT** - Randomized controlled trial
 
 #### 4. **Clean UI** ✅
+
 - Search box with Enter key support
 - Loading states
 - Error handling
@@ -47,6 +53,7 @@ Automatic badge detection:
 **Query**: "septic shock treatment"
 
 **Results**:
+
 - ✅ Found 15 articles from PubMed, CrossRef, Europe PMC
 - ✅ Generated AI summary in 5 seconds
 - ✅ Created structured sections (Definition, Treatment, Clinical Utility)
@@ -55,8 +62,9 @@ Automatic badge detection:
 - ✅ Detected Open Access badges
 
 **Sample Output**:
+
 ```
-Summary: Septic shock is a life-threatening condition characterized by organ 
+Summary: Septic shock is a life-threatening condition characterized by organ
 dysfunction caused by an unregulated response to infection...
 
 Sections:
@@ -97,6 +105,7 @@ Sources (15):
 ### API Endpoints
 
 **POST** `/api/evidence/consensus-search`
+
 ```json
 {
   "query": "clinical question"
@@ -104,6 +113,7 @@ Sources (15):
 ```
 
 **Response**:
+
 ```typescript
 {
   query: string;
@@ -155,8 +165,9 @@ Sources (15):
 ### Live Demo Ready! 🚀
 
 The evidence search is now fully functional with:
+
 - Real medical database search
-- AI-powered Consensus-style summaries  
+- AI-powered Consensus-style summaries
 - Quality source badges
 - Professional UI
 
@@ -164,7 +175,7 @@ The evidence search is now fully functional with:
 
 ---
 
-**Created**: January 19, 2026  
-**Model**: Llama 3.3 70B via Groq  
-**Databases**: PubMed, CrossRef, Europe PMC, Semantic Scholar  
+**Created**: January 19, 2026
+**Model**: Llama 3.3 70B via Groq
+**Databases**: PubMed, CrossRef, Europe PMC, Semantic Scholar
 **API**: Free tier (14,400 requests/day)

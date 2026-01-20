@@ -113,9 +113,9 @@ export async function generateClinicalSynthesis(
     // DO NOT show single-article recommendations - patient safety risk!
     throw new Error(
       `Insufficient high-quality evidence for safe clinical recommendations. ` +
-      `Found ${clinicalArticles.length} high-quality article(s), but need at least ${MINIMUM_ARTICLES_FOR_CLINICAL_USE} from top-tier journals. ` +
-      `This ensures recommendations are based on reliable, peer-reviewed evidence rather than single studies. ` +
-      `Try a broader search term or consult specialized medical databases.`
+        `Found ${clinicalArticles.length} high-quality article(s), but need at least ${MINIMUM_ARTICLES_FOR_CLINICAL_USE} from top-tier journals. ` +
+        `This ensures recommendations are based on reliable, peer-reviewed evidence rather than single studies. ` +
+        `Try a broader search term or consult specialized medical databases.`
     );
   }
 
@@ -137,88 +137,90 @@ export async function generateClinicalSynthesis(
         return b._evidenceType - a._evidenceType; // Higher = better
       }
       // Second: Journal tier
-        if (a._quality.tier !== b._quality.tier) {
-          return a._quality.tier - b._quality.tier; // Lower tier number = better
-        }
-        // Third: Quality score
-        return b._quality.totalScore - a._quality.totalScore;
-      })
-      .slice(0, Math.min(maxArticles, 8)); // Limit to 8 max (OpenEvidence style)
+      if (a._quality.tier !== b._quality.tier) {
+        return a._quality.tier - b._quality.tier; // Lower tier number = better
+      }
+      // Third: Quality score
+      return b._quality.totalScore - a._quality.totalScore;
+    })
+    .slice(0, Math.min(maxArticles, 8)); // Limit to 8 max (OpenEvidence style)
 
-    // Step 3: Prepare references (show only top 4-6 like OpenEvidence)
-    const topReferences = sortedArticles.slice(0, 6); // Max 6 references
-    const references: Reference[] = topReferences.map((article, i) => ({
-      id: `ref-${i + 1}`,
-      title: (article as any).title || "Untitled",
-      authors: (article as any).authors?.slice(0, 5) || [],
-      journal: article.journal,
-      year: parseInt((article as any).published?.split("-")[0] || new Date().getFullYear().toString()),
-      doi: (article as any).doi,
-      pmid: (article as any).pmid,
-      url: (article as any).url || "",
-      qualityScore: article._quality.totalScore,
-      evidenceLevel: inferEvidenceLevel(article as any),
-      citationCount: (article as any).citationCount || 0,
-    }));
+  // Step 3: Prepare references (show only top 4-6 like OpenEvidence)
+  const topReferences = sortedArticles.slice(0, 6); // Max 6 references
+  const references: Reference[] = topReferences.map((article, i) => ({
+    id: `ref-${i + 1}`,
+    title: (article as any).title || "Untitled",
+    authors: (article as any).authors?.slice(0, 5) || [],
+    journal: article.journal,
+    year: parseInt((article as any).published?.split("-")[0] || new Date().getFullYear().toString()),
+    doi: (article as any).doi,
+    pmid: (article as any).pmid,
+    url: (article as any).url || "",
+    qualityScore: article._quality.totalScore,
+    evidenceLevel: inferEvidenceLevel(article as any),
+    citationCount: (article as any).citationCount || 0,
+  }));
 
-    // Step 4: Check if AI is available and requested
-    let usedAI = false;
-    let sections: ClinicalSection[] = [];
+  // Step 4: Check if AI is available and requested
+  let usedAI = false;
+  let sections: ClinicalSection[] = [];
 
-    if (useAI) {
-      try {
-        // Try Groq first (faster, free), then Meditron as fallback
-        const groqAvailable = isGroqAvailable();
-        const meditronAvailable = await isMeditronAvailable();
+  if (useAI) {
+    try {
+      // Try Groq first (faster, free), then Meditron as fallback
+      const groqAvailable = isGroqAvailable();
+      const meditronAvailable = await isMeditronAvailable();
 
-        console.log(`[Evidence Synthesis] 🔍 AI Check:`);
-        console.log(`  - Groq Available: ${groqAvailable}`);
-        console.log(`  - GROQ_API_KEY exists: ${!!process.env.GROQ_API_KEY}`);
-        console.log(`  - GROQ_API_KEY length: ${process.env.GROQ_API_KEY?.length || 0}`);
-        console.log(`  - Meditron Available: ${meditronAvailable}`);
+      console.log(`[Evidence Synthesis] 🔍 AI Check:`);
+      console.log(`  - Groq Available: ${groqAvailable}`);
+      console.log(`  - GROQ_API_KEY exists: ${!!process.env.GROQ_API_KEY}`);
+      console.log(`  - GROQ_API_KEY length: ${process.env.GROQ_API_KEY?.length || 0}`);
+      console.log(`  - Meditron Available: ${meditronAvailable}`);
 
-        if (groqAvailable) {
-          console.log("[Evidence Synthesis] ✅ Using Groq AI for synthesis");
-          sections = await generateGroqSynthesis(query, sortedArticles as any, references);
-          usedAI = true;
-        } else if (meditronAvailable) {
-          console.log("[Evidence Synthesis] Using Meditron AI for synthesis");
-          sections = await generateAISynthesis(query, sortedArticles as any, references);
-          usedAI = true;
-        } else {
-          console.warn("[Evidence Synthesis] ⚠️ No AI available (tried Groq, Meditron), falling back to structured summary");
-          console.warn("Get free Groq API key at: https://console.groq.com");
-          console.warn("Add to .env.local: GROQ_API_KEY=your_key_here");
-          sections = await generateStructuredSummary(query, sortedArticles as any, references);
-        }
-      } catch (error: any) {
-        console.error("[Evidence Synthesis] ❌ AI synthesis failed:", error?.message || error);
-        console.error("Falling back to structured summary");
+      if (groqAvailable) {
+        console.log("[Evidence Synthesis] ✅ Using Groq AI for synthesis");
+        sections = await generateGroqSynthesis(query, sortedArticles as any, references);
+        usedAI = true;
+      } else if (meditronAvailable) {
+        console.log("[Evidence Synthesis] Using Meditron AI for synthesis");
+        sections = await generateAISynthesis(query, sortedArticles as any, references);
+        usedAI = true;
+      } else {
+        console.warn(
+          "[Evidence Synthesis] ⚠️ No AI available (tried Groq, Meditron), falling back to structured summary"
+        );
+        console.warn("Get free Groq API key at: https://console.groq.com");
+        console.warn("Add to .env.local: GROQ_API_KEY=your_key_here");
         sections = await generateStructuredSummary(query, sortedArticles as any, references);
       }
-    } else {
+    } catch (error: any) {
+      console.error("[Evidence Synthesis] ❌ AI synthesis failed:", error?.message || error);
+      console.error("Falling back to structured summary");
       sections = await generateStructuredSummary(query, sortedArticles as any, references);
     }
+  } else {
+    sections = await generateStructuredSummary(query, sortedArticles as any, references);
+  }
 
-    // Step 5: Calculate metadata
-    const metadata: SynthesisMetadata = {
-      confidenceScore: calculateConfidenceScore(sortedArticles.map((a) => a._quality)),
-      articlesAnalyzed: sortedArticles.length,
-      tier1Count: sortedArticles.filter((a) => a._quality.tier === 1).length,
-      tier2Count: sortedArticles.filter((a) => a._quality.tier === 2).length,
-      avgQualityScore: Math.round(
-        sortedArticles.reduce((sum, a) => sum + a._quality.totalScore, 0) / sortedArticles.length
-      ),
-      lastUpdated: new Date().toISOString(),
-      usedAI,
-    };
+  // Step 5: Calculate metadata
+  const metadata: SynthesisMetadata = {
+    confidenceScore: calculateConfidenceScore(sortedArticles.map((a) => a._quality)),
+    articlesAnalyzed: sortedArticles.length,
+    tier1Count: sortedArticles.filter((a) => a._quality.tier === 1).length,
+    tier2Count: sortedArticles.filter((a) => a._quality.tier === 2).length,
+    avgQualityScore: Math.round(
+      sortedArticles.reduce((sum, a) => sum + a._quality.totalScore, 0) / sortedArticles.length
+    ),
+    lastUpdated: new Date().toISOString(),
+    usedAI,
+  };
 
-    return {
-      query,
-      sections,
-      references,
-      metadata,
-    };
+  return {
+    query,
+    sections,
+    references,
+    metadata,
+  };
 }
 
 /**
@@ -516,7 +518,9 @@ function parseParagraphs(text: string, references: Reference[]): ClinicalParagra
           color: getJournalColor(ref.journal),
         });
       } else {
-        console.warn(`[Parse Citations] Reference ${refNum} not found or missing data. Total refs: ${references.length}`);
+        console.warn(
+          `[Parse Citations] Reference ${refNum} not found or missing data. Total refs: ${references.length}`
+        );
       }
     }
 

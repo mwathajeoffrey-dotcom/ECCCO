@@ -5,6 +5,7 @@
 ### ✅ What We Already Have (Excellent!)
 
 1. **High-Quality Evidence Filtering**
+
    - ✅ Minimum 3 articles required (patient safety!)
    - ✅ Quality score ≥50/100
    - ✅ Tier 1-2 journals only (NEJM, Lancet, JAMA)
@@ -12,12 +13,14 @@
    - ✅ Abstract verification
 
 2. **OpenEvidence-Style Citations**
+
    - ✅ Inline journal badges: `🔵 Lancet +2`
    - ✅ Clickable to original articles
    - ✅ Color-coded by tier
    - ✅ Citation merging (Lancet +1, Lancet +1 → Lancet +2)
 
 3. **AI-Powered Synthesis**
+
    - ✅ Groq Llama 3.3 70B (medical-optimized)
    - ✅ Full-text analysis from Europe PMC
    - ✅ Evidence hierarchy (Guidelines > Meta-analyses > RCTs)
@@ -35,6 +38,7 @@
 ### 1. **Structured Clinical Content** 📋
 
 **Consensus Example** (Berlin ARDS):
+
 ```
 Core Diagnostic Criteria (Adults)
   1. Timing
@@ -54,6 +58,7 @@ Recent/Proposed Updates ("Global Definition", Berlin 2.0)
 ```
 
 **Our Current Output**:
+
 ```
 Summary
   Generic paragraphs about management
@@ -65,7 +70,8 @@ Evidence Quality
   Metadata
 ```
 
-**IMPROVEMENT NEEDED**: 
+**IMPROVEMENT NEEDED**:
+
 - Smarter section detection from query
 - Extract diagnostic criteria explicitly
 - Show structured updates/limitations
@@ -76,6 +82,7 @@ Evidence Quality
 ### 2. **Follow-Up Questions** 🤔
 
 **Consensus Shows**:
+
 ```
 📊 CONSENSUS METER: Does the Berlin definition improve ARDS diagnosis accuracy?
 
@@ -88,6 +95,7 @@ Related Searches:
 **Our Current**: Nothing
 
 **IMPLEMENTATION**:
+
 ```typescript
 // Add to synthesis metadata
 suggestedFollowUps: [
@@ -101,7 +109,7 @@ suggestedFollowUps: [
     query: "Berlin criteria ARDS severity",
     reason: "Explore severity classification",
   },
-]
+];
 ```
 
 **DIFFICULTY**: Medium (2-3 hours)
@@ -112,6 +120,7 @@ suggestedFollowUps: [
 ### 3. **Visual Tables/Data** 📊
 
 **Consensus Shows**:
+
 ```
 Severity (Berlin)          PaO₂/FiO₂ (mmHg)    Typical mortality*
 Mild                       >200-≤300           ~27-30%
@@ -124,6 +133,7 @@ Severe                     ≤100                ~45-50%
 **IMPLEMENTATION OPTIONS**:
 
 **Option A: Extract Tables from Full Text** (Best)
+
 ```typescript
 // In Europe PMC full-text analysis
 interface ExtractedTable {
@@ -134,8 +144,8 @@ interface ExtractedTable {
 }
 
 // AI prompt addition:
-"If the evidence includes tables with clinical data 
-(e.g., severity classifications, dosing regimens, 
+"If the evidence includes tables with clinical data
+(e.g., severity classifications, dosing regimens,
 diagnostic criteria), extract them in this format:
 
 TABLE: [Title]
@@ -145,6 +155,7 @@ TABLE: [Title]
 ```
 
 **Option B: AI-Generated Tables** (Faster to implement)
+
 ```typescript
 // Add to synthesis sections
 interface ClinicalTable {
@@ -159,7 +170,8 @@ sections: ClinicalSection[] & {
 }
 ```
 
-**DIFFICULTY**: 
+**DIFFICULTY**:
+
 - Option A: Hard (6-8 hours)
 - Option B: Medium (3-4 hours)
 
@@ -170,6 +182,7 @@ sections: ClinicalSection[] & {
 ### 4. **Prominent Study Badges** 🏆
 
 **Consensus Shows**:
+
 ```
 1. Acute respiratory distress syndrome in adults...
    ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED
@@ -182,40 +195,42 @@ sections: ClinicalSection[] & {
 
 **Our Current**: Small quality badges in reference cards
 
-**IMPROVEMENT NEEDED**: 
+**IMPROVEMENT NEEDED**:
+
 - Move badges UP to article titles
 - Larger, more prominent badges
 - Add "Highly Cited" badge (>500 citations)
 - Add "Recent" badge (<2 years old)
 
 **IMPLEMENTATION**:
+
 ```tsx
 // In ClinicalSynthesisView.tsx
 function ArticleBadges({ article }) {
   const badges = [];
-  
+
   // Tier 1 journal
   if (article.tier === 1) {
     badges.push({ icon: "⭐", text: "RIGOROUS JOURNAL", color: "blue" });
   }
-  
+
   // Highly cited
   if (article.citationCount > 500) {
     badges.push({ icon: "📊", text: "HIGHLY CITED", color: "purple" });
   }
-  
+
   // Study type
   if (article.evidenceLevel === "1") {
     badges.push({ icon: "📋", text: "SYSTEMATIC REVIEW", color: "green" });
   } else if (article.evidenceLevel === "2") {
     badges.push({ icon: "🔬", text: "RCT", color: "indigo" });
   }
-  
+
   // Recent
   if (new Date().getFullYear() - article.year <= 2) {
     badges.push({ icon: "🆕", text: "RECENT", color: "red" });
   }
-  
+
   return (
     <div className="flex gap-2 mt-1">
       {badges.map((badge, i) => (
@@ -236,6 +251,7 @@ function ArticleBadges({ article }) {
 ### 5. **Better Error Messages** ✅ (Already Great!)
 
 **Consensus Shows**:
+
 ```
 Found 29 articles, but not enough meet quality standards.
 
@@ -254,6 +270,7 @@ Try these related searches:
 ### **Phase 1: Quick Wins (Today)** ⚡
 
 1. **Add Prominent Study Badges** (1-2 hours)
+
    - ⭐ RIGOROUS JOURNAL
    - 📊 HIGHLY CITED
    - 📋 SYSTEMATIC REVIEW
@@ -273,6 +290,7 @@ Try these related searches:
 ### **Phase 2: Medium Improvements (This Week)** 📅
 
 3. **Add Follow-Up Questions** (3 hours)
+
    - Generate 3-5 related queries
    - Add consensus meter for Yes/No questions
    - Show in sidebar or below synthesis
@@ -290,6 +308,7 @@ Try these related searches:
 ### **Phase 3: Advanced Features (Next Week)** 🚀
 
 5. **Full-Text Table Extraction** (6-8 hours)
+
    - Parse Europe PMC XML for tables
    - Extract dosing regimens
    - Extract diagnostic criteria
@@ -309,6 +328,7 @@ Try these related searches:
 ## 🎯 Recommended Next Steps
 
 ### **Option A: Ship Quick Wins Today** ⚡
+
 ```bash
 # 1. Add prominent badges (1 hour)
 # 2. Improve section headings (2 hours)
@@ -317,16 +337,19 @@ Try these related searches:
 ```
 
 **Pros**:
+
 - Immediate visible improvement
 - Low risk
 - Builds momentum
 
 **Cons**:
+
 - Still missing tables, follow-ups
 
 ---
 
 ### **Option B: Full Consensus Parity This Week** 🎖️
+
 ```bash
 # Day 1: Badges + Section headings (4 hours)
 # Day 2: Follow-up questions (3 hours)
@@ -336,11 +359,13 @@ Try these related searches:
 ```
 
 **Pros**:
+
 - Feature-complete vs Consensus
 - Professional-grade tool
 - Can charge for access
 
 **Cons**:
+
 - Takes longer
 - More testing needed
 
@@ -353,6 +378,7 @@ Try these related searches:
 The study badges are a **HUGE** visual improvement for minimal effort:
 
 **Before**:
+
 ```
 1. Acute respiratory distress syndrome in adults...
    2022 · 230 citations · E. Gorman et al. · The Lancet
@@ -360,6 +386,7 @@ The study badges are a **HUGE** visual improvement for minimal effort:
 ```
 
 **After**:
+
 ```
 ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED
 
@@ -398,6 +425,7 @@ What we need:
 ## 🚀 Ready to Ship?
 
 Want me to:
+
 1. **Add prominent study badges NOW** (1 hour) - Biggest visual impact
 2. **Improve section headings** (2 hours) - Better content organization
 3. **Deploy and test** (30 min)

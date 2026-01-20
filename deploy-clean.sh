@@ -23,7 +23,7 @@ Features:
 - In-memory cache with optional Vercel KV upgrade
 - Server logs show cache hit/miss for monitoring
 
-📊 High-Quality Evidence Synthesis  
+📊 High-Quality Evidence Synthesis
 - 87% confidence scores from top-tier journals
 - Strategic search: Guidelines → Meta → Reviews → RCTs
 - 4-6 references per search from JAMA, NEJM, Lancet, BMJ
@@ -48,7 +48,7 @@ Quality Maintained:
 ==================
 ✅ 87% confidence scores
 ✅ Top-tier journal sourcing
-✅ High-quality evidence filtering  
+✅ High-quality evidence filtering
 ✅ Strategic search methodology
 ✅ Full citation support with DOI/PubMed links
 

@@ -80,16 +80,16 @@ export default function EvidenceSearchPage() {
       query: searchQuery,
       timestamp: Date.now(),
     };
-    
+
     // Remove duplicates and add to front, keep last 20
-    setSearchHistory(prev => {
-      const filtered = prev.filter(item => item.query.toLowerCase() !== searchQuery.toLowerCase());
+    setSearchHistory((prev) => {
+      const filtered = prev.filter((item) => item.query.toLowerCase() !== searchQuery.toLowerCase());
       return [newItem, ...filtered].slice(0, 20);
     });
   };
 
   const removeFromHistory = (timestamp: number) => {
-    setSearchHistory(prev => prev.filter(item => item.timestamp !== timestamp));
+    setSearchHistory((prev) => prev.filter((item) => item.timestamp !== timestamp));
   };
 
   const clearAllHistory = () => {
@@ -100,7 +100,7 @@ export default function EvidenceSearchPage() {
   const handleSearch = async (searchQuery?: string) => {
     const queryToSearch = searchQuery || query.trim();
     if (!queryToSearch) return;
-    
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -144,7 +144,11 @@ export default function EvidenceSearchPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex">
       {/* Left Sidebar - Search History */}
-      <div className={`${sidebarOpen ? 'w-72' : 'w-0'} transition-all duration-300 border-r border-slate-200 bg-white flex-shrink-0 overflow-hidden`}>
+      <div
+        className={`${
+          sidebarOpen ? "w-72" : "w-0"
+        } transition-all duration-300 border-r border-slate-200 bg-white flex-shrink-0 overflow-hidden`}
+      >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
@@ -178,12 +182,8 @@ export default function EvidenceSearchPage() {
                     onClick={() => handleSearch(item.query)}
                   >
                     <div className="pr-6">
-                      <p className="text-sm text-slate-800 line-clamp-2 leading-snug">
-                        {item.query}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {formatTimeAgo(item.timestamp)}
-                      </p>
+                      <p className="text-sm text-slate-800 line-clamp-2 leading-snug">{item.query}</p>
+                      <p className="text-xs text-slate-500 mt-1">{formatTimeAgo(item.timestamp)}</p>
                     </div>
                     <button
                       onClick={(e) => {
@@ -264,9 +264,7 @@ export default function EvidenceSearchPage() {
             <div className="text-center py-12 text-slate-500">
               <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-20" />
               <p>Enter a clinical question to search evidence-based literature</p>
-              {searchHistory.length > 0 && (
-                <p className="text-sm mt-2">Or select a recent search from the sidebar</p>
-              )}
+              {searchHistory.length > 0 && <p className="text-sm mt-2">Or select a recent search from the sidebar</p>}
             </div>
           )}
         </div>
@@ -282,7 +280,9 @@ function ConsensusResult({ result }: { result: SearchResult }) {
         <h2 className="text-3xl font-bold text-slate-900 mb-3">{result.query}</h2>
         <div className="flex items-center gap-3 text-sm text-slate-600">
           {result.isPro && <span className="font-semibold text-blue-600">Pro</span>}
-          <span>·</span><span>{result.steps} steps</span><span>·</span>
+          <span>·</span>
+          <span>{result.steps} steps</span>
+          <span>·</span>
           <span>{result.sources.length} sources</span>
         </div>
       </div>
@@ -291,32 +291,39 @@ function ConsensusResult({ result }: { result: SearchResult }) {
           {renderSummaryWithLinks(result.summary, result.sources)}
         </div>
       </div>
-      
+
       {/* Key Clinical Points - Quick Reference */}
       {result.keyPoints && result.keyPoints.length > 0 && (
         <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <h3 className="text-lg font-bold text-emerald-900">Key Clinical Points</h3>
-            <span className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-semibold">Quick Reference</span>
+            <span className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full font-semibold">
+              Quick Reference
+            </span>
           </div>
           <ul className="space-y-3">
             {result.keyPoints.map((point, idx) => (
               <li key={idx} className="flex items-start gap-3 text-slate-800">
                 <span className="text-emerald-600 font-bold mt-0.5">•</span>
-                <span className="flex-1 leading-relaxed">
-                  {renderSummaryWithLinks(point, result.sources)}
-                </span>
+                <span className="flex-1 leading-relaxed">{renderSummaryWithLinks(point, result.sources)}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
-      
+
       <div className="space-y-8">
-        {result.sections.map((section, idx) => <SectionView key={idx} section={section} />)}
+        {result.sections.map((section, idx) => (
+          <SectionView key={idx} section={section} />
+        ))}
       </div>
       <div className="border-t border-slate-200 pt-8">
         <h3 className="text-xl font-bold text-slate-900 mb-6">Sources ({result.sources.length})</h3>
@@ -336,7 +343,8 @@ function SectionView({ section }: { section: Section }) {
           {section.subsections.map((subsection, idx) => (
             <div key={idx} className="space-y-2">
               <h4 className="font-semibold text-slate-800 flex items-start gap-2">
-                <span className="text-blue-600">{idx + 1}.</span><span>{subsection.title}</span>
+                <span className="text-blue-600">{idx + 1}.</span>
+                <span>{subsection.title}</span>
               </h4>
               <p className="text-slate-700 leading-relaxed pl-5">
                 {renderWithCitations(subsection.content, subsection.citations)}
@@ -357,14 +365,20 @@ function TableView({ table }: { table: Table }) {
         <thead className="bg-slate-100">
           <tr>
             {table.headers.map((header, idx) => (
-              <th key={idx} className="px-4 py-3 text-left font-semibold text-slate-700 border-b border-slate-300">{header}</th>
+              <th key={idx} className="px-4 py-3 text-left font-semibold text-slate-700 border-b border-slate-300">
+                {header}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {table.rows.map((row, rowIdx) => (
             <tr key={rowIdx} className="hover:bg-slate-50 transition-colors border-b border-slate-200 last:border-0">
-              {row.map((cell, cellIdx) => <td key={cellIdx} className="px-4 py-3 text-slate-700">{cell}</td>)}
+              {row.map((cell, cellIdx) => (
+                <td key={cellIdx} className="px-4 py-3 text-slate-700">
+                  {cell}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
@@ -378,21 +392,34 @@ function SourcesList({ sources }: { sources: Source[] }) {
   return (
     <div className="space-y-4">
       {sources.map((source) => (
-        <div key={source.id} className="border border-slate-200 rounded-lg p-5 hover:border-blue-300 hover:shadow-md transition-all">
+        <div
+          key={source.id}
+          className="border border-slate-200 rounded-lg p-5 hover:border-blue-300 hover:shadow-md transition-all"
+        >
           {source.badges.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-3">
               {source.badges.map((badge, idx) => (
-                <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{badge}</span>
+                <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                  {badge}
+                </span>
               ))}
             </div>
           )}
           <h4 className="font-semibold text-slate-900 mb-2 flex items-start gap-2">
             <span className="text-blue-600">⁽{source.id}⁾</span>
             {source.url ? (
-              <a href={source.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors flex items-center gap-1">
-                {source.title}<ExternalLink className="w-4 h-4" />
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-600 transition-colors flex items-center gap-1"
+              >
+                {source.title}
+                <ExternalLink className="w-4 h-4" />
               </a>
-            ) : <span>{source.title}</span>}
+            ) : (
+              <span>{source.title}</span>
+            )}
           </h4>
           <p className="text-sm text-slate-600">
             {source.year} · {source.citations} citations · {source.authors} · {source.journal}
@@ -405,13 +432,24 @@ function SourcesList({ sources }: { sources: Source[] }) {
 
 function renderWithCitations(text: string, citations?: number[]) {
   if (!citations || citations.length === 0) return text;
-  return (<>{text} <sup className="text-blue-600">{citations.map((c, idx) => (<span key={idx}>⁽{c}⁾{idx < citations.length - 1 && " "}</span>))}</sup></>);
+  return (
+    <>
+      {text}{" "}
+      <sup className="text-blue-600">
+        {citations.map((c, idx) => (
+          <span key={idx}>
+            ⁽{c}⁾{idx < citations.length - 1 && " "}
+          </span>
+        ))}
+      </sup>
+    </>
+  );
 }
 
 function renderSummaryWithLinks(summary: string, sources: Source[]) {
   // Parse the summary to find citation patterns like ⁽¹⁾ and create a mapping
   const parts: (string | React.ReactElement)[] = [];
-  
+
   // Split by superscript citations pattern
   const citationRegex = /⁽(\d+)⁾/g;
   let lastIndex = 0;
@@ -424,11 +462,11 @@ function renderSummaryWithLinks(summary: string, sources: Source[]) {
       const textBefore = summary.slice(lastIndex, match.index);
       parts.push(textBefore);
     }
-    
+
     // Add clickable citation
     const citationNum = parseInt(match[1]);
-    const source = sources.find(s => s.id === citationNum);
-    
+    const source = sources.find((s) => s.id === citationNum);
+
     if (source?.url) {
       parts.push(
         <sup key={`cite-${key++}`}>
@@ -444,23 +482,27 @@ function renderSummaryWithLinks(summary: string, sources: Source[]) {
         </sup>
       );
     } else {
-      parts.push(<sup key={`cite-${key++}`} className="text-blue-600">⁽{citationNum}⁾</sup>);
+      parts.push(
+        <sup key={`cite-${key++}`} className="text-blue-600">
+          ⁽{citationNum}⁾
+        </sup>
+      );
     }
-    
+
     lastIndex = match.index + match[0].length;
   }
-  
+
   // Add remaining text
   if (lastIndex < summary.length) {
     parts.push(summary.slice(lastIndex));
   }
-  
+
   // Now parse for journal name links - look for patterns like "JAMA", "The Lancet", etc.
   // We'll create clickable links for journal names that appear before citations
   return (
     <div className="space-y-4">
       {parts.map((part, idx) => {
-        if (typeof part === 'string') {
+        if (typeof part === "string") {
           // Split by common separators to create paragraphs
           const paragraphs = part.split(/\n\n+/);
           return paragraphs.map((p, pIdx) => {
@@ -477,67 +519,72 @@ function renderSummaryWithLinks(summary: string, sources: Source[]) {
 function highlightJournalNames(text: string, sources: Source[]) {
   // Create a comprehensive mapping of journal names to source URLs
   const journalMap = new Map<string, { url: string; priority: number }>();
-  
-  sources.forEach(source => {
-    if (source.url && source.journal && source.journal.toLowerCase() !== 'unknown' && source.journal !== 'Unknown Journal') {
+
+  sources.forEach((source) => {
+    if (
+      source.url &&
+      source.journal &&
+      source.journal.toLowerCase() !== "unknown" &&
+      source.journal !== "Unknown Journal"
+    ) {
       const journalLower = source.journal.toLowerCase();
-      
+
       // Add the exact journal name (highest priority)
       journalMap.set(source.journal, { url: source.url, priority: 10 });
-      
+
       // Add common variations and abbreviations
-      if (journalLower.includes('new england journal of medicine') || journalLower.includes('n engl j med')) {
-        journalMap.set('NEJM', { url: source.url, priority: 9 });
-        journalMap.set('New England Journal of Medicine', { url: source.url, priority: 10 });
-        journalMap.set('N Engl J Med', { url: source.url, priority: 9 });
+      if (journalLower.includes("new england journal of medicine") || journalLower.includes("n engl j med")) {
+        journalMap.set("NEJM", { url: source.url, priority: 9 });
+        journalMap.set("New England Journal of Medicine", { url: source.url, priority: 10 });
+        journalMap.set("N Engl J Med", { url: source.url, priority: 9 });
       }
-      
-      if (journalLower.includes('jama') && !journalLower.includes('jamanetwork')) {
-        journalMap.set('JAMA', { url: source.url, priority: 9 });
-        if (journalLower.includes('jama internal medicine')) {
-          journalMap.set('JAMA Internal Medicine', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("jama") && !journalLower.includes("jamanetwork")) {
+        journalMap.set("JAMA", { url: source.url, priority: 9 });
+        if (journalLower.includes("jama internal medicine")) {
+          journalMap.set("JAMA Internal Medicine", { url: source.url, priority: 10 });
         }
       }
-      
-      if (journalLower.includes('lancet')) {
-        journalMap.set('The Lancet', { url: source.url, priority: 10 });
-        journalMap.set('Lancet', { url: source.url, priority: 9 });
-        if (journalLower.includes('lancet respiratory')) {
-          journalMap.set('Lancet Respiratory Medicine', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("lancet")) {
+        journalMap.set("The Lancet", { url: source.url, priority: 10 });
+        journalMap.set("Lancet", { url: source.url, priority: 9 });
+        if (journalLower.includes("lancet respiratory")) {
+          journalMap.set("Lancet Respiratory Medicine", { url: source.url, priority: 10 });
         }
       }
-      
-      if (journalLower.includes('bmj') || journalLower.includes('british medical journal')) {
-        journalMap.set('BMJ', { url: source.url, priority: 9 });
-        journalMap.set('British Medical Journal', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("bmj") || journalLower.includes("british medical journal")) {
+        journalMap.set("BMJ", { url: source.url, priority: 9 });
+        journalMap.set("British Medical Journal", { url: source.url, priority: 10 });
       }
-      
-      if (journalLower.includes('critical care medicine')) {
-        journalMap.set('Critical Care Medicine', { url: source.url, priority: 10 });
-        journalMap.set('Crit Care Med', { url: source.url, priority: 9 });
+
+      if (journalLower.includes("critical care medicine")) {
+        journalMap.set("Critical Care Medicine", { url: source.url, priority: 10 });
+        journalMap.set("Crit Care Med", { url: source.url, priority: 9 });
       }
-      
-      if (journalLower.includes('intensive care medicine')) {
-        journalMap.set('Intensive Care Medicine', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("intensive care medicine")) {
+        journalMap.set("Intensive Care Medicine", { url: source.url, priority: 10 });
       }
-      
-      if (journalLower.includes('anesthesia') && journalLower.includes('analgesia')) {
-        journalMap.set('Anesthesia and Analgesia', { url: source.url, priority: 10 });
-        journalMap.set('Anesthesia & Analgesia', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("anesthesia") && journalLower.includes("analgesia")) {
+        journalMap.set("Anesthesia and Analgesia", { url: source.url, priority: 10 });
+        journalMap.set("Anesthesia & Analgesia", { url: source.url, priority: 10 });
       }
-      
-      if (journalLower.includes('cochrane')) {
-        journalMap.set('Cochrane', { url: source.url, priority: 9 });
-        journalMap.set('Cochrane Database of Systematic Reviews', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("cochrane")) {
+        journalMap.set("Cochrane", { url: source.url, priority: 9 });
+        journalMap.set("Cochrane Database of Systematic Reviews", { url: source.url, priority: 10 });
       }
-      
-      if (journalLower.includes('annals of internal medicine')) {
-        journalMap.set('Annals of Internal Medicine', { url: source.url, priority: 10 });
+
+      if (journalLower.includes("annals of internal medicine")) {
+        journalMap.set("Annals of Internal Medicine", { url: source.url, priority: 10 });
       }
-      
-      if (journalLower.includes('chest')) {
-        journalMap.set('Chest', { url: source.url, priority: 9 });
-        journalMap.set('CHEST', { url: source.url, priority: 9 });
+
+      if (journalLower.includes("chest")) {
+        journalMap.set("Chest", { url: source.url, priority: 9 });
+        journalMap.set("CHEST", { url: source.url, priority: 9 });
       }
     }
   });
@@ -555,26 +602,24 @@ function highlightJournalNames(text: string, sources: Source[]) {
   });
 
   // Build a single regex that matches all journal names
-  const journalPatterns = sortedJournals.map(([name]) => 
-    name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  ).join('|');
-  
-  const combinedRegex = new RegExp(`\\b(${journalPatterns})\\b`, 'g');
-  
+  const journalPatterns = sortedJournals.map(([name]) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+
+  const combinedRegex = new RegExp(`\\b(${journalPatterns})\\b`, "g");
+
   // Find all matches
   const matches: Array<{ text: string; start: number; end: number; url: string }> = [];
   let match;
-  
+
   while ((match = combinedRegex.exec(text)) !== null) {
     const matchedText = match[0];
     const journalData = journalMap.get(matchedText);
-    
+
     if (journalData) {
       matches.push({
         text: matchedText,
         start: match.index,
         end: match.index + matchedText.length,
-        url: journalData.url
+        url: journalData.url,
       });
     }
   }
@@ -585,13 +630,13 @@ function highlightJournalNames(text: string, sources: Source[]) {
   // Build the result with clickable links
   const result: (string | React.ReactElement)[] = [];
   let lastIndex = 0;
-  
+
   matches.forEach((match, idx) => {
     // Add text before this match
     if (match.start > lastIndex) {
       result.push(text.slice(lastIndex, match.start));
     }
-    
+
     // Add clickable journal link
     result.push(
       <a
@@ -605,10 +650,10 @@ function highlightJournalNames(text: string, sources: Source[]) {
         {match.text}
       </a>
     );
-    
+
     lastIndex = match.end;
   });
-  
+
   // Add remaining text
   if (lastIndex < text.length) {
     result.push(text.slice(lastIndex));

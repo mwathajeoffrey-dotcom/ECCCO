@@ -5,6 +5,7 @@
 ### 1. **Prominent Study Badges** ⭐📊📋
 
 **BEFORE**:
+
 ```
 1. Acute respiratory distress syndrome in adults...
    2022 · 230 citations · E. Gorman et al. · The Lancet
@@ -13,6 +14,7 @@
 ```
 
 **AFTER** (Like Consensus!):
+
 ```
 ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED   📋 SYSTEMATIC REVIEW
 
@@ -22,6 +24,7 @@
 ```
 
 **Badge Types**:
+
 - ⭐ **RIGOROUS JOURNAL** - Tier 1 (NEJM, Lancet, JAMA, BMJ, Nature Medicine, etc.)
 - 📊 **HIGHLY CITED** - 500+ citations OR 100+ with quality ≥80
 - 📋 **SYSTEMATIC REVIEW** - Evidence Level 1 (meta-analyses, systematic reviews)
@@ -33,6 +36,7 @@
 ### 2. **Query-Specific Section Headings** 📋
 
 **BEFORE** (Generic):
+
 ```
 ## Summary
 Generic overview content...
@@ -45,6 +49,7 @@ Metadata about studies...
 ```
 
 **AFTER** (Specific to Query):
+
 ```
 ## Berlin Criteria for ARDS Diagnosis
 Specific diagnostic criteria for ARDS using Berlin definition...
@@ -57,6 +62,7 @@ Validation studies, autopsy correlation, resource constraints...
 ```
 
 **AI Prompt Enhancement**:
+
 - Sections now include the specific topic from query
 - "Berlin Criteria for ARDS Diagnosis" not "Diagnostic Criteria"
 - "Septic Shock Initial Resuscitation" not "Initial Management"
@@ -67,6 +73,7 @@ Validation studies, autopsy correlation, resource constraints...
 ### 3. **Citation Count Display** 📊
 
 **NEW FORMAT** (Matches Consensus):
+
 ```
 2022 · 230 citations · E. Gorman et al. · The Lancet
 2023 · 355 citations · M. Matthay et al. · American Journal of Respiratory...
@@ -74,6 +81,7 @@ Validation studies, autopsy correlation, resource constraints...
 ```
 
 **Shows**:
+
 - Year first (most prominent)
 - Citation count (when available)
 - Authors (first 3, then "et al.")
@@ -84,6 +92,7 @@ Validation studies, autopsy correlation, resource constraints...
 ## 📊 Before vs After Comparison
 
 ### Consensus.app (Your Screenshot):
+
 ```
 ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED
 
@@ -97,6 +106,7 @@ Validation studies, autopsy correlation, resource constraints...
 ```
 
 ### Our System (NOW - After Update):
+
 ```
 ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED   📋 SYSTEMATIC REVIEW
 
@@ -112,6 +122,7 @@ Validation studies, autopsy correlation, resource constraints...
 ```
 
 **Differences**:
+
 - ✅ Same badge prominence and style
 - ✅ Same citation count display
 - ✅ Same author/journal format
@@ -122,6 +133,7 @@ Validation studies, autopsy correlation, resource constraints...
 ## 🎯 Visual Parity Achieved: **90%**
 
 ### What We Match:
+
 ✅ Prominent study type badges at top of each reference
 ✅ Multiple badges per article (RIGOROUS + HIGHLY CITED + SYSTEMATIC REVIEW)
 ✅ Citation count in metadata line
@@ -130,12 +142,14 @@ Validation studies, autopsy correlation, resource constraints...
 ✅ Professional, clinical appearance
 
 ### What Consensus Has That We Don't (Yet):
+
 ❌ Visual tables (severity classifications, dosing regimens)
 ❌ Follow-up question suggestions
 ❌ Consensus meter for Yes/No questions
 ❌ Interactive filters (by study type, year, journal)
 
 ### What We Have That Consensus Doesn't:
+
 ➕ Quality scores (50-100) with transparency
 ➕ Inline journal badges in text (`🔵 Lancet +2`)
 ➕ Clickable citations to original articles
@@ -149,10 +163,12 @@ Validation studies, autopsy correlation, resource constraints...
 **DEPLOYED TO**: `https://eccco.vercel.app/evidence-search`
 
 **Git Commits**:
+
 1. `8f5667f` - CRITICAL PATIENT SAFETY FIX (minimum quality thresholds)
 2. `bab1630` - Consensus-style badges and section headings (THIS UPDATE)
 
 **Files Modified**:
+
 - `src/components/evidence/ClinicalSynthesisView.tsx` - Added badge function, updated display
 - `src/lib/evidence/clinical-synthesis-engine.ts` - Improved AI prompts, added citation count
 
@@ -163,7 +179,9 @@ Validation studies, autopsy correlation, resource constraints...
 ## 🧪 Testing Checklist
 
 ### Test Query 1: "Berlin criteria for ARDS"
+
 **Expected**:
+
 - ⭐ RIGOROUS JOURNAL badges (Lancet, JAMA articles)
 - 📊 HIGHLY CITED badges (>500 citations)
 - 📋 SYSTEMATIC REVIEW badges (evidence level 1)
@@ -171,13 +189,17 @@ Validation studies, autopsy correlation, resource constraints...
 - Citation counts displayed: "2022 · 230 citations · E. Gorman et al."
 
 ### Test Query 2: "management of septic shock"
+
 **Expected**:
+
 - Multiple badges per reference
 - Query-specific sections: "Septic Shock Initial Resuscitation"
 - Recent publications marked with 🆕 RECENT badge
 
 ### Test Query 3: "antibiotic choice for pneumonia"
+
 **Expected**:
+
 - Still shows safety error (insufficient quality evidence)
 - Error message unchanged: "Found 29 articles, but not enough meet quality standards"
 
@@ -186,16 +208,19 @@ Validation studies, autopsy correlation, resource constraints...
 ## 📈 Impact Metrics
 
 **Visual Improvements**:
+
 - Badge prominence: +300% (moved to top, larger, colored borders)
 - Section relevance: +500% (query-specific vs generic)
 - Citation visibility: +200% (year and count prominent)
 
 **Development Time**:
+
 - Estimated: 3-4 hours
 - Actual: 3.5 hours ✅
 - On schedule!
 
 **User Experience**:
+
 - Professional appearance: ⭐⭐⭐⭐⭐
 - Matches Consensus: 90%
 - Better than before: 10x
@@ -205,6 +230,7 @@ Validation studies, autopsy correlation, resource constraints...
 ## 🎉 Bottom Line
 
 ### We went from this:
+
 ```
 References (6 high-quality articles)
 
@@ -214,6 +240,7 @@ References (6 high-quality articles)
 ```
 
 ### To this (Consensus-style):
+
 ```
 ⭐ RIGOROUS JOURNAL   📊 HIGHLY CITED   📋 SYSTEMATIC REVIEW
 
@@ -229,10 +256,12 @@ References (6 high-quality articles)
 ## 🔜 Next Steps (Optional)
 
 **Phase 2 - Medium Improvements** (7 hours total):
+
 1. Follow-up question generation (3 hours)
 2. Visual tables extraction/generation (4 hours)
 
 **Phase 3 - Advanced Features** (14-18 hours):
+
 1. Full-text table extraction from Europe PMC (6-8 hours)
 2. Interactive evidence explorer (filters, timeline, charts) (8-10 hours)
 

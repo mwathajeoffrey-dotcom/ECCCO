@@ -32,6 +32,7 @@
 ## What's Live on Vercel RIGHT NOW
 
 **Unknown!** Could be:
+
 1. ❓ Old version (before updates)
 2. ❓ Current version (with updates)
 3. ❓ Mixed version (some new, some old)
@@ -43,6 +44,7 @@
 ## After Following Deployment Guide
 
 ### GOOD State ✅
+
 ```
 Production (Vercel):
 ├── /evidence-search → NEW version with sidebar
@@ -57,6 +59,7 @@ Production (Vercel):
 ```
 
 ### Files to Delete After Successful Deploy
+
 ```
 /src/app/evidence-search-new/  ← Delete this (unused template)
 ```
@@ -66,6 +69,7 @@ Production (Vercel):
 ## Deployment Flow (Step by Step)
 
 ### Step 1: Test Locally
+
 ```
 Your Computer:
 - Build: npm run build ✅
@@ -74,6 +78,7 @@ Your Computer:
 ```
 
 ### Step 2: Commit to GitHub
+
 ```
 Your Computer → GitHub:
 - git add .
@@ -87,6 +92,7 @@ GitHub now has:
 ```
 
 ### Step 3: Deploy Preview
+
 ```
 Your Computer → Vercel Preview:
 - vercel (without --prod)
@@ -100,6 +106,7 @@ NOT live to users yet! ✅ Safe to test
 ```
 
 ### Step 4: Deploy Production
+
 ```
 Your Computer → Vercel Production:
 - vercel --prod
@@ -117,6 +124,7 @@ Production URL: https://eccco.vercel.app
 You have THREE ways to recover if something goes wrong:
 
 ### Safety Net #1: Vercel Deployment History
+
 ```
 Vercel Dashboard:
 - See all previous deployments
@@ -126,6 +134,7 @@ Vercel Dashboard:
 ```
 
 ### Safety Net #2: GitHub Commit History
+
 ```
 Git:
 - git log --oneline (see all commits)
@@ -135,6 +144,7 @@ Git:
 ```
 
 ### Safety Net #3: Local Backup
+
 ```
 .backup/ folder:
 - Complete copy of old code
@@ -149,6 +159,7 @@ Git:
 ## What Could Go Wrong? (And How to Fix)
 
 ### Scenario 1: Build Fails Locally
+
 ```
 Problem: npm run build shows errors
 Fix: Don't deploy! Fix errors first
@@ -156,6 +167,7 @@ Risk: 🟢 ZERO (caught before deploy)
 ```
 
 ### Scenario 2: Tests Fail Locally
+
 ```
 Problem: Search doesn't work locally
 Fix: Don't deploy! Debug first
@@ -163,6 +175,7 @@ Risk: 🟢 ZERO (caught before deploy)
 ```
 
 ### Scenario 3: Preview Works, Production Fails
+
 ```
 Problem: Preview OK, but production broken
 Fix: Check environment variables (GROQ_API_KEY)
@@ -171,6 +184,7 @@ Rollback: Use Safety Net #1 (Vercel dashboard)
 ```
 
 ### Scenario 4: Production Deployed but Has Bug
+
 ```
 Problem: Deployed but users see errors
 Fix: Immediate rollback via Vercel
@@ -183,6 +197,7 @@ Steps:
 ```
 
 ### Scenario 5: Everything Breaks Completely
+
 ```
 Problem: Total disaster (very unlikely!)
 Fix: Use all 3 safety nets
@@ -200,19 +215,23 @@ You have 3 ways to recover!
 ## File Conflict Prevention
 
 ### Current Active Files:
+
 ```
 /src/app/evidence-search/page.tsx           → DEPLOY THIS ✅
 /src/app/api/evidence/consensus-search/route.ts → DEPLOY THIS ✅
 ```
 
 ### Files to Ignore:
+
 ```
 /src/app/evidence-search-new/page.tsx       → DON'T DEPLOY (delete after)
 /.backup/evidence-search-old/*              → DON'T DEPLOY (keep for safety)
 ```
 
 ### Vercel Auto-Deploy
+
 Vercel will automatically deploy from `/src/app/` folder:
+
 - ✅ Uses `/evidence-search/page.tsx` (correct)
 - ❌ Ignores `/evidence-search-new/` (good!)
 - ❌ Ignores `/.backup/` (good!)
@@ -243,12 +262,14 @@ Before starting Step 1 of deployment guide:
 ## Quick Reference Commands
 
 ### Test Locally:
+
 ```bash
 rm -rf .next && npm run build  # Clean build
 npm run dev                     # Test locally
 ```
 
 ### Deploy Process:
+
 ```bash
 git add .
 git commit -m "Production deploy: Evidence search with sidebar"
@@ -258,6 +279,7 @@ vercel --prod                  # Production (after preview OK)
 ```
 
 ### Emergency Rollback:
+
 ```bash
 # Method 1: Vercel Dashboard (fastest)
 # Go to vercel.com → Deployments → Promote old version
@@ -311,19 +333,19 @@ vercel --prod
 
 ## Summary
 
-**What you're doing**: Deploying evidence search with new features  
-**How long**: ~20 minutes  
-**Risk level**: 🟢 LOW (3 safety nets, tested, backed up)  
-**Can rollback?**: ✅ YES (3 different ways, all easy)  
-**Will lose data?**: ❌ NO (everything backed up)  
-**Can test first?**: ✅ YES (preview deployment)  
-**Need help?**: 📖 SAFE_DEPLOYMENT_GUIDE.md has all steps  
+**What you're doing**: Deploying evidence search with new features
+**How long**: ~20 minutes
+**Risk level**: 🟢 LOW (3 safety nets, tested, backed up)
+**Can rollback?**: ✅ YES (3 different ways, all easy)
+**Will lose data?**: ❌ NO (everything backed up)
+**Can test first?**: ✅ YES (preview deployment)
+**Need help?**: 📖 SAFE_DEPLOYMENT_GUIDE.md has all steps
 
 **Ready?** Start with SAFE_DEPLOYMENT_GUIDE.md Step 1! 🚀
 
 ---
 
-**Created**: January 19, 2026  
-**Purpose**: Visual guide to prevent confusion  
-**Confidence**: 🟢 HIGH (everything is backed up)  
-**Next**: Follow SAFE_DEPLOYMENT_GUIDE.md  
+**Created**: January 19, 2026
+**Purpose**: Visual guide to prevent confusion
+**Confidence**: 🟢 HIGH (everything is backed up)
+**Next**: Follow SAFE_DEPLOYMENT_GUIDE.md

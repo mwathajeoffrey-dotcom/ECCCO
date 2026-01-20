@@ -3,6 +3,7 @@
 ## Problem Solved
 
 **Before**: When searching "berlin criteria for ARDS", users saw:
+
 ```
 ❌ Search Error
 Found 30 articles, but not enough meet quality standards.
@@ -17,6 +18,7 @@ Try these related searches: ...
 ## Solution Deployed
 
 **After** (NOW): Users see:
+
 ```
 ❌ Search Error
 Found 30 articles, but not enough meet quality standards for clinical use.
@@ -52,12 +54,15 @@ your search or consulting specialized databases.
 ## Key Features
 
 ### 1. **Transparency** 🔍
+
 - Users can see exactly what was found
 - No more mystery about why search "failed"
 - Can review articles themselves
 
 ### 2. **Article Cards** 📄
+
 Each article shows:
+
 - ✅ Title (linked)
 - ✅ Authors (first 3 + "et al.")
 - ✅ Journal name
@@ -67,12 +72,14 @@ Each article shows:
 - ✅ Link to original article (DOI or URL)
 
 ### 3. **Clear Safety Warning** ⚠️
+
 - Amber/warning color scheme (not error red)
 - Explains WHY they didn't meet threshold
 - States the strict requirements clearly
 - Encourages broader search or specialized databases
 
 ### 4. **Smart Display** 🎨
+
 - Shows up to 10 articles (not overwhelming)
 - Clean, professional cards
 - Hover states for interactivity
@@ -86,6 +93,7 @@ Each article shows:
 ### API Changes (`src/app/api/evidence/synthesize/route.ts`)
 
 **Before**:
+
 ```typescript
 return NextResponse.json(
   {
@@ -98,6 +106,7 @@ return NextResponse.json(
 ```
 
 **After**:
+
 ```typescript
 return NextResponse.json(
   {
@@ -114,6 +123,7 @@ return NextResponse.json(
 ### UI Changes (`src/app/evidence-search/page.tsx`)
 
 **Added**:
+
 1. `articles?: any[]` to `ErrorWithSuggestions` interface
 2. Check for `data.error && data.articles` in response handler
 3. New article display section with:
@@ -130,6 +140,7 @@ return NextResponse.json(
 **Query**: "management of septic shock"
 
 **Result**:
+
 ```
 ✅ Structured Summary Generated
 Analyzed 7 high-quality articles
@@ -147,6 +158,7 @@ Analyzed 7 high-quality articles
 **Query**: "berlin criteria for ARDS"
 
 **Result**:
+
 ```
 ❌ Search Error
 Found 30 articles, but not enough meet quality standards.
@@ -160,6 +172,7 @@ Try these searches: pulmonary infection, lung infection, CAP
 ```
 
 **User sees**:
+
 - ✅ Clear error message
 - ✅ Helpful suggestions
 - ✅ **ACTUAL ARTICLES FOUND!** (NEW!)
@@ -173,6 +186,7 @@ Try these searches: pulmonary infection, lung infection, CAP
 **Query**: "treatment for extremely rare disease XYZ"
 
 **Result**:
+
 ```
 ❌ Search Error
 No articles found
@@ -188,18 +202,21 @@ Search Tips: [broaden terms, use synonyms...]
 ## Benefits
 
 ### For Users 👥
+
 1. **Transparency** - See what was found
 2. **Autonomy** - Can review articles themselves
 3. **Learning** - Understand quality thresholds
 4. **Options** - Can click through to original articles
 
 ### For Clinical Safety 🏥
+
 1. **Still maintains strict quality thresholds** ✅
 2. **Clear warnings about quality issues** ✅
 3. **Encourages broader/better searches** ✅
 4. **Doesn't synthesize poor-quality evidence** ✅
 
 ### For Trust 🤝
+
 1. **Shows we're not hiding data** ✅
 2. **Explains our reasoning** ✅
 3. **Gives users control** ✅
@@ -210,6 +227,7 @@ Search Tips: [broaden terms, use synonyms...]
 ## Quality Standards (Unchanged)
 
 Still enforcing:
+
 - ✅ Minimum 3 high-quality articles
 - ✅ Quality score ≥50/100
 - ✅ Tier 1-2 journals only (NEJM, Lancet, JAMA, BMJ, etc.)
@@ -224,8 +242,8 @@ Still enforcing:
 
 ### "berlin criteria for ARDS" Search
 
-**Found**: 30 articles  
-**Displayed**: 10 best matches  
+**Found**: 30 articles
+**Displayed**: 10 best matches
 **Quality Issue**: Only 1-2 met strict Tier 1-2, quality ≥50, last 10 years threshold
 
 **Shown to User**:
@@ -237,6 +255,7 @@ Still enforcing:
 5. ... (6 more articles)
 
 **User Can**:
+
 - Read titles and abstracts
 - Click through to full articles
 - Decide if any are relevant
@@ -248,6 +267,7 @@ Still enforcing:
 ## Deployment Status
 
 **Commits**:
+
 - `8f5667f` - CRITICAL SAFETY FIX (quality thresholds)
 - `bab1630` - Consensus-style badges and sections
 - `c238a77` - **Search results display** (THIS UPDATE)
@@ -257,6 +277,7 @@ Still enforcing:
 **URL**: `https://eccco.vercel.app/evidence-search`
 
 **Test Queries**:
+
 1. "berlin criteria for ARDS" ← Should show articles now!
 2. "management of septic shock" ← Should still work normally
 3. "antibiotic choice for pneumonia" ← Should show articles
@@ -266,12 +287,14 @@ Still enforcing:
 ## Metrics
 
 **Before This Update**:
+
 - User sees: "Found 30 articles, but..." ❌
 - User frustration: High 😤
 - Transparency: Low 📉
 - Trust: Medium ⚠️
 
 **After This Update**:
+
 - User sees: 10 article cards with links ✅
 - User frustration: Low 😊
 - Transparency: High 📈
@@ -286,6 +309,7 @@ Still enforcing:
 **Before**: "Found 30 articles" (but can't see them) 😤
 
 **Now**: Shows the 10 best articles with:
+
 - Titles ✅
 - Authors ✅
 - Journals ✅
@@ -300,5 +324,5 @@ Still enforcing:
 
 ---
 
-**Status**: ✅ **DEPLOYED AND WORKING**  
+**Status**: ✅ **DEPLOYED AND WORKING**
 **Next**: Test on production! 🧪

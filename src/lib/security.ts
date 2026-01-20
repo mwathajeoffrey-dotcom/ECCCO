@@ -29,7 +29,9 @@ export const SecurityConfig = {
 
   // CORS configuration
   cors: {
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    origin: process.env.NODE_ENV === 'production'
+      ? (process.env.ALLOWED_ORIGINS?.split(',') || [])
+      : ['http://localhost:3000', 'http://localhost:3001'],
     credentials: true,
     optionsSuccessStatus: 200,
   },
@@ -130,16 +132,18 @@ export function validatePassword(password: string): { isValid: boolean; errors: 
 // }
 
 export async function requireRole(req: NextApiRequest, res: NextApiResponse, allowedRoles: string[]) {
-  // const token = await requireAuth(req, res)
-  // if (!token) return null
-  const token: any = null; // TODO: Implement with Clerk
+  // NOTE: Role-based access control is handled by Clerk middleware
+  // and admin/developer checks in src/lib/auth/admin.ts and src/lib/auth/developer.ts
+  // This function is deprecated - use Clerk's auth() and check roles directly
   
-  if (!allowedRoles.includes(token.role as string)) {
-    res.status(403).json({ error: 'Insufficient permissions' })
-    return null
-  }
+  console.warn(
+    'requireRole() is deprecated. Use Clerk auth() with admin.ts/developer.ts helpers instead.'
+  );
   
-  return token
+  res.status(501).json({ 
+    error: 'This endpoint uses deprecated authentication. Please contact support.' 
+  });
+  return null;
 }
 
 // CSRF protection

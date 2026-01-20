@@ -24,17 +24,17 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 function checkRateLimit(identifier: string, maxRequests = 5, windowMs = 60000): boolean {
   const now = Date.now();
   const limit = rateLimitMap.get(identifier);
-  
+
   if (!limit || now > limit.resetTime) {
     // Reset window
     rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs });
     return true;
   }
-  
+
   if (limit.count >= maxRequests) {
     return false;
   }
-  
+
   limit.count++;
   return true;
 }
@@ -52,16 +52,14 @@ setInterval(() => {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting check
-    const clientId = request.headers.get('x-forwarded-for') || 
-                     request.headers.get('x-real-ip') || 
-                     'unknown';
-    
+    const clientId = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+
     if (!checkRateLimit(clientId)) {
       return NextResponse.json(
-        { 
-          error: "Rate limit exceeded", 
+        {
+          error: "Rate limit exceeded",
           message: "Too many searches. Please wait a moment before trying again (max 5 searches per minute).",
-          retryAfter: 60 
+          retryAfter: 60,
         },
         { status: 429 }
       );
@@ -71,7 +69,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { query } = body;
 
-    if (!query || typeof query !== 'string') {
+    if (!query || typeof query !== "string") {
       return NextResponse.json(
         { error: "Invalid query", message: "Query is required and must be a string" },
         { status: 400 }
@@ -95,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Remove potentially harmful characters while preserving medical terms
-    const cleanQuery = sanitizedQuery.replace(/[<>\"]/g, '');
+    const cleanQuery = sanitizedQuery.replace(/[<>\"]/g, "");
 
     console.log(`[Consensus Search] Query: "${cleanQuery}"`);
 
@@ -118,7 +116,7 @@ export async function POST(request: NextRequest) {
         keyPoints: [
           "No articles found matching your search criteria",
           "Try using different medical terms or broader keywords",
-          "Ensure proper spelling of medical terminology"
+          "Ensure proper spelling of medical terminology",
         ],
         steps: 2,
         isPro: true,
@@ -172,10 +170,12 @@ export async function POST(request: NextRequest) {
     articlesWithScores.sort((a, b) => b.qualityScore - a.qualityScore);
 
     // Separate high-quality from supplementary sources
-    const highQualitySources = articlesWithScores.filter(a => a.qualityScore >= 80);
-    const supplementarySources = articlesWithScores.filter(a => a.qualityScore < 80);
+    const highQualitySources = articlesWithScores.filter((a) => a.qualityScore >= 80);
+    const supplementarySources = articlesWithScores.filter((a) => a.qualityScore < 80);
 
-    console.log(`[Quality Filter] ${highQualitySources.length} high-quality sources (score ≥80), ${supplementarySources.length} supplementary`);
+    console.log(
+      `[Quality Filter] ${highQualitySources.length} high-quality sources (score ≥80), ${supplementarySources.length} supplementary`
+    );
 
     // Generate badges for ALL sources
     const sourcesWithBadges = articlesWithScores.map((item, idx) => {
@@ -196,7 +196,10 @@ export async function POST(request: NextRequest) {
         badges.push("📈 META-ANALYSIS");
       } else if (article.type.toLowerCase().includes("systematic review")) {
         badges.push("📚 SYSTEMATIC REVIEW");
-      } else if (article.type.toLowerCase().includes("randomized") || article.type.toLowerCase().includes("clinical trial")) {
+      } else if (
+        article.type.toLowerCase().includes("randomized") ||
+        article.type.toLowerCase().includes("clinical trial")
+      ) {
         badges.push("🧪 RCT");
       }
 
@@ -233,7 +236,7 @@ export async function POST(request: NextRequest) {
     // Prioritize high-quality sources in AI context - USE FULL ABSTRACTS
     // Filter out unknown journals and low-quality sources
     const highQualityContext = highQualitySources
-      .filter(item => {
+      .filter((item) => {
         const journal = item.article.journal.toLowerCase();
         // Exclude unknown/generic journals
         if (journal.includes("unknown") || journal === "unknown journal" || journal === "") {
@@ -243,8 +246,9 @@ export async function POST(request: NextRequest) {
         const hasCitations = item.article.citationCount > 10;
         const isTier1 = item.tier1Journal !== undefined;
         const isGuideline = item.article.type.toLowerCase().includes("guideline");
-        const isMetaAnalysis = item.article.type.toLowerCase().includes("meta-analysis") ||
-                               item.article.type.toLowerCase().includes("systematic review");
+        const isMetaAnalysis =
+          item.article.type.toLowerCase().includes("meta-analysis") ||
+          item.article.type.toLowerCase().includes("systematic review");
         return hasCitations || isTier1 || isGuideline || isMetaAnalysis;
       })
       .slice(0, 10) // Top 10 high-quality, relevant sources
@@ -261,9 +265,12 @@ export async function POST(request: NextRequest) {
         const fullAbstract = article.abstract || "No abstract available";
 
         // For guidelines and high-impact articles, provide maximum context
-        const contextDetail = item.qualityScore >= 150 ?
-          `${fullAbstract}\n\nCLINICAL SIGNIFICANCE: This is a ${badges.join(", ")} - prioritize this evidence in your synthesis.` :
-          fullAbstract;
+        const contextDetail =
+          item.qualityScore >= 150
+            ? `${fullAbstract}\n\nCLINICAL SIGNIFICANCE: This is a ${badges.join(
+                ", "
+              )} - prioritize this evidence in your synthesis.`
+            : fullAbstract;
 
         return `[${idx + 1}] **${badges.join(" | ")}** (Quality Score: ${item.qualityScore})
 Title: ${article.title}
@@ -275,7 +282,7 @@ Type: ${article.type}
 FULL ABSTRACT:
 ${contextDetail}
 
-${article.fullTextUrl ? `FULL TEXT AVAILABLE: ${article.fullTextUrl}` : ''}
+${article.fullTextUrl ? `FULL TEXT AVAILABLE: ${article.fullTextUrl}` : ""}
 ---
 `;
       })
@@ -285,7 +292,9 @@ ${article.fullTextUrl ? `FULL TEXT AVAILABLE: ${article.fullTextUrl}` : ''}
       .slice(0, 5) // Up to 5 supplementary sources
       .map((item, idx) => {
         const { article } = item;
-        return `[${highQualitySources.length + idx + 1}] ${article.title} - ${article.journal} (${article.published.split("-")[0]})`;
+        return `[${highQualitySources.length + idx + 1}] ${article.title} - ${article.journal} (${
+          article.published.split("-")[0]
+        })`;
       })
       .join("\n");
 
@@ -418,59 +427,71 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
     } catch (error) {
       // Enhanced error handling with specific error types
       console.error("[Groq] AI generation failed:", error);
-      
+
       let errorMessage = "Evidence synthesis temporarily unavailable";
       let keyPointsGuidance: string[] = [];
-      
+
       // Type-specific error messages
       if (error instanceof Error) {
         const errorStr = error.message.toLowerCase();
-        
+
         if (errorStr.includes("rate limit") || errorStr.includes("quota") || errorStr.includes("429")) {
           // Groq API rate limit exceeded
-          errorMessage = "High demand for AI synthesis. Evidence found successfully - please review sources below or retry in a few moments.";
+          errorMessage =
+            "High demand for AI synthesis. Evidence found successfully - please review sources below or retry in a few moments.";
           keyPointsGuidance = [
             "AI synthesis temporarily at capacity",
             `${searchResults.articles.length} high-quality sources found and listed below`,
             "Review source abstracts for detailed evidence",
-            "Retry in 30-60 seconds for AI-generated summary"
+            "Retry in 30-60 seconds for AI-generated summary",
           ];
           console.warn("[Groq] Rate limit reached - user can still access source articles");
         } else if (errorStr.includes("timeout") || errorStr.includes("timed out")) {
           // Request timed out
-          errorMessage = "Synthesis taking longer than expected. Evidence found successfully - please review sources below or try a more specific query.";
+          errorMessage =
+            "Synthesis taking longer than expected. Evidence found successfully - please review sources below or try a more specific query.";
           keyPointsGuidance = [
             "Complex query required extended processing time",
             `${searchResults.articles.length} relevant sources found and ready to review`,
             "Try narrowing your query for faster synthesis",
-            "All source articles available below with full abstracts"
+            "All source articles available below with full abstracts",
           ];
           console.warn("[Groq] Timeout - query may be too broad or complex");
         } else if (errorStr.includes("network") || errorStr.includes("fetch") || errorStr.includes("connection")) {
           // Network/connection error
-          errorMessage = "Connection issue with AI service. Evidence found successfully - please review sources below or refresh the page.";
+          errorMessage =
+            "Connection issue with AI service. Evidence found successfully - please review sources below or refresh the page.";
           keyPointsGuidance = [
             "Temporary network connectivity issue",
             `${searchResults.articles.length} evidence sources successfully retrieved`,
             "Refresh page or retry in a moment",
-            "Source articles and abstracts available below"
+            "Source articles and abstracts available below",
           ];
           console.error("[Groq] Network error - connectivity issue with Groq API");
         } else {
           // Generic API error
-          errorMessage = "AI synthesis temporarily unavailable. Evidence found successfully - please review the high-quality sources below.";
+          errorMessage =
+            "AI synthesis temporarily unavailable. Evidence found successfully - please review the high-quality sources below.";
           keyPointsGuidance = [
             "Temporary issue with AI synthesis service",
             `${searchResults.articles.length} peer-reviewed sources found`,
             "Full abstracts and citations available below",
-            "Try again in a few moments for AI-generated summary"
+            "Try again in a few moments for AI-generated summary",
           ];
           console.error("[Groq] API error:", error.message);
         }
       }
-      
+
       // Fallback response with sources intact
-      aiResponse = `Based on ${searchResults.articles.length} medical articles:\n\nSUMMARY:\n${errorMessage}\n\nWe found ${searchResults.articles.length} relevant peer-reviewed sources for "${query}". While AI synthesis is temporarily unavailable, you can review the full abstracts and citations below. Each source includes complete publication details, abstract, and direct links to the original articles.\n\nKEY POINTS:\n${keyPointsGuidance.map(point => `- ${point}`).join('\n')}\n\nSECTIONS:\n## Available Evidence\n${searchResults.articles.length} high-quality medical sources found. Review full details below.`;
+      aiResponse = `Based on ${
+        searchResults.articles.length
+      } medical articles:\n\nSUMMARY:\n${errorMessage}\n\nWe found ${
+        searchResults.articles.length
+      } relevant peer-reviewed sources for "${query}". While AI synthesis is temporarily unavailable, you can review the full abstracts and citations below. Each source includes complete publication details, abstract, and direct links to the original articles.\n\nKEY POINTS:\n${keyPointsGuidance
+        .map((point) => `- ${point}`)
+        .join("\n")}\n\nSECTIONS:\n## Available Evidence\n${
+        searchResults.articles.length
+      } high-quality medical sources found. Review full details below.`;
     }
 
     console.log("[Step 3/3] Parsing AI response...");
@@ -483,17 +504,16 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
     // Add quality metadata for transparency
     const qualityMetadata = {
       highQualitySources: highQualitySources.length,
-      tier1Journals: highQualitySources.filter(s => s.tier1Journal).length,
-      guidelines: highQualitySources.filter(s =>
-        s.article.type.toLowerCase().includes("guideline") ||
-        s.article.title.toLowerCase().includes("guideline")
+      tier1Journals: highQualitySources.filter((s) => s.tier1Journal).length,
+      guidelines: highQualitySources.filter(
+        (s) => s.article.type.toLowerCase().includes("guideline") || s.article.title.toLowerCase().includes("guideline")
       ).length,
-      metaAnalyses: highQualitySources.filter(s =>
-        s.article.type.toLowerCase().includes("meta-analysis")
-      ).length,
+      metaAnalyses: highQualitySources.filter((s) => s.article.type.toLowerCase().includes("meta-analysis")).length,
     };
 
-    console.log(`[Quality] ${qualityMetadata.highQualitySources} high-quality sources: ${qualityMetadata.tier1Journals} Tier 1 journals, ${qualityMetadata.guidelines} guidelines, ${qualityMetadata.metaAnalyses} meta-analyses`);
+    console.log(
+      `[Quality] ${qualityMetadata.highQualitySources} high-quality sources: ${qualityMetadata.tier1Journals} Tier 1 journals, ${qualityMetadata.guidelines} guidelines, ${qualityMetadata.metaAnalyses} meta-analyses`
+    );
 
     const result = {
       query,
@@ -512,7 +532,7 @@ Use superscript citations ⁽¹⁾⁽²⁾ throughout both SUMMARY and KEY POINT
     return NextResponse.json(
       {
         error: "Search failed",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
@@ -554,8 +574,8 @@ function extractKeyPoints(aiResponse: string): string[] {
     // Split by bullet points and clean up
     const points = pointsText
       .split(/\n/)
-      .map(line => line.replace(/^[-•*]\s+/, '').trim())
-      .filter(line => line.length > 0);
+      .map((line) => line.replace(/^[-•*]\s+/, "").trim())
+      .filter((line) => line.length > 0);
 
     return points;
   }
@@ -592,11 +612,11 @@ function parseAIResponse(aiResponse: string): Section[] {
   if (tableMatch) {
     const tableTitle = tableMatch[1].trim();
     const tableContent = tableMatch[2].trim();
-    const lines = tableContent.split("\n").filter(l => l.trim());
+    const lines = tableContent.split("\n").filter((l) => l.trim());
 
     if (lines.length >= 2) {
-      const headers = lines[0].split("|").map(h => h.trim());
-      const rows = lines.slice(1).map(line => line.split("|").map(c => c.trim()));
+      const headers = lines[0].split("|").map((h) => h.trim());
+      const rows = lines.slice(1).map((line) => line.split("|").map((c) => c.trim()));
 
       sections.push({
         title: tableTitle,
@@ -637,9 +657,7 @@ function parseSubsections(content: string): Array<{ title: string; content: stri
 
     // Extract citations
     const citationMatches = subsectionContent.match(/⁽(\d+)⁾/g);
-    const citations = citationMatches
-      ? citationMatches.map(c => parseInt(c.replace(/[⁽⁾]/g, "")))
-      : undefined;
+    const citations = citationMatches ? citationMatches.map((c) => parseInt(c.replace(/[⁽⁾]/g, ""))) : undefined;
 
     subsections.push({
       title,

@@ -7,6 +7,7 @@
 Created `/evidence-search/page.tsx` with Consensus-style layout:
 
 **Features**:
+
 - ✅ Clean, professional header with search box
 - ✅ Consensus-style result cards
 - ✅ Structured sections with subsections
@@ -17,6 +18,7 @@ Created `/evidence-search/page.tsx` with Consensus-style layout:
 - ✅ Error handling
 
 **Layout Matches Your Example**:
+
 ```
 ┌─────────────────────────────────────────┐
 │ Berlin criteria for ARDS                │
@@ -51,12 +53,14 @@ Created `/evidence-search/page.tsx` with Consensus-style layout:
 **1. API Route**: `/api/evidence/consensus-search/route.ts`
 
 This endpoint will:
+
 1. Take a medical query
 2. Search across medical databases
 3. Use AI to generate structured summary
 4. Format response like Consensus
 
 **Response Format**:
+
 ```typescript
 {
   query: "berlin criteria for ARDS",
@@ -113,11 +117,13 @@ This endpoint will:
 ## 🚀 Implementation Plan
 
 ### Step 1: Search Medical Literature
+
 - Use existing search from backup (or rebuild)
 - Search PubMed, CrossRef, Europe PMC, Semantic Scholar
 - Filter for quality sources
 
 ### Step 2: AI Prompt Engineering
+
 **Create specialized prompt** for Consensus-style output:
 
 ```
@@ -140,6 +146,7 @@ Be clinical, precise, and use superscript citations.
 ```
 
 ### Step 3: Response Parsing
+
 - Parse AI output into sections
 - Extract tables
 - Match citations to sources
@@ -152,12 +159,15 @@ Be clinical, precise, and use superscript citations.
 **YES!** From `.backup/evidence-search-old/`:
 
 ### Reusable Components:
+
 1. **Search Logic** ✅
+
    - `lib/evidence/unified-search.ts` - Search 4 databases
    - `lib/evidence/clinical-quality-scorer.ts` - Quality scoring
    - `lib/evidence/journal-database.ts` - Journal tiers
 
 2. **AI Synthesis** ✅
+
    - `lib/evidence/clinical-synthesis-engine.ts` - AI prompts
    - Just need to modify prompt for Consensus format
 
@@ -166,6 +176,7 @@ Be clinical, precise, and use superscript citations.
    - Adapt for new format
 
 ### What to Change:
+
 - ❌ Remove patient context stuff (you didn't want it)
 - ❌ Remove inline journal badges (not Consensus-style)
 - ✅ Add table extraction
@@ -177,6 +188,7 @@ Be clinical, precise, and use superscript citations.
 ## 🎨 Visual Comparison
 
 ### Consensus (Your Example):
+
 ```
 Berlin criteria for ARDS
 Pro · 2 steps · 20 sources
@@ -199,6 +211,7 @@ Acute respiratory distress syndrome...
 ```
 
 ### Our New UI:
+
 ```
 ✅ EXACT SAME LAYOUT!
 
@@ -217,18 +230,21 @@ Acute respiratory distress syndrome...
 ## 🎯 Next Action
 
 **Option A: Quick Demo** (2 hours)
+
 - Create mock API endpoint
 - Return static Berlin criteria data
 - See the UI in action
 - Then build real backend
 
 **Option B: Full Implementation** (6-8 hours)
+
 - Build complete API endpoint
 - Search real databases
 - AI synthesis
 - Production-ready
 
 **Option C: Hybrid** (4 hours)
+
 - Adapt existing search/synthesis from backup
 - Modify for Consensus format
 - Get it working faster
@@ -238,6 +254,7 @@ Acute respiratory distress syndrome...
 ## 🚀 Ready to Build Backend?
 
 **Just tell me**:
+
 1. Quick demo first (Option A)?
 2. Full build now (Option B)?
 3. Reuse backup code (Option C)?

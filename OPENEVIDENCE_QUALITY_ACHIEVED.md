@@ -31,10 +31,12 @@ Priority Order:
 ### 2. **Enhanced Clinical Badges** ✅
 
 **Before**:
+
 - ⭐ RIGOROUS JOURNAL (generic)
 - 📊 HIGHLY CITED (>500)
 
 **After** (OpenEvidence-style):
+
 - 📋 **CLINICAL GUIDELINE** - Authoritative recommendations
 - ⭐ **NEJM** / **LANCET** / **JAMA** / **BMJ** - Specific top journals
 - 📈 **META-ANALYSIS** - Highest evidence level
@@ -49,12 +51,14 @@ Priority Order:
 ### 3. **Clinical Decision-Focused AI Prompts** ✅
 
 **Before**:
+
 ```
 Generate a comprehensive Consensus-style evidence summary.
 Create sections with subsections and tables.
 ```
 
 **After** (OpenEvidence approach):
+
 ```
 You are a clinical evidence synthesizer for medical decision-making.
 
@@ -67,7 +71,7 @@ CRITICAL INSTRUCTIONS:
 STRUCTURE:
 ## Clinical Recommendations
 ### 1. When to Use / Indications
-### 2. When NOT to Use / Contraindications  
+### 2. When NOT to Use / Contraindications
 ### 3. Special Populations / Considerations
 
 ## Evidence Basis
@@ -83,11 +87,13 @@ STRUCTURE:
 ### 4. **Two-Tier Source System** ✅
 
 **High-Quality Sources** (Score ≥80):
+
 - Guidelines, Tier 1 journals, meta-analyses
 - **Top 8** sent to AI with full abstracts
 - Includes journal badges for AI context
 
 **Supplementary Sources** (Score <80):
+
 - Listed for completeness
 - **Up to 5** with brief citations
 - Ensures comprehensive coverage
@@ -101,20 +107,21 @@ STRUCTURE:
 ### OpenEvidence Example: "Sodium Bicarbonate in Sepsis"
 
 **Their Output**:
+
 ```
-Sodium bicarbonate therapy in sepsis is not routinely 
-recommended for the correction of lactic acidosis or to 
-improve hemodynamics or vasopressor requirements, as 
+Sodium bicarbonate therapy in sepsis is not routinely
+recommended for the correction of lactic acidosis or to
+improve hemodynamics or vasopressor requirements, as
 current evidence does not demonstrate benefit.
 
-The Surviving Sepsis Campaign guidelines specifically 
-suggest against its use for these indications in adults 
-with septic shock and hypoperfusion-induced lactic 
+The Surviving Sepsis Campaign guidelines specifically
+suggest against its use for these indications in adults
+with septic shock and hypoperfusion-induced lactic
 acidemia, based on low-quality evidence.
 
-However, sodium bicarbonate may have a role in selected 
-subgroups. For patients with septic shock who develop 
-severe metabolic acidemia (arterial pH ≤ 7.2) in the 
+However, sodium bicarbonate may have a role in selected
+subgroups. For patients with septic shock who develop
+severe metabolic acidemia (arterial pH ≤ 7.2) in the
 context of acute kidney injury (AKI) stage 2 or 3...
 
 References:
@@ -123,9 +130,10 @@ References:
 ```
 
 **Our Output** (Same Query):
+
 ```
-The use of sodium bicarbonate in septic shock is not 
-supported by strong evidence, and its administration is 
+The use of sodium bicarbonate in septic shock is not
+supported by strong evidence, and its administration is
 generally not recommended as a first-line treatment ⁽¹⁾.
 
 [AI generates similar structure with:]
@@ -136,6 +144,7 @@ generally not recommended as a first-line treatment ⁽¹⁾.
 ```
 
 **Sources**:
+
 - 📋 CLINICAL GUIDELINE badges auto-detected
 - ⭐ LANCET badge for BICAR-ICU trial
 - 📊 Citation counts shown
@@ -146,6 +155,7 @@ generally not recommended as a first-line treatment ⁽¹⁾.
 ## 🏆 What Makes Ours Clinical-Grade
 
 ### 1. **Guideline-First Approach**
+
 ```typescript
 if (article.type.includes("guideline")) {
   qualityScore += 150; // Highest priority
@@ -154,25 +164,31 @@ if (article.type.includes("guideline")) {
 ```
 
 ### 2. **Evidence Strength Language**
+
 AI prompted to use:
+
 - "Strong evidence" (RCTs, guidelines)
 - "Moderate evidence" (observational)
 - "Limited evidence" (case series)
 - "Evidence suggests against" (harm)
 
 ### 3. **Nuanced Recommendations**
+
 Structured sections:
+
 - When to USE (indications, criteria)
 - When NOT to use (contraindications)
 - Special populations (exceptions)
 - Risk-benefit considerations
 
 ### 4. **Transparent Quality**
+
 Console logs show:
+
 ```
 [Quality] 8 high-quality sources:
   - 2 Tier 1 journals
-  - 1 guideline  
+  - 1 guideline
   - 2 meta-analyses
 ```
 
@@ -183,17 +199,18 @@ Console logs show:
 ### Query: "Treatment of Malaria"
 
 **Response Generated**:
+
 ```json
 {
-  "summary": "The treatment of malaria is primarily based 
-  on artemisinin combination therapies, which have been 
-  shown to be highly effective in reducing morbidity and 
-  mortality, with strong evidence from high-impact 
+  "summary": "The treatment of malaria is primarily based
+  on artemisinin combination therapies, which have been
+  shown to be highly effective in reducing morbidity and
+  mortality, with strong evidence from high-impact
   studies ⁽¹⁾.",
-  
+
   "steps": 3,
   "isPro": true,
-  
+
   "sections": [
     {
       "title": "Clinical Recommendations",
@@ -204,12 +221,13 @@ Console logs show:
       "subsections": [...]
     }
   ],
-  
+
   "sources": [15 sources with quality badges]
 }
 ```
 
 **Quality Metrics**:
+
 - ✅ AI synthesis completed in ~5 seconds
 - ✅ Sources ranked by quality score
 - ✅ Evidence strength stated ("strong evidence")
@@ -221,8 +239,9 @@ Console logs show:
 ## 📁 Files Modified
 
 1. **`/src/app/api/evidence/consensus-search/route.ts`**
+
    - Quality scoring algorithm
-   - Two-tier source system  
+   - Two-tier source system
    - Clinical-focused AI prompts
    - Enhanced badge generation
    - Quality metrics logging
@@ -258,18 +277,18 @@ Console logs show:
 
 ## 📈 Performance vs OpenEvidence
 
-| Feature | OpenEvidence | Our Implementation | Status |
-|---------|-------------|-------------------|--------|
-| **Guidelines First** | ✅ | ✅ Quality score +150 | ✅ Match |
-| **Tier 1 Badges** | ✅ Lancet, NEJM | ✅ All Tier 1 + specific | ✅ **Better** |
-| **Evidence Strength** | ✅ "Low-quality" | ✅ Strong/moderate/limited | ✅ Match |
-| **Nuanced Guidance** | ✅ Use vs NOT use | ✅ Structured sections | ✅ Match |
-| **Clinical Focus** | ✅ Bedside decisions | ✅ Actionable prompts | ✅ Match |
-| **Inline Citations** | ✅ ⁽¹⁾⁽²⁾ | ✅ Superscript format | ✅ Match |
-| **Special Populations** | ✅ AKI, pregnancy | ✅ Dedicated section | ✅ Match |
-| **Risk Considerations** | ✅ Contraindications | ✅ When NOT to use | ✅ Match |
-| **Free to Use** | ❌ Paid | ✅ Free (Groq tier) | ✅ **Advantage** |
-| **Speed** | ~5-10 sec | ~5-10 sec | ✅ Match |
+| Feature                 | OpenEvidence         | Our Implementation         | Status           |
+| ----------------------- | -------------------- | -------------------------- | ---------------- |
+| **Guidelines First**    | ✅                   | ✅ Quality score +150      | ✅ Match         |
+| **Tier 1 Badges**       | ✅ Lancet, NEJM      | ✅ All Tier 1 + specific   | ✅ **Better**    |
+| **Evidence Strength**   | ✅ "Low-quality"     | ✅ Strong/moderate/limited | ✅ Match         |
+| **Nuanced Guidance**    | ✅ Use vs NOT use    | ✅ Structured sections     | ✅ Match         |
+| **Clinical Focus**      | ✅ Bedside decisions | ✅ Actionable prompts      | ✅ Match         |
+| **Inline Citations**    | ✅ ⁽¹⁾⁽²⁾            | ✅ Superscript format      | ✅ Match         |
+| **Special Populations** | ✅ AKI, pregnancy    | ✅ Dedicated section       | ✅ Match         |
+| **Risk Considerations** | ✅ Contraindications | ✅ When NOT to use         | ✅ Match         |
+| **Free to Use**         | ❌ Paid              | ✅ Free (Groq tier)        | ✅ **Advantage** |
+| **Speed**               | ~5-10 sec            | ~5-10 sec                  | ✅ Match         |
 
 ---
 
@@ -278,18 +297,22 @@ Console logs show:
 ### Their Strengths (Now Ours Too):
 
 1. **Guideline Authority**
+
    - They cite Surviving Sepsis Campaign first
    - We prioritize guidelines with +150 quality score
 
 2. **Clear Clinical Stance**
+
    - "Not routinely recommended" language
    - Our AI uses "not supported by strong evidence"
 
 3. **Exception Handling**
+
    - "However, may have a role in selected subgroups"
    - Our "Special Populations" section covers this
 
 4. **Evidence Quality Transparency**
+
    - "Based on low-quality evidence"
    - Our AI states "strong/moderate/limited evidence"
 
@@ -302,6 +325,7 @@ Console logs show:
 ## 🔬 Technical Excellence
 
 ### Quality Algorithm
+
 ```typescript
 // Real implementation from our code
 qualityScore = 0;
@@ -325,16 +349,13 @@ qualityScore += (year - 2020) * 5;
 ```
 
 ### Source Separation
+
 ```typescript
 // High-quality sources (score ≥80)
-highQualitySources = articles
-  .filter(a => a.qualityScore >= 80)
-  .slice(0, 8); // Top 8 for AI
+highQualitySources = articles.filter((a) => a.qualityScore >= 80).slice(0, 8); // Top 8 for AI
 
-// Supplementary (score <80)  
-supplementarySources = articles
-  .filter(a => a.qualityScore < 80)
-  .slice(0, 5); // Up to 5 listed
+// Supplementary (score <80)
+supplementarySources = articles.filter((a) => a.qualityScore < 80).slice(0, 5); // Up to 5 listed
 ```
 
 ---
@@ -342,14 +363,16 @@ supplementarySources = articles
 ## 🎯 Clinical Decision Support Achieved
 
 ### Before (Generic Evidence Search):
+
 ```
 "Found 20 articles about septic shock treatment"
 [List of articles with basic badges]
 ```
 
 ### After (Clinical-Grade):
+
 ```
-Summary: "NOT recommended based on strong evidence 
+Summary: "NOT recommended based on strong evidence
 from Surviving Sepsis Campaign and BICAR-ICU trial ⁽¹⁾⁽²⁾.
 However, may consider in severe acidemia (pH ≤7.2) + AKI."
 
@@ -376,6 +399,7 @@ Sources:
 **Status**: 🟢 **PRODUCTION READY - CLINICAL GRADE**
 
 Our evidence search now:
+
 1. ✅ Prioritizes guidelines and high-impact journals
 2. ✅ Provides clear clinical recommendations
 3. ✅ States evidence strength transparently
@@ -386,6 +410,7 @@ Our evidence search now:
 8. ✅ **Completely FREE** (Groq API)
 
 **Next Steps**:
+
 1. Test with more clinical queries
 2. Gather clinician feedback
 3. Monitor AI response quality
@@ -393,9 +418,9 @@ Our evidence search now:
 
 ---
 
-**Date**: January 19, 2026  
-**Implementation**: Clinical-grade evidence search  
-**Quality**: OpenEvidence-equivalent  
-**Cost**: $0 (free Groq tier)  
-**Performance**: 5-10 second response  
+**Date**: January 19, 2026
+**Implementation**: Clinical-grade evidence search
+**Quality**: OpenEvidence-equivalent
+**Cost**: $0 (free Groq tier)
+**Performance**: 5-10 second response
 **Status**: ✅ **READY FOR CLINICIANS**
