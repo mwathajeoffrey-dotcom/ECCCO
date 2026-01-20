@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BookOpen, User, LogIn, LogOut, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
 
 interface HeaderProps {
@@ -13,18 +14,14 @@ interface HeaderProps {
 
 export default function Header({ title = "ECCCO", subtitle, currentPage }: HeaderProps) {
   const { isSignedIn, user, isLoaded } = useUser();
+  const router = useRouter();
   const [showAuthMenu, setShowAuthMenu] = useState(false);
 
   const isLoading = !isLoaded;
 
-  const handleSignIn = (provider?: string) => {
-    if (provider === "google") {
-      window.location.href = "/auth/signin";
-    } else {
-      // Redirect to custom sign in page for email/password options
-      window.location.href = "/auth/signin";
-    }
+  const handleSignIn = () => {
     setShowAuthMenu(false);
+    router.push("/auth/signin");
   };
 
   return (
@@ -132,7 +129,7 @@ export default function Header({ title = "ECCCO", subtitle, currentPage }: Heade
                       </div>
 
                       <button
-                        onClick={() => handleSignIn("google")}
+                        onClick={handleSignIn}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3"
                       >
                         <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
@@ -145,7 +142,7 @@ export default function Header({ title = "ECCCO", subtitle, currentPage }: Heade
                       </button>
 
                       <button
-                        onClick={() => handleSignIn()}
+                        onClick={handleSignIn}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3"
                       >
                         <UserPlus className="w-5 h-5 text-blue-600" />

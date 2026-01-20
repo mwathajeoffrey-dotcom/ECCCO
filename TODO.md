@@ -106,6 +106,22 @@ model UserNote {
 }
 ```
 
+### Task 4.5: Fix Sign-In Menu Functionality 🆕
+- [ ] Fix Header.tsx sign-in button clicks (not navigating to /auth/signin)
+- [ ] Replace custom handleSignIn() logic with proper Clerk navigation
+- [ ] Test "Continue with Google" button
+- [ ] Test "Create Account" button
+- [ ] Verify dropdown closes after click
+- [ ] Test on mobile and desktop
+- **Priority**: HIGH (User-facing bug)
+- **Effort**: 30 minutes - 1 hour
+- **Assignee**: _________
+- **Due Date**: Today
+- **Dependencies**: None
+- **Files to Modify**:
+  - `src/components/layout/Header.tsx`
+- **Issue**: Sign-in dropdown menu buttons don't properly navigate to auth page
+
 ### Task 5: Cleanup Temporary Scripts
 - [ ] Create archive directory: `mkdir -p scripts/archived/logger-fixes`
 - [ ] Move scripts: `mv fix-*.sh fix_all_loggers.py scripts/archived/logger-fixes/`
