@@ -1,7 +1,7 @@
 "use client";
 import { logger } from '@/lib/logger';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Clock, ChevronLeft, ChevronRight, Flag, BookOpen, CheckCircle, Download } from "lucide-react";
 import Link from "next/link";
@@ -56,6 +56,7 @@ interface Topic {
 export default function ExamInterface() {
   const searchParams = useSearchParams();
   const filterParam = searchParams?.get("filter");
+  const topicParam = searchParams?.get("topic");
 
   const [selectedTopic, setSelectedTopic] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -70,6 +71,7 @@ export default function ExamInterface() {
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [showAnswerAfterAttempt, setShowAnswerAfterAttempt] = useState(false);
   const [currentQuestionAnswered, setCurrentQuestionAnswered] = useState(false);
+  const hasAutoStarted = useRef(false);
 
   // Fetch topics on component mount
   useEffect(() => {
@@ -90,6 +92,19 @@ export default function ExamInterface() {
         // Initialize analytics
         await analytics.initialize();
         analytics.trackPageView("/exam", "Exam Topics Selection");
+
+        // Auto-start exam if topic parameter is provided
+        if (topicParam && data.length > 0) {
+          const topic = data.find((t: Topic) => t.id === topicParam);
+          if (topic) {
+            // Note: We'll fetch questions after the component has topics state set
+            // This is handled by a separate useEffect below
+          } else {
+            toast.error("Topic not found", {
+              description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`
+            });
+          }
+        }
       } catch (error) {
         logger.error("Error fetching topics:", error instanceof Error ? error : new Error(String(error)));
         const errorMsg = getErrorFromFetch(error);
@@ -233,6 +248,29 @@ export default function ExamInterface() {
       setIsLoading(false);
     }
   };
+
+  // Auto-start exam if topic parameter is provided
+  useEffect(() => {
+    if (
+      topicParam &&
+      !hasAutoStarted.current &&
+      topics.length > 0 &&
+      !isExamStarted &&
+      !isLoading &&
+      !loadingTopics
+    ) {
+      const topic = topics.find((t) => t.id === topicParam);
+      if (topic) {
+        hasAutoStarted.current = true;
+        setSelectedTopic(topicParam);
+        fetchQuestions(topicParam);
+      } else {
+        toast.error("Topic not found", {
+          description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`
+        });
+      }
+    }
+  }, [topicParam, topics, isExamStarted, isLoading, loadingTopics]);
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (!isExamFinished) {

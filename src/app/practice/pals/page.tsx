@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { PALSDosageCalculator } from '@/components/pals/PALSDosageCalculator';
 import { PALSCPRSimulator } from '@/components/pals/PALSCPRSimulator';
 import { PALSDrugReference } from '@/components/pals/PALSDrugReference';
+import { PALSAlgorithms } from '@/components/pals/PALSAlgorithms';
 
 type ActiveTool = 'overview' | 'calculator' | 'cpr' | 'drugs' | 'algorithms';
 
@@ -79,7 +80,7 @@ const resources: PracticeResource[] = [
       'Quick reference cards'
     ],
     color: 'bg-purple-500',
-    available: false // Coming soon
+    available: true // Now available!
   }
 ];
 
@@ -95,13 +96,7 @@ export default function PALSPracticeResources() {
       case 'drugs':
         return <PALSDrugReference />;
       case 'algorithms':
-        return (
-          <div className="text-center py-12">
-            <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Coming Soon</h3>
-            <p className="text-gray-600">Interactive PALS algorithms are under development.</p>
-          </div>
-        );
+        return <PALSAlgorithms />;
       default:
         return renderOverview();
     }
@@ -203,13 +198,20 @@ export default function PALSPracticeResources() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link 
             href="/exam?topic=pals" 
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all hover:scale-105 group relative overflow-hidden"
           >
-            <Target className="w-8 h-8 text-blue-600 mb-4" />
-            <h3 className="font-semibold text-gray-900 mb-2">Practice Exam</h3>
-            <p className="text-sm text-gray-600">
+            <div className="absolute top-0 right-0 bg-white bg-opacity-20 text-xs px-3 py-1 rounded-bl-lg font-medium">
+              Auto-Start
+            </div>
+            <Target className="w-8 h-8 text-white mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-white mb-2 text-lg">Start PALS Practice Exam</h3>
+            <p className="text-sm text-blue-50 mb-3">
               Take comprehensive PALS practice exams with enhanced questions and detailed explanations.
             </p>
+            <div className="flex items-center justify-between text-xs text-blue-100">
+              <span>38 Questions Available</span>
+              <span className="font-medium">→ Begin Now</span>
+            </div>
           </Link>
 
           <Link 
