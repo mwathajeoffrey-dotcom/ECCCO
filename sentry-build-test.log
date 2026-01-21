@@ -1,0 +1,144 @@
+
+> eccco-exam-platform@1.0.0 build
+> prisma generate && next build
+
+Prisma schema loaded from prisma/schema.prisma.
+
+✔ Generated Prisma Client (v7.2.0) to ./node_modules/@prisma/client in 647ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+
+▲ Next.js 16.1.4 (Turbopack)
+- Environments: .env.production.local, .env.local, .env
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 104s
+  Running next.config.js provided runAfterProductionCompile ...
+✓ Completed runAfterProductionCompile in 103979ms
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/88) ...
+  Generating static pages using 3 workers (22/88) 
+  Generating static pages using 3 workers (44/88) 
+  Generating static pages using 3 workers (66/88) 
+✓ Generating static pages using 3 workers (88/88) in 4.5s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin/dashboard
+├ ○ /admin/evidence
+├ ○ /admin/feedback
+├ ○ /admin/users
+├ ƒ /api/admin/check
+├ ƒ /api/admin/dashboard
+├ ƒ /api/admin/feedback
+├ ƒ /api/admin/feedback/[id]
+├ ƒ /api/admin/users
+├ ƒ /api/analytics/dashboard
+├ ƒ /api/analytics/record
+├ ƒ /api/analytics/sync
+├ ƒ /api/auth/check-admin
+├ ƒ /api/auth/check-developer
+├ ƒ /api/auth/my-user-id
+├ ƒ /api/bookmarks
+├ ƒ /api/bookmarks-mock
+├ ƒ /api/bookmarks/review
+├ ƒ /api/debug
+├ ƒ /api/debug/db-check
+├ ƒ /api/debug/db-info
+├ ƒ /api/debug/env
+├ ƒ /api/debug/full-diagnosis
+├ ƒ /api/debug/questions-test
+├ ƒ /api/debug/schema
+├ ƒ /api/errors
+├ ƒ /api/evidence
+├ ƒ /api/evidence/[id]
+├ ƒ /api/evidence/consensus-search
+├ ƒ /api/evidence/import
+├ ƒ /api/evidence/search
+├ ƒ /api/evidence/synthesize
+├ ƒ /api/exam/save
+├ ƒ /api/feedback
+├ ƒ /api/guidelines/search
+├ ƒ /api/health
+├ ƒ /api/metrics
+├ ƒ /api/modules
+├ ƒ /api/modules/direct
+├ ƒ /api/monitoring
+├ ƒ /api/notes
+├ ƒ /api/notes/[id]
+├ ƒ /api/privacy
+├ ƒ /api/profile
+├ ƒ /api/pubmed
+├ ƒ /api/questions
+├ ƒ /api/questions/[id]/rating
+├ ƒ /api/questions/[id]/rating-mock
+├ ƒ /api/quiz-arena/answer
+├ ƒ /api/quiz-arena/create
+├ ƒ /api/quiz-arena/join/[accessCode]
+├ ƒ /api/quiz-arena/session/[sessionId]
+├ ƒ /api/quiz-arena/session/[sessionId]/end
+├ ƒ /api/quiz-arena/session/[sessionId]/next
+├ ƒ /api/quiz-arena/session/[sessionId]/start
+├ ƒ /api/ratings
+├ ƒ /api/search
+├ ƒ /api/study/queue
+├ ƒ /api/study/session
+├ ƒ /api/study/stats
+├ ƒ /api/test-db
+├ ƒ /api/test-simple
+├ ƒ /api/topics
+├ ƒ /api/user/stats
+├ ƒ /auth/signin/[[...rest]]
+├ ○ /bookmarks
+├ ○ /cases
+├ ○ /dashboard
+├ ○ /dashboard/analytics
+├ ○ /emergency-references
+├ ○ /evidence
+├ ○ /evidence-search
+├ ○ /evidence-search-new
+├ ○ /exam
+├ ○ /features
+├ ○ /flowcharts
+├ ○ /get-user-id
+├ ○ /guidelines
+├ ○ /guidelines-search
+├ ƒ /guidelines/[id]
+├ ƒ /guidelines/viewer/[id]
+├ ○ /learning-analytics
+├ ○ /modules
+├ ○ /notes
+├ ○ /obgyn-references
+├ ○ /practice
+├ ○ /practice/acls
+├ ○ /practice/pals
+├ ○ /privacy
+├ ○ /profile
+├ ○ /quiz-arena
+├ ○ /quiz-arena/create
+├ ƒ /quiz-arena/host/[sessionId]
+├ ○ /quiz-arena/join
+├ ƒ /quiz-arena/play/[accessCode]
+├ ○ /review
+├ ○ /settings
+├ ○ /study
+├ ○ /support
+├ ○ /terms
+├ ○ /test
+├ ○ /test-answers
+└ ○ /test-synthesis
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
