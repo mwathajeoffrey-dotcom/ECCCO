@@ -28,18 +28,18 @@ export interface LogEntry {
 class Logger {
   private isDevelopment: boolean;
   private isProduction: boolean;
-  
+
   constructor() {
     this.isDevelopment = process.env.NODE_ENV === 'development';
     this.isProduction = process.env.NODE_ENV === 'production';
   }
-  
+
   /**
    * Format log entry with timestamp and context
    */
   private formatLog(entry: LogEntry): string {
     const { level, message, timestamp, context } = entry;
-    
+
     if (this.isDevelopment) {
       // Colorful output for development
       const colors = {
@@ -49,36 +49,36 @@ class Logger {
         error: '\x1b[31m', // Red
       };
       const reset = '\x1b[0m';
-      
+
       let output = `${colors[level]}[${level.toUpperCase()}]${reset} ${timestamp} - ${message}`;
-      
+
       if (context && Object.keys(context).length > 0) {
         output += `\n  Context: ${JSON.stringify(context, null, 2)}`;
       }
-      
+
       return output;
     }
-    
+
     // JSON format for production (easier for log aggregation)
     return JSON.stringify({ level, message, timestamp, ...context });
   }
-  
+
   /**
    * Log debug information (development only)
    */
   debug(message: string, context?: LogContext): void {
     if (!this.isDevelopment) return;
-    
+
     const entry: LogEntry = {
       level: LogLevel.DEBUG,
       message,
       timestamp: new Date().toISOString(),
       context,
     };
-    
+
     logger.debug(this.formatLog(entry));
   }
-  
+
   /**
    * Log informational messages
    */
@@ -89,9 +89,9 @@ class Logger {
       timestamp: new Date().toISOString(),
       context,
     };
-    
+
     logger.debug(this.formatLog(entry));
-    
+
     // Send to Sentry as breadcrumb in production
     if (this.isProduction) {
       Sentry.addBreadcrumb({
@@ -102,7 +102,7 @@ class Logger {
       });
     }
   }
-  
+
   /**
    * Log warning messages
    */
@@ -113,9 +113,9 @@ class Logger {
       timestamp: new Date().toISOString(),
       context,
     };
-    
+
     logger.warn(this.formatLog(entry));
-    
+
     // Send to Sentry as breadcrumb in production
     if (this.isProduction) {
       Sentry.addBreadcrumb({
@@ -126,7 +126,7 @@ class Logger {
       });
     }
   }
-  
+
   /**
    * Log error messages and send to Sentry
    */
@@ -138,13 +138,13 @@ class Logger {
       context,
       error,
     };
-    
+
     logger.error(this.formatLog(entry));
-    
+
     if (error && error.stack) {
       logger.error(error.stack);
     }
-    
+
     // Send to Sentry in production
     if (this.isProduction && error) {
       Sentry.captureException(error, {
@@ -157,20 +157,20 @@ class Logger {
       });
     }
   }
-  
+
   /**
    * Log performance metrics
    */
   performance(operation: string, durationMs: number, context?: LogContext): void {
     const message = `${operation} completed in ${durationMs}ms`;
-    
+
     this.info(message, {
       ...context,
       operation,
       durationMs,
       category: 'performance',
     });
-    
+
     // Warn if operation takes too long
     if (durationMs > 1000) {
       this.warn(`Slow operation detected: ${operation}`, {
@@ -179,7 +179,7 @@ class Logger {
       });
     }
   }
-  
+
   /**
    * Helper for timing operations
    */
@@ -189,7 +189,7 @@ class Logger {
     context?: LogContext
   ): Promise<T> {
     const start = performance.now();
-    
+
     try {
       const result = await fn();
       const duration = performance.now() - start;
@@ -205,13 +205,13 @@ class Logger {
       throw error;
     }
   }
-  
+
   /**
    * Helper for timing synchronous operations
    */
   time<T>(operation: string, fn: () => T, context?: LogContext): T {
     const start = performance.now();
-    
+
     try {
       const result = fn();
       const duration = performance.now() - start;
@@ -237,13 +237,13 @@ export const log = {
   debug: (message: string, context?: LogContext) => logger.debug(message, context),
   info: (message: string, context?: LogContext) => logger.info(message, context),
   warn: (message: string, context?: LogContext) => logger.warn(message, context),
-  error: (message: string, error?: Error, context?: LogContext) => 
+  error: (message: string, error?: Error, context?: LogContext) =>
     logger.error(message, error, context),
-  performance: (operation: string, durationMs: number, context?: LogContext) => 
+  performance: (operation: string, durationMs: number, context?: LogContext) =>
     logger.performance(operation, durationMs, context),
-  timeAsync: <T>(operation: string, fn: () => Promise<T>, context?: LogContext) => 
+  timeAsync: <T>(operation: string, fn: () => Promise<T>, context?: LogContext) =>
     logger.timeAsync(operation, fn, context),
-  time: <T>(operation: string, fn: () => T, context?: LogContext) => 
+  time: <T>(operation: string, fn: () => T, context?: LogContext) =>
     logger.time(operation, fn, context),
 };
 
