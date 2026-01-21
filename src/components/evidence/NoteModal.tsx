@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Save, Tag, Calendar, FileText, Sparkles } from 'lucide-react';
+import { X, Save, Tag, Calendar, FileText, Sparkles, Minimize2, Maximize2, Minus } from 'lucide-react';
 
 interface NoteModalProps {
   isOpen: boolean;
@@ -39,6 +39,8 @@ export function NoteModal({
   const [patientContext, setPatientContext] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [showTips, setShowTips] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Initialize form with existing note or defaults
   useEffect(() => {
@@ -94,10 +96,20 @@ export function NoteModal({
         specialty: specialty || undefined,
         patientContext: patientContext || undefined,
       });
+      
+      // Reset minimize/fullscreen state on success
+      setIsMinimized(false);
+      setIsFullScreen(false);
       onClose();
     } catch (error) {
       console.error('Failed to save note:', error);
-      alert('Failed to save note. Please try again.');
+      
+      // Better error message
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'Failed to save note. Please make sure you are logged in and try again.';
+      
+      alert('❌ ' + errorMessage);
     } finally {
       setIsSaving(false);
     }
@@ -107,40 +119,101 @@ export function NoteModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/50 dark:bg-black/70 transition-opacity"
-        onClick={onClose}
-      />
+      {/* Backdrop - only show when not minimized */}
+      {!isMinimized && (
+        <div
+          className="fixed inset-0 bg-black/50 dark:bg-black/70 transition-opacity"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-3xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl transform transition-all">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {existingNote ? 'Edit Clinical Note' : '📝 Take Clinical Notes'}
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                  Document your findings and insights
-                </p>
-              </div>
+      {/* Minimized Bar */}
+      {isMinimized ? (
+        <div className="fixed bottom-4 right-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-3 min-w-[300px]">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                {title || searchQuery}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {content.length} characters
+              </p>
+            </div>
+            <button
+              onClick={() => setIsMinimized(false)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="Restore"
+            >
+              <Maximize2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            </button>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="Close"
             >
-              <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              <X className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
+        </div>
+      ) : (
+        /* Full Modal */
+        <div className={`flex min-h-full items-center justify-center p-4 ${isFullScreen ? 'p-0' : ''}`}>
+          <div className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl transform transition-all ${
+            isFullScreen 
+              ? 'w-screen h-screen rounded-none' 
+              : 'w-full max-w-3xl'
+          }`}>
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {existingNote ? 'Edit Clinical Note' : '📝 Take Clinical Notes'}
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    Document your findings and insights
+                  </p>
+                </div>
+              </div>
+              
+              {/* Window Controls */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsMinimized(true)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title="Minimize - Continue reading"
+                >
+                  <Minus className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                </button>
+                <button
+                  onClick={() => setIsFullScreen(!isFullScreen)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title={isFullScreen ? 'Exit fullscreen' : 'Fullscreen'}
+                >
+                  {isFullScreen ? (
+                    <Minimize2 className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  ) : (
+                    <Maximize2 className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  )}
+                </button>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  title="Close"
+                >
+                  <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                </button>
+              </div>
+            </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            {/* Content */}
+            <div className={`p-6 space-y-6 overflow-y-auto ${isFullScreen ? 'max-h-[calc(100vh-200px)]' : 'max-h-[70vh]'}`}>
             {/* Search Context */}
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <div className="flex items-start gap-2">
@@ -349,8 +422,9 @@ Example structure:
               </button>
             </div>
           </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
