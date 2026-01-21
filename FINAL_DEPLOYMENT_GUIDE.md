@@ -244,7 +244,62 @@ To keep it simple and beautiful, we removed:
 
 ---
 
-## 🚀 DEPLOY NOW!
+## �️ Database Migrations
+
+### Before You Deploy
+
+**Important**: Check your database migration status before deploying:
+
+```bash
+./check-migration-status.sh
+```
+
+This verifies:
+- ✅ All migrations are applied
+- ✅ Database schema is in sync
+- ✅ No migration drift detected
+
+### Migration Commands
+
+**Development** (create new migration):
+```bash
+npx prisma migrate dev --name descriptive_name
+```
+
+**Production** (apply pending migrations):
+```bash
+npx prisma migrate deploy
+```
+
+**Check Status**:
+```bash
+npx prisma migrate status
+```
+
+### Current Migration Count
+
+- **Total migrations**: 16 applied ✅
+- **Latest**: `20260120_add_comprehensive_models`
+- **Schema version**: Prisma 7.2.0
+
+### Vercel Auto-Migration
+
+Migrations run automatically on deploy via `package.json`:
+
+```json
+{
+  "scripts": {
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma migrate deploy && next build"
+  }
+}
+```
+
+**Documentation**: See `docs/DATABASE_MIGRATIONS.md` for detailed migration guide.
+
+---
+
+## �🚀 DEPLOY NOW!
 
 Your evidence search is **beautiful**, **fast**, and **production-ready**.
 
