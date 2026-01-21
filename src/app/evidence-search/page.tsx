@@ -110,8 +110,22 @@ export default function EvidenceSearchPage() {
     // Add to history
     addToHistory(queryToSearch);
 
+    // Detect if this is a drug-specific query
+    const drugKeywords = [
+      'dosing', 'dose', 'dosage', 'indication', 'contraindication',
+      'interaction', 'adverse effect', 'side effect', 'monitoring',
+      'drug', 'medication', 'mg', 'mcg', 'administration'
+    ];
+    const lowerQuery = queryToSearch.toLowerCase();
+    const isDrugQuery = drugKeywords.some(keyword => lowerQuery.includes(keyword));
+
+    // Choose appropriate endpoint
+    const endpoint = isDrugQuery 
+      ? "/api/evidence/drug-search"
+      : "/api/evidence/consensus-search";
+
     try {
-      const response = await fetch("/api/evidence/consensus-search", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: queryToSearch }),
@@ -257,6 +271,60 @@ export default function EvidenceSearchPage() {
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
               </button>
             </div>
+
+            {/* Quick Search Templates */}
+            {!result && !loading && (
+              <div className="mt-4">
+                <p className="text-sm text-slate-600 mb-2">Try these searches:</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setQuery("management of diabetic ketoacidosis");
+                      setTimeout(() => handleSearch("management of diabetic ketoacidosis"), 100);
+                    }}
+                    className="px-3 py-1.5 text-sm bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
+                  >
+                    💉 DKA Management
+                  </button>
+                  <button
+                    onClick={() => {
+                      setQuery("vancomycin dosing for sepsis");
+                      setTimeout(() => handleSearch("vancomycin dosing for sepsis"), 100);
+                    }}
+                    className="px-3 py-1.5 text-sm bg-purple-50 text-purple-700 hover:bg-purple-100 rounded-lg transition-colors"
+                  >
+                    💊 Vancomycin Dosing
+                  </button>
+                  <button
+                    onClick={() => {
+                      setQuery("STEMI guidelines 2024");
+                      setTimeout(() => handleSearch("STEMI guidelines 2024"), 100);
+                    }}
+                    className="px-3 py-1.5 text-sm bg-green-50 text-green-700 hover:bg-green-100 rounded-lg transition-colors"
+                  >
+                    📋 STEMI Guidelines
+                  </button>
+                  <button
+                    onClick={() => {
+                      setQuery("lisinopril contraindications");
+                      setTimeout(() => handleSearch("lisinopril contraindications"), 100);
+                    }}
+                    className="px-3 py-1.5 text-sm bg-orange-50 text-orange-700 hover:bg-orange-100 rounded-lg transition-colors"
+                  >
+                    ⚠️ Drug Contraindications
+                  </button>
+                  <button
+                    onClick={() => {
+                      setQuery("warfarin drug interactions");
+                      setTimeout(() => handleSearch("warfarin drug interactions"), 100);
+                    }}
+                    className="px-3 py-1.5 text-sm bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors"
+                  >
+                    🔄 Drug Interactions
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>}
