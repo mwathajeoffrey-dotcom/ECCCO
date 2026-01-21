@@ -217,7 +217,7 @@ npm run dev
 **GROQ_API_KEY missing**:
 
 ```bash
-echo "GROQ_API_KEY=gsk_XsXtxtlf6AVhz2Ug4J24WGdyb3FY..." >> .env.local
+echo "GROQ_API_KEY=your_groq_api_key_here" >> .env.local
 ```
 
 (Then restart server)
