@@ -7,14 +7,34 @@ export async function GET() {
   try {
     const { userId } = await auth();
 
-    if (!userId) {
+    // Development mode: Use a default test user if not authenticated
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    let effectiveUserId: string | null = userId;
+
+    if (!userId && isDevelopment) {
+      console.warn('[DEV MODE] Using test user for unauthenticated GET request');
+      effectiveUserId = 'dev_test_user';
+    } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
+    let user = await prisma.user.findUnique({
+      where: { clerkUserId: effectiveUserId! },
     });
+
+    // Create test user in development if doesn't exist
+    if (!user && isDevelopment) {
+      console.warn('[DEV MODE] Creating test user for GET request');
+      user = await prisma.user.create({
+        data: {
+          id: 'dev_user_id',
+          clerkUserId: 'dev_test_user',
+          email: 'test@localhost.dev',
+          updatedAt: new Date(),
+        },
+      });
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -41,14 +61,34 @@ export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
 
-    if (!userId) {
+    // Development mode: Use a default test user if not authenticated
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    let effectiveUserId: string | null = userId;
+
+    if (!userId && isDevelopment) {
+      console.warn('[DEV MODE] Using test user for unauthenticated request');
+      effectiveUserId = 'dev_test_user';
+    } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
+    let user = await prisma.user.findUnique({
+      where: { clerkUserId: effectiveUserId! },
     });
+
+    // Create test user in development if doesn't exist
+    if (!user && isDevelopment) {
+      console.warn('[DEV MODE] Creating test user in database');
+      user = await prisma.user.create({
+        data: {
+          id: 'dev_user_id',
+          clerkUserId: 'dev_test_user',
+          email: 'test@localhost.dev',
+          updatedAt: new Date(),
+        },
+      });
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -111,13 +151,20 @@ export async function PATCH(request: NextRequest) {
   try {
     const { userId } = await auth();
 
-    if (!userId) {
+    // Development mode: Use a default test user if not authenticated
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    let effectiveUserId: string | null = userId;
+
+    if (!userId && isDevelopment) {
+      console.warn('[DEV MODE] Using test user for PATCH request');
+      effectiveUserId = 'dev_test_user';
+    } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user from database
     const user = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
+      where: { clerkUserId: effectiveUserId! },
     });
 
     if (!user) {
@@ -188,13 +235,20 @@ export async function DELETE(request: NextRequest) {
   try {
     const { userId } = await auth();
 
-    if (!userId) {
+    // Development mode: Use a default test user if not authenticated
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    let effectiveUserId: string | null = userId;
+
+    if (!userId && isDevelopment) {
+      console.warn('[DEV MODE] Using test user for DELETE request');
+      effectiveUserId = 'dev_test_user';
+    } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user from database
     const user = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
+      where: { clerkUserId: effectiveUserId! },
     });
 
     if (!user) {
