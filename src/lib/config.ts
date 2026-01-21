@@ -29,11 +29,14 @@ const envSchema = z.object({
   // Optional: Caching
   KV_REST_API_URL: z.string().url().optional(),
   KV_REST_API_TOKEN: z.string().optional(),
+  REDIS_URL: z.string().optional(),
   
   // Optional: Monitoring
+  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
   SENTRY_DSN: z.string().url().optional(),
   SENTRY_ORG: z.string().optional(),
   SENTRY_PROJECT: z.string().optional(),
+  SENTRY_AUTH_TOKEN: z.string().optional(),
   
   // Optional: Security
   ALLOWED_ORIGINS: z.string().optional(),
@@ -129,13 +132,16 @@ export const config = {
   cache: {
     kvUrl: process.env.KV_REST_API_URL,
     kvToken: process.env.KV_REST_API_TOKEN,
+    redisUrl: process.env.REDIS_URL,
   },
   
   // Monitoring
   sentry: {
     dsn: process.env.SENTRY_DSN,
+    publicDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
     org: process.env.SENTRY_ORG,
     project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
   },
   
   // Security
@@ -153,9 +159,18 @@ export const config = {
   },
 } as const;
 
-// Validate on module load (only in production)
-if (process.env.NODE_ENV === 'production') {
+// Validate on module load - this runs when the module is first imported
+// Validates all environments to catch config errors early
+try {
   validateEnv();
+  logger.info('✅ Environment variables validated successfully');
+} catch (error) {
+  logger.error('❌ Environment validation failed:', error);
+  // In development, log the error but continue
+  // In production, the error will be thrown and crash the app (desired behavior)
+  if (process.env.NODE_ENV === 'production') {
+    throw error;
+  }
 }
 
 export default config;
