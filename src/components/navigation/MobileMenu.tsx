@@ -48,7 +48,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       title: "Resources",
       icon: Library,
       items: [
-        { label: "Evidence Library", href: "/emergency-references", icon: Library },
+        { label: "Clinical Notes", href: "/clinical-notes", icon: FileText },
+        { label: "Evidence Search", href: "/evidence-search", icon: Library },
         { label: "Clinical Guidelines", href: "/guidelines", icon: BookOpen },
         { label: "Dashboard", href: "/dashboard", icon: Trophy },
       ],

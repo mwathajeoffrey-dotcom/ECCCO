@@ -51,7 +51,8 @@ export default function StickyHeader({ onSidebarToggle, isSidebarOpen }: StickyH
   ];
 
   const resourcesItems = [
-    { icon: Library, label: "Evidence Library", description: "30+ landmark trials", href: "/emergency-references" },
+    { icon: FileText, label: "Clinical Notes", description: "Your evidence learning journal", href: "/clinical-notes" },
+    { icon: Library, label: "Evidence Search", description: "AI-powered medical research", href: "/evidence-search" },
     {
       icon: BookOpen,
       label: "Clinical Guidelines",

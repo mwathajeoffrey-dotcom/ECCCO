@@ -198,14 +198,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       icon: Library,
       items: [
         {
-          label: "Evidence Library",
-          href: "/emergency-references",
-          icon: Library,
+          label: "Clinical Notes",
+          href: "/clinical-notes",
+          icon: FileText,
+          badge: "NEW"
         },
         {
           label: "Evidence Search",
           href: "/evidence-search",
-          icon: FileText,
+          icon: Library,
         },
         {
           label: "Clinical Guidelines",

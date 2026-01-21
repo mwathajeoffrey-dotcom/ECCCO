@@ -2,7 +2,8 @@
 import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from "react";
-import { Search, Loader2, BookOpen, ExternalLink, Clock, Trash2, X, Menu } from "lucide-react";
+import { Search, Loader2, BookOpen, ExternalLink, Clock, Trash2, X, Menu, FileText } from "lucide-react";
+import { NoteModal, NoteData } from "@/components/evidence/NoteModal";
 
 interface SearchResult {
   query: string;
@@ -56,6 +57,10 @@ export default function EvidenceSearchPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  
+  // NEW: Note-taking modal state
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
 
   // Load search history from localStorage on mount
   useEffect(() => {
@@ -141,6 +146,39 @@ export default function EvidenceSearchPage() {
       setError(err instanceof Error ? err.message : "Search failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // NEW: Handle saving clinical notes
+  const handleSaveNote = async (noteData: NoteData) => {
+    setSavingNote(true);
+    try {
+      const response = await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: noteData.title,
+          content: noteData.content,
+          tags: noteData.tags,
+          searchQuery: noteData.searchQuery,
+          evidenceSummary: noteData.evidenceSummary,
+          specialty: noteData.specialty,
+          patientContext: noteData.patientContext,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save note');
+      }
+
+      // Success! Show a brief confirmation
+      alert('✅ Clinical note saved successfully! View it in "My Notes" tab.');
+      setNoteModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save note:', error);
+      throw error; // Let NoteModal handle the error display
+    } finally {
+      setSavingNote(false);
     }
   };
 
@@ -328,6 +366,22 @@ export default function EvidenceSearchPage() {
           </div>
 
           {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>}
+          
+          {/* NEW: Take Notes Button (appears when there's a search result) */}
+          {result && (
+            <div className="mb-6 flex justify-end">
+              <button
+                onClick={() => setNoteModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 
+                         hover:from-blue-700 hover:to-blue-800 text-white rounded-lg shadow-lg 
+                         hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-medium"
+              >
+                <FileText className="w-5 h-5" />
+                📝 Take Clinical Notes
+              </button>
+            </div>
+          )}
+          
           {result && <ConsensusResult result={result} />}
           {!result && !loading && !error && (
             <div className="text-center py-12 text-slate-500">
@@ -338,6 +392,16 @@ export default function EvidenceSearchPage() {
           )}
         </div>
       </div>
+
+      {/* Note Modal */}
+      <NoteModal
+        isOpen={noteModalOpen}
+        onClose={() => setNoteModalOpen(false)}
+        searchQuery={query}
+        evidenceSummary={result?.summary}
+        onSave={handleSaveNote}
+        existingNote={null}
+      />
     </div>
   );
 }
