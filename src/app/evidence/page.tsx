@@ -601,59 +601,178 @@ function highlightJournalNames(text: string, sources: Source[]) {
       // Add the exact journal name (highest priority)
       journalMap.set(source.journal, { url: source.url, priority: 10 });
 
-      // Add common variations and abbreviations
+      // Tier 1 Journals - Most prestigious
       if (journalLower.includes("new england journal of medicine") || journalLower.includes("n engl j med")) {
-        journalMap.set("NEJM", { url: source.url, priority: 9 });
-        journalMap.set("New England Journal of Medicine", { url: source.url, priority: 10 });
-        journalMap.set("N Engl J Med", { url: source.url, priority: 9 });
+        journalMap.set("NEJM", { url: source.url, priority: 10 });
+        journalMap.set("New England Journal of Medicine", { url: source.url, priority: 11 });
+        journalMap.set("N Engl J Med", { url: source.url, priority: 10 });
+        journalMap.set("New England Journal Med", { url: source.url, priority: 9 });
       }
 
       if (journalLower.includes("jama") && !journalLower.includes("jamanetwork")) {
-        journalMap.set("JAMA", { url: source.url, priority: 9 });
+        journalMap.set("JAMA", { url: source.url, priority: 10 });
         if (journalLower.includes("jama internal medicine")) {
-          journalMap.set("JAMA Internal Medicine", { url: source.url, priority: 10 });
+          journalMap.set("JAMA Internal Medicine", { url: source.url, priority: 11 });
+        }
+        if (journalLower.includes("jama cardiology")) {
+          journalMap.set("JAMA Cardiology", { url: source.url, priority: 11 });
+        }
+        if (journalLower.includes("jama surgery")) {
+          journalMap.set("JAMA Surgery", { url: source.url, priority: 11 });
+        }
+        if (journalLower.includes("jama pediatrics")) {
+          journalMap.set("JAMA Pediatrics", { url: source.url, priority: 11 });
         }
       }
 
       if (journalLower.includes("lancet")) {
-        journalMap.set("The Lancet", { url: source.url, priority: 10 });
-        journalMap.set("Lancet", { url: source.url, priority: 9 });
+        journalMap.set("The Lancet", { url: source.url, priority: 11 });
+        journalMap.set("Lancet", { url: source.url, priority: 10 });
         if (journalLower.includes("lancet respiratory")) {
-          journalMap.set("Lancet Respiratory Medicine", { url: source.url, priority: 10 });
+          journalMap.set("Lancet Respiratory Medicine", { url: source.url, priority: 11 });
+          journalMap.set("The Lancet Respiratory Medicine", { url: source.url, priority: 11 });
+        }
+        if (journalLower.includes("lancet infectious")) {
+          journalMap.set("Lancet Infectious Diseases", { url: source.url, priority: 11 });
+          journalMap.set("The Lancet Infectious Diseases", { url: source.url, priority: 11 });
+        }
+        if (journalLower.includes("lancet neurology")) {
+          journalMap.set("Lancet Neurology", { url: source.url, priority: 11 });
+          journalMap.set("The Lancet Neurology", { url: source.url, priority: 11 });
         }
       }
 
       if (journalLower.includes("bmj") || journalLower.includes("british medical journal")) {
-        journalMap.set("BMJ", { url: source.url, priority: 9 });
-        journalMap.set("British Medical Journal", { url: source.url, priority: 10 });
+        journalMap.set("BMJ", { url: source.url, priority: 10 });
+        journalMap.set("British Medical Journal", { url: source.url, priority: 11 });
+        journalMap.set("The BMJ", { url: source.url, priority: 11 });
       }
 
+      // Critical Care & Emergency Medicine
       if (journalLower.includes("critical care medicine")) {
-        journalMap.set("Critical Care Medicine", { url: source.url, priority: 10 });
-        journalMap.set("Crit Care Med", { url: source.url, priority: 9 });
+        journalMap.set("Critical Care Medicine", { url: source.url, priority: 11 });
+        journalMap.set("Crit Care Med", { url: source.url, priority: 10 });
       }
 
       if (journalLower.includes("intensive care medicine")) {
-        journalMap.set("Intensive Care Medicine", { url: source.url, priority: 10 });
+        journalMap.set("Intensive Care Medicine", { url: source.url, priority: 11 });
+        journalMap.set("Intens Care Med", { url: source.url, priority: 10 });
       }
 
-      if (journalLower.includes("anesthesia") && journalLower.includes("analgesia")) {
-        journalMap.set("Anesthesia and Analgesia", { url: source.url, priority: 10 });
-        journalMap.set("Anesthesia & Analgesia", { url: source.url, priority: 10 });
-      }
-
-      if (journalLower.includes("cochrane")) {
-        journalMap.set("Cochrane", { url: source.url, priority: 9 });
-        journalMap.set("Cochrane Database of Systematic Reviews", { url: source.url, priority: 10 });
-      }
-
-      if (journalLower.includes("annals of internal medicine")) {
-        journalMap.set("Annals of Internal Medicine", { url: source.url, priority: 10 });
+      if (journalLower.includes("critical care") && !journalLower.includes("medicine")) {
+        journalMap.set("Critical Care", { url: source.url, priority: 10 });
       }
 
       if (journalLower.includes("chest")) {
-        journalMap.set("Chest", { url: source.url, priority: 9 });
-        journalMap.set("CHEST", { url: source.url, priority: 9 });
+        journalMap.set("Chest", { url: source.url, priority: 10 });
+        journalMap.set("CHEST", { url: source.url, priority: 10 });
+      }
+
+      if (journalLower.includes("american journal of emergency medicine")) {
+        journalMap.set("American Journal of Emergency Medicine", { url: source.url, priority: 11 });
+      }
+
+      if (journalLower.includes("annals of emergency medicine")) {
+        journalMap.set("Annals of Emergency Medicine", { url: source.url, priority: 11 });
+        journalMap.set("Ann Emerg Med", { url: source.url, priority: 10 });
+      }
+
+      // Anesthesia & Pain
+      if (journalLower.includes("anesthesia") && journalLower.includes("analgesia")) {
+        journalMap.set("Anesthesia and Analgesia", { url: source.url, priority: 11 });
+        journalMap.set("Anesthesia & Analgesia", { url: source.url, priority: 11 });
+        journalMap.set("Anesth Analg", { url: source.url, priority: 10 });
+      }
+
+      if (journalLower.includes("anesthesiology")) {
+        journalMap.set("Anesthesiology", { url: source.url, priority: 11 });
+      }
+
+      // Cardiology
+      if (journalLower.includes("circulation")) {
+        journalMap.set("Circulation", { url: source.url, priority: 11 });
+        if (journalLower.includes("circulation: cardiovascular")) {
+          journalMap.set("Circulation: Cardiovascular Interventions", { url: source.url, priority: 11 });
+        }
+      }
+
+      if (journalLower.includes("journal of the american college of cardiology")) {
+        journalMap.set("Journal of the American College of Cardiology", { url: source.url, priority: 11 });
+        journalMap.set("JACC", { url: source.url, priority: 10 });
+      }
+
+      if (journalLower.includes("european heart journal")) {
+        journalMap.set("European Heart Journal", { url: source.url, priority: 11 });
+        journalMap.set("Eur Heart J", { url: source.url, priority: 10 });
+      }
+
+      // Internal Medicine
+      if (journalLower.includes("annals of internal medicine")) {
+        journalMap.set("Annals of Internal Medicine", { url: source.url, priority: 11 });
+        journalMap.set("Ann Intern Med", { url: source.url, priority: 10 });
+      }
+
+      if (journalLower.includes("american journal of medicine")) {
+        journalMap.set("American Journal of Medicine", { url: source.url, priority: 10 });
+        journalMap.set("Am J Med", { url: source.url, priority: 9 });
+      }
+
+      // Evidence-Based Medicine
+      if (journalLower.includes("cochrane")) {
+        journalMap.set("Cochrane", { url: source.url, priority: 10 });
+        journalMap.set("Cochrane Database of Systematic Reviews", { url: source.url, priority: 11 });
+        journalMap.set("Cochrane Database Syst Rev", { url: source.url, priority: 10 });
+      }
+
+      // Infectious Diseases
+      if (journalLower.includes("clinical infectious diseases")) {
+        journalMap.set("Clinical Infectious Diseases", { url: source.url, priority: 11 });
+        journalMap.set("Clin Infect Dis", { url: source.url, priority: 10 });
+      }
+
+      if (journalLower.includes("journal of infectious diseases")) {
+        journalMap.set("Journal of Infectious Diseases", { url: source.url, priority: 11 });
+        journalMap.set("J Infect Dis", { url: source.url, priority: 10 });
+      }
+
+      // Neurology
+      if (journalLower.includes("neurology") && !journalLower.includes("lancet")) {
+        journalMap.set("Neurology", { url: source.url, priority: 11 });
+      }
+
+      if (journalLower.includes("stroke")) {
+        journalMap.set("Stroke", { url: source.url, priority: 11 });
+      }
+
+      // Pediatrics
+      if (journalLower.includes("pediatrics") && !journalLower.includes("jama")) {
+        journalMap.set("Pediatrics", { url: source.url, priority: 11 });
+      }
+
+      // Pharmacology
+      if (journalLower.includes("clinical pharmacology")) {
+        journalMap.set("Clinical Pharmacology and Therapeutics", { url: source.url, priority: 11 });
+        journalMap.set("Clin Pharmacol Ther", { url: source.url, priority: 10 });
+      }
+
+      // Surgery
+      if (journalLower.includes("annals of surgery")) {
+        journalMap.set("Annals of Surgery", { url: source.url, priority: 11 });
+        journalMap.set("Ann Surg", { url: source.url, priority: 10 });
+      }
+
+      // Diabetes & Endocrinology
+      if (journalLower.includes("diabetes care")) {
+        journalMap.set("Diabetes Care", { url: source.url, priority: 11 });
+      }
+
+      // Nephrology
+      if (journalLower.includes("kidney international")) {
+        journalMap.set("Kidney International", { url: source.url, priority: 11 });
+      }
+
+      if (journalLower.includes("american journal of kidney diseases")) {
+        journalMap.set("American Journal of Kidney Diseases", { url: source.url, priority: 11 });
       }
     }
   });
