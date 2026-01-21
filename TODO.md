@@ -25,6 +25,7 @@
 - [x] **Task 7: PALS Practice Mode** (Jan 20, 2026) - Full PALS implementation with algorithms, auto-start exams, enhanced UX, test suite
 - [x] **Task 1: VS Code Phantom Errors** (Jan 21, 2026) - Removed unused imports, TypeScript errors resolved
 - [x] **Task 10: Sentry Source Maps** (Jan 21, 2026) - Full Sentry setup with error tracking, performance monitoring, source maps upload
+- [x] **Task 15: Environment Variable Validation** (Jan 21, 2026) - Centralized type-safe env validation with Zod schema, startup checks
 
 ---
 
@@ -359,17 +360,31 @@ model UserNote {
 - **Assignee**: _________
 - **Due Date**: _________
 
-### Task 15: Centralize Environment Variable Validation
-- [ ] Create `src/lib/env.ts`
-- [ ] Add validation for all required vars
-- [ ] Add type-safe env getters
-- [ ] Call validation at app startup
-- [ ] Add helpful error messages
-- [ ] Update documentation
+### Task 15: Centralize Environment Variable Validation ✅ COMPLETE
+- [x] Enhanced `src/lib/config.ts` with complete Zod schema
+- [x] Added all missing env vars (REDIS_URL, NEXT_PUBLIC_SENTRY_DSN, SENTRY_AUTH_TOKEN)
+- [x] Created `src/lib/env.ts` for type-safe environment access
+- [x] Added validation at app startup (instrumentation.ts)
+- [x] Created helper functions (isProduction, isDevelopment, getEnv, getRequiredEnv)
+- [x] Updated `.env.example` with all current variables
+- [x] Created comprehensive `docs/ENVIRONMENT_VARIABLES.md` guide
 - **Priority**: TECHNICAL DEBT
-- **Effort**: 2 hours
-- **Assignee**: _________
-- **Due Date**: _________
+- **Effort**: 2 hours (actual: 45 minutes)
+- **Status**: ✅ COMPLETED (Jan 21, 2026)
+- **Commit**: 810c0ba
+- **Files Created**:
+  - `src/lib/env.ts` (type-safe env exports with TypeScript autocomplete)
+  - `docs/ENVIRONMENT_VARIABLES.md` (comprehensive setup guide)
+- **Files Modified**:
+  - `src/lib/config.ts` (enhanced schema with all env vars)
+  - `instrumentation.ts` (imports env validation on startup)
+  - `.env.example` (complete template with all variables)
+- **Features**:
+  - Zod schema validation catches missing/invalid vars early
+  - Type-safe exports: `env.DATABASE_URL` instead of `process.env.DATABASE_URL`
+  - Production-specific validation (ENCRYPTION_KEY must be 32+ chars)
+  - Clear error messages with helpful hints
+  - Single source of truth for all environment configuration
 
 ### Task 16: Test Coverage
 - [ ] Set up Vitest configuration
