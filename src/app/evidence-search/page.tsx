@@ -60,7 +60,6 @@ export default function EvidenceSearchPage() {
   
   // NEW: Note-taking modal state
   const [noteModalOpen, setNoteModalOpen] = useState(false);
-  const [savingNote, setSavingNote] = useState(false);
 
   // Load search history from localStorage on mount
   useEffect(() => {
@@ -151,7 +150,6 @@ export default function EvidenceSearchPage() {
 
   // NEW: Handle saving clinical notes
   const handleSaveNote = async (noteData: NoteData) => {
-    setSavingNote(true);
     try {
       const response = await fetch('/api/notes', {
         method: 'POST',
@@ -172,13 +170,11 @@ export default function EvidenceSearchPage() {
       }
 
       // Success! Show a brief confirmation
-      alert('✅ Clinical note saved successfully! View it in "My Notes" tab.');
+      alert('✅ Clinical note saved successfully! View it in "Clinical Notes" tab.');
       setNoteModalOpen(false);
     } catch (error) {
       console.error('Failed to save note:', error);
       throw error; // Let NoteModal handle the error display
-    } finally {
-      setSavingNote(false);
     }
   };
 

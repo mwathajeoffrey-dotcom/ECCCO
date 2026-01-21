@@ -17,7 +17,8 @@ import {
   Clock,
   Filter,
   X,
-  AlertCircle
+  AlertCircle,
+  Award
 } from 'lucide-react';
 import { NoteModal, NoteData } from '@/components/evidence/NoteModal';
 
@@ -48,6 +49,7 @@ export default function ClinicalNotesPage() {
   // Fetch notes on mount
   useEffect(() => {
     fetchNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchNotes = async () => {
