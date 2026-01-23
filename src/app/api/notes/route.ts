@@ -128,19 +128,32 @@ export async function POST(request: NextRequest) {
         questionText,
         category,
         tags: tags || [],
-        // Clinical evidence search fields (NEW)
-        searchQuery,
-        evidenceSummary,
-        specialty,
-        patientContext,
+        // Clinical evidence search fields (NEW) - all optional
+        ...(searchQuery && { searchQuery }),
+        ...(evidenceSummary && { evidenceSummary }),
+        ...(specialty && { specialty }),
+        ...(patientContext && { patientContext }),
       },
     });
 
     return NextResponse.json(note, { status: 201 });
   } catch (error) {
     console.error("Error creating note:", error);
+    
+    // Better error logging for debugging
+    if (error instanceof Error) {
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
+    }
+    
     return NextResponse.json(
-      { error: "Failed to create note" },
+      { 
+        error: "Failed to create note",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }
