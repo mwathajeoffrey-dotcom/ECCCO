@@ -23,21 +23,18 @@ export async function GET() {
       where: { clerkUserId: effectiveUserId! },
     });
 
-    // Create test user in development if doesn't exist
-    if (!user && isDevelopment) {
-      console.warn('[DEV MODE] Creating test user for GET request');
+    // Auto-create user if doesn't exist (both dev and production)
+    if (!user) {
+      console.warn(`[GET] Creating new user for Clerk ID: ${effectiveUserId}`);
       user = await prisma.user.create({
         data: {
-          id: 'dev_user_id',
-          clerkUserId: 'dev_test_user',
-          email: 'test@localhost.dev',
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          clerkUserId: effectiveUserId!,
+          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          createdAt: new Date(),
           updatedAt: new Date(),
         },
       });
-    }
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Get all notes for the user, sorted by most recent
@@ -77,21 +74,18 @@ export async function POST(request: NextRequest) {
       where: { clerkUserId: effectiveUserId! },
     });
 
-    // Create test user in development if doesn't exist
-    if (!user && isDevelopment) {
-      console.warn('[DEV MODE] Creating test user in database');
+    // Auto-create user if doesn't exist (both dev and production)
+    if (!user) {
+      console.warn(`Creating new user for Clerk ID: ${effectiveUserId}`);
       user = await prisma.user.create({
         data: {
-          id: 'dev_user_id',
-          clerkUserId: 'dev_test_user',
-          email: 'test@localhost.dev',
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          clerkUserId: effectiveUserId!,
+          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          createdAt: new Date(),
           updatedAt: new Date(),
         },
       });
-    }
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const body = await request.json();
@@ -176,12 +170,22 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Get user from database
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { clerkUserId: effectiveUserId! },
     });
 
+    // Auto-create user if doesn't exist
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      console.warn(`[PATCH] Creating new user for Clerk ID: ${effectiveUserId}`);
+      user = await prisma.user.create({
+        data: {
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          clerkUserId: effectiveUserId!,
+          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
     }
 
     const body = await request.json();
@@ -260,12 +264,22 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get user from database
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { clerkUserId: effectiveUserId! },
     });
 
+    // Auto-create user if doesn't exist
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      console.warn(`[DELETE] Creating new user for Clerk ID: ${effectiveUserId}`);
+      user = await prisma.user.create({
+        data: {
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          clerkUserId: effectiveUserId!,
+          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
     }
 
     const { searchParams } = new URL(request.url);
