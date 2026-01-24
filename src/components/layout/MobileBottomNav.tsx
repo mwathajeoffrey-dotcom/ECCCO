@@ -56,7 +56,7 @@ export function MobileBottomNav() {
 
       {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav
-        className={`md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50 transition-transform duration-300 ${
+        className={`md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-30 transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "translate-y-full"
         }`}
         role="navigation"

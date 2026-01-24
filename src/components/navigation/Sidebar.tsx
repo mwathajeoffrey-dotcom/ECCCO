@@ -241,7 +241,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-30"
+            className="fixed inset-0 bg-black/50 z-40"
             onClick={onClose}
           />
         )}
@@ -252,7 +252,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         initial={false}
         animate={{ x: isOpen ? 0 : -300 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container"
+        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onWheel={(e) => {
