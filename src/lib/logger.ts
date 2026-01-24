@@ -21,20 +21,20 @@ class Logger {
   private isProduction: boolean;
 
   constructor() {
-    this.isProduction = process.env.NODE_ENV === 'production';
+    this.isProduction = process.env.NODE_ENV === "production";
     this.logLevel = this.getLogLevel();
   }
 
   private getLogLevel(): LogLevel {
     const level = process.env.LOG_LEVEL?.toLowerCase();
     switch (level) {
-      case 'error':
+      case "error":
         return LogLevel.ERROR;
-      case 'warn':
+      case "warn":
         return LogLevel.WARN;
-      case 'info':
+      case "info":
         return LogLevel.INFO;
-      case 'debug':
+      case "debug":
         return LogLevel.DEBUG;
       default:
         return this.isProduction ? LogLevel.WARN : LogLevel.DEBUG;
@@ -45,12 +45,7 @@ class Logger {
     return level <= this.logLevel;
   }
 
-  private createLogEntry(
-    level: LogLevel,
-    message: string,
-    error?: Error,
-    metadata?: Record<string, any>
-  ): LogEntry {
+  private createLogEntry(level: LogLevel, message: string, error?: Error, metadata?: Record<string, any>): LogEntry {
     return {
       timestamp: new Date().toISOString(),
       level,
@@ -64,88 +59,91 @@ class Logger {
     const levelName = LogLevel[entry.level];
     const timestamp = entry.timestamp;
     const message = entry.message;
-    
+
     let formatted = `[${timestamp}] ${levelName}: ${message}`;
-    
+
     if (entry.metadata) {
       formatted += ` | Metadata: ${JSON.stringify(entry.metadata)}`;
     }
-    
+
     if (entry.error) {
       formatted += `\n  Error: ${entry.error.message}`;
       if (!this.isProduction && entry.error.stack) {
         formatted += `\n  Stack: ${entry.error.stack}`;
       }
     }
-    
+
     return formatted;
   }
 
   error(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
-    
+
     // Handle console.log-style arguments for backward compatibility
     let error: Error | undefined;
     let metadata: Record<string, any> | undefined;
-    
+
     if (args.length > 0) {
       if (args[0] instanceof Error) {
         error = args[0];
         metadata = args[1];
-      } else if (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0])) {
+      } else if (typeof args[0] === "object" && args[0] !== null && !Array.isArray(args[0])) {
         metadata = args[0];
       } else {
         // Convert remaining args to metadata
         error = args[0] instanceof Error ? args[0] : undefined;
-        metadata = { args: args.filter((arg, i) => i === 0 ? !(arg instanceof Error) : true) };
+        metadata = { args: args.filter((arg, i) => (i === 0 ? !(arg instanceof Error) : true)) };
       }
     }
-    
+
     const entry = this.createLogEntry(LogLevel.ERROR, message, error, metadata);
-    
+
     // In production, send to external logging service
     if (this.isProduction) {
       this.sendToExternalLogger(entry);
     }
-    
+
     console.error(this.formatLog(entry));
   }
 
   warn(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.WARN)) return;
-    
-    const metadata = args.length > 0 
-      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
-          ? args[0] 
-          : { args })
-      : undefined;
-    
+
+    const metadata =
+      args.length > 0
+        ? typeof args[0] === "object" && args[0] !== null && !Array.isArray(args[0])
+          ? args[0]
+          : { args }
+        : undefined;
+
     const entry = this.createLogEntry(LogLevel.WARN, message, undefined, metadata);
     console.warn(this.formatLog(entry));
   }
 
   info(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.INFO)) return;
-    
-    const metadata = args.length > 0 
-      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
-          ? args[0] 
-          : { args })
-      : undefined;
-    
+
+    const metadata =
+      args.length > 0
+        ? typeof args[0] === "object" && args[0] !== null && !Array.isArray(args[0])
+          ? args[0]
+          : { args }
+        : undefined;
+
     const entry = this.createLogEntry(LogLevel.INFO, message, undefined, metadata);
     console.info(this.formatLog(entry));
   }
 
   debug(message: string, ...args: any[]) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    
-    const metadata = args.length > 0 
-      ? (typeof args[0] === 'object' && args[0] !== null && !Array.isArray(args[0]) 
-          ? args[0] 
-          : { args })
-      : undefined;
-    
+
+    const metadata =
+      args.length > 0
+        ? typeof args[0] === "object" && args[0] !== null && !Array.isArray(args[0])
+          ? args[0]
+          : { args }
+        : undefined;
+
     const entry = this.createLogEntry(LogLevel.DEBUG, message, undefined, metadata);
     console.log(this.formatLog(entry));
   }
@@ -156,12 +154,12 @@ class Logger {
       if (process.env.SENTRY_DSN) {
         // Sentry integration would go here
       }
-      
+
       // Example: Send to webhook
       if (process.env.ERROR_WEBHOOK_URL) {
         await fetch(process.env.ERROR_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(entry),
         }).catch(() => {
           // Fail silently to avoid logging loops
@@ -182,61 +180,56 @@ export class AppError extends Error {
   public isOperational: boolean;
   public code?: string;
 
-  constructor(
-    message: string,
-    statusCode: number = 500,
-    isOperational: boolean = true,
-    code?: string
-  ) {
+  constructor(message: string, statusCode: number = 500, isOperational: boolean = true, code?: string) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.code = code;
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
 export class ValidationError extends AppError {
   constructor(message: string, field?: string) {
-    super(message, 400, true, 'VALIDATION_ERROR');
-    this.name = 'ValidationError';
+    super(message, 400, true, "VALIDATION_ERROR");
+    this.name = "ValidationError";
   }
 }
 
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication failed') {
-    super(message, 401, true, 'AUTHENTICATION_ERROR');
-    this.name = 'AuthenticationError';
+  constructor(message: string = "Authentication failed") {
+    super(message, 401, true, "AUTHENTICATION_ERROR");
+    this.name = "AuthenticationError";
   }
 }
 
 export class AuthorizationError extends AppError {
-  constructor(message: string = 'Insufficient permissions') {
-    super(message, 403, true, 'AUTHORIZATION_ERROR');
-    this.name = 'AuthorizationError';
+  constructor(message: string = "Insufficient permissions") {
+    super(message, 403, true, "AUTHORIZATION_ERROR");
+    this.name = "AuthorizationError";
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(resource: string) {
-    super(`${resource} not found`, 404, true, 'NOT_FOUND_ERROR');
-    this.name = 'NotFoundError';
+    super(`${resource} not found`, 404, true, "NOT_FOUND_ERROR");
+    this.name = "NotFoundError";
   }
 }
 
 export class DatabaseError extends AppError {
   constructor(message: string, originalError?: Error) {
-    super(message, 500, true, 'DATABASE_ERROR');
-    this.name = 'DatabaseError';
-    logger.error('Database error occurred', originalError, { message });
+    super(message, 500, true, "DATABASE_ERROR");
+    this.name = "DatabaseError";
+    logger.error("Database error occurred", originalError, { message });
   }
 }
 
 export class ExternalServiceError extends AppError {
   constructor(service: string, message: string) {
-    super(`${service} service error: ${message}`, 503, true, 'EXTERNAL_SERVICE_ERROR');
-    this.name = 'ExternalServiceError';
+    super(`${service} service error: ${message}`, 503, true, "EXTERNAL_SERVICE_ERROR");
+    this.name = "ExternalServiceError";
   }
 }
 
@@ -249,35 +242,26 @@ export function createErrorHandler() {
       appError = error;
     } else {
       // Convert unknown errors to AppError
-      appError = new AppError(
-        'Internal server error',
-        500,
-        false,
-        'INTERNAL_ERROR'
-      );
+      appError = new AppError("Internal server error", 500, false, "INTERNAL_ERROR");
     }
 
     // Log the error
-    logger.error(
-      `${appError.name}: ${appError.message}`,
-      error,
-      {
-        statusCode: appError.statusCode,
-        code: appError.code,
-        url: req?.url,
-        method: req?.method,
-        userAgent: req?.headers?.['user-agent'],
-        ip: req?.ip,
-      }
-    );
+    logger.error(`${appError.name}: ${appError.message}`, error, {
+      statusCode: appError.statusCode,
+      code: appError.code,
+      url: req?.url,
+      method: req?.method,
+      userAgent: req?.headers?.["user-agent"],
+      ip: req?.ip,
+    });
 
     // Send error response (if in API route context)
     if (res) {
-      const isProduction = process.env.NODE_ENV === 'production';
-      
+      const isProduction = process.env.NODE_ENV === "production";
+
       res.status(appError.statusCode).json({
         error: {
-          message: appError.isOperational ? appError.message : 'Internal server error',
+          message: appError.isOperational ? appError.message : "Internal server error",
           code: appError.code,
           ...(isProduction ? {} : { stack: error.stack }),
         },
@@ -292,22 +276,22 @@ export function createErrorHandler() {
 export function logRequest(req: any, res: any, next: any) {
   const startTime = Date.now();
   const requestId = Math.random().toString(36).substr(2, 9);
-  
+
   // Add request ID to request object
   req.requestId = requestId;
-  
-  logger.info('Incoming request', {
+
+  logger.info("Incoming request", {
     requestId,
     method: req.method,
     url: req.url,
-    userAgent: req.headers['user-agent'],
+    userAgent: req.headers["user-agent"],
     ip: req.ip,
   });
 
   // Log response
-  res.on('finish', () => {
+  res.on("finish", () => {
     const duration = Date.now() - startTime;
-    logger.info('Request completed', {
+    logger.info("Request completed", {
       requestId,
       method: req.method,
       url: req.url,
@@ -320,9 +304,7 @@ export function logRequest(req: any, res: any, next: any) {
 }
 
 // Utility for wrapping async route handlers
-export function asyncHandler<T extends any[], R>(
-  fn: (...args: T) => Promise<R>
-): (...args: T) => Promise<R> {
+export function asyncHandler<T extends any[], R>(fn: (...args: T) => Promise<R>): (...args: T) => Promise<R> {
   return async (...args: T): Promise<R> => {
     try {
       return await fn(...args);
@@ -371,19 +353,19 @@ export class PerformanceLogger {
 
 // Client-side error reporting
 export function setupClientErrorReporting() {
-  if (typeof window !== 'undefined') {
-    window.addEventListener('error', (event) => {
-      logger.error('Client-side error', event.error, {
+  if (typeof window !== "undefined") {
+    window.addEventListener("error", (event) => {
+      logger.error("Client-side error", event.error, {
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
-        type: 'javascript',
+        type: "javascript",
       });
     });
 
-    window.addEventListener('unhandledrejection', (event) => {
-      logger.error('Unhandled promise rejection', event.reason, {
-        type: 'promise',
+    window.addEventListener("unhandledrejection", (event) => {
+      logger.error("Unhandled promise rejection", event.reason, {
+        type: "promise",
       });
     });
   }

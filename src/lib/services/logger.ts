@@ -4,13 +4,13 @@
  * Integrates with Sentry for error tracking in production
  */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
 export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
+  DEBUG = "debug",
+  INFO = "info",
+  WARN = "warn",
+  ERROR = "error",
 }
 
 export interface LogContext {
@@ -30,8 +30,8 @@ class Logger {
   private isProduction: boolean;
 
   constructor() {
-    this.isDevelopment = process.env.NODE_ENV === 'development';
-    this.isProduction = process.env.NODE_ENV === 'production';
+    this.isDevelopment = process.env.NODE_ENV === "development";
+    this.isProduction = process.env.NODE_ENV === "production";
   }
 
   /**
@@ -43,12 +43,12 @@ class Logger {
     if (this.isDevelopment) {
       // Colorful output for development
       const colors = {
-        debug: '\x1b[36m', // Cyan
-        info: '\x1b[34m',  // Blue
-        warn: '\x1b[33m',  // Yellow
-        error: '\x1b[31m', // Red
+        debug: "\x1b[36m", // Cyan
+        info: "\x1b[34m", // Blue
+        warn: "\x1b[33m", // Yellow
+        error: "\x1b[31m", // Red
       };
-      const reset = '\x1b[0m';
+      const reset = "\x1b[0m";
 
       let output = `${colors[level]}[${level.toUpperCase()}]${reset} ${timestamp} - ${message}`;
 
@@ -95,10 +95,10 @@ class Logger {
     // Send to Sentry as breadcrumb in production
     if (this.isProduction) {
       Sentry.addBreadcrumb({
-        category: 'info',
+        category: "info",
         message,
         data: context,
-        level: 'info',
+        level: "info",
       });
     }
   }
@@ -119,10 +119,10 @@ class Logger {
     // Send to Sentry as breadcrumb in production
     if (this.isProduction) {
       Sentry.addBreadcrumb({
-        category: 'warning',
+        category: "warning",
         message,
         data: context,
-        level: 'warning',
+        level: "warning",
       });
     }
   }
@@ -152,7 +152,7 @@ class Logger {
           custom: context || {},
         },
         tags: {
-          category: 'application_error',
+          category: "application_error",
         },
       });
     }
@@ -168,7 +168,7 @@ class Logger {
       ...context,
       operation,
       durationMs,
-      category: 'performance',
+      category: "performance",
     });
 
     // Warn if operation takes too long
@@ -183,11 +183,7 @@ class Logger {
   /**
    * Helper for timing operations
    */
-  async timeAsync<T>(
-    operation: string,
-    fn: () => Promise<T>,
-    context?: LogContext
-  ): Promise<T> {
+  async timeAsync<T>(operation: string, fn: () => Promise<T>, context?: LogContext): Promise<T> {
     const start = performance.now();
 
     try {
@@ -197,11 +193,7 @@ class Logger {
       return result;
     } catch (error) {
       const duration = performance.now() - start;
-      this.error(
-        `Operation failed: ${operation}`,
-        error as Error,
-        { ...context, durationMs: duration }
-      );
+      this.error(`Operation failed: ${operation}`, error as Error, { ...context, durationMs: duration });
       throw error;
     }
   }
@@ -219,11 +211,7 @@ class Logger {
       return result;
     } catch (error) {
       const duration = performance.now() - start;
-      this.error(
-        `Operation failed: ${operation}`,
-        error as Error,
-        { ...context, durationMs: duration }
-      );
+      this.error(`Operation failed: ${operation}`, error as Error, { ...context, durationMs: duration });
       throw error;
     }
   }
@@ -237,14 +225,12 @@ export const log = {
   debug: (message: string, context?: LogContext) => logger.debug(message, context),
   info: (message: string, context?: LogContext) => logger.info(message, context),
   warn: (message: string, context?: LogContext) => logger.warn(message, context),
-  error: (message: string, error?: Error, context?: LogContext) =>
-    logger.error(message, error, context),
+  error: (message: string, error?: Error, context?: LogContext) => logger.error(message, error, context),
   performance: (operation: string, durationMs: number, context?: LogContext) =>
     logger.performance(operation, durationMs, context),
   timeAsync: <T>(operation: string, fn: () => Promise<T>, context?: LogContext) =>
     logger.timeAsync(operation, fn, context),
-  time: <T>(operation: string, fn: () => T, context?: LogContext) =>
-    logger.time(operation, fn, context),
+  time: <T>(operation: string, fn: () => T, context?: LogContext) => logger.time(operation, fn, context),
 };
 
 export default logger;

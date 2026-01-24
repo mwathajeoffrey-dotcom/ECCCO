@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import {
   LayoutDashboard,
   Users,
@@ -88,15 +88,15 @@ export default function AdminDashboard() {
   const fetchDashboardStats = async () => {
     try {
       const response = await fetch("/api/admin/dashboard");
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch stats: ${response.statusText}`);
       }
 
       const data: DashboardData = await response.json();
-      
+
       setStats(data.stats);
-      
+
       logger.info("Dashboard stats loaded", {
         totalUsers: data.stats.totalUsers,
         activeToday: data.stats.activeToday,
@@ -218,9 +218,7 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
-              <span className="text-sm text-green-600 font-medium">
-                +{stats.recentUsers || 0} this week
-              </span>
+              <span className="text-sm text-green-600 font-medium">+{stats.recentUsers || 0} this week</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-900">{stats.totalUsers.toLocaleString()}</h3>
             <p className="text-gray-600 text-sm mt-1">Total Users</p>
@@ -232,9 +230,7 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-purple-600" />
               </div>
-              <span className="text-sm text-blue-600 font-medium">
-                {stats.avgQuestionsPerUser || 0}/user avg
-              </span>
+              <span className="text-sm text-blue-600 font-medium">{stats.avgQuestionsPerUser || 0}/user avg</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-900">{stats.totalQuestions.toLocaleString()}</h3>
             <p className="text-gray-600 text-sm mt-1">Practice Questions</p>

@@ -40,7 +40,7 @@ export default function NotesPage() {
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
-  
+
   // Form state
   const [formTitle, setFormTitle] = useState("");
   const [formContent, setFormContent] = useState("");
@@ -52,41 +52,36 @@ export default function NotesPage() {
 
   // Autosave with debounce
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  const debouncedSave = useCallback(
-    async (noteId: string, updates: Partial<Note>) => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
+
+  const debouncedSave = useCallback(async (noteId: string, updates: Partial<Note>) => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    setSaveStatus("saving");
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/notes/${noteId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates),
+        });
+
+        if (!response.ok) throw new Error("Failed to save");
+
+        const updatedNote = await response.json();
+        setNotes((prev) => prev.map((note) => (note.id === noteId ? updatedNote : note)));
+        setSaveStatus("saved");
+
+        // Reset to idle after showing "saved" for a moment
+        setTimeout(() => setSaveStatus("idle"), 2000);
+      } catch (error) {
+        console.error("Error saving note:", error);
+        setSaveStatus("idle");
       }
-
-      setSaveStatus("saving");
-
-      saveTimeoutRef.current = setTimeout(async () => {
-        try {
-          const response = await fetch(`/api/notes/${noteId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updates),
-          });
-
-          if (!response.ok) throw new Error("Failed to save");
-
-          const updatedNote = await response.json();
-          setNotes((prev) =>
-            prev.map((note) => (note.id === noteId ? updatedNote : note))
-          );
-          setSaveStatus("saved");
-          
-          // Reset to idle after showing "saved" for a moment
-          setTimeout(() => setSaveStatus("idle"), 2000);
-        } catch (error) {
-          console.error("Error saving note:", error);
-          setSaveStatus("idle");
-        }
-      }, 500); // 500ms debounce
-    },
-    []
-  );
+    }, 500); // 500ms debounce
+  }, []);
 
   // Load notes on mount
   useEffect(() => {
@@ -252,7 +247,9 @@ export default function NotesPage() {
                 My Notes
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                {loading ? "Loading..." : `${filteredNotes.length} ${filteredNotes.length === 1 ? "note" : "notes"} found`}
+                {loading
+                  ? "Loading..."
+                  : `${filteredNotes.length} ${filteredNotes.length === 1 ? "note" : "notes"} found`}
               </p>
             </div>
             <div className="flex items-center gap-4">

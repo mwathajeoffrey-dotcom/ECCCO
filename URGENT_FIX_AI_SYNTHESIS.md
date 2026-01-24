@@ -1,9 +1,11 @@
 # 🔧 URGENT FIX: AI Synthesis Not Working in Production
 
 ## Problem
+
 AI synthesis shows "temporarily unavailable" on production (eccco.vercel.app).
 
 ## Root Cause
+
 **GROQ_API_KEY environment variable is NOT set in Vercel production environment.**
 
 The API key exists in `.env.local` (local development) but Vercel deployments need environment variables configured separately.
@@ -11,11 +13,13 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 ## Quick Fix (5 minutes)
 
 ### Step 1: Go to Vercel Dashboard
+
 1. Open: https://vercel.com/mwathajeoffrey-dotcoms-projects/eccco
 2. Click on "Settings" tab
 3. Click on "Environment Variables" in left sidebar
 
 ### Step 2: Add GROQ_API_KEY
+
 1. Click "Add New" button
 2. Fill in:
    - **Name**: `GROQ_API_KEY`
@@ -27,6 +31,7 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 3. Click "Save"
 
 ### Step 3: Redeploy
+
 1. Go to "Deployments" tab
 2. Find latest deployment
 3. Click "..." (three dots)
@@ -34,6 +39,7 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 5. Wait 2-3 minutes for deployment
 
 ### Step 4: Test
+
 1. Open: https://eccco.vercel.app/evidence
 2. Search: "management of diabetic ketoacidosis"
 3. Should see full AI synthesis (not "temporarily unavailable")
@@ -43,6 +49,7 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 ## Verification
 
 ### Before Fix:
+
 ```json
 {
   "summary": "AI synthesis temporarily unavailable. Evidence found successfully - please review the high-quality sources below."
@@ -50,6 +57,7 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 ```
 
 ### After Fix:
+
 ```json
 {
   "summary": "When managing diabetic ketoacidosis (DKA), it is crucial to...[full 3-5 paragraphs]",
@@ -76,12 +84,14 @@ The API key exists in `.env.local` (local development) but Vercel deployments ne
 While you're in Vercel environment variables, verify these are also set:
 
 ### Required for Full Functionality:
+
 - ✅ `DATABASE_URL` - Supabase connection (should already be set)
 - ✅ `CLERK_SECRET_KEY` - Authentication
 - ✅ `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Auth (public)
 - ✅ `GROQ_API_KEY` - **ADD THIS NOW** ⚠️
 
 ### Optional (for enhanced features):
+
 - `REDIS_URL` - Caching (faster searches)
 - `NEXT_PUBLIC_SENTRY_DSN` - Error tracking
 - `SENTRY_AUTH_TOKEN` - Source maps
@@ -125,7 +135,7 @@ open http://localhost:3000/evidence
 ## Timeline
 
 1. **Add env var**: 2 minutes
-2. **Redeploy**: 2-3 minutes  
+2. **Redeploy**: 2-3 minutes
 3. **Test**: 1 minute
 4. **Total**: ~5 minutes
 

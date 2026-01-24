@@ -1,5 +1,5 @@
-import { logger } from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
+import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from "next/server";
 
 interface MetricsData {
   timestamp: string;
@@ -19,7 +19,7 @@ interface MetricsData {
     latency: number;
   };
   database: {
-    status: 'connected' | 'disconnected' | 'error';
+    status: "connected" | "disconnected" | "error";
     responseTime: number;
     connections: number;
   };
@@ -39,42 +39,40 @@ const metrics = {
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
-  
+
   try {
     // Update request metrics
     metrics.requests.total++;
-    
+
     // Gather system metrics
     const memoryUsage = process.memoryUsage();
     const cpuUsage = process.cpuUsage();
     const uptime = process.uptime();
-    
+
     // Test database connection
     const dbStartTime = Date.now();
-    let dbStatus: 'connected' | 'disconnected' | 'error' = 'connected';
+    let dbStatus: "connected" | "disconnected" | "error" = "connected";
     let dbResponseTime = 0;
-    
+
     try {
       // Simple database health check
-      const { prisma } = await import('@/lib/db');
-      
+      const { prisma } = await import("@/lib/db");
+
       await prisma.$queryRaw`SELECT 1`;
       dbResponseTime = Date.now() - dbStartTime;
     } catch (error) {
-      dbStatus = 'error';
+      dbStatus = "error";
       dbResponseTime = Date.now() - dbStartTime;
-      logger.error('Database health check failed:', error instanceof Error ? error : new Error(String(error)));
+      logger.error("Database health check failed:", error instanceof Error ? error : new Error(String(error)));
     }
-    
+
     // Calculate cache ratio
     const cacheTotal = metrics.cache.hits + metrics.cache.misses;
     const cacheRatio = cacheTotal > 0 ? metrics.cache.hits / cacheTotal : 0;
-    
+
     // Calculate average latency
-    const avgLatency = metrics.requests.total > 0 
-      ? metrics.requests.totalLatency / metrics.requests.total 
-      : 0;
-    
+    const avgLatency = metrics.requests.total > 0 ? metrics.requests.totalLatency / metrics.requests.total : 0;
+
     const metricsData: MetricsData = {
       timestamp: new Date().toISOString(),
       uptime: uptime,
@@ -85,7 +83,7 @@ export async function GET(request: NextRequest) {
       },
       cpu: {
         load: [0], // Would need OS-specific implementation
-        usage: 0,  // Simplified - would need proper CPU monitoring
+        usage: 0, // Simplified - would need proper CPU monitoring
       },
       requests: {
         total: metrics.requests.total,
@@ -103,26 +101,25 @@ export async function GET(request: NextRequest) {
         ratio: cacheRatio,
       },
     };
-    
+
     // Update latency metrics
     const requestLatency = Date.now() - startTime;
     metrics.requests.totalLatency += requestLatency;
-    
+
     return NextResponse.json({
-      status: 'healthy',
-      environment: process.env.NODE_ENV || 'development',
-      version: process.env.npm_package_version || '1.0.0',
+      status: "healthy",
+      environment: process.env.NODE_ENV || "development",
+      version: process.env.npm_package_version || "1.0.0",
       metrics: metricsData,
     });
-    
   } catch (error) {
     metrics.requests.errors++;
-    logger.error('Metrics endpoint error:', error instanceof Error ? error : new Error(String(error)));
-    
+    logger.error("Metrics endpoint error:", error instanceof Error ? error : new Error(String(error)));
+
     return NextResponse.json(
       {
-        status: 'error',
-        error: 'Failed to gather metrics',
+        status: "error",
+        error: "Failed to gather metrics",
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

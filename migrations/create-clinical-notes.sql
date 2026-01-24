@@ -4,28 +4,28 @@
 CREATE TABLE IF NOT EXISTS clinical_notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id TEXT NOT NULL, -- Clerk user ID
-  
+
   -- Note content
   title TEXT NOT NULL, -- Usually the search query
   content TEXT NOT NULL, -- User's notes (markdown supported)
   tags TEXT[] DEFAULT '{}', -- Searchable tags (e.g., ["sepsis", "emergency", "ICU"])
-  
+
   -- Source reference (links back to the search)
   search_query TEXT NOT NULL, -- Original search query
   search_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(), -- When they searched
   evidence_summary TEXT, -- Optional: Store the AI synthesis they were reading
-  
+
   -- Metadata
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
+
   -- Soft delete support
   deleted_at TIMESTAMP WITH TIME ZONE,
-  
+
   -- Clinical context (optional enrichment)
   specialty TEXT, -- e.g., "Emergency Medicine", "ICU", "Cardiology"
   patient_context TEXT, -- e.g., "Elderly patient with comorbidities"
-  
+
   -- Versioning support (for tracking guideline updates)
   version INTEGER DEFAULT 1,
   previous_version_id UUID REFERENCES clinical_notes(id)
@@ -39,8 +39,8 @@ CREATE INDEX IF NOT EXISTS idx_clinical_notes_created_at ON clinical_notes(creat
 CREATE INDEX IF NOT EXISTS idx_clinical_notes_updated_at ON clinical_notes(updated_at DESC) WHERE deleted_at IS NULL;
 
 -- Full-text search support
-CREATE INDEX IF NOT EXISTS idx_clinical_notes_content_search 
-  ON clinical_notes USING GIN(to_tsvector('english', content || ' ' || title)) 
+CREATE INDEX IF NOT EXISTS idx_clinical_notes_content_search
+  ON clinical_notes USING GIN(to_tsvector('english', content || ' ' || title))
   WHERE deleted_at IS NULL;
 
 -- Row Level Security (RLS)

@@ -243,28 +243,28 @@ model UserNote {
   userId       String
   title        String?
   content      String   @db.Text
-  
+
   // Quiz/Question related (legacy)
   questionId   String?
   questionText String?
   category     String?
-  
+
   // Clinical Evidence Search related (NEW)
   searchQuery       String?  // The evidence search query
   evidenceSummary   String?  @db.Text // AI synthesis they were reading
   specialty         String?  // e.g., "Emergency Medicine", "ICU"
   patientContext    String?  // e.g., "Elderly patient with comorbidities"
-  
+
   // Organization
   tags         String[]
-  
+
   // Versioning support for tracking guideline updates
   version      Int      @default(1)
-  
+
   // Timestamps
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  
+
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])

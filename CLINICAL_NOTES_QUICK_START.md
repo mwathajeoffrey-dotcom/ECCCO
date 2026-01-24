@@ -9,12 +9,14 @@
 ## ✨ Why You'll Love It
 
 ### The Problem It Solves
+
 - ❌ You search for evidence but **forget the details later**
 - ❌ No way to **track your clinical reasoning** process
 - ❌ Guidelines change but you **don't remember what you previously learned**
 - ❌ Other tools (OpenEvidence, UpToDate) **don't let you take notes**
 
 ### The Solution
+
 - ✅ Take notes **while reading evidence**
 - ✅ **Organize** with tags and specialties
 - ✅ **Search** your past notes instantly
@@ -26,6 +28,7 @@
 ## 🚀 How to Use (3 Simple Steps)
 
 ### Step 1: Search for Evidence
+
 ```
 1. Click "Evidence Search" in sidebar
 2. Type: "management of septic shock"
@@ -33,6 +36,7 @@
 ```
 
 ### Step 2: Take Notes
+
 ```
 4. Click the blue "📝 Take Clinical Notes" button (top-right)
 5. A beautiful modal appears!
@@ -42,6 +46,7 @@
 ```
 
 ### Step 3: Review Anytime
+
 ```
 9. Click "Clinical Notes" in sidebar
 10. See all your notes organized
@@ -53,30 +58,37 @@
 ## 📋 Note-Taking Pro Tips
 
 ### Suggested Structure
+
 ```markdown
 📋 Key Takeaways:
+
 - Early recognition is critical
-- Lactate >2 mmol/L concerning  
+- Lactate >2 mmol/L concerning
 - Source control within 12 hours
 
 ❓ Questions to Explore:
+
 - Optimal fluid resuscitation strategy?
 - Role of early vasopressors?
 
 💭 Clinical Pearls:
+
 - [Your insights here]
 
 🏥 Patient Context:
+
 - Elderly patient with comorbidities
 ```
 
 ### Smart Tagging
+
 - **Condition**: sepsis, DKA, pneumonia
 - **Setting**: emergency, ICU, ward
 - **Category**: diagnosis, treatment, monitoring
 - **Priority**: high-yield, exam-relevant, practice-changing
 
 ### Specialty Tracking
+
 - Emergency Medicine
 - Internal Medicine - ICU
 - Cardiology
@@ -90,6 +102,7 @@
 ### The Note-Taking Modal
 
 **What You See:**
+
 ```
 ┌─────────────────────────────────────────┐
 │ 📝 Take Clinical Notes                 │
@@ -115,6 +128,7 @@
 ### The Clinical Notes Page
 
 **What You See:**
+
 ```
 📝 My Clinical Notes
 Your personal evidence-based learning journal
@@ -147,17 +161,20 @@ Your Notes:
 ## 🔍 Power Features
 
 ### 1. Smart Search
+
 - Search by **title**, **content**, or **search query**
 - Real-time filtering as you type
 - No need to remember exact wording
 
 ### 2. Tag Organization
+
 - Add unlimited tags
 - Filter to see only notes with specific tag
 - Suggested tags appear as you type
 - Remove tags with one click
 
 ### 3. Version Tracking
+
 ```
 When guidelines change:
 1. Open your old note
@@ -169,6 +186,7 @@ When guidelines change:
 ```
 
 ### 4. Re-search Functionality
+
 ```
 In any note:
 1. Expand the note
@@ -179,6 +197,7 @@ In any note:
 ```
 
 ### 5. Evidence Integration
+
 ```
 Every note remembers:
 - What you searched
@@ -198,14 +217,17 @@ One-click back to the evidence!
 **Search:** "diabetic ketoacidosis management"
 
 **Note Taken:**
+
 ```markdown
 📋 Key DKA Management Points:
+
 - Fluids: 1-2L NS bolus, then 250-500ml/hr
 - Insulin: 0.1 units/kg/hr AFTER fluids started
 - K+ replacement: Start if <5.3, goal 4-5
 - Anion gap closure = resolution, NOT glucose normalization
 
 ❓ Board Questions Likely About:
+
 - When to start insulin (after fluids!)
 - K+ management (super testable)
 - Cerebral edema in kids
@@ -220,19 +242,23 @@ One-click back to the evidence!
 **Search:** "refractory hypotension in sepsis"
 
 **Note Taken (3am):**
+
 ```markdown
 📋 Tonight's Learning:
+
 - Started norepinephrine for BP 75/40 despite 3L fluids
 - Added vasopressin when norepi maxed at 30mcg/min
 - Read about hydrocortisone - use if refractory to 2 pressors
 - Lactate trending down (6.2 → 4.1 → 2.8) - good sign!
 
 ❓ Questions for Morning Rounds:
+
 - When to add hydrocortisone?
 - Duration of vasopressor therapy?
 - Transition from pressors protocol?
 
 💭 Clinical Pearl from Tonight:
+
 - MAP >65 but lactate still high = tissue perfusion still poor
 - Don't just chase the MAP number!
 
@@ -245,8 +271,10 @@ One-click back to the evidence!
 ### Example 3: Attending Tracking Guideline Changes
 
 **Initial Note (March 2025):**
+
 ```markdown
 📋 Current COVID Treatment Evidence:
+
 - Paxlovid within 5 days of sx onset
 - Remdesivir for hospitalized patients
 - Dexamethasone if requiring oxygen
@@ -256,10 +284,12 @@ Version 1 | Saved March 2025
 ```
 
 **Updated Note (October 2025):**
+
 ```markdown
 [Previous content...]
 
 🆕 October 2025 Update:
+
 - NEW: XBB-targeting vaccine now available
 - NEW: Updated Paxlovid resistance data
 - CHANGED: Remdesivir now 3-day course (was 5-day)
@@ -274,14 +304,14 @@ Version 2 | Updated Oct 2025
 
 ## 🏆 vs. Other Tools
 
-| Feature | ECCCO Clinical Notes | OpenEvidence | UpToDate | Medscape |
-|---------|---------------------|--------------|----------|----------|
-| Take Notes While Reading | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| Organize with Tags | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| Track Version Changes | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| Search Your Notes | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| Link Back to Evidence | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| Mobile Friendly | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| Feature                  | ECCCO Clinical Notes | OpenEvidence | UpToDate | Medscape |
+| ------------------------ | -------------------- | ------------ | -------- | -------- |
+| Take Notes While Reading | ✅ Yes               | ❌ No        | ❌ No    | ❌ No    |
+| Organize with Tags       | ✅ Yes               | ❌ No        | ❌ No    | ❌ No    |
+| Track Version Changes    | ✅ Yes               | ❌ No        | ❌ No    | ❌ No    |
+| Search Your Notes        | ✅ Yes               | ❌ No        | ❌ No    | ❌ No    |
+| Link Back to Evidence    | ✅ Yes               | ❌ No        | ❌ No    | ❌ No    |
+| Mobile Friendly          | ✅ Yes               | ✅ Yes       | ✅ Yes   | ✅ Yes   |
 
 **ECCCO wins! 🏆**
 
@@ -334,28 +364,28 @@ Version 2 | Updated Oct 2025
 
 ## ❓ FAQ
 
-**Q: Are my notes private?**  
+**Q: Are my notes private?**
 A: Yes! Your notes are only visible to you. Row Level Security ensures privacy.
 
-**Q: Can I export my notes?**  
+**Q: Can I export my notes?**
 A: Coming soon! PDF export feature in development.
 
-**Q: What's the difference from quiz notes?**  
+**Q: What's the difference from quiz notes?**
 A: Clinical Notes are from Evidence Search (clinical learning). Quiz notes are from question practice (exam prep). They're in separate sections!
 
-**Q: How many notes can I create?**  
+**Q: How many notes can I create?**
 A: Unlimited! Take as many notes as you need.
 
-**Q: Can I share notes with colleagues?**  
+**Q: Can I share notes with colleagues?**
 A: Not yet, but it's a planned feature for team learning!
 
-**Q: What happens if I delete a note?**  
+**Q: What happens if I delete a note?**
 A: It's permanent deletion. Make sure you want to delete before confirming.
 
-**Q: Can I update old notes?**  
+**Q: Can I update old notes?**
 A: Yes! Edit notes anytime. Version number increments automatically.
 
-**Q: Do notes sync across devices?**  
+**Q: Do notes sync across devices?**
 A: Yes! Your notes are cloud-stored and sync everywhere.
 
 ---
@@ -372,16 +402,16 @@ A: Yes! Your notes are cloud-stored and sync everywhere.
 
 ## 💡 Pro Tips Summary
 
-✅ **Use templates** for consistent note structure  
-✅ **Tag generously** for easy finding later  
-✅ **Update notes** when guidelines change  
-✅ **Write questions** to guide future learning  
-✅ **Document reasoning** not just facts  
-✅ **Review notes** before exams/shifts  
-✅ **Re-search topics** to stay current  
+✅ **Use templates** for consistent note structure
+✅ **Tag generously** for easy finding later
+✅ **Update notes** when guidelines change
+✅ **Write questions** to guide future learning
+✅ **Document reasoning** not just facts
+✅ **Review notes** before exams/shifts
+✅ **Re-search topics** to stay current
 
 ---
 
 **Happy Note-Taking! 🎉**
 
-*Transform your evidence searches into a lasting learning resource!*
+_Transform your evidence searches into a lasting learning resource!_

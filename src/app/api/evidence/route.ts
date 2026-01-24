@@ -1,7 +1,7 @@
-import { logger } from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/auth/admin';
-import { prisma } from '@/lib/db';
+import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth/admin";
+import { prisma } from "@/lib/db";
 
 // Some environments may not have generated Prisma types available during linting
 // so access the model via `any` to avoid compile-time errors while still using runtime client.
@@ -23,17 +23,14 @@ export function safeParseJson<T = any>(value: string | null | undefined, fallbac
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    const includeUnpublished = searchParams.get('includeUnpublished') === 'true';
+    const id = searchParams.get("id");
+    const includeUnpublished = searchParams.get("includeUnpublished") === "true";
 
     // If includeUnpublished is requested, check admin auth
     if (includeUnpublished) {
       const { authorized } = await requireAdmin();
       if (!authorized) {
-        return NextResponse.json(
-          { error: 'Unauthorized' },
-          { status: 401 }
-        );
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
     }
 
@@ -46,7 +43,7 @@ export async function GET(request: NextRequest) {
       });
 
       if (!reference) {
-        return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
       }
 
       const parsed = {
@@ -60,7 +57,7 @@ export async function GET(request: NextRequest) {
       // Prevent returning unpublished to non-admins
       if (!reference.published) {
         const { authorized } = await requireAdmin();
-        if (!authorized) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        if (!authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
       return NextResponse.json(parsed);
@@ -68,11 +65,7 @@ export async function GET(request: NextRequest) {
 
     const references = await evidenceModel.findMany({
       where,
-      orderBy: [
-        { displayOrder: 'asc' },
-        { year: 'desc' },
-        { name: 'asc' },
-      ],
+      orderBy: [{ displayOrder: "asc" }, { year: "desc" }, { name: "asc" }],
     });
 
     // Parse JSON fields
@@ -86,11 +79,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    logger.error('Error fetching evidence references:', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to fetch references' },
-      { status: 500 }
-    );
+    logger.error("Error fetching evidence references:", error instanceof Error ? error : new Error(String(error)));
+    return NextResponse.json({ error: "Failed to fetch references" }, { status: 500 });
   }
 }
 
@@ -102,31 +92,17 @@ export async function POST(request: NextRequest) {
   try {
     const { authorized, user } = await requireAdmin();
     if (!authorized) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Admin access required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
     }
 
     const body = await request.json();
 
     // Validate required fields
-    const required = [
-      'referenceId',
-      'category',
-      'name',
-      'year',
-      'summary',
-      'evidenceLevel',
-      'citation',
-    ];
+    const required = ["referenceId", "category", "name", "year", "summary", "evidenceLevel", "citation"];
 
     for (const field of required) {
       if (!body[field]) {
-        return NextResponse.json(
-          { error: `Missing required field: ${field}` },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
       }
     }
 
@@ -136,10 +112,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Reference ID already exists' },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: "Reference ID already exists" }, { status: 409 });
     }
 
     // Create the reference
@@ -179,14 +152,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(parsed, { status: 201 });
   } catch (error) {
-    logger.error('Error creating evidence reference:', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to create reference' },
-      { status: 500 }
-    );
+    logger.error("Error creating evidence reference:", error instanceof Error ? error : new Error(String(error)));
+    return NextResponse.json({ error: "Failed to create reference" }, { status: 500 });
   }
 }
-
 
 /**
  * PUT /api/evidence
@@ -195,26 +164,46 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const { authorized, user } = await requireAdmin();
-    if (!authorized) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json();
     const id = body.referenceId || body.id;
-    if (!id) return NextResponse.json({ error: 'Missing referenceId' }, { status: 400 });
+    if (!id) return NextResponse.json({ error: "Missing referenceId" }, { status: 400 });
 
-  const existing = await evidenceModel.findUnique({ where: { referenceId: id } });
-    if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    const existing = await evidenceModel.findUnique({ where: { referenceId: id } });
+    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     const updateData: any = {};
     // Allow updating fields if present in body
     const updatable = [
-      'category','name','organization','year','summary','keyRecommendations','clinicalPearls',
-      'evidenceLevel','citation','references','topics','journal','doi','pmid','published','featured','displayOrder'
+      "category",
+      "name",
+      "organization",
+      "year",
+      "summary",
+      "keyRecommendations",
+      "clinicalPearls",
+      "evidenceLevel",
+      "citation",
+      "references",
+      "topics",
+      "journal",
+      "doi",
+      "pmid",
+      "published",
+      "featured",
+      "displayOrder",
     ];
 
     for (const field of updatable) {
       if (body[field] !== undefined) {
-        if (field === 'year') updateData.year = parseInt(body.year);
-        else if (field === 'keyRecommendations' || field === 'clinicalPearls' || field === 'references' || field === 'topics') {
+        if (field === "year") updateData.year = parseInt(body.year);
+        else if (
+          field === "keyRecommendations" ||
+          field === "clinicalPearls" ||
+          field === "references" ||
+          field === "topics"
+        ) {
           updateData[field] = JSON.stringify(body[field] || []);
         } else {
           updateData[field] = body[field];
@@ -239,11 +228,10 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    logger.error('Error updating evidence reference:', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json({ error: 'Failed to update reference' }, { status: 500 });
+    logger.error("Error updating evidence reference:", error instanceof Error ? error : new Error(String(error)));
+    return NextResponse.json({ error: "Failed to update reference" }, { status: 500 });
   }
 }
-
 
 /**
  * DELETE /api/evidence
@@ -252,10 +240,10 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { authorized } = await requireAdmin();
-    if (!authorized) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const id = searchParams.get("id");
 
     // Allow body with referenceId as fallback
     let bodyId = id;
@@ -266,16 +254,16 @@ export async function DELETE(request: NextRequest) {
       // ignore
     }
 
-    if (!bodyId) return NextResponse.json({ error: 'Missing referenceId' }, { status: 400 });
+    if (!bodyId) return NextResponse.json({ error: "Missing referenceId" }, { status: 400 });
 
-  const existing = await evidenceModel.findUnique({ where: { referenceId: bodyId } });
-  if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    const existing = await evidenceModel.findUnique({ where: { referenceId: bodyId } });
+    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await evidenceModel.delete({ where: { referenceId: bodyId } });
+    await evidenceModel.delete({ where: { referenceId: bodyId } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error('Error deleting evidence reference:', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json({ error: 'Failed to delete reference' }, { status: 500 });
+    logger.error("Error deleting evidence reference:", error instanceof Error ? error : new Error(String(error)));
+    return NextResponse.json({ error: "Failed to delete reference" }, { status: 500 });
   }
 }

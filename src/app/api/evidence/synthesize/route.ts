@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 /**
  * API Route: Evidence Synthesis
  * POST /api/evidence/synthesize
@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     logger.error("[Evidence Synthesis Error]", error instanceof Error ? error : new Error(String(error)));
     logger.error("[Error Stack]", error instanceof Error ? error : undefined, {
-      stack: error?.stack
+      stack: error?.stack,
     });
     logger.error("[Error Details]", error instanceof Error ? error : undefined, {
       message: error?.message,

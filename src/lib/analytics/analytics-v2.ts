@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 /**
  * ECCCO Analytics System v2.0 - Production Ready
  *
@@ -144,7 +144,10 @@ class ECCCOAnalyticsV2 {
 
       logger.debug(`[Analytics] Recorded exam completion: ${topicName} - ${score}%`);
     } catch (error) {
-      logger.error("[Analytics] Failed to record exam completion:", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        "[Analytics] Failed to record exam completion:",
+        error instanceof Error ? error : new Error(String(error))
+      );
     }
   }
 
@@ -257,7 +260,10 @@ class ECCCOAnalyticsV2 {
         localStorage.setItem("eccco_session_id", this.sessionId);
       }
     } catch (error) {
-      logger.error("[Analytics] Failed to load local sessions:", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        "[Analytics] Failed to load local sessions:",
+        error instanceof Error ? error : new Error(String(error))
+      );
     }
   }
 
@@ -268,7 +274,10 @@ class ECCCOAnalyticsV2 {
       localStorage.setItem("eccco_analytics_sessions", JSON.stringify(this.sessions));
       localStorage.setItem("eccco_session_id", this.sessionId);
     } catch (error) {
-      logger.error("[Analytics] Failed to save local sessions:", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        "[Analytics] Failed to save local sessions:",
+        error instanceof Error ? error : new Error(String(error))
+      );
     }
   }
 
@@ -287,7 +296,7 @@ class ECCCOAnalyticsV2 {
       }
     } catch (error) {
       logger.debug("[Analytics] Server sync failed, session stored locally", {
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
     }
   }

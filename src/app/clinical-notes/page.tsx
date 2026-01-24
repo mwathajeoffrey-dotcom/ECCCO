@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { 
-  FileText, 
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  FileText,
   Calendar,
   Tag,
   Search,
@@ -18,9 +18,9 @@ import {
   Filter,
   X,
   AlertCircle,
-  Award
-} from 'lucide-react';
-import { NoteModal, NoteData } from '@/components/evidence/NoteModal';
+  Award,
+} from "lucide-react";
+import { NoteModal, NoteData } from "@/components/evidence/NoteModal";
 
 interface ClinicalNote {
   id: string;
@@ -41,7 +41,7 @@ export default function ClinicalNotesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedNote, setExpandedNote] = useState<string | null>(null);
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchFilter, setSearchFilter] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [editingNote, setEditingNote] = useState<ClinicalNote | null>(null);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
@@ -56,49 +56,49 @@ export default function ClinicalNotesPage() {
     setLoading(true);
     setError(null);
     try {
-      const url = new URL('/api/notes', window.location.origin);
+      const url = new URL("/api/notes", window.location.origin);
       if (selectedTag) {
-        url.searchParams.set('tag', selectedTag);
+        url.searchParams.set("tag", selectedTag);
       }
       if (searchFilter) {
-        url.searchParams.set('search', searchFilter);
+        url.searchParams.set("search", searchFilter);
       }
 
       const response = await fetch(url.toString());
       if (!response.ok) {
-        throw new Error('Failed to fetch notes');
+        throw new Error("Failed to fetch notes");
       }
       const data = await response.json();
       // Filter to show only clinical evidence notes (those with searchQuery)
       const clinicalNotes = data.filter((note: ClinicalNote) => note.searchQuery);
       setNotes(clinicalNotes);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load notes');
+      setError(err instanceof Error ? err.message : "Failed to load notes");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteNote = async (noteId: string) => {
-    if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+    if (!confirm("Are you sure you want to delete this note? This action cannot be undone.")) {
       return;
     }
 
     try {
       const response = await fetch(`/api/notes?id=${noteId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete note');
+        throw new Error("Failed to delete note");
       }
 
       // Remove from local state
-      setNotes(notes.filter(note => note.id !== noteId));
-      alert('✅ Note deleted successfully');
+      setNotes(notes.filter((note) => note.id !== noteId));
+      alert("✅ Note deleted successfully");
     } catch (err) {
-      alert('❌ Failed to delete note. Please try again.');
-      console.error('Delete error:', err);
+      alert("❌ Failed to delete note. Please try again.");
+      console.error("Delete error:", err);
     }
   };
 
@@ -109,12 +109,12 @@ export default function ClinicalNotesPage() {
 
   const handleSaveNote = async (noteData: NoteData) => {
     try {
-      const url = editingNote ? '/api/notes' : '/api/notes';
-      const method = editingNote ? 'PATCH' : 'POST';
+      const url = editingNote ? "/api/notes" : "/api/notes";
+      const method = editingNote ? "PATCH" : "POST";
 
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...(editingNote && { id: editingNote.id }),
           title: noteData.title,
@@ -128,16 +128,16 @@ export default function ClinicalNotesPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save note');
+        throw new Error("Failed to save note");
       }
 
       // Refresh notes list
       await fetchNotes();
       setNoteModalOpen(false);
       setEditingNote(null);
-      alert(editingNote ? '✅ Note updated successfully!' : '✅ Note created successfully!');
+      alert(editingNote ? "✅ Note updated successfully!" : "✅ Note created successfully!");
     } catch (error) {
-      console.error('Failed to save note:', error);
+      console.error("Failed to save note:", error);
       throw error;
     }
   };
@@ -147,28 +147,29 @@ export default function ClinicalNotesPage() {
   };
 
   // Get all unique tags from notes
-  const allTags = Array.from(new Set(notes.flatMap(note => note.tags)));
+  const allTags = Array.from(new Set(notes.flatMap((note) => note.tags)));
 
   // Filter notes based on search
-  const filteredNotes = notes.filter(note => {
-    const matchesSearch = !searchFilter || 
+  const filteredNotes = notes.filter((note) => {
+    const matchesSearch =
+      !searchFilter ||
       note.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
       note.content.toLowerCase().includes(searchFilter.toLowerCase()) ||
       note.searchQuery.toLowerCase().includes(searchFilter.toLowerCase());
-    
+
     const matchesTag = !selectedTag || note.tags.includes(selectedTag);
-    
+
     return matchesSearch && matchesTag;
   });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -179,17 +180,13 @@ export default function ClinicalNotesPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                📝 My Clinical Notes
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Your personal evidence-based learning journal
-              </p>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">📝 My Clinical Notes</h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">Your personal evidence-based learning journal</p>
             </div>
             <Link
               href="/evidence-search"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 
-                       text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700
+                       text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200
                        transform hover:scale-105 font-medium"
             >
               <Search className="w-5 h-5" />
@@ -198,17 +195,17 @@ export default function ClinicalNotesPage() {
           </div>
 
           {/* Info Banner */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 
-                        border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+          <div
+            className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20
+                        border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6"
+          >
             <div className="flex items-start gap-3">
               <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                  Welcome to Your Clinical Notes
-                </h3>
+                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Welcome to Your Clinical Notes</h3>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  This is your personal space for documenting insights from evidence searches. 
-                  Click <strong>"Search Evidence"</strong> to explore medical literature, then use the 
+                  This is your personal space for documenting insights from evidence searches. Click{" "}
+                  <strong>"Search Evidence"</strong> to explore medical literature, then use the
                   <strong> "📝 Take Clinical Notes"</strong> button to save your findings here!
                 </p>
               </div>
@@ -237,15 +234,17 @@ export default function ClinicalNotesPage() {
                 <div className="flex items-center gap-2">
                   <Filter className="w-5 h-5 text-gray-400 flex-shrink-0" />
                   <select
-                    value={selectedTag || ''}
+                    value={selectedTag || ""}
                     onChange={(e) => setSelectedTag(e.target.value || null)}
                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                              bg-white dark:bg-gray-900 text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                   >
                     <option value="">All Tags</option>
-                    {allTags.map(tag => (
-                      <option key={tag} value={tag}>{tag}</option>
+                    {allTags.map((tag) => (
+                      <option key={tag} value={tag}>
+                        {tag}
+                      </option>
                     ))}
                   </select>
                   {selectedTag && (
@@ -295,7 +294,7 @@ export default function ClinicalNotesPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {notes.length > 0 ? formatDate(notes[0].updatedAt).split(',')[0] : 'N/A'}
+                    {notes.length > 0 ? formatDate(notes[0].updatedAt).split(",")[0] : "N/A"}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Last Updated</p>
                 </div>
@@ -329,19 +328,18 @@ export default function ClinicalNotesPage() {
               <BookOpen className="w-16 h-16 text-gray-400 dark:text-gray-600" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {searchFilter || selectedTag ? 'No notes found' : 'No clinical notes yet'}
+              {searchFilter || selectedTag ? "No notes found" : "No clinical notes yet"}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-              {searchFilter || selectedTag 
-                ? 'Try adjusting your search or filter criteria'
-                : 'Start documenting your evidence-based learning journey! Search for clinical topics and take notes on your findings.'
-              }
+              {searchFilter || selectedTag
+                ? "Try adjusting your search or filter criteria"
+                : "Start documenting your evidence-based learning journey! Search for clinical topics and take notes on your findings."}
             </p>
             {!searchFilter && !selectedTag && (
               <Link
                 href="/evidence-search"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 
-                         text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700
+                         text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200
                          transform hover:scale-105 font-medium"
               >
                 <Search className="w-5 h-5" />
@@ -357,8 +355,8 @@ export default function ClinicalNotesPage() {
             {filteredNotes.map((note) => (
               <div
                 key={note.id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg 
-                         transition-shadow duration-200 overflow-hidden border border-gray-200 
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg
+                         transition-shadow duration-200 overflow-hidden border border-gray-200
                          dark:border-gray-700"
               >
                 {/* Note Header */}
@@ -368,14 +366,14 @@ export default function ClinicalNotesPage() {
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                        {note.title}
-                      </h3>
-                      
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{note.title}</h3>
+
                       {/* Search Query Badge */}
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 
-                                     text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                        <span
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/30
+                                     text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium"
+                        >
                           <Search className="w-3 h-3" />
                           {note.searchQuery}
                         </span>
@@ -387,7 +385,7 @@ export default function ClinicalNotesPage() {
                           {note.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 
+                              className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-700
                                        text-gray-700 dark:text-gray-300 rounded-md text-xs font-medium"
                             >
                               <Tag className="w-3 h-3" />
@@ -411,8 +409,7 @@ export default function ClinicalNotesPage() {
                         )}
                         {note.version > 1 && (
                           <span className="flex items-center gap-1 text-purple-600 dark:text-purple-400">
-                            <Clock className="w-4 h-4" />
-                            v{note.version} (Updated)
+                            <Clock className="w-4 h-4" />v{note.version} (Updated)
                           </span>
                         )}
                       </div>
@@ -462,9 +459,7 @@ export default function ClinicalNotesPage() {
                     {/* Patient Context */}
                     {note.patientContext && (
                       <div className="mb-4">
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                          Patient Context
-                        </h4>
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Patient Context</h4>
                         <p className="text-gray-700 dark:text-gray-300">{note.patientContext}</p>
                       </div>
                     )}
@@ -473,8 +468,10 @@ export default function ClinicalNotesPage() {
                     {note.evidenceSummary && (
                       <div className="mb-4">
                         <details className="group">
-                          <summary className="cursor-pointer font-semibold text-blue-600 dark:text-blue-400 
-                                           hover:text-blue-800 dark:hover:text-blue-200 flex items-center gap-2">
+                          <summary
+                            className="cursor-pointer font-semibold text-blue-600 dark:text-blue-400
+                                           hover:text-blue-800 dark:hover:text-blue-200 flex items-center gap-2"
+                          >
                             <ExternalLink className="w-4 h-4" />
                             View Original Evidence Summary
                           </summary>
@@ -491,8 +488,8 @@ export default function ClinicalNotesPage() {
                     <div className="flex gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
                       <Link
                         href={`/evidence-search?q=${encodeURIComponent(note.searchQuery)}`}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 
-                                 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30
+                                 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200
                                  dark:hover:bg-blue-900/50 transition-colors text-sm font-medium"
                       >
                         <Search className="w-4 h-4" />
@@ -514,19 +511,23 @@ export default function ClinicalNotesPage() {
           setNoteModalOpen(false);
           setEditingNote(null);
         }}
-        searchQuery={editingNote?.searchQuery || ''}
+        searchQuery={editingNote?.searchQuery || ""}
         evidenceSummary={editingNote?.evidenceSummary}
         onSave={handleSaveNote}
-        existingNote={editingNote ? {
-          id: editingNote.id,
-          title: editingNote.title,
-          content: editingNote.content,
-          tags: editingNote.tags,
-          searchQuery: editingNote.searchQuery,
-          evidenceSummary: editingNote.evidenceSummary,
-          specialty: editingNote.specialty,
-          patientContext: editingNote.patientContext,
-        } : null}
+        existingNote={
+          editingNote
+            ? {
+                id: editingNote.id,
+                title: editingNote.title,
+                content: editingNote.content,
+                tags: editingNote.tags,
+                searchQuery: editingNote.searchQuery,
+                evidenceSummary: editingNote.evidenceSummary,
+                specialty: editingNote.specialty,
+                patientContext: editingNote.patientContext,
+              }
+            : null
+        }
       />
     </div>
   );

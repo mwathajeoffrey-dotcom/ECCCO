@@ -2,14 +2,14 @@
 
 ###############################################################################
 # ECCCO Database Restore Script
-# 
+#
 # This script restores the PostgreSQL database from a backup file
-# 
+#
 # ⚠️  WARNING: This will REPLACE all data in the target database!
-# 
+#
 # Usage:
 #   ./scripts/restore-database.sh <backup-file>
-#   
+#
 # Example:
 #   ./scripts/restore-database.sh backups/database/eccco_backup_20260120_140530.sql.gz
 #

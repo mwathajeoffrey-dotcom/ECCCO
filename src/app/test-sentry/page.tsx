@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import * as Sentry from '@sentry/nextjs';
+import { useState } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function TestSentryPage() {
   const [errorTriggered, setErrorTriggered] = useState(false);
@@ -9,7 +9,7 @@ export default function TestSentryPage() {
   const triggerClientError = () => {
     setErrorTriggered(true);
     // This will trigger a client-side error that Sentry will catch
-    throw new Error('🧪 Test Error: Client-side error triggered at ' + new Date().toISOString());
+    throw new Error("🧪 Test Error: Client-side error triggered at " + new Date().toISOString());
   };
 
   const triggerCapturedError = () => {
@@ -21,25 +21,25 @@ export default function TestSentryPage() {
       // Manually capture the error with additional context
       Sentry.captureException(error, {
         tags: {
-          test_type: 'manual_capture',
-          location: 'test-sentry-page',
+          test_type: "manual_capture",
+          location: "test-sentry-page",
         },
         extra: {
           timestamp: new Date().toISOString(),
-          userAction: 'clicked manual capture button',
+          userAction: "clicked manual capture button",
         },
       });
-      alert('Error captured and sent to Sentry! Check your dashboard.');
+      alert("Error captured and sent to Sentry! Check your dashboard.");
     }
   };
 
   const triggerServerError = async () => {
     try {
-      const response = await fetch('/api/test-sentry-error');
+      const response = await fetch("/api/test-sentry-error");
       const data = await response.json();
       alert(data.message);
     } catch (error) {
-      alert('Server error triggered! Check Sentry dashboard.');
+      alert("Server error triggered! Check Sentry dashboard.");
     }
   };
 
@@ -47,9 +47,7 @@ export default function TestSentryPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
-          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
-            🧪 Sentry Error Testing
-          </h1>
+          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">🧪 Sentry Error Testing</h1>
           <p className="text-gray-600 dark:text-gray-300 mb-8">
             Click the buttons below to trigger test errors and verify Sentry integration
           </p>
@@ -89,9 +87,7 @@ export default function TestSentryPage() {
 
             {/* Server Error */}
             <div className="border border-purple-200 dark:border-purple-800 rounded-lg p-4 bg-purple-50 dark:bg-purple-900/20">
-              <h2 className="text-lg font-semibold mb-2 text-purple-900 dark:text-purple-100">
-                3. Server-Side Error
-              </h2>
+              <h2 className="text-lg font-semibold mb-2 text-purple-900 dark:text-purple-100">3. Server-Side Error</h2>
               <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">
                 This will trigger an error on the server that Sentry will capture server-side.
               </p>
@@ -110,9 +106,20 @@ export default function TestSentryPage() {
               📍 How to Find Errors in Sentry:
             </h3>
             <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
-              <li>Go to <a href="https://eccco.sentry.io/issues/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">eccco.sentry.io/issues/</a></li>
+              <li>
+                Go to{" "}
+                <a
+                  href="https://eccco.sentry.io/issues/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  eccco.sentry.io/issues/
+                </a>
+              </li>
               <li>You'll see your error appear in the issues list (may take 5-10 seconds)</li>
-              <li>Click on the error to see:
+              <li>
+                Click on the error to see:
                 <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-sm">
                   <li>Full stack trace with your actual code (not minified!)</li>
                   <li>Error message and context</li>

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
-import React, { Component, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Bug, ChevronDown, ChevronUp } from 'lucide-react';
-import * as Sentry from '@sentry/nextjs';
+import React, { Component, ReactNode } from "react";
+import { AlertTriangle, RefreshCw, Bug, ChevronDown, ChevronUp } from "lucide-react";
+import * as Sentry from "@sentry/nextjs";
 
 interface Props {
   children: ReactNode;
@@ -33,31 +33,31 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { 
+    this.state = {
       hasError: false,
       retryCount: 0,
-      showDetails: false
+      showDetails: false,
     };
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
-    return { 
-      hasError: true, 
+    return {
+      hasError: true,
       error,
-      errorId: `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      errorId: `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const { onError, componentName = 'UnknownComponent' } = this.props;
-    
+    const { onError, componentName = "UnknownComponent" } = this.props;
+
     this.setState({
       error,
       errorInfo,
     });
 
     // Report to Sentry in production
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       const eventId = Sentry.captureException(error, {
         contexts: {
           react: {
@@ -77,35 +77,35 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     }
 
     // Log the error to console
-    logger.error('Component Error', error instanceof Error ? error : new Error(String(error)), {
+    logger.error("Component Error", error instanceof Error ? error : new Error(String(error)), {
       componentName,
       props: this.props,
       errorInfo: errorInfo.componentStack,
       retryCount: this.state.retryCount,
-      errorId: this.state.errorId
+      errorId: this.state.errorId,
     });
 
     // Call custom error handler
     onError?.(error, errorInfo);
 
     // Log error details
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.group(`🚨 Error in ${componentName}`);
-      logger.error('Error:', error instanceof Error ? error : new Error(String(error)));
-      logger.error('Error Info', errorInfo instanceof Error ? errorInfo : new Error(String(errorInfo)));
-      logger.error('Component Stack:', errorInfo.componentStack);
+      logger.error("Error:", error instanceof Error ? error : new Error(String(error)));
+      logger.error("Error Info", errorInfo instanceof Error ? errorInfo : new Error(String(errorInfo)));
+      logger.error("Component Stack:", errorInfo.componentStack);
       console.groupEnd();
     }
   }
 
   handleRetry = () => {
     if (this.state.retryCount < this.maxRetries) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         hasError: false,
         error: undefined,
         errorInfo: undefined,
         retryCount: prevState.retryCount + 1,
-        showDetails: false
+        showDetails: false,
       }));
     }
   };
@@ -116,26 +116,26 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       error: undefined,
       errorInfo: undefined,
       retryCount: 0,
-      showDetails: false
+      showDetails: false,
     });
   };
 
   toggleDetails = () => {
-    this.setState(prevState => ({
-      showDetails: !prevState.showDetails
+    this.setState((prevState) => ({
+      showDetails: !prevState.showDetails,
     }));
   };
 
   render() {
     if (this.state.hasError) {
-      const { 
-        fallback, 
-        isolate, 
-        showDetails = process.env.NODE_ENV === 'development',
+      const {
+        fallback,
+        isolate,
+        showDetails = process.env.NODE_ENV === "development",
         customTitle,
         customMessage,
         retryable = true,
-        componentName = 'Component'
+        componentName = "Component",
       } = this.props;
 
       // Use custom fallback if provided
@@ -144,30 +144,29 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       }
 
       const canRetry = retryable && this.state.retryCount < this.maxRetries;
-      const isDevelopment = process.env.NODE_ENV === 'development';
+      const isDevelopment = process.env.NODE_ENV === "development";
 
       // Determine error severity
-      const isCritical = this.state.error?.message?.toLowerCase().includes('chunk') ||
-                        this.state.error?.message?.toLowerCase().includes('loading') ||
-                        this.state.retryCount >= 2;
+      const isCritical =
+        this.state.error?.message?.toLowerCase().includes("chunk") ||
+        this.state.error?.message?.toLowerCase().includes("loading") ||
+        this.state.retryCount >= 2;
 
       return (
-        <div className={`${isolate ? '' : 'min-h-[200px]'} bg-red-50 border border-red-200 rounded-lg p-6 m-4`}>
+        <div className={`${isolate ? "" : "min-h-[200px]"} bg-red-50 border border-red-200 rounded-lg p-6 m-4`}>
           <div className="flex items-start space-x-3">
-            <div className={`flex-shrink-0 ${isCritical ? 'text-red-600' : 'text-orange-500'}`}>
+            <div className={`flex-shrink-0 ${isCritical ? "text-red-600" : "text-orange-500"}`}>
               <AlertTriangle className="w-6 h-6" />
             </div>
-            
+
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {customTitle || `${componentName} Error`}
-              </h3>
-              
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{customTitle || `${componentName} Error`}</h3>
+
               <p className="text-gray-700 mb-4">
-                {customMessage || 
-                 `An error occurred while rendering this ${componentName.toLowerCase()}. ${
-                   canRetry ? 'You can try again or' : ''
-                 } Please refresh the page if the problem persists.`}
+                {customMessage ||
+                  `An error occurred while rendering this ${componentName.toLowerCase()}. ${
+                    canRetry ? "You can try again or" : ""
+                  } Please refresh the page if the problem persists.`}
               </p>
 
               {this.state.errorId && (
@@ -187,7 +186,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
               )}
 
               {/* Report to Sentry button (production only) */}
-              {process.env.NODE_ENV === 'production' && this.state.eventId && (
+              {process.env.NODE_ENV === "production" && this.state.eventId && (
                 <div className="mb-4">
                   <button
                     onClick={() => {
@@ -214,7 +213,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                     ) : (
                       <ChevronDown className="w-4 h-4 mr-1" />
                     )}
-                    {this.state.showDetails ? 'Hide' : 'Show'} Error Details
+                    {this.state.showDetails ? "Hide" : "Show"} Error Details
                   </button>
 
                   {this.state.showDetails && (
@@ -225,7 +224,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                           {this.state.error.message}
                         </pre>
                       </div>
-                      
+
                       {this.state.error.stack && (
                         <div className="mb-2">
                           <strong>Stack Trace:</strong>
@@ -234,7 +233,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                           </pre>
                         </div>
                       )}
-                      
+
                       {this.state.errorInfo?.componentStack && (
                         <div>
                           <strong>Component Stack:</strong>
@@ -259,7 +258,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                     Try Again ({this.maxRetries - this.state.retryCount} left)
                   </button>
                 )}
-                
+
                 <button
                   onClick={this.handleReset}
                   className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -270,8 +269,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                 {isDevelopment && (
                   <button
                     onClick={() => {
-                      logger.debug('Error State', { value: this.state });
-                      logger.debug('Props', { value: this.props });
+                      logger.debug("Error State", { value: this.state });
+                      logger.debug("Props", { value: this.props });
                     }}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                   >
@@ -314,6 +313,6 @@ export function withEnhancedErrorBoundary<T extends object>(
   );
 
   WrappedComponent.displayName = `withEnhancedErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }

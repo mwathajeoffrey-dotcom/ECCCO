@@ -90,7 +90,7 @@ else
     echo ""
     echo "This might be expected with Prisma 7 adapter pattern."
     echo "Checking database connection..."
-    
+
     if npx prisma db execute --stdin <<< "SELECT 1;" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Database connection successful${NC}"
         echo ""

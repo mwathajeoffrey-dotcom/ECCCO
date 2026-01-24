@@ -1,5 +1,5 @@
 "use client";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -201,7 +201,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           label: "Clinical Notes",
           href: "/clinical-notes",
           icon: FileText,
-          badge: "NEW"
+          badge: "NEW",
         },
         {
           label: "Evidence Search",

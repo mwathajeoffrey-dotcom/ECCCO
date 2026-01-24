@@ -1,8 +1,8 @@
 # 🔧 SUPABASE DATABASE MIGRATION GUIDE
 
-**Date:** January 24, 2026  
-**Issue:** Clinical Notes not saving - Supabase database missing columns  
-**Status:** 🎯 MANUAL MIGRATION REQUIRED  
+**Date:** January 24, 2026
+**Issue:** Clinical Notes not saving - Supabase database missing columns
+**Status:** 🎯 MANUAL MIGRATION REQUIRED
 
 ---
 
@@ -29,6 +29,7 @@ You have **3 options** to fix this:
 ## 🎯 OPTION 1: Use Supabase SQL Editor (EASIEST)
 
 ### Step 1: Go to Supabase Dashboard
+
 ```
 1. Open: https://supabase.com/dashboard
 2. Select: Your ECCCO project
@@ -37,6 +38,7 @@ You have **3 options** to fix this:
 ```
 
 ### Step 2: Copy and Run This SQL
+
 ```sql
 -- Clinical Notes Migration
 BEGIN;
@@ -57,12 +59,12 @@ ALTER TABLE "UserNote" ADD COLUMN IF NOT EXISTS "patientContext" TEXT;
 ALTER TABLE "UserNote" ADD COLUMN IF NOT EXISTS "version" INTEGER NOT NULL DEFAULT 1;
 
 -- Create indexes for performance
-CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx" 
-    ON "UserNote"("searchQuery") 
+CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx"
+    ON "UserNote"("searchQuery")
     WHERE "searchQuery" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx" 
-    ON "UserNote"("specialty") 
+CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx"
+    ON "UserNote"("specialty")
     WHERE "specialty" IS NOT NULL;
 
 -- Update existing records
@@ -72,17 +74,19 @@ COMMIT;
 
 -- Verify columns were added
 SELECT column_name, data_type, is_nullable
-FROM information_schema.columns 
-WHERE table_name = 'UserNote' 
+FROM information_schema.columns
+WHERE table_name = 'UserNote'
   AND column_name IN ('searchQuery', 'evidenceSummary', 'specialty', 'patientContext', 'version')
 ORDER BY column_name;
 ```
 
 ### Step 3: Click "Run"
+
 - ✅ Should see: "Success. No rows returned" (or 5 rows showing columns)
 - ✅ Columns are now added!
 
 ### Step 4: Test Clinical Notes
+
 ```
 1. Go to: https://eccco.vercel.app
 2. Sign in
@@ -97,6 +101,7 @@ ORDER BY column_name;
 ## 🎯 OPTION 2: Use Terminal with psql
 
 ### Step 1: Get Your Supabase Connection String
+
 ```
 1. Go to: https://supabase.com/dashboard/project/YOUR_PROJECT
 2. Click: Settings → Database
@@ -106,26 +111,31 @@ ORDER BY column_name;
 ```
 
 **Example:**
+
 ```
 postgresql://postgres:YOUR_PASSWORD@db.xxxxx.supabase.co:5432/postgres
 ```
 
 ### Step 2: Set Environment Variable
+
 ```bash
 export DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@db.xxxxx.supabase.co:5432/postgres"
 ```
 
 ### Step 3: Run the Script
+
 ```bash
 ./run-supabase-migration.sh
 ```
 
 **Or use Prisma directly:**
+
 ```bash
 npx prisma migrate deploy
 ```
 
 ### Step 4: Verify
+
 ```bash
 psql "$DATABASE_URL" -c "SELECT column_name FROM information_schema.columns WHERE table_name = 'UserNote' AND column_name IN ('searchQuery', 'evidenceSummary', 'specialty', 'patientContext', 'version');"
 ```
@@ -137,16 +147,19 @@ psql "$DATABASE_URL" -c "SELECT column_name FROM information_schema.columns WHER
 ## 🎯 OPTION 3: Use Supabase CLI
 
 ### Step 1: Install Supabase CLI
+
 ```bash
 npm install -g supabase
 ```
 
 ### Step 2: Link to Your Project
+
 ```bash
 supabase link --project-ref YOUR_PROJECT_REF
 ```
 
 ### Step 3: Apply Migration
+
 ```bash
 supabase db push
 ```
@@ -158,6 +171,7 @@ supabase db push
 **Even with `prisma migrate deploy` in build command:**
 
 ### Issue 1: Connection Timeout
+
 ```
 Build → Run prisma migrate deploy
        → Connect to Supabase...
@@ -167,6 +181,7 @@ Build → Run prisma migrate deploy
 ```
 
 ### Issue 2: Row Level Security (RLS)
+
 ```
 Build → Run prisma migrate deploy
        → Connect to Supabase
@@ -177,6 +192,7 @@ Build → Run prisma migrate deploy
 ```
 
 ### Issue 3: Transaction Isolation
+
 ```
 Build → Multiple builds running simultaneously
        → Both try to run same migration
@@ -191,19 +207,21 @@ Build → Multiple builds running simultaneously
 ## 📊 VERIFICATION STEPS
 
 ### Check 1: Verify Columns Exist
+
 ```sql
 -- Run in Supabase SQL Editor
-SELECT 
+SELECT
     table_name,
-    column_name, 
-    data_type, 
+    column_name,
+    data_type,
     is_nullable
-FROM information_schema.columns 
+FROM information_schema.columns
 WHERE table_name = 'UserNote'
 ORDER BY ordinal_position;
 ```
 
 **Look for:**
+
 - ✅ searchQuery | text | YES
 - ✅ evidenceSummary | text | YES
 - ✅ specialty | text | YES
@@ -211,13 +229,14 @@ ORDER BY ordinal_position;
 - ✅ version | integer | NO
 
 ### Check 2: Test Insert
+
 ```sql
 -- Run in Supabase SQL Editor
 INSERT INTO "UserNote" (
-    id, 
-    "userId", 
-    content, 
-    "searchQuery", 
+    id,
+    "userId",
+    content,
+    "searchQuery",
     "evidenceSummary",
     specialty,
     "patientContext",
@@ -242,14 +261,15 @@ INSERT INTO "UserNote" (
 ```
 
 ### Check 3: Verify Indexes
+
 ```sql
 -- Run in Supabase SQL Editor
-SELECT 
-    indexname, 
+SELECT
+    indexname,
     indexdef
-FROM pg_indexes 
-WHERE tablename = 'UserNote' 
-  AND indexname LIKE '%searchQuery%' 
+FROM pg_indexes
+WHERE tablename = 'UserNote'
+  AND indexname LIKE '%searchQuery%'
    OR indexname LIKE '%specialty%';
 ```
 
@@ -260,12 +280,15 @@ WHERE tablename = 'UserNote'
 ## 🚨 TROUBLESHOOTING
 
 ### Error: "column 'searchQuery' does not exist"
-**Cause:** Migration hasn't run yet  
+
+**Cause:** Migration hasn't run yet
 **Fix:** Run Option 1 (SQL Editor) above
 
 ### Error: "permission denied for table UserNote"
-**Cause:** Supabase RLS blocking ALTER TABLE  
+
+**Cause:** Supabase RLS blocking ALTER TABLE
 **Fix:**
+
 ```sql
 -- Temporarily disable RLS
 ALTER TABLE "UserNote" DISABLE ROW LEVEL SECURITY;
@@ -277,15 +300,19 @@ ALTER TABLE "UserNote" ENABLE ROW LEVEL SECURITY;
 ```
 
 ### Error: "relation 'UserNote' does not exist"
-**Cause:** Table name case sensitivity  
+
+**Cause:** Table name case sensitivity
 **Fix:** Check actual table name:
+
 ```sql
 SELECT tablename FROM pg_tables WHERE schemaname = 'public';
 ```
 
 ### Error: "database connection failed"
-**Cause:** Wrong DATABASE_URL or network issue  
+
+**Cause:** Wrong DATABASE_URL or network issue
 **Fix:**
+
 1. Verify connection string from Supabase dashboard
 2. Check password is correct (no special chars issues)
 3. Try connecting with psql first to test
@@ -295,10 +322,11 @@ SELECT tablename FROM pg_tables WHERE schemaname = 'public';
 ## 🎓 SUPABASE-SPECIFIC CONSIDERATIONS
 
 ### 1. Row Level Security (RLS)
+
 ```sql
 -- Check if RLS is blocking migrations
-SELECT tablename, rowsecurity 
-FROM pg_tables 
+SELECT tablename, rowsecurity
+FROM pg_tables
 WHERE tablename = 'UserNote';
 
 -- If rowsecurity = true, temporarily disable:
@@ -308,6 +336,7 @@ ALTER TABLE "UserNote" ENABLE ROW LEVEL SECURITY;
 ```
 
 ### 2. Connection Pooling
+
 ```
 Supabase uses connection pooling (PgBouncer)
 - Use transaction mode for migrations
@@ -316,6 +345,7 @@ Supabase uses connection pooling (PgBouncer)
 ```
 
 ### 3. Backups
+
 ```
 Supabase auto-backs up daily
 - Safe to run migrations
@@ -328,23 +358,27 @@ Supabase auto-backs up daily
 ## 📋 COMPLETE MIGRATION CHECKLIST
 
 **Before Migration:**
+
 - [ ] Backed up database (Supabase auto-backup exists)
 - [ ] Have Supabase dashboard access
 - [ ] Know project password/connection string
 - [ ] Verified UserNote table exists
 
 **Run Migration:**
+
 - [ ] Option 1: SQL Editor (recommended)
 - [ ] OR Option 2: Terminal psql
 - [ ] OR Option 3: Supabase CLI
 
 **After Migration:**
+
 - [ ] Verified 5 columns exist (run verification SQL)
 - [ ] Tested insert with new columns (run test SQL)
 - [ ] Checked indexes created
 - [ ] Tested in production (save a note)
 
 **Success Criteria:**
+
 - [ ] No 500 errors when saving notes ✅
 - [ ] Notes save successfully ✅
 - [ ] Notes appear in Clinical Notes tab ✅
@@ -357,6 +391,7 @@ Supabase auto-backs up daily
 **EASIEST & FASTEST (5 minutes):**
 
 1. **Open Supabase SQL Editor**
+
    - https://supabase.com/dashboard → Your Project → SQL Editor
 
 2. **Paste the migration SQL** (from Option 1 above)
@@ -374,6 +409,7 @@ Supabase auto-backs up daily
 ## 📊 EXPECTED RESULTS
 
 ### Before Migration:
+
 ```
 Save Note → API Call → Database Insert
                     ↓
@@ -383,6 +419,7 @@ Save Note → API Call → Database Insert
 ```
 
 ### After Migration:
+
 ```
 Save Note → API Call → Database Insert
                     ↓
@@ -400,16 +437,19 @@ Save Note → API Call → Database Insert
 ## 🔧 QUICK COMMANDS
 
 ### Check if columns exist:
+
 ```bash
 psql "$DATABASE_URL" -c "SELECT column_name FROM information_schema.columns WHERE table_name = 'UserNote' AND column_name IN ('searchQuery', 'evidenceSummary', 'specialty', 'patientContext', 'version');"
 ```
 
 ### Run migration:
+
 ```bash
 psql "$DATABASE_URL" -f prisma/migrations/20260121_add_clinical_notes_fields/migration.sql
 ```
 
 ### Test connection:
+
 ```bash
 psql "$DATABASE_URL" -c "SELECT current_database(), current_user, version();"
 ```
@@ -421,11 +461,13 @@ psql "$DATABASE_URL" -c "SELECT current_database(), current_user, version();"
 **If migration runs but still getting errors:**
 
 1. **Check Vercel environment variables:**
+
    - Go to: Vercel → Settings → Environment Variables
    - Verify: DATABASE_URL matches Supabase connection string
    - Redeploy: After verifying URL is correct
 
 2. **Check Supabase project:**
+
    - Verify: Correct project (not staging/dev)
    - Check: Database region matches expectations
    - Confirm: Connection pooling settings
@@ -450,12 +492,13 @@ psql "$DATABASE_URL" -c "SELECT current_database(), current_user, version();"
 
 ---
 
-**Status:** 🟡 AWAITING MANUAL MIGRATION  
-**Action Required:** Run SQL in Supabase SQL Editor  
-**Time Required:** 5 minutes  
-**Difficulty:** Easy (just copy/paste SQL)  
+**Status:** 🟡 AWAITING MANUAL MIGRATION
+**Action Required:** Run SQL in Supabase SQL Editor
+**Time Required:** 5 minutes
+**Difficulty:** Easy (just copy/paste SQL)
 
 **DO THIS NOW:**
+
 1. Open: https://supabase.com/dashboard
 2. SQL Editor → New Query
 3. Paste migration SQL (from Option 1)

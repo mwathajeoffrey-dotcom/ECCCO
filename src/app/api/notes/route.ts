@@ -8,12 +8,12 @@ export async function GET() {
     const { userId } = await auth();
 
     // Development mode: Use a default test user if not authenticated
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = process.env.NODE_ENV === "development";
     let effectiveUserId: string | null = userId;
 
     if (!userId && isDevelopment) {
-      console.warn('[DEV MODE] Using test user for unauthenticated GET request');
-      effectiveUserId = 'dev_test_user';
+      console.warn("[DEV MODE] Using test user for unauthenticated GET request");
+      effectiveUserId = "dev_test_user";
     } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -30,7 +30,7 @@ export async function GET() {
         data: {
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: effectiveUserId!,
-          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          email: isDevelopment ? "test@localhost.dev" : "user@eccco.app",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -46,10 +46,7 @@ export async function GET() {
     return NextResponse.json(notes);
   } catch (error) {
     console.error("Error fetching notes:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch notes" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch notes" }, { status: 500 });
   }
 }
 
@@ -59,12 +56,12 @@ export async function POST(request: NextRequest) {
     const { userId } = await auth();
 
     // Development mode: Use a default test user if not authenticated
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = process.env.NODE_ENV === "development";
     let effectiveUserId: string | null = userId;
 
     if (!userId && isDevelopment) {
-      console.warn('[DEV MODE] Using test user for unauthenticated request');
-      effectiveUserId = 'dev_test_user';
+      console.warn("[DEV MODE] Using test user for unauthenticated request");
+      effectiveUserId = "dev_test_user";
     } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -81,7 +78,7 @@ export async function POST(request: NextRequest) {
         data: {
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: effectiveUserId!,
-          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          email: isDevelopment ? "test@localhost.dev" : "user@eccco.app",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -89,12 +86,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { 
-      title, 
-      content, 
-      questionId, 
-      questionText, 
-      category, 
+    const {
+      title,
+      content,
+      questionId,
+      questionText,
+      category,
       tags,
       // NEW: Clinical evidence search fields
       searchQuery,
@@ -105,10 +102,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!content) {
-      return NextResponse.json(
-        { error: "Content is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Content is required" }, { status: 400 });
     }
 
     // Create new note
@@ -133,7 +127,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(note, { status: 201 });
   } catch (error) {
     console.error("Error creating note:", error);
-    
+
     // Better error logging for debugging
     if (error instanceof Error) {
       console.error("Error details:", {
@@ -142,11 +136,11 @@ export async function POST(request: NextRequest) {
         name: error.name,
       });
     }
-    
+
     return NextResponse.json(
-      { 
+      {
         error: "Failed to create note",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
@@ -159,12 +153,12 @@ export async function PATCH(request: NextRequest) {
     const { userId } = await auth();
 
     // Development mode: Use a default test user if not authenticated
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = process.env.NODE_ENV === "development";
     let effectiveUserId: string | null = userId;
 
     if (!userId && isDevelopment) {
-      console.warn('[DEV MODE] Using test user for PATCH request');
-      effectiveUserId = 'dev_test_user';
+      console.warn("[DEV MODE] Using test user for PATCH request");
+      effectiveUserId = "dev_test_user";
     } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -181,7 +175,7 @@ export async function PATCH(request: NextRequest) {
         data: {
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: effectiveUserId!,
-          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          email: isDevelopment ? "test@localhost.dev" : "user@eccco.app",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -189,38 +183,23 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { 
-      id,
-      title, 
-      content, 
-      tags,
-      searchQuery,
-      evidenceSummary,
-      specialty,
-      patientContext,
-    } = body;
+    const { id, title, content, tags, searchQuery, evidenceSummary, specialty, patientContext } = body;
 
     // Validate required fields
     if (!id) {
-      return NextResponse.json(
-        { error: "Note ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Note ID is required" }, { status: 400 });
     }
 
     // Verify the note belongs to the user
     const existingNote = await prisma.userNote.findFirst({
-      where: { 
+      where: {
         id,
         userId: user.id,
       },
     });
 
     if (!existingNote) {
-      return NextResponse.json(
-        { error: "Note not found or unauthorized" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Note not found or unauthorized" }, { status: 404 });
     }
 
     // Update the note
@@ -240,10 +219,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(note);
   } catch (error) {
     console.error("Error updating note:", error);
-    return NextResponse.json(
-      { error: "Failed to update note" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update note" }, { status: 500 });
   }
 }
 
@@ -253,12 +229,12 @@ export async function DELETE(request: NextRequest) {
     const { userId } = await auth();
 
     // Development mode: Use a default test user if not authenticated
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = process.env.NODE_ENV === "development";
     let effectiveUserId: string | null = userId;
 
     if (!userId && isDevelopment) {
-      console.warn('[DEV MODE] Using test user for DELETE request');
-      effectiveUserId = 'dev_test_user';
+      console.warn("[DEV MODE] Using test user for DELETE request");
+      effectiveUserId = "dev_test_user";
     } else if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -275,7 +251,7 @@ export async function DELETE(request: NextRequest) {
         data: {
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           clerkUserId: effectiveUserId!,
-          email: isDevelopment ? 'test@localhost.dev' : 'user@eccco.app',
+          email: isDevelopment ? "test@localhost.dev" : "user@eccco.app",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -286,25 +262,19 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "Note ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Note ID is required" }, { status: 400 });
     }
 
     // Verify the note belongs to the user before deleting
     const existingNote = await prisma.userNote.findFirst({
-      where: { 
+      where: {
         id,
         userId: user.id,
       },
     });
 
     if (!existingNote) {
-      return NextResponse.json(
-        { error: "Note not found or unauthorized" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Note not found or unauthorized" }, { status: 404 });
     }
 
     // Delete the note
@@ -315,9 +285,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting note:", error);
-    return NextResponse.json(
-      { error: "Failed to delete note" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete note" }, { status: 500 });
   }
 }

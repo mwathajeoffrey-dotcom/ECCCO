@@ -1,14 +1,15 @@
 # 🎯 ECCCO Development TODO List
 
-**Created**: January 20, 2026  
-**Status**: Ready for execution  
-**Total Tasks**: 20  
-**Completed**: 16/20 (80%)  
+**Created**: January 20, 2026
+**Status**: Ready for execution
+**Total Tasks**: 20
+**Completed**: 16/20 (80%)
 **Estimated Total Effort**: ~90-120 hours
 
 ---
 
 ## ✅ COMPLETED
+
 - [x] Logger root cause fixed (variadic arguments)
 - [x] All TypeScript errors resolved (0 errors)
 - [x] Production deployment successful
@@ -36,6 +37,7 @@
 ## 🔥 IMMEDIATE (Do First)
 
 ### Task 1: Fix VS Code Phantom Errors ✅ COMPLETE
+
 - [x] **Action**: Removed unused logger import from layout.tsx
 - [x] **Verify**: TypeScript errors resolved
 - **Priority**: CRITICAL
@@ -49,6 +51,7 @@
 ## 📋 HIGH PRIORITY (Week 1)
 
 ### Task 2: Command Palette Implementation ✅ COMPLETE
+
 - [x] Create `/src/components/CommandPalette.tsx`
 - [x] Implement fuzzy search functionality
 - [x] Add navigation commands (go to Dashboard, Practice, Evidence, etc.)
@@ -69,6 +72,7 @@
   - `src/app/layout.tsx` (added CommandPaletteProvider)
 
 ### Task 3: Keyboard Shortcuts Modal ✅ COMPLETE
+
 - [x] Create modal state management in layout
 - [x] Connect `KeyboardShortcutsHelp` component to Shift+? trigger
 - [x] Add close on Escape key
@@ -87,6 +91,7 @@
   - `src/components/ui/command-palette.tsx` (added Show Shortcuts command)
 
 ### Task 4: Notes Save Functionality ✅ COMPLETE
+
 - [x] Design Prisma schema for UserNote model
 - [x] Create migration file
 - [x] Run migration: `npx prisma migrate dev --name add-user-notes`
@@ -117,6 +122,7 @@
   - Edit modal with form validation
   - User authentication and authorization
 - **Schema Addition**:
+
 ```prisma
 model UserNote {
   id        String   @id @default(cuid())
@@ -126,13 +132,14 @@ model UserNote {
   tags      String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@index([userId])
   @@index([createdAt])
 }
 ```
 
 ### Task 4.5: Fix Sign-In Menu Functionality ✅ COMPLETE
+
 - [x] Fix Header.tsx sign-in button clicks (not navigating to /auth/signin)
 - [x] Replace custom handleSignIn() logic with proper Clerk navigation
 - [x] Test "Continue with Google" button
@@ -148,6 +155,7 @@ model UserNote {
 - **Impact**: Fixed critical authentication flow bug
 
 ### Task 5: Cleanup Temporary Scripts ✅ COMPLETE
+
 - [x] Create archive directory: `mkdir -p scripts/archived/logger-fixes`
 - [x] Move scripts: `mv fix-*.sh fix_all_loggers.py scripts/archived/logger-fixes/`
 - [x] Commit: `git add -A && git commit -m "chore: archive temporary logger fix scripts"`
@@ -168,6 +176,7 @@ model UserNote {
 ## 🔧 MEDIUM PRIORITY (Week 2)
 
 ### Task 6: Admin Dashboard Real Data ✅ COMPLETE
+
 - [x] Create analytics aggregation queries in Prisma
 - [x] Fetch real user count from database
 - [x] Calculate real question statistics
@@ -198,6 +207,7 @@ model UserNote {
   - Number formatting with locale support
 
 ### Task 7: PALS Practice Mode ✅ COMPLETE
+
 - [x] Verify PALS questions exist in database (38 questions confirmed)
 - [x] Enable PALS route (already enabled)
 - [x] Remove "Coming Soon" placeholders (Algorithms now available)
@@ -227,6 +237,7 @@ model UserNote {
   - All PALS tools available (Calculator, CPR, Drugs, Algorithms)
 
 ### Task 8: ESLint Configuration Fix ✅ COMPLETE
+
 - [x] Check current ESLint version: `npm list eslint`
 - [x] Choose fix approach:
   - [x] Option A: Upgrade to ESLint 9: `npm install eslint@latest -D`
@@ -248,6 +259,7 @@ model UserNote {
   - All builds passing, linter working correctly
 
 ### Task 9: Prisma Upgrade (6.19.2 → 7.2.0) ✅ COMPLETE
+
 - [x] Read Prisma 7.x migration guide
 - [x] Backup database schema
 - [x] Create feature branch: `git checkout -b upgrade/prisma-7`
@@ -274,13 +286,14 @@ model UserNote {
 ## 🎨 LOW PRIORITY (As Time Permits)
 
 ### Task 10: Sentry Source Maps ✅ COMPLETE
+
 - [x] Created Sentry account and organization (ECCCO - eccco.sentry.io)
 - [x] Created Next.js project in Sentry
 - [x] Generated auth token with project:releases scope
 - [x] Added all credentials to .env.local:
   - SENTRY_DSN (project-specific ingest URL)
   - SENTRY_ORG=eccco
-  - SENTRY_PROJECT=eccco  
+  - SENTRY_PROJECT=eccco
   - SENTRY_AUTH_TOKEN (with releases permission)
 - [x] Verified setup with check-sentry-setup.sh
 - [x] Tested build with source maps upload (104s compile)
@@ -300,8 +313,8 @@ model UserNote {
 - **Dashboard**: https://eccco.sentry.io/issues/
 - **Note**: Source maps upload during build, hidden from production for security
 - **Effort**: 15 minutes
-- **Assignee**: _________
-- **Due Date**: _________
+- **Assignee**: ****\_****
+- **Due Date**: ****\_****
 - **Dependencies**: Sentry account access
 
 ---
@@ -309,6 +322,7 @@ model UserNote {
 ## ✨ NICE TO HAVE (Future Sprints)
 
 ### Task 11: Enhanced Evidence Search
+
 - [ ] Implement search history persistence
 - [ ] Add export to PDF functionality
 - [ ] Add share results feature
@@ -317,10 +331,11 @@ model UserNote {
 - [ ] Add Zotero export
 - **Priority**: LOW
 - **Effort**: 8-12 hours
-- **Assignee**: _________
-- **Sprint**: _________
+- **Assignee**: ****\_****
+- **Sprint**: ****\_****
 
 ### Task 12: Quiz Arena Enhancements
+
 - [ ] Design tournament bracket system
 - [ ] Implement ELO rating system
 - [ ] Add team mode (2v2, 3v3)
@@ -329,10 +344,11 @@ model UserNote {
 - [ ] Add tournament history
 - **Priority**: LOW
 - **Effort**: 12-15 hours
-- **Assignee**: _________
-- **Sprint**: _________
+- **Assignee**: ****\_****
+- **Sprint**: ****\_****
 
 ### Task 13: Mobile PWA Optimization
+
 - [ ] Implement service worker for offline support
 - [ ] Add background sync for analytics
 - [ ] Enable push notifications
@@ -341,14 +357,15 @@ model UserNote {
 - [ ] Test on iOS and Android
 - **Priority**: LOW
 - **Effort**: 6-8 hours
-- **Assignee**: _________
-- **Sprint**: _________
+- **Assignee**: ****\_****
+- **Sprint**: ****\_****
 
 ---
 
 ## 📊 TECHNICAL DEBT
 
 ### Task 14: Merge Duplicate Logger Services
+
 - [ ] Analyze both implementations:
   - `src/lib/logger.ts` (variadic args)
   - `src/lib/services/logger.ts` (Sentry integration)
@@ -361,10 +378,11 @@ model UserNote {
 - [ ] Remove old implementation
 - **Priority**: TECHNICAL DEBT
 - **Effort**: 3-4 hours
-- **Assignee**: _________
-- **Due Date**: _________
+- **Assignee**: ****\_****
+- **Due Date**: ****\_****
 
 ### Task 15: Centralize Environment Variable Validation ✅ COMPLETE
+
 - [x] Enhanced `src/lib/config.ts` with complete Zod schema
 - [x] Added all missing env vars (REDIS_URL, NEXT_PUBLIC_SENTRY_DSN, SENTRY_AUTH_TOKEN)
 - [x] Created `src/lib/env.ts` for type-safe environment access
@@ -391,6 +409,7 @@ model UserNote {
   - Single source of truth for all environment configuration
 
 ### Task 16: Test Coverage
+
 - [ ] Set up Vitest configuration
 - [ ] Write unit tests for utilities
 - [ ] Write integration tests for API routes
@@ -399,7 +418,7 @@ model UserNote {
 - [ ] Target: 70% code coverage
 - **Priority**: TECHNICAL DEBT (ongoing)
 - **Effort**: 15-20 hours
-- **Assignee**: _________
+- **Assignee**: ****\_****
 - **Sprint**: Multiple
 
 ---
@@ -407,6 +426,7 @@ model UserNote {
 ## 🏗️ INFRASTRUCTURE
 
 ### Task 17: Database Migration Tracking ✅ COMPLETE
+
 - [x] **Task 14: Logger Services Consolidation** (Jan 21, 2026) - Analysis, documentation, deprecation notice, future migration plan
 - [x] Initialize Prisma Migrate documentation
 - [x] Create comprehensive migration guide (docs/DATABASE_MIGRATIONS.md)
@@ -436,6 +456,7 @@ model UserNote {
   - Prisma 7 adapter pattern notes
 
 ### Task 18: Monitoring & Alerting Setup
+
 - [ ] Sign up for uptime monitoring (UptimeRobot or Better Uptime)
 - [ ] Configure alerts for:
   - Site down
@@ -447,14 +468,15 @@ model UserNote {
 - [ ] Create monitoring dashboard
 - **Priority**: INFRASTRUCTURE
 - **Effort**: 4-6 hours
-- **Assignee**: _________
-- **Due Date**: _________
+- **Assignee**: ****\_****
+- **Due Date**: ****\_****
 
 ---
 
 ## 📚 DOCUMENTATION
 
 ### Task 19: API Documentation
+
 - [ ] Install Swagger/OpenAPI tools
 - [ ] Document all API routes
 - [ ] Add request/response examples
@@ -464,10 +486,11 @@ model UserNote {
 - [ ] Host on `/docs` route
 - **Priority**: DOCUMENTATION
 - **Effort**: 6-8 hours
-- **Assignee**: _________
-- **Sprint**: _________
+- **Assignee**: ****\_****
+- **Sprint**: ****\_****
 
 ### Task 20: User Guide
+
 - [ ] Write getting started guide
 - [ ] Create feature walkthroughs with screenshots
 - [ ] Document keyboard shortcuts
@@ -476,18 +499,20 @@ model UserNote {
 - [ ] Publish to `/help` route
 - **Priority**: DOCUMENTATION
 - **Effort**: 8-10 hours
-- **Assignee**: _________
-- **Sprint**: _________
+- **Assignee**: ****\_****
+- **Sprint**: ****\_****
 
 ---
 
 ## 📅 SPRINT PLANNING
 
 ### Sprint 1 (Week 1) - "Core Features"
-**Goal**: Complete high-priority user-facing features  
-**Tasks**: 1, 2, 3, 4, 5  
-**Total Effort**: ~10-14 hours  
+
+**Goal**: Complete high-priority user-facing features
+**Tasks**: 1, 2, 3, 4, 5
+**Total Effort**: ~10-14 hours
 **Definition of Done**:
+
 - [ ] VS Code errors resolved
 - [ ] Command Palette working
 - [ ] Shortcuts modal working
@@ -495,30 +520,36 @@ model UserNote {
 - [ ] Temp scripts archived
 
 ### Sprint 2 (Week 2) - "Polish & Infrastructure"
-**Goal**: Admin features and infrastructure improvements  
-**Tasks**: 6, 7, 8, 9  
-**Total Effort**: ~13-17 hours  
+
+**Goal**: Admin features and infrastructure improvements
+**Tasks**: 6, 7, 8, 9
+**Total Effort**: ~13-17 hours
 **Definition of Done**:
+
 - [ ] Admin sees real data
 - [ ] PALS mode functional
 - [ ] Linter working
 - [ ] Prisma upgraded
 
 ### Sprint 3 (Weeks 3-4) - "Technical Debt"
-**Goal**: Code quality and testing  
-**Tasks**: 14, 15, 16, 17, 18  
-**Total Effort**: ~25-33 hours  
+
+**Goal**: Code quality and testing
+**Tasks**: 14, 15, 16, 17, 18
+**Total Effort**: ~25-33 hours
 **Definition of Done**:
+
 - [ ] Single logger service
 - [ ] Environment validation
 - [ ] Test coverage > 50%
 - [ ] Monitoring active
 
 ### Sprint 4 (Month 2) - "Enhancements"
-**Goal**: Nice-to-have features  
-**Tasks**: 10, 11, 12, 13, 19, 20  
-**Total Effort**: ~40-58 hours  
+
+**Goal**: Nice-to-have features
+**Tasks**: 10, 11, 12, 13, 19, 20
+**Total Effort**: ~40-58 hours
 **Definition of Done**:
+
 - [ ] Sentry source maps
 - [ ] Evidence search enhanced
 - [ ] Quiz Arena improvements
@@ -530,12 +561,14 @@ model UserNote {
 ## 🎯 SUCCESS METRICS
 
 ### Week 1 Success
+
 - [ ] 0 VS Code errors
 - [ ] Command Palette used > 10 times
 - [ ] Notes saved successfully
 - [ ] All scripts archived
 
 ### Month 1 Success
+
 - [ ] All HIGH priority tasks completed
 - [ ] All MEDIUM priority tasks completed
 - [ ] 50% test coverage
@@ -543,6 +576,7 @@ model UserNote {
 - [ ] 0 production bugs reported
 
 ### Quarter 1 Success
+
 - [ ] All 20 tasks completed
 - [ ] 70% test coverage
 - [ ] API docs published
@@ -554,6 +588,7 @@ model UserNote {
 ## 📝 NOTES & DECISIONS
 
 ### Development Guidelines
+
 - Always create feature branch: `git checkout -b feature/task-name`
 - Write tests before merging to main
 - Update documentation with code changes
@@ -561,6 +596,7 @@ model UserNote {
 - Get code review for major changes
 
 ### When Stuck
+
 1. Check documentation files in `/docs`
 2. Review similar implementations in codebase
 3. Check Git history: `git log --follow <file>`
@@ -568,6 +604,7 @@ model UserNote {
 5. Create GitHub issue if blocked
 
 ### Quick Commands
+
 ```bash
 # Start development
 npm run dev
@@ -599,14 +636,14 @@ git push origin main  # Auto-deploys to Vercel
 
 Mark tasks complete by changing `- [ ]` to `- [x]`
 
-**Weekly Review**: Every Monday, review progress and adjust priorities  
-**Daily Standup**: What did you do? What will you do? Any blockers?  
+**Weekly Review**: Every Monday, review progress and adjust priorities
+**Daily Standup**: What did you do? What will you do? Any blockers?
 **Sprint Retrospective**: What went well? What can improve?
 
 ---
 
-**Last Updated**: January 20, 2026  
-**Next Review**: January 27, 2026  
+**Last Updated**: January 20, 2026
+**Next Review**: January 27, 2026
 **Maintained By**: Development Team
 
 ---

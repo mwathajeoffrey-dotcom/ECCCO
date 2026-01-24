@@ -3,6 +3,7 @@
 ## The Problem We Had
 
 **What happened**:
+
 - I created helpful documentation with examples
 - Examples included actual API keys from your `.env.local`
 - Documentation got committed to git
@@ -10,6 +11,7 @@
 - GitHub secret scanning detected and reported to Groq
 
 **Why it happened**:
+
 - Documentation needs to show "real examples"
 - Easy to copy from `.env.local` for accuracy
 - No automated check before committing
@@ -33,7 +35,7 @@ git secrets --install
 
 # Add patterns for all our secret types
 git secrets --add 'gsk_[a-zA-Z0-9]{50,}'                    # Groq API keys
-git secrets --add 'sk_test_[a-zA-Z0-9]{40,}'                # Clerk secret keys  
+git secrets --add 'sk_test_[a-zA-Z0-9]{40,}'                # Clerk secret keys
 git secrets --add 'sk_live_[a-zA-Z0-9]{40,}'                # Clerk live keys
 git secrets --add 'pk_live_[a-zA-Z0-9]{40,}'                # Clerk live publishable
 git secrets --add 'sntryu_[a-zA-Z0-9]{50,}'                 # Sentry auth tokens
@@ -48,12 +50,14 @@ git secrets --scan
 ```
 
 **What this does**:
+
 - ✅ Blocks `git commit` if secrets detected
 - ✅ Scans all files before commit
 - ✅ Shows you which files/lines have secrets
 - ✅ Prevents push to GitHub
 
 **Example**:
+
 ```bash
 $ git commit -m "Add docs"
 ❌ ERROR: Commit blocked - secrets detected!
@@ -106,27 +110,34 @@ echo "✅ Pre-commit checks passed!"
 ### 3. Documentation Templates (What I'll use going forward)
 
 **BEFORE** (What I was doing - BAD ❌):
-```markdown
+
+````markdown
 ## Setup
 
 Add to .env.local:
+
 ```bash
 GROQ_API_KEY=gsk_EXPOSED_OLD_KEY  # Example of what NOT to do!
 DATABASE_URL="postgresql://postgres.xxx:password_redacted@..."
 ```
+````
 
 **AFTER** (What I'll do now - GOOD ✅):
-```markdown
+
+````markdown
 ## Setup
 
 Add to .env.local:
+
 ```bash
 GROQ_API_KEY=your_groq_api_key_here  # Get from: https://console.groq.com/keys
 DATABASE_URL=your_database_url_here  # Get from: Supabase dashboard
 ```
+````
 
 Or copy from `.env.local` (do NOT commit this file!)
-```
+
+````
 
 ---
 
@@ -142,7 +153,7 @@ CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
 DATABASE_URL=postgresql://postgres.xxx:password@host.supabase.com:6543/postgres
 REDIS_URL=redis://default:password@host.redislabs.com:11940
 SENTRY_AUTH_TOKEN=sntryu_your_sentry_auth_token_here
-```
+````
 
 **Rule**: If it starts with `your_` or contains `xxx`, it's a placeholder (safe)
 
@@ -158,7 +169,8 @@ GROQ_API_KEY=gsk_your_key_here
 DATABASE_URL=postgresql://postgres:password@host:6543/postgres
 ```
 
-**Rule**: 
+**Rule**:
+
 - `.env.local` = NEVER commit (has real secrets)
 - `.env.example` = ALWAYS commit (has placeholders)
 
@@ -179,6 +191,7 @@ Add to package.json:
 ```
 
 Run regularly:
+
 ```bash
 npm run security:check    # Our custom audit
 npm run security:scan     # Check current files
@@ -192,6 +205,7 @@ npm run security:history  # Scan all git history
 **Good news**: GitHub already caught this! Their system works.
 
 **To enable push protection** (blocks push immediately):
+
 1. Go to: https://github.com/mwathajeoffrey-dotcom/ECCCO/settings/security_analysis
 2. Enable "Push protection"
 3. Now secrets are blocked BEFORE push (not after)
@@ -201,37 +215,47 @@ npm run security:history  # Scan all git history
 ## 📋 My New Documentation Rules (Going Forward)
 
 ### Rule 1: Never Copy from .env.local
+
 Instead of:
+
 ```bash
 grep GROQ_API_KEY .env.local  # Then copy value
 ```
 
 I'll use:
+
 ```bash
 # Placeholder with instructions
 GROQ_API_KEY=gsk_your_key_here  # Copy from your .env.local file
 ```
 
 ### Rule 2: Always Use Placeholders in Examples
+
 ```markdown
 # Good ✅
+
 GROQ_API_KEY=gsk_your_key_here
 DATABASE_URL=postgresql://postgres:password@host:6543/postgres
 
 # Bad ❌ - Never include real values!
+
 GROQ_API_KEY=gsk_XsXtxtlf6AVhz2Ug4J24...
 ```
 
 ### Rule 3: Reference Files, Don't Expose Them
+
 ```markdown
 # Good ✅
+
 "Copy the GROQ_API_KEY value from your .env.local file (line 13)"
 
 # Bad ❌
+
 "The GROQ_API_KEY is: gsk_XsXtxtlf6AVhz2Ug4J24..."
 ```
 
 ### Rule 4: Mark Sensitive Sections
+
 ```markdown
 <!-- 🔒 SECURITY: This section shows configuration -->
 <!-- Do NOT include actual secret values in this document -->
@@ -239,16 +263,20 @@ GROQ_API_KEY=gsk_XsXtxtlf6AVhz2Ug4J24...
 ## API Configuration
 
 Your `.env.local` should contain:
+
 - GROQ_API_KEY (from Groq console)
 - DATABASE_URL (from Supabase)
 ```
 
 ### Rule 5: Link to Sources, Don't Embed
+
 ```markdown
 # Good ✅
+
 Get your Groq API key from: https://console.groq.com/keys
 
 # Bad ❌
+
 Your Groq API key: gsk_XsXtxtlf6AVhz2Ug4J24...
 ```
 
@@ -292,6 +320,7 @@ git secrets --scan
 ## 📝 Going Forward: Our Agreement
 
 **I promise to**:
+
 - ✅ Never include real API keys in documentation
 - ✅ Always use placeholders (`your_key_here`, `xxx`, etc.)
 - ✅ Reference where to get values, not show them
@@ -299,12 +328,14 @@ git secrets --scan
 - ✅ Verify docs before suggesting commits
 
 **You'll have**:
+
 - ✅ git-secrets blocking commits with secrets
 - ✅ Pre-commit hooks checking for secrets
 - ✅ GitHub push protection enabled
 - ✅ Weekly security audit script
 
 **Result**:
+
 - ✅ No more exposed secrets
 - ✅ Safe documentation
 - ✅ Peace of mind

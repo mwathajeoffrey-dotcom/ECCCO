@@ -1,5 +1,5 @@
 "use client";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect } from "react";
 import { Search, Loader2, BookOpen, ExternalLink, Clock, Trash2, X, Menu, FileText } from "lucide-react";
@@ -57,7 +57,7 @@ export default function EvidenceSearchPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  
+
   // NEW: Note-taking modal state
   const [noteModalOpen, setNoteModalOpen] = useState(false);
 
@@ -116,17 +116,26 @@ export default function EvidenceSearchPage() {
 
     // Detect if this is a drug-specific query
     const drugKeywords = [
-      'dosing', 'dose', 'dosage', 'indication', 'contraindication',
-      'interaction', 'adverse effect', 'side effect', 'monitoring',
-      'drug', 'medication', 'mg', 'mcg', 'administration'
+      "dosing",
+      "dose",
+      "dosage",
+      "indication",
+      "contraindication",
+      "interaction",
+      "adverse effect",
+      "side effect",
+      "monitoring",
+      "drug",
+      "medication",
+      "mg",
+      "mcg",
+      "administration",
     ];
     const lowerQuery = queryToSearch.toLowerCase();
-    const isDrugQuery = drugKeywords.some(keyword => lowerQuery.includes(keyword));
+    const isDrugQuery = drugKeywords.some((keyword) => lowerQuery.includes(keyword));
 
     // Choose appropriate endpoint
-    const endpoint = isDrugQuery 
-      ? "/api/evidence/drug-search"
-      : "/api/evidence/consensus-search";
+    const endpoint = isDrugQuery ? "/api/evidence/drug-search" : "/api/evidence/consensus-search";
 
     try {
       const response = await fetch(endpoint, {
@@ -151,9 +160,9 @@ export default function EvidenceSearchPage() {
   // NEW: Handle saving clinical notes
   const handleSaveNote = async (noteData: NoteData) => {
     try {
-      const response = await fetch('/api/notes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: noteData.title,
           content: noteData.content,
@@ -166,14 +175,14 @@ export default function EvidenceSearchPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save note');
+        throw new Error("Failed to save note");
       }
 
       // Success! Show a brief confirmation
       alert('✅ Clinical note saved successfully! View it in "Clinical Notes" tab.');
       setNoteModalOpen(false);
     } catch (error) {
-      console.error('Failed to save note:', error);
+      console.error("Failed to save note:", error);
       throw error; // Let NoteModal handle the error display
     }
   };
@@ -362,14 +371,14 @@ export default function EvidenceSearchPage() {
           </div>
 
           {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>}
-          
+
           {/* NEW: Take Notes Button (appears when there's a search result) */}
           {result && (
             <div className="mb-6 flex justify-end">
               <button
                 onClick={() => setNoteModalOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 
-                         hover:from-blue-700 hover:to-blue-800 text-white rounded-lg shadow-lg 
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700
+                         hover:from-blue-700 hover:to-blue-800 text-white rounded-lg shadow-lg
                          hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-medium"
               >
                 <FileText className="w-5 h-5" />
@@ -377,7 +386,7 @@ export default function EvidenceSearchPage() {
               </button>
             </div>
           )}
-          
+
           {result && <ConsensusResult result={result} />}
           {!result && !loading && !error && (
             <div className="text-center py-12 text-slate-500">

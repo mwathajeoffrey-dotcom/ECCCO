@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import { searchAllSources, type UnifiedArticle } from "@/lib/evidence/unified-search";
 import { callGroq } from "@/lib/ai/groq-client";

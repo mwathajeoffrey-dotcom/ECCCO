@@ -1,7 +1,7 @@
 # ⚡ IMMEDIATE ACTION REQUIRED - Security Fixes
 
-**Date**: January 21, 2026  
-**Priority**: CRITICAL  
+**Date**: January 21, 2026
+**Priority**: CRITICAL
 **Time Required**: 15 minutes
 
 ---
@@ -9,11 +9,13 @@
 ## 🚨 Two Critical Issues to Fix NOW
 
 ### Issue 1: Groq API Key Compromised
+
 - **Expires**: January 24, 2026 (3 days!)
 - **Impact**: All AI features will stop working
 - **Time**: 10 minutes
 
-### Issue 2: Supabase Security Warnings  
+### Issue 2: Supabase Security Warnings
+
 - **Status**: 18 errors detected
 - **Impact**: Database potentially exposed
 - **Time**: 5 minutes to review + fixes as needed
@@ -47,7 +49,7 @@
 5. **Paste new key** (⌘+V / Ctrl+V)
 6. **Verify all 3 environments are checked**:
    - ✅ Production
-   - ✅ Preview  
+   - ✅ Preview
    - ✅ Development
 7. **Click "Save"**
 8. **Wait for "Redeploying..."** message (~30 seconds)
@@ -80,6 +82,7 @@
 ### STEP 5: Test Everything Works (3 minutes)
 
 **Local Test**:
+
 ```bash
 # In VS Code terminal
 npm run dev
@@ -90,6 +93,7 @@ npm run dev
 ```
 
 **Production Test** (after Vercel redeploys - ~2 min):
+
 ```
 # Open: https://eccco.vercel.app/evidence-search
 # Search: "management of septic shock"
@@ -108,22 +112,23 @@ npm run dev
 4. **Share with me** so I can help create fixes
 
 **Common issues** (we'll fix together):
+
 - Row Level Security (RLS) not enabled
-- Missing auth policies  
+- Missing auth policies
 - Public table access
 
 ---
 
 ## ⏱️ Timeline
 
-| Step | Action | Time | When |
-|------|--------|------|------|
-| 1 | Create new Groq key | 3 min | NOW |
-| 2 | Update Vercel | 2 min | NOW |
-| 3 | Update .env.local | 1 min | NOW |
-| 4 | Revoke old key | 1 min | NOW |
-| 5 | Test | 3 min | After steps 1-4 |
-| 6 | Supabase review | 5 min | After step 5 |
+| Step | Action              | Time  | When            |
+| ---- | ------------------- | ----- | --------------- |
+| 1    | Create new Groq key | 3 min | NOW             |
+| 2    | Update Vercel       | 2 min | NOW             |
+| 3    | Update .env.local   | 1 min | NOW             |
+| 4    | Revoke old key      | 1 min | NOW             |
+| 5    | Test                | 3 min | After steps 1-4 |
+| 6    | Supabase review     | 5 min | After step 5    |
 
 **Total**: ~15 minutes
 
@@ -132,15 +137,17 @@ npm run dev
 ## ✅ Success Checklist
 
 ### Groq API Key Fixed
+
 - [ ] New key created in Groq console
 - [ ] Vercel `GROQ_API_KEY` updated
-- [ ] Local `.env.local` updated  
+- [ ] Local `.env.local` updated
 - [ ] Old key revoked in Groq
 - [ ] Local dev works (AI synthesis shows)
 - [ ] Production works (AI synthesis shows)
 - [ ] Journal links are blue and clickable
 
 ### Supabase Review Started
+
 - [ ] Opened Security Advisor
 - [ ] Reviewed 18 errors
 - [ ] Documented error types
@@ -151,15 +158,17 @@ npm run dev
 ## 🎯 What You Should See After Fix
 
 ### Before (Current - Broken)
+
 ```
 Evidence Search Results:
 Summary: AI synthesis temporarily unavailable. Please check back soon.
 ```
 
 ### After (Fixed - Working)
+
 ```
 Evidence Search Results:
-Summary: The management of septic shock is complex, with guidelines 
+Summary: The management of septic shock is complex, with guidelines
 from the Surviving Sepsis Campaign published in [Critical Care Medicine]
 suggesting early recognition and treatment. Studies in [NEJM] and [JAMA]
 have shown that...
@@ -171,23 +180,28 @@ have shown that...
 ## 🆘 If You Get Stuck
 
 ### Groq Console Won't Load
+
 - Try: https://groq.com → Login → API Keys
 - Or: Clear browser cache and retry
 
 ### Can't Find Vercel Environment Variable
+
 - Search: Type "GROQ" in the search box (top of env vars list)
 - Or: Scroll down - it's alphabetically sorted
 
 ### Vercel Won't Save
+
 - Check: All required fields filled
 - Check: Environment checkboxes are checked
 - Refresh page and try again
 
 ### Old Key Still Works
+
 - Wait 5 minutes - revocation takes time
 - Check: You revoked the right key (ends in `...C3te`)
 
 ### Test Fails
+
 - Check: Vercel deployment finished (green checkmark)
 - Check: Browser cache - try incognito/private window
 - Check: `.env.local` saved correctly
@@ -197,11 +211,13 @@ have shown that...
 ## 📞 Support
 
 **If you need help during this process**:
+
 1. **Share screenshots** of any errors
 2. **Tell me which step** you're on
 3. **Describe what happened** vs what you expected
 
 **After you're done**:
+
 1. **Confirm**: "Groq API key updated ✅"
 2. **Share**: Supabase Security Advisor screenshots
 3. **We'll**: Fix the 18 Supabase errors together
@@ -216,19 +232,22 @@ have shown that...
 
 **Groq's Response**: Proactive warning with 3-day grace period to fix
 
-**Lesson Learned**: 
+**Lesson Learned**:
+
 - ✅ Always use placeholders in docs
 - ✅ Never commit real secrets
 - ✅ Use git-secrets to prevent this
 - ✅ Keep `.env.local` in `.gitignore`
 
 **We've now fixed**:
+
 - ✅ Removed all exposed secrets from docs
 - ✅ Added security audit script
 - ✅ Ensured `.env.local` in `.gitignore`
 - ✅ Created prevention measures
 
 **You need to**:
+
 - ⏳ Create new API keys
 - ⏳ Update all environments
 - ⏳ Revoke old keys

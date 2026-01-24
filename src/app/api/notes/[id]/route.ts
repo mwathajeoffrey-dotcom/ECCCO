@@ -3,10 +3,7 @@ import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 // PATCH - Update an existing note
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { userId } = await auth();
 
@@ -36,10 +33,7 @@ export async function PATCH(
     });
 
     if (!existingNote) {
-      return NextResponse.json(
-        { error: "Note not found or unauthorized" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Note not found or unauthorized" }, { status: 404 });
     }
 
     // Update note
@@ -58,18 +52,12 @@ export async function PATCH(
     return NextResponse.json(updatedNote);
   } catch (error) {
     console.error("Error updating note:", error);
-    return NextResponse.json(
-      { error: "Failed to update note" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update note" }, { status: 500 });
   }
 }
 
 // DELETE - Delete a note
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { userId } = await auth();
 
@@ -97,10 +85,7 @@ export async function DELETE(
     });
 
     if (!existingNote) {
-      return NextResponse.json(
-        { error: "Note not found or unauthorized" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Note not found or unauthorized" }, { status: 404 });
     }
 
     // Delete note
@@ -111,9 +96,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting note:", error);
-    return NextResponse.json(
-      { error: "Failed to delete note" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete note" }, { status: 500 });
   }
 }

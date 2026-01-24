@@ -9,6 +9,7 @@
 ## 📋 Quick Overview
 
 You need to run SQL commands in Supabase to create 2 tables:
+
 1. **`User`** table - Stores user information
 2. **`UserNote`** table - Stores clinical notes
 
@@ -34,7 +35,8 @@ You need to run SQL commands in Supabase to create 2 tables:
 3. Click the **"+ New query"** button (top right)
 4. You'll see a blank SQL editor
 
-> 💡 **What you'll see:** 
+> 💡 **What you'll see:**
+>
 > - Top: "New query" tab
 > - Middle: Large text area for SQL
 > - Bottom right: Green "Run" button
@@ -49,8 +51,8 @@ Before creating tables, let's see what's already there:
 
 ```sql
 -- Check what tables exist
-SELECT table_name 
-FROM information_schema.tables 
+SELECT table_name
+FROM information_schema.tables
 WHERE table_schema = 'public'
 ORDER BY table_name;
 ```
@@ -60,6 +62,7 @@ ORDER BY table_name;
 4. Look at the results below
 
 **What to look for:**
+
 - ✅ If you see `User` table → Good! Skip to Step 5
 - ✅ If you see `UserNote` table → Good! Skip to Step 5
 - ❌ If you DON'T see either → Continue to Step 4
@@ -81,10 +84,13 @@ If you saw **NO tables** or neither `User` nor `UserNote` in Step 3:
 5. Wait 2-3 seconds
 
 **Expected Result:**
+
 ```
 Success. No rows returned
 ```
+
 or
+
 ```
 CREATE TABLE
 CREATE TABLE
@@ -104,7 +110,7 @@ If you saw `UserNote` table in Step 3, but it's missing new columns:
 
 ```sql
 -- Add new clinical notes columns
-ALTER TABLE "UserNote" 
+ALTER TABLE "UserNote"
   ADD COLUMN IF NOT EXISTS "searchQuery" TEXT,
   ADD COLUMN IF NOT EXISTS "evidenceSummary" TEXT,
   ADD COLUMN IF NOT EXISTS "specialty" TEXT,
@@ -112,10 +118,10 @@ ALTER TABLE "UserNote"
   ADD COLUMN IF NOT EXISTS "version" INTEGER DEFAULT 1;
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx" 
+CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx"
   ON "UserNote"("searchQuery");
-  
-CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx" 
+
+CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx"
   ON "UserNote"("specialty");
 ```
 
@@ -123,6 +129,7 @@ CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx"
 3. Click **"Run"**
 
 **Expected Result:**
+
 ```
 ALTER TABLE
 CREATE INDEX
@@ -141,7 +148,7 @@ Let's confirm everything is set up correctly:
 ```sql
 -- Check UserNote table structure
 SELECT column_name, data_type, is_nullable
-FROM information_schema.columns 
+FROM information_schema.columns
 WHERE table_name = 'UserNote'
 ORDER BY ordinal_position;
 ```
@@ -149,25 +156,25 @@ ORDER BY ordinal_position;
 3. Click **"Run"**
 4. **Check the results** - you should see **14 rows** with these columns:
 
-| column_name | data_type | is_nullable |
-|-------------|-----------|-------------|
-| id | text | NO |
-| userId | text | NO |
-| title | text | YES |
-| content | text | NO |
-| questionId | text | YES |
-| questionText | text | YES |
-| category | text | YES |
-| searchQuery | text | YES |
-| evidenceSummary | text | YES |
-| specialty | text | YES |
-| patientContext | text | YES |
-| tags | ARRAY | YES |
-| version | integer | NO |
-| createdAt | timestamp... | NO |
-| updatedAt | timestamp... | NO |
+| column_name     | data_type    | is_nullable |
+| --------------- | ------------ | ----------- |
+| id              | text         | NO          |
+| userId          | text         | NO          |
+| title           | text         | YES         |
+| content         | text         | NO          |
+| questionId      | text         | YES         |
+| questionText    | text         | YES         |
+| category        | text         | YES         |
+| searchQuery     | text         | YES         |
+| evidenceSummary | text         | YES         |
+| specialty       | text         | YES         |
+| patientContext  | text         | YES         |
+| tags            | ARRAY        | YES         |
+| version         | integer      | NO          |
+| createdAt       | timestamp... | NO          |
+| updatedAt       | timestamp... | NO          |
 
-> ✅ **If you see all 14 columns:** Perfect! Database is ready!  
+> ✅ **If you see all 14 columns:** Perfect! Database is ready!
 > ❌ **If you see fewer columns:** Some are missing, go back to Step 4B
 
 ---
@@ -220,11 +227,13 @@ Now test that Clinical Notes can save data:
 9. Click **"Save Note"**
 
 **Expected Results:**
+
 - ✅ See: "Clinical note saved successfully!" message
 - ✅ Modal closes automatically
 - ✅ NO error in browser console (press F12 to check)
 
 **Then verify it saved:**
+
 1. Click **"Clinical Notes"** in Resources menu
 2. You should see your test note in the list!
 3. Click to expand it - all fields should be visible
@@ -277,28 +286,37 @@ Now test that Clinical Notes can save data:
 ## ❓ Troubleshooting
 
 ### **Problem: "Run" button is greyed out**
+
 **Solution:** Make sure you've pasted SQL into the editor area
 
 ### **Problem: "permission denied for table"**
-**Solution:** 
+
+**Solution:**
+
 1. You might not be the project owner
 2. Go to Settings → Database → Connection string
 3. Make sure you're using the correct project
 
 ### **Problem: "relation UserNote already exists"**
-**Solution:** 
+
+**Solution:**
+
 - Table already exists! This is good
 - Skip to Step 5 to verify columns
 - Or use Option B to add missing columns
 
 ### **Problem: Can't find SQL Editor**
+
 **Solution:**
+
 - Look for `</>` icon in left sidebar
 - Might be labeled "SQL" or "SQL Editor"
 - Try scrolling down the sidebar
 
 ### **Problem: Query returns 0 rows in Step 5**
+
 **Solution:**
+
 - Tables weren't created
 - Go back to Step 4
 - Make sure you clicked "Run" after pasting SQL
@@ -352,8 +370,8 @@ CREATE TABLE IF NOT EXISTS "UserNote" (
   "version" INTEGER NOT NULL DEFAULT 1,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT "UserNote_userId_fkey" 
-    FOREIGN KEY ("userId") REFERENCES "User"("id") 
+  CONSTRAINT "UserNote_userId_fkey"
+    FOREIGN KEY ("userId") REFERENCES "User"("id")
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -370,14 +388,14 @@ CREATE INDEX IF NOT EXISTS "UserNote_createdAt_idx" ON "UserNote"("createdAt");
 
 ## ⏱️ Timeline
 
-| Step | Time | What You're Doing |
-|------|------|-------------------|
-| 1-2  | 30 sec | Open Supabase & SQL Editor |
-| 3    | 30 sec | Check existing tables |
-| 4    | 1-2 min | Run table creation SQL |
-| 5    | 30 sec | Verify columns exist |
-| 6    | 1 min | Test in production |
-| **Total** | **5-10 min** | **Complete setup** |
+| Step      | Time         | What You're Doing          |
+| --------- | ------------ | -------------------------- |
+| 1-2       | 30 sec       | Open Supabase & SQL Editor |
+| 3         | 30 sec       | Check existing tables      |
+| 4         | 1-2 min      | Run table creation SQL     |
+| 5         | 30 sec       | Verify columns exist       |
+| 6         | 1 min        | Test in production         |
+| **Total** | **5-10 min** | **Complete setup**         |
 
 ---
 
@@ -398,12 +416,14 @@ If you get stuck:
 After completing this guide:
 
 ✅ **In Supabase:**
+
 - User table exists with 5 columns
 - UserNote table exists with 14 columns
 - Indexes created for performance
 - Can view tables in Table Editor
 
 ✅ **In Production (eccco.vercel.app):**
+
 - Can search for evidence
 - "Take Clinical Notes" button appears
 - Can save notes (no errors)
@@ -411,6 +431,7 @@ After completing this guide:
 - Can edit/delete notes
 
 ✅ **No More Errors:**
+
 - ❌ NO "relation UserNote does not exist"
 - ❌ NO "500 Internal Server Error"
 - ❌ NO "Failed to save note"
@@ -425,6 +446,7 @@ Once you see your test note in the Clinical Notes page, everything is working pe
 **Clinical Notes is now live and ready for real use!** 🎉
 
 Users can:
+
 - Save notes during evidence searches
 - Organize by specialty and tags
 - Link notes to specific questions
@@ -432,4 +454,3 @@ Users can:
 - Edit and delete as needed
 
 **Great job!** 🌟
-

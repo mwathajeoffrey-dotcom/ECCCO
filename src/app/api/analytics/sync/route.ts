@@ -1,6 +1,6 @@
-import { logger } from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma-client";
 
 /**
  * GET /api/analytics/sync?sessionId=xxx
@@ -9,13 +9,10 @@ import { prisma } from '@/lib/database/prisma-client';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get('sessionId');
+    const sessionId = searchParams.get("sessionId");
 
     if (!sessionId) {
-      return NextResponse.json(
-        { error: 'sessionId is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
     }
 
     // Check database availability
@@ -25,15 +22,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         success: true,
         sessions: [],
-        message: 'Database unavailable, using local data only',
-        storageMode: 'local'
+        message: "Database unavailable, using local data only",
+        storageMode: "local",
       });
     }
 
     // Get sessions for this sessionId
     const sessions = await prisma.examSession.findMany({
       where: { sessionId },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
 
     const processedSessions = sessions.map((session: any) => ({
@@ -48,25 +45,27 @@ export async function GET(request: NextRequest) {
       correctAnswers: session.correctAnswers,
       timeSpent: session.timeSpent || session.totalTime,
       completedAt: session.completedAt || session.createdAt,
-      metadata: session.metadata ? JSON.parse(session.metadata as string) : {}
+      metadata: session.metadata ? JSON.parse(session.metadata as string) : {},
     }));
 
     return NextResponse.json({
       success: true,
       sessions: processedSessions,
       count: processedSessions.length,
-      storageMode: 'database'
+      storageMode: "database",
     });
-
   } catch (error) {
-    logger.error('[Analytics Sync API] Error:', error instanceof Error ? error : new Error(String(error)));
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      sessions: [],
-      storageMode: 'local'
-    }, { status: 500 });
+    logger.error("[Analytics Sync API] Error:", error instanceof Error ? error : new Error(String(error)));
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+        sessions: [],
+        storageMode: "local",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -76,8 +75,8 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    logger.debug('[Analytics Sync API] Database unavailable', { 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    logger.debug("[Analytics Sync API] Database unavailable", {
+      error: error instanceof Error ? error.message : "Unknown error",
     });
     return false;
   } finally {

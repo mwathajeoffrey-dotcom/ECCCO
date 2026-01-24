@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
 /**
  * Enhanced Analytics Dashboard Component
  * Advanced analytics visualization with PALS-specific insights
  */
 
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { 
-  TrendingUp, 
-  Target, 
-  Clock, 
-  Brain, 
-  AlertTriangle, 
+import React, { useState, useEffect } from "react";
+import { logger } from "@/lib/logger";
+import {
+  TrendingUp,
+  Target,
+  Clock,
+  Brain,
+  AlertTriangle,
   CheckCircle,
   BarChart3,
   PieChart,
   Calendar,
   BookOpen,
   Award,
-  Lightbulb
-} from 'lucide-react';
-import { enhancedAnalytics, EnhancedAnalytics } from '@/lib/analytics/enhanced-analytics';
+  Lightbulb,
+} from "lucide-react";
+import { enhancedAnalytics, EnhancedAnalytics } from "@/lib/analytics/enhanced-analytics";
 
 export const EnhancedAnalyticsDashboard: React.FC = () => {
   const [analytics, setAnalytics] = useState<EnhancedAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'difficulty' | 'topics' | 'patterns' | 'path'>('overview');
+  const [activeTab, setActiveTab] = useState<"overview" | "difficulty" | "topics" | "patterns" | "path">("overview");
 
   useEffect(() => {
     const loadAnalytics = async () => {
@@ -34,7 +34,7 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
         const data = await enhancedAnalytics.generateEnhancedAnalytics();
         setAnalytics(data);
       } catch (error) {
-        logger.error('Failed to load enhanced analytics', error instanceof Error ? error : new Error('Unknown error'));
+        logger.error("Failed to load enhanced analytics", error instanceof Error ? error : new Error("Unknown error"));
       } finally {
         setLoading(false);
       }
@@ -63,11 +63,11 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
   }
 
   const tabConfig = [
-    { key: 'overview', label: 'Overview', icon: BarChart3 },
-    { key: 'difficulty', label: 'Difficulty Analysis', icon: Target },
-    { key: 'topics', label: 'Topic Breakdown', icon: BookOpen },
-    { key: 'patterns', label: 'Mistake Patterns', icon: AlertTriangle },
-    { key: 'path', label: 'Learning Path', icon: Brain }
+    { key: "overview", label: "Overview", icon: BarChart3 },
+    { key: "difficulty", label: "Difficulty Analysis", icon: Target },
+    { key: "topics", label: "Topic Breakdown", icon: BookOpen },
+    { key: "patterns", label: "Mistake Patterns", icon: AlertTriangle },
+    { key: "path", label: "Learning Path", icon: Brain },
   ];
 
   return (
@@ -88,8 +88,8 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
                 onClick={() => setActiveTab(tab.key as any)}
                 className={`${
                   activeTab === tab.key
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 } whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2`}
               >
                 <Icon className="h-4 w-4" />
@@ -102,11 +102,11 @@ export const EnhancedAnalyticsDashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className="min-h-[600px]">
-        {activeTab === 'overview' && <OverviewTab analytics={analytics} />}
-        {activeTab === 'difficulty' && <DifficultyAnalysisTab analytics={analytics} />}
-        {activeTab === 'topics' && <TopicBreakdownTab analytics={analytics} />}
-        {activeTab === 'patterns' && <MistakePatternsTab analytics={analytics} />}
-        {activeTab === 'path' && <LearningPathTab analytics={analytics} />}
+        {activeTab === "overview" && <OverviewTab analytics={analytics} />}
+        {activeTab === "difficulty" && <DifficultyAnalysisTab analytics={analytics} />}
+        {activeTab === "topics" && <TopicBreakdownTab analytics={analytics} />}
+        {activeTab === "patterns" && <MistakePatternsTab analytics={analytics} />}
+        {activeTab === "path" && <LearningPathTab analytics={analytics} />}
       </div>
     </div>
   );
@@ -159,11 +159,15 @@ const OverviewTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics }) 
                 <span className="text-sm text-gray-600 ml-2">({trend.date})</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  trend.difficulty === 'hard' ? 'bg-red-100 text-red-800' :
-                  trend.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${
+                    trend.difficulty === "hard"
+                      ? "bg-red-100 text-red-800"
+                      : trend.difficulty === "medium"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   {trend.difficulty}
                 </span>
                 <span className="font-bold text-lg">{trend.score}%</span>
@@ -185,11 +189,15 @@ const OverviewTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics }) 
                   <p className="text-sm text-gray-600 mt-1">{rec.description}</p>
                   <p className="text-sm text-blue-600 mt-2">{rec.action}</p>
                 </div>
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  rec.priority === 'high' ? 'bg-red-100 text-red-800' :
-                  rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${
+                    rec.priority === "high"
+                      ? "bg-red-100 text-red-800"
+                      : rec.priority === "medium"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   {rec.priority}
                 </span>
               </div>
@@ -207,21 +215,25 @@ const DifficultyAnalysisTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ ana
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">Performance by Difficulty Level</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {analytics.difficultyAnalysis.map((difficulty) => (
             <div key={difficulty.difficulty} className="border rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
-                <h4 className={`font-semibold text-lg capitalize ${
-                  difficulty.difficulty === 'easy' ? 'text-green-600' :
-                  difficulty.difficulty === 'medium' ? 'text-yellow-600' :
-                  'text-red-600'
-                }`}>
+                <h4
+                  className={`font-semibold text-lg capitalize ${
+                    difficulty.difficulty === "easy"
+                      ? "text-green-600"
+                      : difficulty.difficulty === "medium"
+                      ? "text-yellow-600"
+                      : "text-red-600"
+                  }`}
+                >
                   {difficulty.difficulty}
                 </h4>
                 <span className="text-2xl font-bold">{difficulty.accuracy}%</span>
               </div>
-              
+
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Questions Attempted:</span>
@@ -263,11 +275,15 @@ const DifficultyAnalysisTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ ana
             <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
               <div>
                 <span className="font-medium text-gray-900">{question.questionType}</span>
-                <span className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
-                  question.difficulty === 'hard' ? 'bg-red-100 text-red-800' :
-                  question.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span
+                  className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
+                    question.difficulty === "hard"
+                      ? "bg-red-100 text-red-800"
+                      : question.difficulty === "medium"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   {question.difficulty}
                 </span>
               </div>
@@ -292,28 +308,43 @@ const TopicBreakdownTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analyti
                 <h3 className="text-lg font-semibold text-gray-900">{topic.topicName}</h3>
                 <div className="flex items-center gap-4 mt-2">
                   <span className="text-2xl font-bold">{topic.overallAccuracy}%</span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    topic.masteryLevel === 'expert' ? 'bg-purple-100 text-purple-800' :
-                    topic.masteryLevel === 'advanced' ? 'bg-blue-100 text-blue-800' :
-                    topic.masteryLevel === 'intermediate' ? 'bg-green-100 text-green-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      topic.masteryLevel === "expert"
+                        ? "bg-purple-100 text-purple-800"
+                        : topic.masteryLevel === "advanced"
+                        ? "bg-blue-100 text-blue-800"
+                        : topic.masteryLevel === "intermediate"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
                     {topic.masteryLevel}
                   </span>
                 </div>
               </div>
-              <div className={`p-2 rounded-full ${
-                topic.timeEfficiency === 'excellent' ? 'bg-green-100' :
-                topic.timeEfficiency === 'good' ? 'bg-blue-100' :
-                topic.timeEfficiency === 'needs-improvement' ? 'bg-yellow-100' :
-                'bg-red-100'
-              }`}>
-                <Clock className={`h-5 w-5 ${
-                  topic.timeEfficiency === 'excellent' ? 'text-green-600' :
-                  topic.timeEfficiency === 'good' ? 'text-blue-600' :
-                  topic.timeEfficiency === 'needs-improvement' ? 'text-yellow-600' :
-                  'text-red-600'
-                }`} />
+              <div
+                className={`p-2 rounded-full ${
+                  topic.timeEfficiency === "excellent"
+                    ? "bg-green-100"
+                    : topic.timeEfficiency === "good"
+                    ? "bg-blue-100"
+                    : topic.timeEfficiency === "needs-improvement"
+                    ? "bg-yellow-100"
+                    : "bg-red-100"
+                }`}
+              >
+                <Clock
+                  className={`h-5 w-5 ${
+                    topic.timeEfficiency === "excellent"
+                      ? "text-green-600"
+                      : topic.timeEfficiency === "good"
+                      ? "text-blue-600"
+                      : topic.timeEfficiency === "needs-improvement"
+                      ? "text-yellow-600"
+                      : "text-red-600"
+                  }`}
+                />
               </div>
             </div>
 
@@ -355,7 +386,7 @@ const MistakePatternsTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analyt
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">Identified Mistake Patterns</h3>
-        
+
         {analytics.mistakePatterns.length === 0 ? (
           <div className="text-center py-8">
             <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-4" />
@@ -365,33 +396,42 @@ const MistakePatternsTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analyt
         ) : (
           <div className="space-y-4">
             {analytics.mistakePatterns.map((pattern, index) => (
-              <div key={index} className={`border-l-4 pl-4 ${
-                pattern.severity === 'high' ? 'border-red-500' :
-                pattern.severity === 'medium' ? 'border-yellow-500' :
-                'border-green-500'
-              }`}>
+              <div
+                key={index}
+                className={`border-l-4 pl-4 ${
+                  pattern.severity === "high"
+                    ? "border-red-500"
+                    : pattern.severity === "medium"
+                    ? "border-yellow-500"
+                    : "border-green-500"
+                }`}
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h4 className="font-medium text-gray-900">{pattern.pattern}</h4>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        pattern.severity === 'high' ? 'bg-red-100 text-red-800' :
-                        pattern.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${
+                          pattern.severity === "high"
+                            ? "bg-red-100 text-red-800"
+                            : pattern.severity === "medium"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
+                      >
                         {pattern.severity} severity
                       </span>
                     </div>
-                    
+
                     <div className="mb-3">
                       <p className="text-sm text-gray-600 mb-1">
                         <strong>Frequency:</strong> {pattern.frequency}% of attempts
                       </p>
                       <p className="text-sm text-gray-600">
-                        <strong>Affected topics:</strong> {pattern.affectedTopics.join(', ')}
+                        <strong>Affected topics:</strong> {pattern.affectedTopics.join(", ")}
                       </p>
                     </div>
-                    
+
                     <div className="bg-blue-50 p-3 rounded">
                       <p className="text-sm text-blue-800">
                         <strong>Recommendation:</strong> {pattern.recommendation}
@@ -438,7 +478,7 @@ const LearningPathTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics
       {/* Current Status */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Learning Journey</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -447,7 +487,7 @@ const LearningPathTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics
             <h4 className="font-medium text-gray-900">Current Level</h4>
             <p className="text-lg font-bold text-blue-600">{analytics.learningPath.currentLevel}</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <Target className="h-8 w-8 text-green-600" />
@@ -455,7 +495,7 @@ const LearningPathTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics
             <h4 className="font-medium text-gray-900">Next Milestone</h4>
             <p className="text-sm text-green-600 font-medium">{analytics.learningPath.nextMilestone}</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <Clock className="h-8 w-8 text-purple-600" />
@@ -469,18 +509,22 @@ const LearningPathTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics
       {/* Priority Topics */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Priority Focus Areas</h3>
-        
+
         <div className="space-y-4">
           {analytics.learningPath.priorityTopics.map((topic, index) => (
             <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h4 className="font-medium text-gray-900">{topic.topicName}</h4>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    topic.priority === 'high' ? 'bg-red-100 text-red-800' :
-                    topic.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-green-100 text-green-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      topic.priority === "high"
+                        ? "bg-red-100 text-red-800"
+                        : topic.priority === "medium"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
                     {topic.priority} priority
                   </span>
                 </div>
@@ -498,16 +542,20 @@ const LearningPathTab: React.FC<{ analytics: EnhancedAnalytics }> = ({ analytics
       {/* Customized Questions */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Recommended Question Mix</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {analytics.learningPath.customizedQuestions.map((question, index) => (
             <div key={index} className="p-4 border rounded-lg text-center">
               <h4 className="font-medium text-gray-900 mb-2">{question.questionType}</h4>
-              <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-2 ${
-                question.difficulty === 'hard' ? 'bg-red-100 text-red-800' :
-                question.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                'bg-green-100 text-green-800'
-              }`}>
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-2 ${
+                  question.difficulty === "hard"
+                    ? "bg-red-100 text-red-800"
+                    : question.difficulty === "medium"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-green-100 text-green-800"
+                }`}
+              >
                 {question.difficulty}
               </div>
               <p className="text-2xl font-bold text-blue-600">{question.count}</p>
@@ -525,14 +573,14 @@ const MetricCard: React.FC<{
   title: string;
   value: string;
   icon: React.ComponentType<any>;
-  color: 'blue' | 'green' | 'purple' | 'orange';
+  color: "blue" | "green" | "purple" | "orange";
   subtitle: string;
 }> = ({ title, value, icon: Icon, color, subtitle }) => {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600',
-    green: 'bg-green-100 text-green-600',
-    purple: 'bg-purple-100 text-purple-600',
-    orange: 'bg-orange-100 text-orange-600'
+    blue: "bg-blue-100 text-blue-600",
+    green: "bg-green-100 text-green-600",
+    purple: "bg-purple-100 text-purple-600",
+    orange: "bg-orange-100 text-orange-600",
   };
 
   return (

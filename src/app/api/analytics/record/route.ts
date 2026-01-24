@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { ExamSession } from "@/lib/analytics/analytics-v2";
@@ -78,10 +78,9 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    logger.debug(
-      "[Analytics API] Database connection failed",
-      { error: error instanceof Error ? error.message : "Unknown error" }
-    );
+    logger.debug("[Analytics API] Database connection failed", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
     return false;
   } finally {
     await prisma.$disconnect();

@@ -4,11 +4,11 @@
  * Allows triggering from anywhere in the app
  */
 
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { CommandPalette } from '@/components/ui/command-palette';
-import { logger } from '@/lib/services/logger';
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { CommandPalette } from "@/components/ui/command-palette";
+import { logger } from "@/lib/services/logger";
 
 interface CommandPaletteContextType {
   isOpen: boolean;
@@ -22,7 +22,7 @@ const CommandPaletteContext = createContext<CommandPaletteContextType | undefine
 export function useCommandPalette() {
   const context = useContext(CommandPaletteContext);
   if (!context) {
-    throw new Error('useCommandPalette must be used within CommandPaletteProvider');
+    throw new Error("useCommandPalette must be used within CommandPaletteProvider");
   }
   return context;
 }
@@ -35,12 +35,12 @@ export function CommandPaletteProvider({ children }: CommandPaletteProviderProps
   const [isOpen, setIsOpen] = useState(false);
 
   const open = useCallback(() => {
-    logger.debug('Opening command palette');
+    logger.debug("Opening command palette");
     setIsOpen(true);
   }, []);
 
   const close = useCallback(() => {
-    logger.debug('Closing command palette');
+    logger.debug("Closing command palette");
     setIsOpen(false);
   }, []);
 
@@ -51,14 +51,14 @@ export function CommandPaletteProvider({ children }: CommandPaletteProviderProps
   // Global keyboard shortcut (Cmd+K / Ctrl+K)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         toggle();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [toggle]);
 
   return (

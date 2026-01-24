@@ -1,6 +1,6 @@
-import { logger } from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database/prisma-client';
+import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database/prisma-client";
 
 /**
  * GET /api/analytics/dashboard
@@ -9,7 +9,7 @@ import { prisma } from '@/lib/database/prisma-client';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get('sessionId');
+    const sessionId = searchParams.get("sessionId");
 
     // Check database availability
     const isDatabaseAvailable = await checkDatabaseConnection();
@@ -24,26 +24,26 @@ export async function GET(request: NextRequest) {
           totalCorrect: 0,
           averageScore: 0,
           totalTimeSpent: 0,
-          strongestTopic: { name: 'Complete an exam to see your strongest topic', score: 0 },
-          weakestTopic: { name: 'Complete an exam to see improvement areas', score: 0 },
+          strongestTopic: { name: "Complete an exam to see your strongest topic", score: 0 },
+          weakestTopic: { name: "Complete an exam to see improvement areas", score: 0 },
           recentSessions: [],
           topicPerformance: [],
-          lastUpdated: new Date()
+          lastUpdated: new Date(),
         },
-        storageMode: 'local',
-        message: 'Using local analytics data'
+        storageMode: "local",
+        message: "Using local analytics data",
       });
     }
 
     // Query database for session data
-    const sessions = sessionId 
+    const sessions = sessionId
       ? await prisma.examSession.findMany({
           where: { sessionId },
-          orderBy: { createdAt: 'desc' }
+          orderBy: { createdAt: "desc" },
         })
       : await prisma.examSession.findMany({
-          orderBy: { createdAt: 'desc' },
-          take: 100 // Limit to recent sessions
+          orderBy: { createdAt: "desc" },
+          take: 100, // Limit to recent sessions
         });
 
     // Process sessions into analytics summary
@@ -52,18 +52,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: analytics,
-      storageMode: 'database',
-      sessionCount: sessions.length
+      storageMode: "database",
+      sessionCount: sessions.length,
     });
-
   } catch (error) {
-    logger.error('[Analytics Dashboard API] Error:', error instanceof Error ? error : new Error(String(error)));
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      data: getEmptyAnalytics()
-    }, { status: 500 });
+    logger.error("[Analytics Dashboard API] Error:", error instanceof Error ? error : new Error(String(error)));
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+        data: getEmptyAnalytics(),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -79,7 +81,10 @@ function processSessionsToAnalytics(sessions: any[]) {
   const totalTimeSpent = sessions.reduce((sum: number, s: any) => sum + (s.timeSpent || s.totalTime || 0), 0);
 
   // Calculate topic performance
-  const topicStats = new Map<string, { name: string; sessions: number; totalQuestions: number; correctAnswers: number; scores: number[] }>();
+  const topicStats = new Map<
+    string,
+    { name: string; sessions: number; totalQuestions: number; correctAnswers: number; scores: number[] }
+  >();
 
   sessions.forEach((session: any) => {
     const key = session.topicId;
@@ -89,7 +94,7 @@ function processSessionsToAnalytics(sessions: any[]) {
         sessions: 0,
         totalQuestions: 0,
         correctAnswers: 0,
-        scores: []
+        scores: [],
       });
     }
     const stats = topicStats.get(key)!;
@@ -105,13 +110,13 @@ function processSessionsToAnalytics(sessions: any[]) {
     sessions: stats.sessions,
     averageScore: Math.round(stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length),
     totalQuestions: stats.totalQuestions,
-    correctAnswers: stats.correctAnswers
+    correctAnswers: stats.correctAnswers,
   }));
 
   // Find strongest and weakest topics
   const sortedTopics = topicPerformance.sort((a, b) => b.averageScore - a.averageScore);
-  const strongestTopic = sortedTopics[0] || { topicName: 'N/A', averageScore: 0 };
-  const weakestTopic = sortedTopics[sortedTopics.length - 1] || { topicName: 'N/A', averageScore: 0 };
+  const strongestTopic = sortedTopics[0] || { topicName: "N/A", averageScore: 0 };
+  const weakestTopic = sortedTopics[sortedTopics.length - 1] || { topicName: "N/A", averageScore: 0 };
 
   return {
     totalSessions,
@@ -130,10 +135,10 @@ function processSessionsToAnalytics(sessions: any[]) {
       totalQuestions: s.totalQuestions,
       correctAnswers: s.correctAnswers,
       timeSpent: s.timeSpent || s.totalTime || 0,
-      completedAt: s.completedAt || s.createdAt
+      completedAt: s.completedAt || s.createdAt,
     })),
     topicPerformance,
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
   };
 }
 
@@ -144,11 +149,11 @@ function getEmptyAnalytics() {
     totalCorrect: 0,
     averageScore: 0,
     totalTimeSpent: 0,
-    strongestTopic: { name: 'Complete an exam to see your strongest topic', score: 0 },
-    weakestTopic: { name: 'Complete an exam to see improvement areas', score: 0 },
+    strongestTopic: { name: "Complete an exam to see your strongest topic", score: 0 },
+    weakestTopic: { name: "Complete an exam to see improvement areas", score: 0 },
     recentSessions: [],
     topicPerformance: [],
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
   };
 }
 
@@ -158,8 +163,8 @@ async function checkDatabaseConnection(): Promise<boolean> {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (error) {
-    logger.debug('[Analytics Dashboard API] Database unavailable', { 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    logger.debug("[Analytics Dashboard API] Database unavailable", {
+      error: error instanceof Error ? error.message : "Unknown error",
     });
     return false;
   } finally {

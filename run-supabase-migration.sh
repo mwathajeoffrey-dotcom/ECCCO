@@ -55,10 +55,10 @@ cat > /tmp/clinical_notes_migration.sql << 'EOF'
 BEGIN;
 
 -- Check and add searchQuery column
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
+        SELECT 1 FROM information_schema.columns
         WHERE table_name = 'UserNote' AND column_name = 'searchQuery'
     ) THEN
         ALTER TABLE "UserNote" ADD COLUMN "searchQuery" TEXT;
@@ -69,10 +69,10 @@ BEGIN
 END $$;
 
 -- Check and add evidenceSummary column
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
+        SELECT 1 FROM information_schema.columns
         WHERE table_name = 'UserNote' AND column_name = 'evidenceSummary'
     ) THEN
         ALTER TABLE "UserNote" ADD COLUMN "evidenceSummary" TEXT;
@@ -83,10 +83,10 @@ BEGIN
 END $$;
 
 -- Check and add specialty column
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
+        SELECT 1 FROM information_schema.columns
         WHERE table_name = 'UserNote' AND column_name = 'specialty'
     ) THEN
         ALTER TABLE "UserNote" ADD COLUMN "specialty" TEXT;
@@ -97,10 +97,10 @@ BEGIN
 END $$;
 
 -- Check and add patientContext column
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
+        SELECT 1 FROM information_schema.columns
         WHERE table_name = 'UserNote' AND column_name = 'patientContext'
     ) THEN
         ALTER TABLE "UserNote" ADD COLUMN "patientContext" TEXT;
@@ -111,10 +111,10 @@ BEGIN
 END $$;
 
 -- Check and add version column
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
+        SELECT 1 FROM information_schema.columns
         WHERE table_name = 'UserNote' AND column_name = 'version'
     ) THEN
         ALTER TABLE "UserNote" ADD COLUMN "version" INTEGER NOT NULL DEFAULT 1;
@@ -125,12 +125,12 @@ BEGIN
 END $$;
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx" 
-    ON "UserNote"("searchQuery") 
+CREATE INDEX IF NOT EXISTS "UserNote_searchQuery_idx"
+    ON "UserNote"("searchQuery")
     WHERE "searchQuery" IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx" 
-    ON "UserNote"("specialty") 
+CREATE INDEX IF NOT EXISTS "UserNote_specialty_idx"
+    ON "UserNote"("specialty")
     WHERE "specialty" IS NOT NULL;
 
 -- Update existing records to have version 1
@@ -139,10 +139,10 @@ UPDATE "UserNote" SET "version" = 1 WHERE "version" IS NULL;
 COMMIT;
 
 -- Verify the migration
-SELECT 
+SELECT
     'Column: ' || column_name || ' | Type: ' || data_type || ' | Nullable: ' || is_nullable as info
-FROM information_schema.columns 
-WHERE table_name = 'UserNote' 
+FROM information_schema.columns
+WHERE table_name = 'UserNote'
   AND column_name IN ('searchQuery', 'evidenceSummary', 'specialty', 'patientContext', 'version')
 ORDER BY column_name;
 EOF

@@ -3,17 +3,17 @@
  * Main page combining all PALS training tools and resources
  */
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Calculator, Heart, Pill, BookOpen, Target, Users, Clock, Award } from 'lucide-react';
-import Link from 'next/link';
-import { PALSDosageCalculator } from '@/components/pals/PALSDosageCalculator';
-import { PALSCPRSimulator } from '@/components/pals/PALSCPRSimulator';
-import { PALSDrugReference } from '@/components/pals/PALSDrugReference';
-import { PALSAlgorithms } from '@/components/pals/PALSAlgorithms';
+import { useState } from "react";
+import { Calculator, Heart, Pill, BookOpen, Target, Users, Clock, Award } from "lucide-react";
+import Link from "next/link";
+import { PALSDosageCalculator } from "@/components/pals/PALSDosageCalculator";
+import { PALSCPRSimulator } from "@/components/pals/PALSCPRSimulator";
+import { PALSDrugReference } from "@/components/pals/PALSDrugReference";
+import { PALSAlgorithms } from "@/components/pals/PALSAlgorithms";
 
-type ActiveTool = 'overview' | 'calculator' | 'cpr' | 'drugs' | 'algorithms';
+type ActiveTool = "overview" | "calculator" | "cpr" | "drugs" | "algorithms";
 
 interface PracticeResource {
   id: ActiveTool;
@@ -27,75 +27,75 @@ interface PracticeResource {
 
 const resources: PracticeResource[] = [
   {
-    id: 'calculator',
-    title: 'Dosage Calculator',
-    description: 'Weight-based medication calculations for pediatric emergencies',
+    id: "calculator",
+    title: "Dosage Calculator",
+    description: "Weight-based medication calculations for pediatric emergencies",
     icon: <Calculator className="w-6 h-6" />,
     features: [
-      'Weight-based drug calculations',
-      'Maximum dose safety limits',
-      'Route-specific dosing',
-      'Real-time dose verification'
+      "Weight-based drug calculations",
+      "Maximum dose safety limits",
+      "Route-specific dosing",
+      "Real-time dose verification",
     ],
-    color: 'bg-blue-500',
-    available: true
+    color: "bg-blue-500",
+    available: true,
   },
   {
-    id: 'cpr',
-    title: 'CPR Simulator',
-    description: 'Interactive CPR training with real-time feedback',
+    id: "cpr",
+    title: "CPR Simulator",
+    description: "Interactive CPR training with real-time feedback",
     icon: <Heart className="w-6 h-6" />,
     features: [
-      'Age-specific CPR scenarios',
-      'Real-time rate feedback',
-      'Compression-to-ventilation ratios',
-      'Performance tracking'
+      "Age-specific CPR scenarios",
+      "Real-time rate feedback",
+      "Compression-to-ventilation ratios",
+      "Performance tracking",
     ],
-    color: 'bg-red-500',
-    available: true
+    color: "bg-red-500",
+    available: true,
   },
   {
-    id: 'drugs',
-    title: 'Drug Reference',
-    description: 'Comprehensive pediatric emergency medication guide',
+    id: "drugs",
+    title: "Drug Reference",
+    description: "Comprehensive pediatric emergency medication guide",
     icon: <Pill className="w-6 h-6" />,
     features: [
-      'Complete drug database',
-      'Dosing guidelines',
-      'Contraindications & side effects',
-      'Administration notes'
+      "Complete drug database",
+      "Dosing guidelines",
+      "Contraindications & side effects",
+      "Administration notes",
     ],
-    color: 'bg-green-500',
-    available: true
+    color: "bg-green-500",
+    available: true,
   },
   {
-    id: 'algorithms',
-    title: 'PALS Algorithms',
-    description: 'Interactive flowcharts for pediatric emergencies',
+    id: "algorithms",
+    title: "PALS Algorithms",
+    description: "Interactive flowcharts for pediatric emergencies",
     icon: <BookOpen className="w-6 h-6" />,
     features: [
-      'Step-by-step algorithms',
-      'Decision tree navigation',
-      'Evidence-based protocols',
-      'Quick reference cards'
+      "Step-by-step algorithms",
+      "Decision tree navigation",
+      "Evidence-based protocols",
+      "Quick reference cards",
     ],
-    color: 'bg-purple-500',
-    available: true // Now available!
-  }
+    color: "bg-purple-500",
+    available: true, // Now available!
+  },
 ];
 
 export default function PALSPracticeResources() {
-  const [activeTool, setActiveTool] = useState<ActiveTool>('overview');
+  const [activeTool, setActiveTool] = useState<ActiveTool>("overview");
 
   const renderActiveComponent = () => {
     switch (activeTool) {
-      case 'calculator':
+      case "calculator":
         return <PALSDosageCalculator />;
-      case 'cpr':
+      case "cpr":
         return <PALSCPRSimulator />;
-      case 'drugs':
+      case "drugs":
         return <PALSDrugReference />;
-      case 'algorithms':
+      case "algorithms":
         return <PALSAlgorithms />;
       default:
         return renderOverview();
@@ -111,8 +111,8 @@ export default function PALSPracticeResources() {
           <h1 className="text-4xl font-bold text-gray-900">PALS Practice Resources</h1>
         </div>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Comprehensive training tools for Pediatric Advanced Life Support. Practice critical skills, 
-          calculate dosages, and master emergency protocols with interactive simulations.
+          Comprehensive training tools for Pediatric Advanced Life Support. Practice critical skills, calculate dosages,
+          and master emergency protocols with interactive simulations.
         </p>
       </div>
 
@@ -146,9 +146,9 @@ export default function PALSPracticeResources() {
           <div
             key={resource.id}
             className={`bg-white rounded-xl shadow-lg overflow-hidden border-2 transition-all duration-300 ${
-              resource.available 
-                ? 'hover:shadow-xl hover:scale-105 cursor-pointer border-gray-200' 
-                : 'opacity-60 border-gray-100 cursor-not-allowed'
+              resource.available
+                ? "hover:shadow-xl hover:scale-105 cursor-pointer border-gray-200"
+                : "opacity-60 border-gray-100 cursor-not-allowed"
             }`}
             onClick={() => resource.available && setActiveTool(resource.id)}
           >
@@ -159,14 +159,12 @@ export default function PALSPracticeResources() {
                   <h3 className="text-xl font-bold ml-3">{resource.title}</h3>
                 </div>
                 {!resource.available && (
-                  <span className="bg-white bg-opacity-20 text-xs px-3 py-1 rounded-full">
-                    Coming Soon
-                  </span>
+                  <span className="bg-white bg-opacity-20 text-xs px-3 py-1 rounded-full">Coming Soon</span>
                 )}
               </div>
               <p className="mt-3 text-white text-opacity-90">{resource.description}</p>
             </div>
-            
+
             <div className="p-6">
               <h4 className="font-semibold text-gray-900 mb-3">Features:</h4>
               <ul className="space-y-2">
@@ -177,7 +175,7 @@ export default function PALSPracticeResources() {
                   </li>
                 ))}
               </ul>
-              
+
               {resource.available && (
                 <button
                   onClick={() => setActiveTool(resource.id)}
@@ -194,10 +192,10 @@ export default function PALSPracticeResources() {
       {/* Additional Resources */}
       <div className="bg-gray-50 rounded-xl p-8 mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Additional Learning Resources</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link 
-            href="/exam?topic=pals" 
+          <Link
+            href="/exam?topic=pals"
             className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all hover:scale-105 group relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 bg-white bg-opacity-20 text-xs px-3 py-1 rounded-bl-lg font-medium">
@@ -214,10 +212,7 @@ export default function PALSPracticeResources() {
             </div>
           </Link>
 
-          <Link 
-            href="/dashboard" 
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
+          <Link href="/dashboard" className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <Award className="w-8 h-8 text-green-600 mb-4" />
             <h3 className="font-semibold text-gray-900 mb-2">Progress Tracking</h3>
             <p className="text-sm text-gray-600">
@@ -243,8 +238,8 @@ export default function PALSPracticeResources() {
           Current Guidelines
         </h3>
         <p className="text-blue-800 text-sm mb-3">
-          All resources are based on the latest American Heart Association PALS guidelines (2020) 
-          and American Academy of Pediatrics recommendations.
+          All resources are based on the latest American Heart Association PALS guidelines (2020) and American Academy
+          of Pediatrics recommendations.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
           <div>
@@ -279,27 +274,27 @@ export default function PALSPracticeResources() {
             </Link>
 
             {/* Tool Navigation - Only show when not in overview */}
-            {activeTool !== 'overview' && (
+            {activeTool !== "overview" && (
               <nav className="hidden md:flex space-x-6">
                 <button
-                  onClick={() => setActiveTool('overview')}
+                  onClick={() => setActiveTool("overview")}
                   className="text-gray-700 hover:text-blue-600 font-medium"
                 >
                   Overview
                 </button>
-                {resources.filter(r => r.available).map((resource) => (
-                  <button
-                    key={resource.id}
-                    onClick={() => setActiveTool(resource.id)}
-                    className={`font-medium transition-colors ${
-                      activeTool === resource.id
-                        ? 'text-blue-600'
-                        : 'text-gray-700 hover:text-blue-600'
-                    }`}
-                  >
-                    {resource.title}
-                  </button>
-                ))}
+                {resources
+                  .filter((r) => r.available)
+                  .map((resource) => (
+                    <button
+                      key={resource.id}
+                      onClick={() => setActiveTool(resource.id)}
+                      className={`font-medium transition-colors ${
+                        activeTool === resource.id ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
+                      }`}
+                    >
+                      {resource.title}
+                    </button>
+                  ))}
               </nav>
             )}
           </div>
@@ -307,9 +302,7 @@ export default function PALSPracticeResources() {
       </header>
 
       {/* Main Content */}
-      <main className="py-8 px-4 sm:px-6 lg:px-8">
-        {renderActiveComponent()}
-      </main>
+      <main className="py-8 px-4 sm:px-6 lg:px-8">{renderActiveComponent()}</main>
     </div>
   );
 }

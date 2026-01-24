@@ -255,6 +255,7 @@ To keep it simple and beautiful, we removed:
 ```
 
 This verifies:
+
 - ✅ All migrations are applied
 - ✅ Database schema is in sync
 - ✅ No migration drift detected
@@ -262,16 +263,19 @@ This verifies:
 ### Migration Commands
 
 **Development** (create new migration):
+
 ```bash
 npx prisma migrate dev --name descriptive_name
 ```
 
 **Production** (apply pending migrations):
+
 ```bash
 npx prisma migrate deploy
 ```
 
 **Check Status**:
+
 ```bash
 npx prisma migrate status
 ```

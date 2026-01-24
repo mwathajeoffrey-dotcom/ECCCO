@@ -1,4 +1,4 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import { searchAllSources, type UnifiedArticle } from "@/lib/evidence/unified-search";
 import { callGroq } from "@/lib/ai/groq-client";
@@ -41,25 +41,41 @@ setInterval(() => {
 // Detect if query is drug-related
 function isDrugQuery(query: string): boolean {
   const drugKeywords = [
-    'dosing', 'dose', 'dosage', 'indication', 'contraindication',
-    'interaction', 'adverse effect', 'side effect', 'monitoring',
-    'drug', 'medication', 'pharmacology', 'therapeutic', 'treatment',
-    'mg', 'mcg', 'units', 'administration', 'route', 'frequency'
+    "dosing",
+    "dose",
+    "dosage",
+    "indication",
+    "contraindication",
+    "interaction",
+    "adverse effect",
+    "side effect",
+    "monitoring",
+    "drug",
+    "medication",
+    "pharmacology",
+    "therapeutic",
+    "treatment",
+    "mg",
+    "mcg",
+    "units",
+    "administration",
+    "route",
+    "frequency",
   ];
-  
+
   const lowerQuery = query.toLowerCase();
-  return drugKeywords.some(keyword => lowerQuery.includes(keyword));
+  return drugKeywords.some((keyword) => lowerQuery.includes(keyword));
 }
 
 // Extract drug name from query
 function extractDrugName(query: string): string | null {
   // Simple extraction - could be enhanced with NLP or drug name database
-  const words = query.split(' ');
-  
+  const words = query.split(" ");
+
   // Common drug name patterns
-  const drugIndicators = ['for', 'in', 'with', 'during', 'after', 'before'];
-  const queryWords = ['dosing', 'dose', 'indication', 'contraindication', 'interaction'];
-  
+  const drugIndicators = ["for", "in", "with", "during", "after", "before"];
+  const queryWords = ["dosing", "dose", "indication", "contraindication", "interaction"];
+
   // Find potential drug name (usually before indicators or query words)
   for (let i = 0; i < words.length; i++) {
     const word = words[i].toLowerCase();
@@ -69,7 +85,7 @@ function extractDrugName(query: string): string | null {
       }
     }
   }
-  
+
   // If no pattern found, return first word (often the drug name)
   return words[0] || null;
 }
@@ -77,9 +93,7 @@ function extractDrugName(query: string): string | null {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const clientId = request.headers.get("x-forwarded-for") || 
-                     request.headers.get("x-real-ip") || 
-                     "unknown";
+    const clientId = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
 
     if (!checkRateLimit(clientId)) {
       return NextResponse.json(
@@ -124,7 +138,7 @@ export async function POST(request: NextRequest) {
 
     // Extract drug name
     const drugName = extractDrugName(cleanQuery);
-    logger.debug(`[Drug Search] Detected drug: ${drugName || 'unknown'}`);
+    logger.debug(`[Drug Search] Detected drug: ${drugName || "unknown"}`);
 
     // Search medical databases with drug-specific filters
     logger.debug("[Drug Search] Searching medical databases...");
@@ -142,7 +156,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         query: cleanQuery,
         drugName,
-        type: 'drug',
+        type: "drug",
         summary: `No medical evidence found for "${cleanQuery}". Try rephrasing with the generic drug name or check spelling.`,
         keyPoints: [
           "No articles found matching your drug query",
@@ -166,7 +180,7 @@ export async function POST(request: NextRequest) {
       // Guideline priority
       const articleTypeLower = article.type.toLowerCase();
       const titleLower = article.title.toLowerCase();
-      
+
       if (articleTypeLower.includes("guideline") || titleLower.includes("guideline")) {
         qualityScore += 150;
       } else if (articleTypeLower.includes("meta-analysis")) {
@@ -181,8 +195,12 @@ export async function POST(request: NextRequest) {
 
       // Pharmacy/clinical pharmacology journals bonus
       const journal = article.journal.toLowerCase();
-      if (journal.includes("pharmacolog") || journal.includes("pharmacy") || 
-          journal.includes("therapeutic") || journal.includes("drug")) {
+      if (
+        journal.includes("pharmacolog") ||
+        journal.includes("pharmacy") ||
+        journal.includes("therapeutic") ||
+        journal.includes("drug")
+      ) {
         qualityScore += 30;
       }
 
@@ -209,7 +227,7 @@ export async function POST(request: NextRequest) {
       .map((item, idx) => {
         const { article } = item;
         const badges = [];
-        
+
         if (article.type.toLowerCase().includes("guideline")) badges.push("GUIDELINE");
         if (article.type.toLowerCase().includes("meta-analysis")) badges.push("META-ANALYSIS");
         if (article.type.toLowerCase().includes("systematic review")) badges.push("SYSTEMATIC REVIEW");
@@ -377,8 +395,7 @@ Review ${searchResults.articles.length} sources below for detailed drug informat
 
       // Add drug/pharmacy journal badge
       const journal = article.journal.toLowerCase();
-      if (journal.includes("pharmacolog") || journal.includes("pharmacy") ||
-          journal.includes("therapeutic")) {
+      if (journal.includes("pharmacolog") || journal.includes("pharmacy") || journal.includes("therapeutic")) {
         badges.push("💊 PHARMACOLOGY");
       }
 
@@ -402,7 +419,7 @@ Review ${searchResults.articles.length} sources below for detailed drug informat
     return NextResponse.json({
       query: cleanQuery,
       drugName,
-      type: 'drug',
+      type: "drug",
       summary,
       keyPoints,
       sections: [], // Using integrated narrative
@@ -411,7 +428,6 @@ Review ${searchResults.articles.length} sources below for detailed drug informat
       isPro: true,
       steps: 3,
     });
-
   } catch (error) {
     logger.error("Drug search error:", error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(

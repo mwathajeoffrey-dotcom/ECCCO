@@ -221,39 +221,43 @@ Use this to track your progress:
 
 ## 🎯 Time Estimates
 
-| Step | Time | Status |
-|------|------|--------|
-| 1. Wait for deployment | 3-5 min | ⏳ In progress |
-| 2. Open Supabase | 30 sec | ⏳ Next |
-| 3. Run diagnostic | 30 sec | ⏳ Next |
-| 4. Create tables | 1-2 min | ⏳ Next |
-| 5. Verify columns | 30 sec | ⏳ Next |
-| 6. Test in production | 2-3 min | ⏳ Next |
-| **Total** | **8-12 min** | |
+| Step                   | Time         | Status         |
+| ---------------------- | ------------ | -------------- |
+| 1. Wait for deployment | 3-5 min      | ⏳ In progress |
+| 2. Open Supabase       | 30 sec       | ⏳ Next        |
+| 3. Run diagnostic      | 30 sec       | ⏳ Next        |
+| 4. Create tables       | 1-2 min      | ⏳ Next        |
+| 5. Verify columns      | 30 sec       | ⏳ Next        |
+| 6. Test in production  | 2-3 min      | ⏳ Next        |
+| **Total**              | **8-12 min** |                |
 
 ---
 
 ## 🆘 Help Points
 
 **Stuck at Step 1?**
+
 - Check Vercel dashboard for error messages
 - Look at build logs for clues
 
 **Stuck at Step 3?**
+
 - Make sure you're in the right Supabase project
 - Check you have database access
 
 **Stuck at Step 4?**
+
 - Try disabling RLS temporarily
 - Use the pre-made SQL files
 
 **Stuck at Step 6?**
+
 - Open browser console (F12)
 - Look for error messages
 - Share the error message for help
 
 ---
 
-**Follow the flowchart from top to bottom!**  
-**Each step builds on the previous one.**  
+**Follow the flowchart from top to bottom!**
+**Each step builds on the previous one.**
 **Don't skip steps!**

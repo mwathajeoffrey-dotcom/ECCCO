@@ -5,14 +5,17 @@
 ### 🔴 Critical (Required for Production)
 
 #### 1. ENCRYPTION_KEY
+
 **Purpose:** Encrypts sensitive user data (PII, health information)
 
 **Generate:**
+
 ```bash
 openssl rand -base64 32
 ```
 
 **Set in Vercel:**
+
 ```bash
 vercel env add ENCRYPTION_KEY production
 # Paste generated key when prompted
@@ -23,25 +26,30 @@ vercel env add ENCRYPTION_KEY production
 ---
 
 #### 2. DATABASE_URL
+
 **Purpose:** PostgreSQL connection string
 
-**Format:** 
+**Format:**
+
 ```
 postgresql://username:password@host:port/database
 ```
 
 **Set in Vercel:**
+
 - Already set if using Vercel Postgres
 - For external DB: `vercel env add DATABASE_URL production`
 
 ---
 
 #### 3. CLERK_SECRET_KEY
+
 **Purpose:** Server-side authentication
 
 **Get from:** https://dashboard.clerk.com
 
 **Set in Vercel:**
+
 ```bash
 vercel env add CLERK_SECRET_KEY production
 ```
@@ -51,11 +59,13 @@ vercel env add CLERK_SECRET_KEY production
 ---
 
 #### 4. NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
 **Purpose:** Client-side authentication
 
 **Get from:** https://dashboard.clerk.com
 
 **Set in Vercel:**
+
 ```bash
 vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY production
 ```
@@ -67,14 +77,17 @@ vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY production
 ### 🟡 Important (Recommended for Production)
 
 #### 5. ALLOWED_ORIGINS
+
 **Purpose:** CORS security - which domains can access your API
 
 **Format:** Comma-separated list of domains
+
 ```
 https://eccco.vercel.app,https://www.eccco.app
 ```
 
 **Set in Vercel:**
+
 ```bash
 vercel env add ALLOWED_ORIGINS production
 ```
@@ -82,16 +95,19 @@ vercel env add ALLOWED_ORIGINS production
 ---
 
 #### 6. ADMIN_USER_IDS
+
 **Purpose:** Clerk user IDs with admin access
 
 **Get your ID:** https://dashboard.clerk.com → Users → Click user → Copy ID
 
 **Format:** Comma-separated Clerk user IDs
+
 ```
 user_2abc123def,user_2xyz789ghi
 ```
 
 **Set in Vercel:**
+
 ```bash
 vercel env add ADMIN_USER_IDS production
 ```
@@ -99,11 +115,13 @@ vercel env add ADMIN_USER_IDS production
 ---
 
 #### 7. GROQ_API_KEY
+
 **Purpose:** AI-powered evidence synthesis
 
 **Get free key:** https://console.groq.com
 
 **Set in Vercel:**
+
 ```bash
 vercel env add GROQ_API_KEY production
 ```
@@ -115,9 +133,11 @@ vercel env add GROQ_API_KEY production
 ### 🟢 Optional
 
 #### 8. KV_REST_API_URL & KV_REST_API_TOKEN
+
 **Purpose:** Vercel KV for caching (improves performance)
 
 **Setup:**
+
 ```bash
 vercel kv create eccco-cache
 # Automatically adds KV_REST_API_URL and KV_REST_API_TOKEN
@@ -126,11 +146,13 @@ vercel kv create eccco-cache
 ---
 
 #### 9. SENTRY_DSN
+
 **Purpose:** Error tracking and monitoring
 
 **Get from:** https://sentry.io
 
 **Set in Vercel:**
+
 ```bash
 vercel env add SENTRY_DSN production
 ```
@@ -142,40 +164,44 @@ vercel env add SENTRY_DSN production
 ### For Production Deployment
 
 1. **Generate Encryption Key**
+
    ```bash
    openssl rand -base64 32
    ```
+
    Copy the output.
 
 2. **Set All Required Variables in Vercel**
+
    ```bash
    # Navigate to project
    cd /Users/apple/ECCCO
-   
+
    # Login to Vercel
    vercel login
-   
+
    # Link project (if not already)
    vercel link
-   
+
    # Add encryption key
    vercel env add ENCRYPTION_KEY production
    # Paste the key generated in step 1
-   
+
    # Add allowed origins
    vercel env add ALLOWED_ORIGINS production
    # Enter: https://eccco.vercel.app
-   
+
    # Add admin user IDs
    vercel env add ADMIN_USER_IDS production
    # Enter: your_clerk_user_id
-   
+
    # Add Groq API key (optional but recommended)
    vercel env add GROQ_API_KEY production
    # Enter: your_groq_api_key
    ```
 
 3. **Verify Environment Variables**
+
    ```bash
    vercel env ls
    ```
@@ -233,6 +259,7 @@ EOF
 ```
 
 **Test:**
+
 ```bash
 npm run dev
 # Check for any environment variable errors
@@ -245,19 +272,21 @@ npm run dev
 If secrets are compromised:
 
 1. **Rotate Clerk Keys**
+
    - Go to https://dashboard.clerk.com
    - Generate new keys
    - Update in Vercel
    - Redeploy
 
 2. **Rotate Encryption Key**
+
    ```bash
    # Generate new key
    openssl rand -base64 32
-   
+
    # Update in Vercel
    vercel env add ENCRYPTION_KEY production
-   
+
    # NOTE: This will invalidate old encrypted data!
    # You may need to re-encrypt existing data
    ```
@@ -272,7 +301,9 @@ If secrets are compromised:
 ## 📞 Troubleshooting
 
 ### "ENCRYPTION_KEY must be set in production"
+
 **Solution:**
+
 ```bash
 openssl rand -base64 32
 vercel env add ENCRYPTION_KEY production
@@ -281,13 +312,17 @@ vercel --prod
 ```
 
 ### "Invalid environment configuration"
+
 **Check:**
+
 1. All required variables are set: `vercel env ls`
 2. Values are not empty
 3. URLs are properly formatted (start with http:// or https://)
 
 ### "Failed to connect to database"
+
 **Check:**
+
 1. `DATABASE_URL` is correct
 2. Database is accessible from Vercel
 3. IP allowlist includes Vercel IPs (if using external DB)
@@ -303,5 +338,5 @@ vercel --prod
 
 ---
 
-**Last Updated:** January 20, 2026  
+**Last Updated:** January 20, 2026
 **Maintained by:** ECCCO Development Team

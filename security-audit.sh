@@ -37,10 +37,10 @@ echo ""
 
 if [ -f .env.local ]; then
     echo -e "${GREEN}✅ .env.local exists${NC}"
-    
+
     # Check for required keys (without showing values)
     required_keys=("GROQ_API_KEY" "DATABASE_URL" "CLERK_SECRET_KEY" "REDIS_URL")
-    
+
     for key in "${required_keys[@]}"; do
         if grep -q "^$key=" .env.local; then
             echo -e "${GREEN}✅ $key is set${NC}"
@@ -67,7 +67,7 @@ if [ -f .gitignore ]; then
         echo "   ACTION: Add .env.local to .gitignore"
         echo "   Run: echo '.env.local' >> .gitignore"
     fi
-    
+
     if grep -q ".env*.local" .gitignore; then
         echo -e "${GREEN}✅ .env*.local pattern in .gitignore${NC}"
     else
@@ -119,7 +119,7 @@ echo ""
 
 if [ -f .env.example ]; then
     echo -e "${GREEN}✅ .env.example exists${NC}"
-    
+
     # Check that .env.example doesn't contain real secrets
     if grep -E "gsk_[a-zA-Z0-9]{50,}|sk_test_[a-zA-Z0-9]{24,}|postgres\.[a-z]+:[a-zA-Z0-9]+" .env.example 2>/dev/null; then
         echo -e "${RED}❌ .env.example contains real secrets!${NC}"
@@ -140,7 +140,7 @@ echo ""
 
 if command -v git-secrets &> /dev/null; then
     echo -e "${GREEN}✅ git-secrets is installed${NC}"
-    
+
     # Check if git-secrets is initialized in this repo
     if [ -f .git/hooks/commit-msg ] && grep -q "git-secrets" .git/hooks/commit-msg; then
         echo -e "${GREEN}✅ git-secrets hooks are installed${NC}"
@@ -165,7 +165,7 @@ if [ $? -eq 0 ]; then
     echo "Recent commits:"
     echo "$recent_commits"
     echo ""
-    
+
     # Check if any recent commits mention keys or secrets
     if echo "$recent_commits" | grep -iE "key|secret|password|token|credential"; then
         echo -e "${YELLOW}⚠️  Recent commits mention keys/secrets${NC}"

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 // Check if user is admin
 async function isUserAdmin(clerkUserId: string): Promise<boolean> {
   const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
-  
+
   const user = await prisma.user.findUnique({
     where: { clerkUserId },
     select: { email: true },
@@ -124,9 +124,7 @@ export async function GET() {
     }
 
     // Average questions per user
-    const avgQuestionsPerUser = totalUsers > 0 
-      ? Math.round((await prisma.questionAttempt.count()) / totalUsers)
-      : 0;
+    const avgQuestionsPerUser = totalUsers > 0 ? Math.round((await prisma.questionAttempt.count()) / totalUsers) : 0;
 
     return NextResponse.json({
       stats: {
@@ -156,9 +154,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch dashboard statistics" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch dashboard statistics" }, { status: 500 });
   }
 }

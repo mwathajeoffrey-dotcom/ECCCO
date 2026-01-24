@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Console.log Cleanup Script
-# 
+#
 # This script helps identify and replace console.log statements with
 # structured logging using the logger service.
 #
@@ -103,7 +103,7 @@ fi
 replace_in_file() {
   local file="$1"
   local changes=0
-  
+
   if [ "$DRY_RUN" = true ]; then
     echo "  Would update: $file"
   else
@@ -115,25 +115,25 @@ import { logger } from '@/lib/logger';\\
 " "$file"
       changes=$((changes + 1))
     fi
-    
+
     # Replace console.log with logger.debug (development only)
     if grep -q "console\.log" "$file"; then
       sed -i '' 's/console\.log(/logger.debug(/g' "$file"
       changes=$((changes + 1))
     fi
-    
+
     # Replace console.warn with logger.warn
     if grep -q "console\.warn" "$file"; then
       sed -i '' 's/console\.warn(/logger.warn(/g' "$file"
       changes=$((changes + 1))
     fi
-    
+
     # Replace console.error with logger.error
     if grep -q "console\.error" "$file"; then
       sed -i '' 's/console\.error(/logger.error(/g' "$file"
       changes=$((changes + 1))
     fi
-    
+
     if [ $changes -gt 0 ]; then
       echo -e "  ${GREEN}✅ Updated: $file${NC}"
     fi
@@ -143,14 +143,14 @@ import { logger } from '@/lib/logger';\\
 if [ "$AUTO_MODE" = true ]; then
   echo -e "${YELLOW}🔄 Automatically replacing console statements...${NC}"
   echo ""
-  
+
   # Get list of files with console statements
   FILES=$(grep -r "console\." src/ --include="*.ts" --include="*.tsx" -l 2>/dev/null || true)
-  
+
   for file in $FILES; do
     replace_in_file "$file"
   done
-  
+
   if [ "$DRY_RUN" = false ]; then
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

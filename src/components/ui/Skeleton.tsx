@@ -4,7 +4,7 @@
  * Replaces loading spinners with content-aware skeletons
  */
 
-import React from 'react';
+import React from "react";
 
 interface SkeletonProps {
   className?: string;
@@ -14,7 +14,7 @@ interface SkeletonProps {
 /**
  * Base Skeleton component
  */
-export function Skeleton({ className = '', style }: SkeletonProps) {
+export function Skeleton({ className = "", style }: SkeletonProps) {
   return (
     <div
       className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`}
@@ -28,14 +28,11 @@ export function Skeleton({ className = '', style }: SkeletonProps) {
 /**
  * Text line skeleton
  */
-export function SkeletonText({ className = '', lines = 3 }: SkeletonProps & { lines?: number }) {
+export function SkeletonText({ className = "", lines = 3 }: SkeletonProps & { lines?: number }) {
   return (
     <div className={`space-y-2 ${className}`}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton 
-          key={i} 
-          className={`h-4 ${i === lines - 1 ? 'w-3/4' : 'w-full'}`} 
-        />
+        <Skeleton key={i} className={`h-4 ${i === lines - 1 ? "w-3/4" : "w-full"}`} />
       ))}
     </div>
   );
@@ -44,7 +41,7 @@ export function SkeletonText({ className = '', lines = 3 }: SkeletonProps & { li
 /**
  * Card skeleton for content cards
  */
-export function SkeletonCard({ className = '' }: SkeletonProps) {
+export function SkeletonCard({ className = "" }: SkeletonProps) {
   return (
     <div className={`border rounded-lg p-6 ${className}`}>
       <Skeleton className="h-6 w-3/4 mb-4" />
@@ -60,7 +57,7 @@ export function SkeletonCard({ className = '' }: SkeletonProps) {
 /**
  * Question skeleton for quiz interface
  */
-export function SkeletonQuestion({ className = '' }: SkeletonProps) {
+export function SkeletonQuestion({ className = "" }: SkeletonProps) {
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Question text */}
@@ -68,7 +65,7 @@ export function SkeletonQuestion({ className = '' }: SkeletonProps) {
         <Skeleton className="h-5 w-24 mb-3" />
         <SkeletonText lines={4} />
       </div>
-      
+
       {/* Answer options */}
       <div className="space-y-3">
         {[1, 2, 3, 4].map((i) => (
@@ -78,7 +75,7 @@ export function SkeletonQuestion({ className = '' }: SkeletonProps) {
           </div>
         ))}
       </div>
-      
+
       {/* Action buttons */}
       <div className="flex gap-3">
         <Skeleton className="h-10 w-32" />
@@ -91,10 +88,10 @@ export function SkeletonQuestion({ className = '' }: SkeletonProps) {
 /**
  * Table skeleton
  */
-export function SkeletonTable({ 
-  rows = 5, 
-  columns = 4, 
-  className = '' 
+export function SkeletonTable({
+  rows = 5,
+  columns = 4,
+  className = "",
 }: SkeletonProps & { rows?: number; columns?: number }) {
   return (
     <div className={`space-y-3 ${className}`}>
@@ -104,7 +101,7 @@ export function SkeletonTable({
           <Skeleton key={i} className="h-5 w-full" />
         ))}
       </div>
-      
+
       {/* Rows */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div key={rowIndex} className="flex gap-4">
@@ -120,7 +117,7 @@ export function SkeletonTable({
 /**
  * Dashboard stats skeleton
  */
-export function SkeletonStats({ count = 4, className = '' }: SkeletonProps & { count?: number }) {
+export function SkeletonStats({ count = 4, className = "" }: SkeletonProps & { count?: number }) {
   return (
     <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}>
       {Array.from({ length: count }).map((_, i) => (
@@ -137,34 +134,34 @@ export function SkeletonStats({ count = 4, className = '' }: SkeletonProps & { c
 /**
  * Avatar skeleton
  */
-export function SkeletonAvatar({ size = 'md', className = '' }: SkeletonProps & { size?: 'sm' | 'md' | 'lg' }) {
+export function SkeletonAvatar({ size = "md", className = "" }: SkeletonProps & { size?: "sm" | "md" | "lg" }) {
   const sizeClasses = {
-    sm: 'h-8 w-8',
-    md: 'h-12 w-12',
-    lg: 'h-16 w-16',
+    sm: "h-8 w-8",
+    md: "h-12 w-12",
+    lg: "h-16 w-16",
   };
-  
+
   return <Skeleton className={`${sizeClasses[size]} rounded-full ${className}`} />;
 }
 
 /**
  * Evidence search result skeleton
  */
-export function SkeletonEvidenceResult({ className = '' }: SkeletonProps) {
+export function SkeletonEvidenceResult({ className = "" }: SkeletonProps) {
   return (
     <div className={`border-l-4 border-gray-200 bg-white p-6 rounded-lg shadow-sm ${className}`}>
       <div className="flex items-start justify-between mb-3">
         <Skeleton className="h-6 w-3/4" />
         <Skeleton className="h-6 w-16" />
       </div>
-      
+
       <div className="flex items-center gap-2 mb-3">
         <Skeleton className="h-4 w-32" />
         <Skeleton className="h-4 w-24" />
       </div>
-      
+
       <SkeletonText lines={3} className="mb-4" />
-      
+
       <div className="flex items-center gap-4">
         <Skeleton className="h-5 w-20" />
         <Skeleton className="h-5 w-16" />
@@ -177,10 +174,7 @@ export function SkeletonEvidenceResult({ className = '' }: SkeletonProps) {
 /**
  * List skeleton
  */
-export function SkeletonList({ 
-  items = 5, 
-  className = '' 
-}: SkeletonProps & { items?: number }) {
+export function SkeletonList({ items = 5, className = "" }: SkeletonProps & { items?: number }) {
   return (
     <div className={`space-y-3 ${className}`}>
       {Array.from({ length: items }).map((_, i) => (
@@ -200,17 +194,13 @@ export function SkeletonList({
 /**
  * Chart skeleton
  */
-export function SkeletonChart({ className = '' }: SkeletonProps) {
+export function SkeletonChart({ className = "" }: SkeletonProps) {
   return (
     <div className={`border rounded-lg p-6 ${className}`}>
       <Skeleton className="h-6 w-48 mb-6" />
       <div className="flex items-end justify-between gap-2 h-64">
         {Array.from({ length: 7 }).map((_, i) => (
-          <Skeleton 
-            key={i} 
-            className="w-full" 
-            style={{ height: `${Math.random() * 100}%` }}
-          />
+          <Skeleton key={i} className="w-full" style={{ height: `${Math.random() * 100}%` }} />
         ))}
       </div>
     </div>
@@ -220,21 +210,21 @@ export function SkeletonChart({ className = '' }: SkeletonProps) {
 /**
  * Full page skeleton for dashboard
  */
-export function SkeletonDashboard({ className = '' }: SkeletonProps) {
+export function SkeletonDashboard({ className = "" }: SkeletonProps) {
   return (
     <div className={`space-y-6 ${className}`}>
       <div>
         <Skeleton className="h-8 w-64 mb-2" />
         <Skeleton className="h-4 w-96" />
       </div>
-      
+
       <SkeletonStats count={4} />
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SkeletonChart />
         <SkeletonChart />
       </div>
-      
+
       <SkeletonTable rows={10} columns={5} />
     </div>
   );

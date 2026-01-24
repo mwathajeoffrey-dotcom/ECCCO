@@ -22,7 +22,7 @@ check_env() {
     local var_name=$1
     local is_required=$2
     local description=$3
-    
+
     if [ -n "${!var_name}" ]; then
         echo -e "${GREEN}✅${NC} $var_name - $description"
         ((PRESENT++))

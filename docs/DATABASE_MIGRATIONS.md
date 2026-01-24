@@ -5,6 +5,7 @@ This document outlines our Prisma migration strategy and best practices for the 
 ## 📁 Migration Structure
 
 All migrations are stored in `prisma/migrations/` with timestamps:
+
 ```
 prisma/
 ├── schema.prisma              # Single source of truth for database schema
@@ -20,6 +21,7 @@ prisma/
 ### Development Environment
 
 #### 1. Create a Migration
+
 When you modify `schema.prisma`, create a migration:
 
 ```bash
@@ -27,22 +29,26 @@ npx prisma migrate dev --name descriptive_name_here
 ```
 
 **Example:**
+
 ```bash
 npx prisma migrate dev --name add_user_preferences
 ```
 
 This will:
+
 1. Create a new migration in `prisma/migrations/`
 2. Apply the migration to your dev database
 3. Regenerate Prisma Client
 4. Update `_prisma_migrations` table
 
 #### 2. Reset Database (when things go wrong)
+
 ```bash
 npx prisma migrate reset
 ```
 
 ⚠️ **WARNING**: This will:
+
 - Drop the database
 - Recreate it
 - Run all migrations from scratch
@@ -53,6 +59,7 @@ npx prisma migrate reset
 ### Production Environment
 
 #### 1. Deploy Migrations
+
 In production, use `migrate deploy` instead of `migrate dev`:
 
 ```bash
@@ -60,12 +67,14 @@ npx prisma migrate deploy
 ```
 
 This will:
+
 - Apply pending migrations only
 - NOT create new migrations
 - NOT prompt for input
 - Fail if migration history is out of sync
 
 #### 2. Check Migration Status
+
 Before deploying:
 
 ```bash
@@ -73,11 +82,13 @@ npx prisma migrate status
 ```
 
 Expected output:
+
 ```
 Database schema is up to date!
 ```
 
 Or if migrations are pending:
+
 ```
 1 migration has not yet been applied:
 
@@ -87,7 +98,9 @@ Or if migrations are pending:
 ## 📝 Migration Best Practices
 
 ### Naming Conventions
+
 Use descriptive, snake_case names:
+
 - ✅ `add_user_preferences`
 - ✅ `remove_deprecated_fields`
 - ✅ `create_quiz_arena_tables`
@@ -98,25 +111,30 @@ Use descriptive, snake_case names:
 ### Schema Changes
 
 #### Safe Changes (non-breaking)
+
 - Adding optional fields
 - Adding new tables
 - Adding indexes
 - Creating new models
 
 #### Dangerous Changes (breaking)
+
 - Removing fields
 - Renaming fields
 - Changing field types
 - Adding required fields without defaults
 
 **For dangerous changes:**
+
 1. Create a multi-step migration:
+
    - Step 1: Add new field as optional
    - Step 2: Backfill data
    - Step 3: Make field required
    - Step 4: Remove old field
 
 2. Or use custom SQL migration:
+
 ```bash
 npx prisma migrate dev --create-only --name custom_migration
 # Edit the generated migration.sql file
@@ -135,12 +153,13 @@ Then edit the generated `migration.sql` file:
 
 ```sql
 -- Custom data migration
-UPDATE "User" 
-SET "emailVerified" = NOW() 
+UPDATE "User"
+SET "emailVerified" = NOW()
 WHERE "emailVerified" IS NULL AND "email" IS NOT NULL;
 ```
 
 Then apply it:
+
 ```bash
 npx prisma migrate dev
 ```
@@ -161,25 +180,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          
+          node-version: "20"
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Check migration status
         run: npx prisma migrate status
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          
+
       - name: Deploy migrations
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          
+
       - name: Generate Prisma Client
         run: npx prisma generate
 ```
@@ -187,6 +206,7 @@ jobs:
 ### Vercel Deployment
 
 Add to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -203,6 +223,7 @@ Add to `package.json`:
 **Problem**: Local and remote migration histories don't match.
 
 **Solution**:
+
 1. Check status: `npx prisma migrate status`
 2. If in development: `npx prisma migrate reset`
 3. If in production: Contact team lead
@@ -212,6 +233,7 @@ Add to `package.json`:
 **Problem**: Migration has SQL errors or conflicts.
 
 **Solution**:
+
 1. Check the migration file for errors
 2. Fix the SQL
 3. Create a new migration: `npx prisma migrate dev`
@@ -221,6 +243,7 @@ Add to `package.json`:
 **Problem**: Schema file doesn't match database.
 
 **Solution**:
+
 ```bash
 # Pull current database schema
 npx prisma db pull
@@ -255,12 +278,15 @@ npx prisma migrate dev --name sync_schema
 ## 🔒 Security
 
 ### Sensitive Data
+
 - Never commit `.env` files
 - Use environment variables for DATABASE_URL
 - Rotate production database credentials regularly
 
 ### Backup Strategy
+
 Before major migrations:
+
 ```bash
 # Backup production database
 pg_dump $DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
@@ -297,6 +323,6 @@ npx prisma format                           # Format schema file
 
 ---
 
-**Last Updated**: January 21, 2026  
-**Schema Version**: Prisma 7.2.0  
+**Last Updated**: January 21, 2026
+**Schema Version**: Prisma 7.2.0
 **Migrations**: 16 applied

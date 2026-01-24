@@ -3,16 +3,19 @@
 ## What Was Improved
 
 ### **Issue #1: Lost AI Synthesis** ✅ FIXED
+
 - **Before**: `/evidence` showed simple library list
 - **After**: `/evidence` now has full AI-powered synthesis
 - **Solution**: Replaced page with advanced search functionality
 
 ### **Issue #2: Abstract-Only Search** ✅ FIXED
+
 - **Before**: Search referenced abstracts only
 - **After**: Full content analysis with comprehensive synthesis
 - **Solution**: consensus-search API uses full abstracts + strategic search
 
 ### **Issue #3: No Drug Search** ✅ FIXED
+
 - **Before**: No specialized medication search
 - **After**: Automatic drug query detection + dedicated endpoint
 - **Solution**: Created `/api/evidence/drug-search` with smart routing
@@ -26,6 +29,7 @@
 **Query**: `management of diabetic ketoacidosis`
 
 **Expected Result**:
+
 - ✅ AI synthesis in 3-5 flowing paragraphs
 - ✅ Journal names inline (clickable to articles)
 - ✅ Superscript citations ⁽¹⁾⁽²⁾
@@ -34,6 +38,7 @@
 - ✅ Quality indicators (tier-1 journals highlighted)
 
 **Success Criteria**:
+
 - Response in 10-15 seconds (first search)
 - Structured clinical recommendations
 - Evidence grading visible
@@ -48,6 +53,7 @@
 **Query**: `vancomycin dosing for MRSA pneumonia`
 
 **Expected Result**:
+
 - ✅ Auto-detected as drug query
 - ✅ Routes to `/api/evidence/drug-search`
 - ✅ Comprehensive drug monograph:
@@ -61,6 +67,7 @@
   - Clinical pearls
 
 **Success Criteria**:
+
 - Specific dosing numbers (mg/kg, intervals)
 - Renal dose adjustment table/info
 - Monitoring parameters specified
@@ -75,6 +82,7 @@
 **Query**: `warfarin drug interactions`
 
 **Expected Result**:
+
 - ✅ Auto-routed to drug search
 - ✅ Major drug interactions listed
 - ✅ Clinical significance explained
@@ -82,6 +90,7 @@
 - ✅ Management strategies
 
 **Success Criteria**:
+
 - Lists major interacting medications
 - Explains mechanism (CYP450, etc.)
 - Provides dosing adjustments
@@ -96,6 +105,7 @@
 **Query**: `lisinopril contraindications`
 
 **Expected Result**:
+
 - ✅ Auto-detected as drug query
 - ✅ Absolute contraindications listed
 - ✅ Relative contraindications
@@ -103,6 +113,7 @@
 - ✅ Special populations (pregnancy, renal failure)
 
 **Success Criteria**:
+
 - Clear categorization (absolute vs relative)
 - Pregnancy category specified
 - Renal/hepatic considerations
@@ -115,6 +126,7 @@
 **URL**: http://localhost:3000/evidence
 
 **Action**: Click one of the template buttons:
+
 - 💉 DKA Management
 - 💊 Vancomycin Dosing
 - 📋 STEMI Guidelines
@@ -122,12 +134,14 @@
 - 🔄 Drug Interactions
 
 **Expected Result**:
+
 - ✅ Pre-fills search query
 - ✅ Auto-executes search
 - ✅ Returns relevant results
 - ✅ Appropriate routing (clinical vs drug)
 
 **Success Criteria**:
+
 - One-click search works
 - Results match template topic
 - Fast user experience
@@ -139,6 +153,7 @@
 **URL**: http://localhost:3000/evidence
 
 **Actions**:
+
 1. Perform 3-5 different searches
 2. Check left sidebar for history
 3. Click on a previous search
@@ -146,6 +161,7 @@
 5. Try "Clear All History"
 
 **Expected Result**:
+
 - ✅ All searches saved to history
 - ✅ Most recent at top
 - ✅ Timestamp shown ("2m ago", "1h ago")
@@ -154,6 +170,7 @@
 - ✅ Clear all button works
 
 **Success Criteria**:
+
 - History persists after page refresh (localStorage)
 - Max 20 searches saved
 - No duplicates
@@ -166,6 +183,7 @@
 The system auto-detects drug queries based on these keywords:
 
 ### Keywords That Trigger Drug Search:
+
 - `dosing` / `dose` / `dosage`
 - `indication` / `indications`
 - `contraindication` / `contraindications`
@@ -178,7 +196,9 @@ The system auto-detects drug queries based on these keywords:
 - `administration` / `route`
 
 ### Example Queries:
+
 **Drug Search** (auto-detected):
+
 - ✅ "amoxicillin dosing for pneumonia"
 - ✅ "metformin indications"
 - ✅ "atorvastatin adverse effects"
@@ -186,6 +206,7 @@ The system auto-detects drug queries based on these keywords:
 - ✅ "aspirin drug interactions"
 
 **Clinical Search** (general):
+
 - ✅ "management of septic shock"
 - ✅ "STEMI guidelines 2024"
 - ✅ "treatment of anaphylaxis"
@@ -196,17 +217,20 @@ The system auto-detects drug queries based on these keywords:
 ## Expected Performance
 
 ### First Search (No Cache):
+
 - **Time**: 10-15 seconds
 - **Steps**: Database search → AI synthesis → Format response
 - **Sources**: 15-25 articles analyzed
 - **Output**: 3-6 paragraphs + key points + sources
 
 ### Subsequent Searches (Cached):
+
 - **Time**: <1 second
 - **Cache Duration**: Based on Vercel KV or in-memory
 - **Note**: Same query returns cached result
 
 ### Rate Limiting:
+
 - **Limit**: 5 searches per minute per IP
 - **Response**: 429 error if exceeded
 - **Message**: "Too many searches. Please wait a moment"
@@ -216,6 +240,7 @@ The system auto-detects drug queries based on these keywords:
 ## Quality Indicators
 
 ### Source Badges:
+
 - 📋 **CLINICAL GUIDELINE** - Official medical guidelines
 - 📈 **META-ANALYSIS** - Pooled data from multiple studies
 - 📚 **SYSTEMATIC REVIEW** - Comprehensive literature review
@@ -226,6 +251,7 @@ The system auto-detects drug queries based on these keywords:
 - 💊 **PHARMACOLOGY** - Pharmacy/drug journal
 
 ### Quality Scoring:
+
 - **150+**: Guidelines (highest priority)
 - **100+**: Meta-analyses
 - **90+**: Systematic reviews
@@ -237,31 +263,39 @@ The system auto-detects drug queries based on these keywords:
 ## Common Issues & Troubleshooting
 
 ### Issue: "No evidence found"
+
 **Cause**: Query too specific or misspelled
-**Solution**: 
+**Solution**:
+
 - Try broader terms
 - Check spelling (especially drug names)
 - Use generic names, not brand names
 - Example: "aspirin" not "Bayer"
 
 ### Issue: "AI synthesis temporarily unavailable"
+
 **Cause**: Groq API rate limit or error
 **Solution**:
+
 - Sources still displayed
 - Full abstracts available
 - Wait 30-60 seconds and retry
 - Review source abstracts directly
 
 ### Issue: "Rate limit exceeded"
+
 **Cause**: >5 searches in 1 minute
 **Solution**:
+
 - Wait 60 seconds
 - Review current results
 - Refine query instead of new search
 
 ### Issue: Wrong search type (drug vs clinical)
+
 **Cause**: Query doesn't match keyword detection
 **Solution**:
+
 - Add keywords: "dosing", "indication", etc.
 - Example: "vancomycin for pneumonia" → "vancomycin dosing for pneumonia"
 
@@ -270,11 +304,13 @@ The system auto-detects drug queries based on these keywords:
 ## API Endpoints
 
 ### `/api/evidence/consensus-search` (POST)
+
 **Purpose**: General clinical evidence synthesis
 **Input**: `{ "query": "clinical question" }`
 **Output**: Structured synthesis with sources
 
 **Example**:
+
 ```bash
 curl -X POST http://localhost:3000/api/evidence/consensus-search \
   -H "Content-Type: application/json" \
@@ -282,11 +318,13 @@ curl -X POST http://localhost:3000/api/evidence/consensus-search \
 ```
 
 ### `/api/evidence/drug-search` (POST)
+
 **Purpose**: Medication-specific monographs
 **Input**: `{ "query": "drug dosing question" }`
 **Output**: Drug monograph with structured sections
 
 **Example**:
+
 ```bash
 curl -X POST http://localhost:3000/api/evidence/drug-search \
   -H "Content-Type: application/json" \
@@ -298,6 +336,7 @@ curl -X POST http://localhost:3000/api/evidence/drug-search \
 ## Success Metrics
 
 ### Functionality:
+
 - ✅ AI synthesis visible on /evidence page
 - ✅ Drug queries auto-detected and routed correctly
 - ✅ Full abstracts analyzed (not truncated)
@@ -306,12 +345,14 @@ curl -X POST http://localhost:3000/api/evidence/drug-search \
 - ✅ Search history persists across sessions
 
 ### Performance:
+
 - ✅ First search <15 seconds
 - ✅ Cached search <1 second
 - ✅ Rate limiting works (5/minute)
 - ✅ Error handling graceful
 
 ### Quality:
+
 - ✅ Guidelines prioritized
 - ✅ Tier-1 journals highlighted
 - ✅ Evidence grading visible
@@ -324,23 +365,28 @@ curl -X POST http://localhost:3000/api/evidence/drug-search \
 ## Next Steps (Future Enhancements)
 
 ### Phase 2 (Optional):
+
 1. **DrugBank API Integration**
+
    - Comprehensive drug database
    - Chemical structures
    - Metabolism pathways
    - Protein targets
 
 2. **RxNorm Integration**
+
    - Standardized drug names
    - Brand ↔ generic mapping
    - Dosing forms
 
 3. **Clinical Calculator Integration**
+
    - CrCl calculator for renal dosing
    - BMI calculator for weight-based dosing
    - Pediatric dosing calculators
 
 4. **Favorite Searches**
+
    - Star frequently used queries
    - Quick access sidebar section
    - Export/share capability

@@ -1,5 +1,5 @@
 "use client";
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
@@ -11,7 +11,7 @@ import { analytics } from "@/lib/analytics/service";
 import BookmarkButton from "@/components/BookmarkButton";
 import QuestionRating from "@/components/QuestionRating";
 import { toast } from "sonner";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
+import { ERROR_MESSAGES, getErrorFromFetch } from "@/lib/error-messages";
 import { TopicGridSkeleton, QuestionSkeleton } from "@/components/ui/skeletons";
 
 interface Question {
@@ -101,7 +101,7 @@ export default function ExamInterface() {
             // This is handled by a separate useEffect below
           } else {
             toast.error("Topic not found", {
-              description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`
+              description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`,
             });
           }
         }
@@ -251,14 +251,7 @@ export default function ExamInterface() {
 
   // Auto-start exam if topic parameter is provided
   useEffect(() => {
-    if (
-      topicParam &&
-      !hasAutoStarted.current &&
-      topics.length > 0 &&
-      !isExamStarted &&
-      !isLoading &&
-      !loadingTopics
-    ) {
+    if (topicParam && !hasAutoStarted.current && topics.length > 0 && !isExamStarted && !isLoading && !loadingTopics) {
       const topic = topics.find((t) => t.id === topicParam);
       if (topic) {
         hasAutoStarted.current = true;
@@ -266,7 +259,7 @@ export default function ExamInterface() {
         fetchQuestions(topicParam);
       } else {
         toast.error("Topic not found", {
-          description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`
+          description: `The topic "${topicParam}" doesn't exist. Please select from the available topics.`,
         });
       }
     }
@@ -760,6 +753,16 @@ export default function ExamInterface() {
                     <p className="text-xs text-blue-700">Reveal answer after each attempt</p>
                   </div>
                 </label>
+                {/* Debug indicator */}
+                {process.env.NODE_ENV === "development" && (
+                  <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono">
+                    <div>Toggle: {showAnswerAfterAttempt ? "✅ ON" : "❌ OFF"}</div>
+                    <div>Answered: {currentQuestionAnswered ? "✅ YES" : "❌ NO"}</div>
+                    <div className="font-bold">
+                      Show: {showAnswerAfterAttempt && currentQuestionAnswered ? "✅ YES" : "❌ NO"}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-5 gap-1 sm:gap-2">
@@ -932,16 +935,17 @@ export default function ExamInterface() {
                 }
               >
                 <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-                  {currentQuestion &&
-                    (typeof currentQuestion.options === "string"
-                      ? JSON.parse(currentQuestion.options)
-                      : currentQuestion.options
-                    ).map((option: string, index: number) => {
-                      const isSelected = selectedAnswers[currentQuestionIndex] === index;
-                      const isCorrect = index === currentQuestion.correctIndex;
-                      const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
+                  {currentQuestion && currentQuestion.options ? (
+                    <>
+                      {(typeof currentQuestion.options === "string"
+                        ? JSON.parse(currentQuestion.options)
+                        : currentQuestion.options
+                      ).map((option: string, index: number) => {
+                        const isSelected = selectedAnswers[currentQuestionIndex] === index;
+                        const isCorrect = index === currentQuestion.correctIndex;
+                        const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
 
-                      return (
+                        return (
                         <button
                           key={index}
                           onClick={() => handleAnswerSelect(index)}
@@ -995,6 +999,12 @@ export default function ExamInterface() {
                         </button>
                       );
                     })}
+                    </>
+                  ) : (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <p className="text-yellow-800">No options available for this question.</p>
+                    </div>
+                  )}
                 </div>
               </EnhancedErrorBoundary>
 

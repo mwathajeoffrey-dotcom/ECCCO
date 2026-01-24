@@ -4,45 +4,45 @@
  * Logs who did what, when, and from where
  */
 
-import { logger } from './logger';
-import prisma from '@/lib/db';
+import { logger } from "./logger";
+import prisma from "@/lib/db";
 
 export enum AuditAction {
   // User actions
-  USER_LOGIN = 'user.login',
-  USER_LOGOUT = 'user.logout',
-  USER_REGISTER = 'user.register',
-  USER_UPDATE = 'user.update',
-  USER_DELETE = 'user.delete',
-  
+  USER_LOGIN = "user.login",
+  USER_LOGOUT = "user.logout",
+  USER_REGISTER = "user.register",
+  USER_UPDATE = "user.update",
+  USER_DELETE = "user.delete",
+
   // Content actions
-  CONTENT_VIEW = 'content.view',
-  CONTENT_CREATE = 'content.create',
-  CONTENT_UPDATE = 'content.update',
-  CONTENT_DELETE = 'content.delete',
-  
+  CONTENT_VIEW = "content.view",
+  CONTENT_CREATE = "content.create",
+  CONTENT_UPDATE = "content.update",
+  CONTENT_DELETE = "content.delete",
+
   // Quiz/Exam actions
-  QUIZ_START = 'quiz.start',
-  QUIZ_COMPLETE = 'quiz.complete',
-  QUIZ_SUBMIT = 'quiz.submit',
-  
+  QUIZ_START = "quiz.start",
+  QUIZ_COMPLETE = "quiz.complete",
+  QUIZ_SUBMIT = "quiz.submit",
+
   // Admin actions
-  ADMIN_ACCESS = 'admin.access',
-  ADMIN_USER_MODIFY = 'admin.user.modify',
-  ADMIN_CONTENT_MODIFY = 'admin.content.modify',
-  
+  ADMIN_ACCESS = "admin.access",
+  ADMIN_USER_MODIFY = "admin.user.modify",
+  ADMIN_CONTENT_MODIFY = "admin.content.modify",
+
   // Data access
-  DATA_EXPORT = 'data.export',
-  DATA_DELETE = 'data.delete',
-  
+  DATA_EXPORT = "data.export",
+  DATA_DELETE = "data.delete",
+
   // Evidence search
-  EVIDENCE_SEARCH = 'evidence.search',
-  EVIDENCE_VIEW = 'evidence.view',
-  
+  EVIDENCE_SEARCH = "evidence.search",
+  EVIDENCE_VIEW = "evidence.view",
+
   // Security events
-  SECURITY_RATE_LIMIT = 'security.rate_limit',
-  SECURITY_UNAUTHORIZED = 'security.unauthorized',
-  SECURITY_INVALID_INPUT = 'security.invalid_input',
+  SECURITY_RATE_LIMIT = "security.rate_limit",
+  SECURITY_UNAUTHORIZED = "security.unauthorized",
+  SECURITY_INVALID_INPUT = "security.invalid_input",
 }
 
 export interface AuditLogEntry {
@@ -63,19 +63,9 @@ export interface AuditLogEntry {
  * This creates both an application log and a database record for compliance
  */
 export async function logAudit(entry: AuditLogEntry): Promise<void> {
-  const {
-    action,
-    userId,
-    userEmail,
-    resourceType,
-    resourceId,
-    details,
-    ipAddress,
-    userAgent,
-    success,
-    errorMessage,
-  } = entry;
-  
+  const { action, userId, userEmail, resourceType, resourceId, details, ipAddress, userAgent, success, errorMessage } =
+    entry;
+
   // Log to application logger
   logger.info(`Audit: ${action}`, {
     userId,
@@ -87,7 +77,7 @@ export async function logAudit(entry: AuditLogEntry): Promise<void> {
     errorMessage,
     ...details,
   });
-  
+
   // Store in database for long-term compliance
   try {
     // Note: You'll need to create an AuditLog model in your Prisma schema
@@ -109,13 +99,13 @@ export async function logAudit(entry: AuditLogEntry): Promise<void> {
       },
     });
     */
-    
+
     // For now, we'll just log it
     // You can add the Prisma model later
-    logger.debug('Audit log entry created', { action });
+    logger.debug("Audit log entry created", { action });
   } catch (error) {
     // Never fail the main operation due to audit logging failure
-    logger.error('Failed to create audit log entry', error as Error, {
+    logger.error("Failed to create audit log entry", error as Error, {
       action,
       userId,
     });
@@ -139,7 +129,7 @@ export const audit = {
       success: true,
     });
   },
-  
+
   /**
    * Log user logout
    */
@@ -151,7 +141,7 @@ export const audit = {
       success: true,
     });
   },
-  
+
   /**
    * Log quiz completion
    */
@@ -159,13 +149,13 @@ export const audit = {
     await logAudit({
       action: AuditAction.QUIZ_COMPLETE,
       userId,
-      resourceType: 'quiz',
+      resourceType: "quiz",
       resourceId: quizId,
       details: { score },
       success: true,
     });
   },
-  
+
   /**
    * Log evidence search
    */
@@ -173,7 +163,7 @@ export const audit = {
     await logAudit({
       action: AuditAction.EVIDENCE_SEARCH,
       userId,
-      resourceType: 'evidence',
+      resourceType: "evidence",
       details: {
         query,
         resultCount,
@@ -181,20 +171,15 @@ export const audit = {
       success: true,
     });
   },
-  
+
   /**
    * Log admin action
    */
-  adminAction: async (
-    adminId: string,
-    action: string,
-    targetUserId?: string,
-    details?: Record<string, any>
-  ) => {
+  adminAction: async (adminId: string, action: string, targetUserId?: string, details?: Record<string, any>) => {
     await logAudit({
       action: AuditAction.ADMIN_USER_MODIFY,
       userId: adminId,
-      resourceType: 'user',
+      resourceType: "user",
       resourceId: targetUserId,
       details: {
         adminAction: action,
@@ -203,16 +188,11 @@ export const audit = {
       success: true,
     });
   },
-  
+
   /**
    * Log unauthorized access attempt
    */
-  unauthorized: async (
-    userId: string | undefined,
-    resource: string,
-    ipAddress?: string,
-    userAgent?: string
-  ) => {
+  unauthorized: async (userId: string | undefined, resource: string, ipAddress?: string, userAgent?: string) => {
     await logAudit({
       action: AuditAction.SECURITY_UNAUTHORIZED,
       userId,
@@ -220,27 +200,27 @@ export const audit = {
       ipAddress,
       userAgent,
       success: false,
-      errorMessage: 'Unauthorized access attempt',
+      errorMessage: "Unauthorized access attempt",
     });
   },
-  
+
   /**
    * Log rate limit hit
    */
   rateLimit: async (identifier: string, endpoint: string, ipAddress?: string) => {
     await logAudit({
       action: AuditAction.SECURITY_RATE_LIMIT,
-      resourceType: 'api',
+      resourceType: "api",
       resourceId: endpoint,
       details: {
         identifier,
       },
       ipAddress,
       success: false,
-      errorMessage: 'Rate limit exceeded',
+      errorMessage: "Rate limit exceeded",
     });
   },
-  
+
   /**
    * Log data export (important for HIPAA compliance)
    */
@@ -266,10 +246,8 @@ export function getRequestContext(request: Request): {
   userAgent?: string;
 } {
   return {
-    ipAddress: request.headers.get('x-forwarded-for') || 
-                request.headers.get('x-real-ip') || 
-                'unknown',
-    userAgent: request.headers.get('user-agent') || 'unknown',
+    ipAddress: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+    userAgent: request.headers.get("user-agent") || "unknown",
   };
 }
 

@@ -3,12 +3,12 @@
  * Manages state and shortcuts for the keyboard shortcuts modal
  */
 
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { KeyboardShortcutsModal } from '@/components/ui/keyboard-shortcuts-modal';
-import { useDefaultShortcuts, ShortcutCategory } from '@/lib/services/keyboard-shortcuts';
-import { logger } from '@/lib/services/logger';
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { KeyboardShortcutsModal } from "@/components/ui/keyboard-shortcuts-modal";
+import { useDefaultShortcuts, ShortcutCategory } from "@/lib/services/keyboard-shortcuts";
+import { logger } from "@/lib/services/logger";
 
 interface KeyboardShortcutsContextType {
   isOpen: boolean;
@@ -17,16 +17,12 @@ interface KeyboardShortcutsContextType {
   toggle: () => void;
 }
 
-const KeyboardShortcutsContext = createContext<KeyboardShortcutsContextType | undefined>(
-  undefined
-);
+const KeyboardShortcutsContext = createContext<KeyboardShortcutsContextType | undefined>(undefined);
 
 export function useKeyboardShortcutsModal() {
   const context = useContext(KeyboardShortcutsContext);
   if (!context) {
-    throw new Error(
-      'useKeyboardShortcutsModal must be used within KeyboardShortcutsProvider'
-    );
+    throw new Error("useKeyboardShortcutsModal must be used within KeyboardShortcutsProvider");
   }
   return context;
 }
@@ -40,12 +36,12 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
   const shortcuts = useDefaultShortcuts();
 
   const open = useCallback(() => {
-    logger.debug('Opening keyboard shortcuts modal');
+    logger.debug("Opening keyboard shortcuts modal");
     setIsOpen(true);
   }, []);
 
   const close = useCallback(() => {
-    logger.debug('Closing keyboard shortcuts modal');
+    logger.debug("Closing keyboard shortcuts modal");
     setIsOpen(false);
   }, []);
 
@@ -56,14 +52,14 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
   // Global keyboard shortcut (Shift+?)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.shiftKey && e.key === '?') {
+      if (e.shiftKey && e.key === "?") {
         e.preventDefault();
         toggle();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [toggle]);
 
   return (

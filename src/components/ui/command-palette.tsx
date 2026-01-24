@@ -4,14 +4,14 @@
  * Inspired by VS Code's command palette (Cmd/Ctrl + K)
  */
 
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { logger } from '@/lib/services/logger';
-import { useKeyboardShortcutsModal } from '@/components/providers/keyboard-shortcuts-provider';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { logger } from "@/lib/services/logger";
+import { useKeyboardShortcutsModal } from "@/components/providers/keyboard-shortcuts-provider";
 import {
   Search,
   Home,
@@ -29,7 +29,7 @@ import {
   Award,
   X,
   Keyboard,
-} from 'lucide-react';
+} from "lucide-react";
 
 export interface Command {
   id: string;
@@ -49,7 +49,7 @@ interface CommandPaletteProps {
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const router = useRouter();
   const { open: openShortcutsModal } = useKeyboardShortcutsModal();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Define all available commands
@@ -57,213 +57,213 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     return [
       // Navigation
       {
-        id: 'nav-dashboard',
-        label: 'Go to Dashboard',
-        description: 'View your learning dashboard',
+        id: "nav-dashboard",
+        label: "Go to Dashboard",
+        description: "View your learning dashboard",
         icon: Home,
         action: () => {
-          router.push('/dashboard');
+          router.push("/dashboard");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['home', 'main', 'overview'],
+        category: "Navigation",
+        keywords: ["home", "main", "overview"],
       },
       {
-        id: 'nav-practice',
-        label: 'Go to Practice',
-        description: 'Start practicing with quiz questions',
+        id: "nav-practice",
+        label: "Go to Practice",
+        description: "Start practicing with quiz questions",
         icon: PlayCircle,
         action: () => {
-          router.push('/practice');
+          router.push("/practice");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['quiz', 'questions', 'test', 'exam'],
+        category: "Navigation",
+        keywords: ["quiz", "questions", "test", "exam"],
       },
       {
-        id: 'nav-evidence',
-        label: 'Go to Evidence Search',
-        description: 'Search clinical evidence and guidelines',
+        id: "nav-evidence",
+        label: "Go to Evidence Search",
+        description: "Search clinical evidence and guidelines",
         icon: FileSearch,
         action: () => {
-          router.push('/evidence');
+          router.push("/evidence");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['research', 'pubmed', 'guidelines', 'clinical'],
+        category: "Navigation",
+        keywords: ["research", "pubmed", "guidelines", "clinical"],
       },
       {
-        id: 'nav-modules',
-        label: 'Go to Modules',
-        description: 'Browse learning modules',
+        id: "nav-modules",
+        label: "Go to Modules",
+        description: "Browse learning modules",
         icon: BookOpen,
         action: () => {
-          router.push('/modules');
+          router.push("/modules");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['courses', 'lessons', 'learning'],
+        category: "Navigation",
+        keywords: ["courses", "lessons", "learning"],
       },
       {
-        id: 'nav-bookmarks',
-        label: 'Go to Bookmarks',
-        description: 'View your saved items',
+        id: "nav-bookmarks",
+        label: "Go to Bookmarks",
+        description: "View your saved items",
         icon: Bookmark,
         action: () => {
-          router.push('/bookmarks');
+          router.push("/bookmarks");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['saved', 'favorites', 'starred'],
+        category: "Navigation",
+        keywords: ["saved", "favorites", "starred"],
       },
       {
-        id: 'nav-progress',
-        label: 'Go to Progress',
-        description: 'Track your learning progress',
+        id: "nav-progress",
+        label: "Go to Progress",
+        description: "Track your learning progress",
         icon: TrendingUp,
         action: () => {
-          router.push('/progress');
+          router.push("/progress");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['stats', 'analytics', 'performance'],
+        category: "Navigation",
+        keywords: ["stats", "analytics", "performance"],
       },
       {
-        id: 'nav-settings',
-        label: 'Go to Settings',
-        description: 'Manage your preferences',
+        id: "nav-settings",
+        label: "Go to Settings",
+        description: "Manage your preferences",
         icon: Settings,
         action: () => {
-          router.push('/settings');
+          router.push("/settings");
           onClose();
         },
-        category: 'Navigation',
-        keywords: ['preferences', 'config', 'account'],
+        category: "Navigation",
+        keywords: ["preferences", "config", "account"],
       },
 
       // Practice Actions
       {
-        id: 'practice-acls',
-        label: 'Practice ACLS',
-        description: 'Start ACLS practice session',
+        id: "practice-acls",
+        label: "Practice ACLS",
+        description: "Start ACLS practice session",
         icon: Activity,
         action: () => {
-          router.push('/practice/acls');
+          router.push("/practice/acls");
           onClose();
         },
-        category: 'Practice',
-        keywords: ['adult', 'cardiac', 'advanced'],
+        category: "Practice",
+        keywords: ["adult", "cardiac", "advanced"],
       },
       {
-        id: 'practice-pals',
-        label: 'Practice PALS',
-        description: 'Start PALS practice session',
+        id: "practice-pals",
+        label: "Practice PALS",
+        description: "Start PALS practice session",
         icon: Users,
         action: () => {
-          router.push('/practice/pals');
+          router.push("/practice/pals");
           onClose();
         },
-        category: 'Practice',
-        keywords: ['pediatric', 'children', 'kids'],
+        category: "Practice",
+        keywords: ["pediatric", "children", "kids"],
       },
       {
-        id: 'practice-bls',
-        label: 'Practice BLS',
-        description: 'Start BLS practice session',
+        id: "practice-bls",
+        label: "Practice BLS",
+        description: "Start BLS practice session",
         icon: PlayCircle,
         action: () => {
-          router.push('/practice/bls');
+          router.push("/practice/bls");
           onClose();
         },
-        category: 'Practice',
-        keywords: ['basic', 'cpr', 'resuscitation'],
+        category: "Practice",
+        keywords: ["basic", "cpr", "resuscitation"],
       },
       {
-        id: 'practice-random',
-        label: 'Random Practice',
-        description: 'Practice with random questions',
+        id: "practice-random",
+        label: "Random Practice",
+        description: "Practice with random questions",
         icon: PlayCircle,
         action: () => {
-          router.push('/practice?mode=random');
+          router.push("/practice?mode=random");
           onClose();
         },
-        category: 'Practice',
-        keywords: ['mixed', 'shuffle', 'all'],
+        category: "Practice",
+        keywords: ["mixed", "shuffle", "all"],
       },
 
       // Quick Actions
       {
-        id: 'action-search',
-        label: 'Focus Search',
-        description: 'Jump to search bar',
+        id: "action-search",
+        label: "Focus Search",
+        description: "Jump to search bar",
         icon: Search,
         action: () => {
           const searchInput = document.querySelector('input[type="search"]') as HTMLInputElement;
           searchInput?.focus();
           onClose();
         },
-        category: 'Actions',
-        keywords: ['find', 'query'],
+        category: "Actions",
+        keywords: ["find", "query"],
       },
       {
-        id: 'action-shortcuts',
-        label: 'Show Keyboard Shortcuts',
-        description: 'View all available keyboard shortcuts',
+        id: "action-shortcuts",
+        label: "Show Keyboard Shortcuts",
+        description: "View all available keyboard shortcuts",
         icon: Keyboard,
         action: () => {
           openShortcutsModal();
           onClose();
         },
-        category: 'Actions',
-        keywords: ['help', 'keys', 'hotkeys', '?'],
+        category: "Actions",
+        keywords: ["help", "keys", "hotkeys", "?"],
       },
       {
-        id: 'action-help',
-        label: 'Show Help',
-        description: 'View keyboard shortcuts and help',
+        id: "action-help",
+        label: "Show Help",
+        description: "View keyboard shortcuts and help",
         icon: HelpCircle,
         action: () => {
-          router.push('/help');
+          router.push("/help");
           onClose();
         },
-        category: 'Actions',
-        keywords: ['shortcuts', 'guide', 'tutorial'],
+        category: "Actions",
+        keywords: ["shortcuts", "guide", "tutorial"],
       },
       {
-        id: 'action-stats',
-        label: 'View Statistics',
-        description: 'See your performance statistics',
+        id: "action-stats",
+        label: "View Statistics",
+        description: "See your performance statistics",
         icon: TrendingUp,
         action: () => {
-          router.push('/dashboard/stats');
+          router.push("/dashboard/stats");
           onClose();
         },
-        category: 'Actions',
-        keywords: ['analytics', 'metrics', 'data'],
+        category: "Actions",
+        keywords: ["analytics", "metrics", "data"],
       },
       {
-        id: 'action-calendar',
-        label: 'Study Calendar',
-        description: 'View your study schedule',
+        id: "action-calendar",
+        label: "Study Calendar",
+        description: "View your study schedule",
         icon: Calendar,
         action: () => {
-          router.push('/calendar');
+          router.push("/calendar");
           onClose();
         },
-        category: 'Actions',
-        keywords: ['schedule', 'plan', 'dates'],
+        category: "Actions",
+        keywords: ["schedule", "plan", "dates"],
       },
       {
-        id: 'action-certificates',
-        label: 'My Certificates',
-        description: 'View earned certificates',
+        id: "action-certificates",
+        label: "My Certificates",
+        description: "View earned certificates",
         icon: Award,
         action: () => {
-          router.push('/certificates');
+          router.push("/certificates");
           onClose();
         },
-        category: 'Actions',
-        keywords: ['achievements', 'awards', 'completion'],
+        category: "Actions",
+        keywords: ["achievements", "awards", "completion"],
       },
     ];
   }, [router, onClose, openShortcutsModal]);
@@ -278,9 +278,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     return allCommands.filter((command) => {
       const matchesLabel = command.label.toLowerCase().includes(query);
       const matchesDescription = command.description?.toLowerCase().includes(query);
-      const matchesKeywords = command.keywords?.some((keyword) =>
-        keyword.toLowerCase().includes(query)
-      );
+      const matchesKeywords = command.keywords?.some((keyword) => keyword.toLowerCase().includes(query));
       const matchesCategory = command.category.toLowerCase().includes(query);
 
       return matchesLabel || matchesDescription || matchesKeywords || matchesCategory;
@@ -302,19 +300,19 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose();
-      } else if (e.key === 'ArrowDown') {
+      } else if (e.key === "ArrowDown") {
         e.preventDefault();
         setSelectedIndex((prev) => Math.min(prev + 1, filteredCommands.length - 1));
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelectedIndex((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         e.preventDefault();
         const selectedCommand = filteredCommands[selectedIndex];
         if (selectedCommand) {
-          logger.debug('Command executed from palette', {
+          logger.debug("Command executed from palette", {
             commandId: selectedCommand.id,
             label: selectedCommand.label,
           });
@@ -333,10 +331,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      setSearchQuery('');
+      setSearchQuery("");
       setSelectedIndex(0);
       setTimeout(() => {
-        const input = document.getElementById('command-palette-input');
+        const input = document.getElementById("command-palette-input");
         input?.focus();
       }, 100);
     }
@@ -373,11 +371,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
             autoComplete="off"
           />
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
-            aria-label="Close"
-          >
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded" aria-label="Close">
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
@@ -405,7 +399,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     <button
                       key={command.id}
                       onClick={() => {
-                        logger.debug('Command clicked', {
+                        logger.debug("Command clicked", {
                           commandId: command.id,
                           label: command.label,
                         });
@@ -414,23 +408,21 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors ${
                         isSelected
-                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
-                          : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100'
+                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100"
                       }`}
                     >
                       {Icon && (
                         <Icon
                           className={`w-5 h-5 flex-shrink-0 ${
-                            isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'
+                            isSelected ? "text-blue-600 dark:text-blue-400" : "text-gray-400"
                           }`}
                         />
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="font-medium">{command.label}</div>
                         {command.description && (
-                          <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {command.description}
-                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400 truncate">{command.description}</div>
                         )}
                       </div>
                       {isSelected && (
@@ -450,15 +442,21 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs text-gray-500">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
-              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">↑↓</Badge>
+              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
+                ↑↓
+              </Badge>
               Navigate
             </span>
             <span className="flex items-center gap-1">
-              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">↵</Badge>
+              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
+                ↵
+              </Badge>
               Select
             </span>
             <span className="flex items-center gap-1">
-              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">esc</Badge>
+              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
+                esc
+              </Badge>
               Close
             </span>
           </div>

@@ -4,11 +4,11 @@
  * Triggered by Shift+? or from Command Palette
  */
 
-'use client';
+"use client";
 
-import { Badge } from '@/components/ui/badge';
-import { ShortcutCategory, formatShortcut } from '@/lib/services/keyboard-shortcuts';
-import { X, Keyboard } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { ShortcutCategory, formatShortcut } from "@/lib/services/keyboard-shortcuts";
+import { X, Keyboard } from "lucide-react";
 
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
@@ -16,16 +16,12 @@ interface KeyboardShortcutsModalProps {
   shortcuts: ShortcutCategory[];
 }
 
-export function KeyboardShortcutsModal({
-  isOpen,
-  onClose,
-  shortcuts,
-}: KeyboardShortcutsModalProps) {
+export function KeyboardShortcutsModal({ isOpen, onClose, shortcuts }: KeyboardShortcutsModalProps) {
   if (!isOpen) return null;
 
   // Handle Escape key
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       onClose();
     }
   };
@@ -54,10 +50,7 @@ export function KeyboardShortcutsModal({
               <Keyboard className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h2
-                id="shortcuts-modal-title"
-                className="text-2xl font-bold text-gray-900 dark:text-white"
-              >
+              <h2 id="shortcuts-modal-title" className="text-2xl font-bold text-gray-900 dark:text-white">
                 Keyboard Shortcuts
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
@@ -98,9 +91,7 @@ export function KeyboardShortcutsModal({
                         key={`${category.name}-${index}`}
                         className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
-                        <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">
-                          {shortcut.description}
-                        </span>
+                        <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">{shortcut.description}</span>
                         <Badge
                           variant="secondary"
                           className="font-mono text-xs ml-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1"

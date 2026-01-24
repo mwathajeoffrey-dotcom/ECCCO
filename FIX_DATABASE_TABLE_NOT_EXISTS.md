@@ -1,8 +1,8 @@
 # 🔍 SUPABASE DATABASE DIAGNOSTIC & FIX
 
-**Error:** `relation "UserNote" does not exist`  
-**Cause:** Table hasn't been created OR using wrong schema  
-**Solution:** Run full database setup  
+**Error:** `relation "UserNote" does not exist`
+**Cause:** Table hasn't been created OR using wrong schema
+**Solution:** Run full database setup
 
 ---
 
@@ -12,15 +12,16 @@
 
 ```sql
 -- See all tables in your database
-SELECT 
+SELECT
     schemaname,
-    tablename 
-FROM pg_tables 
+    tablename
+FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
 ORDER BY schemaname, tablename;
 ```
 
 **This will show you all your tables. Look for:**
+
 - `UserNote` or `user_note` or `usernote`
 - Other tables like `User`, `QuizAttempt`, etc.
 
@@ -32,11 +33,11 @@ ORDER BY schemaname, tablename;
 
 ```sql
 -- Check current UserNote structure
-SELECT 
-    column_name, 
-    data_type, 
+SELECT
+    column_name,
+    data_type,
     is_nullable
-FROM information_schema.columns 
+FROM information_schema.columns
 WHERE table_schema = 'public'
   AND table_name IN ('UserNote', 'user_note', 'usernote')
 ORDER BY ordinal_position;
@@ -55,21 +56,21 @@ DECLARE
 BEGIN
     -- Find the actual table name
     SELECT tablename INTO actual_table_name
-    FROM pg_tables 
-    WHERE schemaname = 'public' 
+    FROM pg_tables
+    WHERE schemaname = 'public'
       AND lower(tablename) = 'usernote'
     LIMIT 1;
-    
+
     IF actual_table_name IS NOT NULL THEN
         RAISE NOTICE 'Found table: %', actual_table_name;
-        
+
         -- Add columns using dynamic SQL
         EXECUTE format('ALTER TABLE %I ADD COLUMN IF NOT EXISTS "searchQuery" TEXT', actual_table_name);
         EXECUTE format('ALTER TABLE %I ADD COLUMN IF NOT EXISTS "evidenceSummary" TEXT', actual_table_name);
         EXECUTE format('ALTER TABLE %I ADD COLUMN IF NOT EXISTS "specialty" TEXT', actual_table_name);
         EXECUTE format('ALTER TABLE %I ADD COLUMN IF NOT EXISTS "patientContext" TEXT', actual_table_name);
         EXECUTE format('ALTER TABLE %I ADD COLUMN IF NOT EXISTS "version" INTEGER NOT NULL DEFAULT 1', actual_table_name);
-        
+
         RAISE NOTICE 'Columns added successfully';
     ELSE
         RAISE NOTICE 'Table not found - need to create it';
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS "UserNote" (
   "version" INTEGER NOT NULL DEFAULT 1,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT "UserNote_userId_fkey" FOREIGN KEY ("userId") 
+  CONSTRAINT "UserNote_userId_fkey" FOREIGN KEY ("userId")
     REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -132,8 +133,8 @@ COMMIT;
 
 -- Verify creation
 SELECT 'UserNote table created!' as status;
-SELECT column_name, data_type FROM information_schema.columns 
-WHERE table_name = 'UserNote' 
+SELECT column_name, data_type FROM information_schema.columns
+WHERE table_name = 'UserNote'
 ORDER BY ordinal_position;
 ```
 
@@ -144,6 +145,7 @@ ORDER BY ordinal_position;
 ### Issue: Vercel Build Failed
 
 **Go to Vercel Deployment Logs:**
+
 ```
 https://vercel.com/mwathajeoffrey-dotcom/eccco/deployments
 → Click latest deployment
@@ -154,27 +156,36 @@ https://vercel.com/mwathajeoffrey-dotcom/eccco/deployments
 **Common Errors:**
 
 #### 1. Database Connection Failed
+
 ```
 Error: P1001: Can't reach database server at `db.xxx.supabase.co`
 ```
+
 **Fix:**
+
 - Check DATABASE_URL in Vercel environment variables
 - Ensure Supabase project is running (not paused)
 - Verify connection string format
 
 #### 2. Migration Failed (Table Not Exists)
+
 ```
 Error: P3009: migrate found failed migrations
 ```
+
 **Fix:**
+
 - Run the SQL in Step 2B above to create tables
 - Then redeploy on Vercel
 
 #### 3. Timeout During Migration
+
 ```
 Error: Migration engine timed out
 ```
+
 **Fix:**
+
 - Database too slow or connection pool exhausted
 - Run migration manually (this guide)
 - Remove `prisma migrate deploy` from build temporarily
@@ -184,45 +195,49 @@ Error: Migration engine timed out
 ## 🎯 RECOMMENDED FIX SEQUENCE
 
 ### 1. Diagnose Database State
+
 ```sql
 -- Run in Supabase SQL Editor
-SELECT 
+SELECT
     'Checking database state...' as status;
 
 -- Check if User table exists
 SELECT EXISTS (
-    SELECT 1 FROM pg_tables 
+    SELECT 1 FROM pg_tables
     WHERE schemaname = 'public' AND tablename = 'User'
 ) as user_table_exists;
 
 -- Check if UserNote table exists
 SELECT EXISTS (
-    SELECT 1 FROM pg_tables 
+    SELECT 1 FROM pg_tables
     WHERE schemaname = 'public' AND tablename = 'UserNote'
 ) as usernote_table_exists;
 
 -- List all tables
-SELECT tablename FROM pg_tables 
-WHERE schemaname = 'public' 
+SELECT tablename FROM pg_tables
+WHERE schemaname = 'public'
 ORDER BY tablename;
 ```
 
 ### 2. Create Missing Tables
+
 **If `UserNote` doesn't exist, run Step 2B above**
 
 ### 3. Verify Schema
+
 ```sql
 -- Check UserNote structure
 \d "UserNote"
 
 -- Or use this:
 SELECT column_name, data_type, is_nullable
-FROM information_schema.columns 
+FROM information_schema.columns
 WHERE table_name = 'UserNote'
 ORDER BY ordinal_position;
 ```
 
 ### 4. Test Insert
+
 ```sql
 -- Try inserting a test note
 INSERT INTO "UserNote" (
@@ -281,6 +296,7 @@ COMMIT;
 ## 📋 CHECKLIST
 
 **After running fixes:**
+
 - [ ] UserNote table exists (check with query)
 - [ ] Table has all required columns
 - [ ] Can insert test data
@@ -288,11 +304,13 @@ COMMIT;
 - [ ] Indexes created successfully
 
 **Then in Vercel:**
+
 - [ ] Redeploy (should succeed now)
 - [ ] Check build logs (no migration errors)
 - [ ] Test in production
 
 **Then in app:**
+
 - [ ] Sign in works
 - [ ] Can save clinical notes
 - [ ] Notes appear in Clinical Notes tab
@@ -307,6 +325,7 @@ COMMIT;
 ### Remove migration from build (temporarily)
 
 **In `vercel.json`:**
+
 ```json
 {
   "buildCommand": "npx prisma generate && npm run build"
@@ -314,8 +333,9 @@ COMMIT;
 ```
 
 **Then:**
+
 1. Redeploy (will succeed without migration)
-2. Fix database manually (this guide)  
+2. Fix database manually (this guide)
 3. Restore migration to build command
 4. Redeploy again
 

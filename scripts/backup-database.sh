@@ -2,9 +2,9 @@
 
 ###############################################################################
 # ECCCO Database Backup Script
-# 
+#
 # This script creates automated backups of the PostgreSQL database
-# 
+#
 # Usage:
 #   ./scripts/backup-database.sh
 #

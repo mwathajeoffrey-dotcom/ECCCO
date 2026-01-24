@@ -1,16 +1,16 @@
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 /**
  * Data Protection and Privacy Compliance Service
- * 
+ *
  * Comprehensive GDPR/CCPA/HIPAA compliant data protection framework
  * with encryption, consent management, data retention, and audit trails.
  */
 
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 export interface ConsentRecord {
   userId: string;
-  consentType: 'essential' | 'analytics' | 'marketing' | 'cookies' | 'data_processing';
+  consentType: "essential" | "analytics" | "marketing" | "cookies" | "data_processing";
   granted: boolean;
   timestamp: number;
   ipAddress?: string;
@@ -36,56 +36,56 @@ export interface AuditLogEntry {
   ipAddress?: string;
   userAgent?: string;
   metadata?: Record<string, any>;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
 }
 
 export interface PrivacySettings {
   allowAnalytics: boolean;
   allowMarketing: boolean;
   allowCookies: boolean;
-  dataRetention: 'minimal' | 'standard' | 'extended';
+  dataRetention: "minimal" | "standard" | "extended";
   shareWithPartners: boolean;
   allowProfiling: boolean;
 }
 
 class DataProtectionService {
   private encryptionKey: string;
-  private consentVersion = '1.0';
+  private consentVersion = "1.0";
   private auditLogs: AuditLogEntry[] = [];
-  
+
   // Data retention policies
   private retentionPolicies: Record<string, DataRetentionPolicy> = {
     sessionData: {
-      dataType: 'session',
+      dataType: "session",
       retentionPeriod: 24 * 60 * 60 * 1000, // 24 hours
       autoDelete: true,
-      requiresConsent: false
+      requiresConsent: false,
     },
     examResults: {
-      dataType: 'exam_results',
+      dataType: "exam_results",
       retentionPeriod: 365 * 24 * 60 * 60 * 1000, // 1 year
       autoDelete: false,
       anonymizeAfter: 2 * 365 * 24 * 60 * 60 * 1000, // 2 years
-      requiresConsent: true
+      requiresConsent: true,
     },
     analyticsData: {
-      dataType: 'analytics',
+      dataType: "analytics",
       retentionPeriod: 180 * 24 * 60 * 60 * 1000, // 6 months
       autoDelete: true,
-      requiresConsent: true
+      requiresConsent: true,
     },
     userProfile: {
-      dataType: 'profile',
+      dataType: "profile",
       retentionPeriod: 5 * 365 * 24 * 60 * 60 * 1000, // 5 years
       autoDelete: false,
-      requiresConsent: true
+      requiresConsent: true,
     },
     auditLogs: {
-      dataType: 'audit',
+      dataType: "audit",
       retentionPeriod: 3 * 365 * 24 * 60 * 60 * 1000, // 3 years
       autoDelete: true,
-      requiresConsent: false
-    }
+      requiresConsent: false,
+    },
   };
 
   constructor() {
@@ -95,16 +95,16 @@ class DataProtectionService {
 
   private generateEncryptionKey(): string {
     const key = process.env.ENCRYPTION_KEY;
-    
+
     // CRITICAL: Never use default key in production
-    if (!key && process.env.NODE_ENV === 'production') {
+    if (!key && process.env.NODE_ENV === "production") {
       throw new Error(
-        'ENCRYPTION_KEY environment variable must be set in production. ' +
-        'Generate a secure key with: openssl rand -base64 32'
+        "ENCRYPTION_KEY environment variable must be set in production. " +
+          "Generate a secure key with: openssl rand -base64 32"
       );
     }
-    
-    return key || 'development-key-do-not-use-in-production';
+
+    return key || "development-key-do-not-use-in-production";
   }
 
   private async initializeDataProtection(): Promise<void> {
@@ -115,8 +115,8 @@ class DataProtectionService {
 
     // Load existing consent records
     await this.loadConsentRecords();
-    
-    logger.debug('[DataProtection] Service initialized');
+
+    logger.debug("[DataProtection] Service initialized");
   }
 
   /**
@@ -128,9 +128,9 @@ class DataProtectionService {
       const encrypted = CryptoJS.AES.encrypt(jsonString, this.encryptionKey).toString();
       return encrypted;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown encryption error';
-      this.logAuditEvent('encryption_failed', 'data', { error: errorMessage }, 'high');
-      throw new Error('Data encryption failed');
+      const errorMessage = error instanceof Error ? error.message : "Unknown encryption error";
+      this.logAuditEvent("encryption_failed", "data", { error: errorMessage }, "high");
+      throw new Error("Data encryption failed");
     }
   }
 
@@ -140,9 +140,9 @@ class DataProtectionService {
       const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
       return JSON.parse(jsonString);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown decryption error';
-      this.logAuditEvent('decryption_failed', 'data', { error: errorMessage }, 'high');
-      throw new Error('Data decryption failed');
+      const errorMessage = error instanceof Error ? error.message : "Unknown decryption error";
+      this.logAuditEvent("decryption_failed", "data", { error: errorMessage }, "high");
+      throw new Error("Data decryption failed");
     }
   }
 
@@ -151,7 +151,7 @@ class DataProtectionService {
    */
   public async recordConsent(
     userId: string,
-    consentType: ConsentRecord['consentType'],
+    consentType: ConsentRecord["consentType"],
     granted: boolean,
     metadata?: Record<string, any>
   ): Promise<void> {
@@ -163,41 +163,36 @@ class DataProtectionService {
       ipAddress: await this.getClientIP(),
       userAgent: navigator.userAgent,
       consentVersion: this.consentVersion,
-      expiresAt: this.calculateConsentExpiry(consentType)
+      expiresAt: this.calculateConsentExpiry(consentType),
     };
 
     // Store consent record
     await this.storeConsentRecord(consent);
-    
+
     // Log audit event
-    this.logAuditEvent(
-      'consent_recorded',
-      'consent',
-      { consentType, granted, ...metadata },
-      'medium'
-    );
+    this.logAuditEvent("consent_recorded", "consent", { consentType, granted, ...metadata }, "medium");
 
     logger.debug(`[DataProtection] Consent recorded: ${consentType} - ${granted}`);
   }
 
-  public async getConsent(userId: string, consentType: ConsentRecord['consentType']): Promise<boolean> {
+  public async getConsent(userId: string, consentType: ConsentRecord["consentType"]): Promise<boolean> {
     const consents = await this.getUserConsents(userId);
-    const consent = consents.find(c => c.consentType === consentType);
-    
+    const consent = consents.find((c) => c.consentType === consentType);
+
     if (!consent) return false;
-    
+
     // Check if consent has expired
     if (consent.expiresAt && consent.expiresAt < Date.now()) {
       return false;
     }
-    
+
     return consent.granted;
   }
 
   public async getUserConsents(userId: string): Promise<ConsentRecord[]> {
     const stored = localStorage.getItem(`consent_${userId}`);
     if (!stored) return [];
-    
+
     try {
       const decrypted = this.decryptSensitiveData(stored);
       return Array.isArray(decrypted) ? decrypted : [];
@@ -206,27 +201,27 @@ class DataProtectionService {
     }
   }
 
-  public async revokeConsent(userId: string, consentType: ConsentRecord['consentType']): Promise<void> {
+  public async revokeConsent(userId: string, consentType: ConsentRecord["consentType"]): Promise<void> {
     await this.recordConsent(userId, consentType, false);
-    
+
     // Trigger data deletion for revoked consent types
-    if (consentType === 'analytics') {
+    if (consentType === "analytics") {
       await this.deleteAnalyticsData(userId);
-    } else if (consentType === 'marketing') {
+    } else if (consentType === "marketing") {
       await this.deleteMarketingData(userId);
     }
   }
 
-  private calculateConsentExpiry(consentType: ConsentRecord['consentType']): number {
+  private calculateConsentExpiry(consentType: ConsentRecord["consentType"]): number {
     const baseExpiry = 365 * 24 * 60 * 60 * 1000; // 1 year
     return Date.now() + baseExpiry;
   }
 
   private async storeConsentRecord(consent: ConsentRecord): Promise<void> {
     const existing = await this.getUserConsents(consent.userId);
-    const updated = existing.filter(c => c.consentType !== consent.consentType);
+    const updated = existing.filter((c) => c.consentType !== consent.consentType);
     updated.push(consent);
-    
+
     const encrypted = this.encryptSensitiveData(updated);
     localStorage.setItem(`consent_${consent.userId}`, encrypted);
   }
@@ -236,27 +231,27 @@ class DataProtectionService {
    */
   public anonymizeUserData(data: any): any {
     const anonymized = { ...data };
-    
+
     // Remove or hash personally identifiable information
     if (anonymized.email) {
       anonymized.email = this.hashPII(anonymized.email);
     }
-    
+
     if (anonymized.name) {
       delete anonymized.name;
     }
-    
+
     if (anonymized.ipAddress) {
       anonymized.ipAddress = this.anonymizeIP(anonymized.ipAddress);
     }
-    
+
     if (anonymized.userId) {
       anonymized.userId = this.hashPII(anonymized.userId);
     }
-    
+
     // Add anonymization timestamp
     anonymized._anonymized = Date.now();
-    
+
     return anonymized;
   }
 
@@ -266,12 +261,12 @@ class DataProtectionService {
 
   private anonymizeIP(ip: string): string {
     // Remove last octet for IPv4, last 80 bits for IPv6
-    if (ip.includes('.')) {
-      return ip.split('.').slice(0, 3).join('.') + '.0';
-    } else if (ip.includes(':')) {
-      return ip.split(':').slice(0, 4).join(':') + '::';
+    if (ip.includes(".")) {
+      return ip.split(".").slice(0, 3).join(".") + ".0";
+    } else if (ip.includes(":")) {
+      return ip.split(":").slice(0, 4).join(":") + "::";
     }
-    return 'anonymous';
+    return "anonymous";
   }
 
   /**
@@ -284,9 +279,9 @@ class DataProtectionService {
     for (const [policyName, policy] of Object.entries(this.retentionPolicies)) {
       if (policy.autoDelete) {
         const expired = await this.findExpiredData(policy, now);
-        
+
         for (const item of expired) {
-          if (policy.anonymizeAfter && (now - item.timestamp) > policy.anonymizeAfter) {
+          if (policy.anonymizeAfter && now - item.timestamp > policy.anonymizeAfter) {
             // Anonymize instead of delete
             const anonymized = this.anonymizeUserData(item);
             await this.updateDataItem(item.id, anonymized);
@@ -300,12 +295,7 @@ class DataProtectionService {
     }
 
     if (cleanedCount > 0) {
-      this.logAuditEvent(
-        'data_cleanup',
-        'system',
-        { cleanedCount, timestamp: now },
-        'low'
-      );
+      this.logAuditEvent("data_cleanup", "system", { cleanedCount, timestamp: now }, "low");
       logger.debug(`[DataProtection] Cleaned up ${cleanedCount} expired data items`);
     }
   }
@@ -314,13 +304,13 @@ class DataProtectionService {
     // This would query your actual database
     // For now, check localStorage for demo purposes
     const expired: any[] = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith(policy.dataType)) {
         try {
-          const data = JSON.parse(localStorage.getItem(key) || '{}');
-          if (data.timestamp && (now - data.timestamp) > policy.retentionPeriod) {
+          const data = JSON.parse(localStorage.getItem(key) || "{}");
+          if (data.timestamp && now - data.timestamp > policy.retentionPeriod) {
             expired.push({ id: key, ...data });
           }
         } catch {
@@ -329,7 +319,7 @@ class DataProtectionService {
         }
       }
     }
-    
+
     return expired;
   }
 
@@ -350,17 +340,12 @@ class DataProtectionService {
       this.deleteExamData(userId),
       this.deleteAnalyticsData(userId),
       this.deleteSessionData(userId),
-      this.deleteConsentRecords(userId)
+      this.deleteConsentRecords(userId),
     ];
 
     await Promise.all(deletionTasks);
-    
-    this.logAuditEvent(
-      'user_data_deleted',
-      'user',
-      { userId, deletedAt: Date.now() },
-      'high'
-    );
+
+    this.logAuditEvent("user_data_deleted", "user", { userId, deletedAt: Date.now() }, "high");
 
     logger.debug(`[DataProtection] All data deleted for user: ${userId}`);
   }
@@ -373,7 +358,7 @@ class DataProtectionService {
     // Remove exam sessions and results
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const key = localStorage.key(i);
-      if (key?.includes(userId) && (key.includes('exam') || key.includes('session'))) {
+      if (key?.includes(userId) && (key.includes("exam") || key.includes("session"))) {
         localStorage.removeItem(key);
       }
     }
@@ -383,7 +368,7 @@ class DataProtectionService {
     // Remove analytics data
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const key = localStorage.key(i);
-      if (key?.includes(userId) && key.includes('analytics')) {
+      if (key?.includes(userId) && key.includes("analytics")) {
         localStorage.removeItem(key);
       }
     }
@@ -412,15 +397,10 @@ class DataProtectionService {
       analyticsData: await this.getUserAnalyticsData(userId),
       consents: await this.getUserConsents(userId),
       exportedAt: Date.now(),
-      format: 'JSON'
+      format: "JSON",
     };
 
-    this.logAuditEvent(
-      'data_exported',
-      'user',
-      { userId, exportedAt: userData.exportedAt },
-      'medium'
-    );
+    this.logAuditEvent("data_exported", "user", { userId, exportedAt: userData.exportedAt }, "medium");
 
     return userData;
   }
@@ -432,37 +412,37 @@ class DataProtectionService {
 
   private async getUserExamData(userId: string): Promise<any[]> {
     const examData: any[] = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key?.includes(userId) && (key.includes('exam') || key.includes('session'))) {
+      if (key?.includes(userId) && (key.includes("exam") || key.includes("session"))) {
         try {
-          const data = JSON.parse(localStorage.getItem(key) || '{}');
+          const data = JSON.parse(localStorage.getItem(key) || "{}");
           examData.push({ key, ...data });
         } catch {
           // Skip invalid data
         }
       }
     }
-    
+
     return examData;
   }
 
   private async getUserAnalyticsData(userId: string): Promise<any[]> {
     const analyticsData: any[] = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key?.includes(userId) && key.includes('analytics')) {
+      if (key?.includes(userId) && key.includes("analytics")) {
         try {
-          const data = JSON.parse(localStorage.getItem(key) || '{}');
+          const data = JSON.parse(localStorage.getItem(key) || "{}");
           analyticsData.push({ key, ...data });
         } catch {
           // Skip invalid data
         }
       }
     }
-    
+
     return analyticsData;
   }
 
@@ -473,7 +453,7 @@ class DataProtectionService {
     action: string,
     resource: string,
     metadata: Record<string, any> = {},
-    severity: AuditLogEntry['severity'] = 'low'
+    severity: AuditLogEntry["severity"] = "low"
   ): void {
     const auditEntry: AuditLogEntry = {
       id: `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -484,14 +464,14 @@ class DataProtectionService {
       ipAddress: metadata.ipAddress,
       userAgent: navigator.userAgent,
       metadata,
-      severity
+      severity,
     };
 
     this.auditLogs.push(auditEntry);
-    
+
     // Store audit log
     this.storeAuditLog(auditEntry);
-    
+
     // Keep only recent audit logs in memory
     if (this.auditLogs.length > 1000) {
       this.auditLogs = this.auditLogs.slice(-500);
@@ -499,34 +479,34 @@ class DataProtectionService {
   }
 
   private storeAuditLog(entry: AuditLogEntry): void {
-    const stored = localStorage.getItem('audit_logs') || '[]';
+    const stored = localStorage.getItem("audit_logs") || "[]";
     try {
       const logs = JSON.parse(stored);
       logs.push(entry);
-      
+
       // Keep only recent logs
       const recentLogs = logs.slice(-1000);
-      localStorage.setItem('audit_logs', JSON.stringify(recentLogs));
+      localStorage.setItem("audit_logs", JSON.stringify(recentLogs));
     } catch {
-      localStorage.setItem('audit_logs', JSON.stringify([entry]));
+      localStorage.setItem("audit_logs", JSON.stringify([entry]));
     }
   }
 
   public getAuditLogs(userId?: string, startDate?: number, endDate?: number): AuditLogEntry[] {
     let logs = [...this.auditLogs];
-    
+
     if (userId) {
-      logs = logs.filter(log => log.userId === userId);
+      logs = logs.filter((log) => log.userId === userId);
     }
-    
+
     if (startDate) {
-      logs = logs.filter(log => log.timestamp >= startDate);
+      logs = logs.filter((log) => log.timestamp >= startDate);
     }
-    
+
     if (endDate) {
-      logs = logs.filter(log => log.timestamp <= endDate);
+      logs = logs.filter((log) => log.timestamp <= endDate);
     }
-    
+
     return logs.sort((a, b) => b.timestamp - a.timestamp);
   }
 
@@ -536,18 +516,13 @@ class DataProtectionService {
   public async updatePrivacySettings(userId: string, settings: PrivacySettings): Promise<void> {
     const encrypted = this.encryptSensitiveData(settings);
     localStorage.setItem(`privacy_${userId}`, encrypted);
-    
+
     // Update consents based on settings
-    await this.recordConsent(userId, 'analytics', settings.allowAnalytics);
-    await this.recordConsent(userId, 'marketing', settings.allowMarketing);
-    await this.recordConsent(userId, 'cookies', settings.allowCookies);
-    
-    this.logAuditEvent(
-      'privacy_settings_updated',
-      'user',
-      { userId, settings },
-      'medium'
-    );
+    await this.recordConsent(userId, "analytics", settings.allowAnalytics);
+    await this.recordConsent(userId, "marketing", settings.allowMarketing);
+    await this.recordConsent(userId, "cookies", settings.allowCookies);
+
+    this.logAuditEvent("privacy_settings_updated", "user", { userId, settings }, "medium");
   }
 
   public async getPrivacySettings(userId: string): Promise<PrivacySettings> {
@@ -555,7 +530,7 @@ class DataProtectionService {
     if (!stored) {
       return this.getDefaultPrivacySettings();
     }
-    
+
     try {
       return this.decryptSensitiveData(stored);
     } catch {
@@ -568,9 +543,9 @@ class DataProtectionService {
       allowAnalytics: false,
       allowMarketing: false,
       allowCookies: true,
-      dataRetention: 'standard',
+      dataRetention: "standard",
       shareWithPartners: false,
-      allowProfiling: false
+      allowProfiling: false,
     };
   }
 
@@ -580,15 +555,15 @@ class DataProtectionService {
   private async getClientIP(): Promise<string> {
     try {
       // In production, this would be handled server-side
-      return 'client-ip-not-available';
+      return "client-ip-not-available";
     } catch {
-      return 'unknown';
+      return "unknown";
     }
   }
 
   private async loadConsentRecords(): Promise<void> {
     // Load existing consent records on initialization
-    logger.debug('[DataProtection] Consent records loaded');
+    logger.debug("[DataProtection] Consent records loaded");
   }
 
   /**
@@ -596,22 +571,22 @@ class DataProtectionService {
    */
   public generateComplianceReport(): any {
     const now = Date.now();
-    const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
-    
+    const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+
     const recentAudits = this.getAuditLogs(undefined, thirtyDaysAgo, now);
-    
+
     return {
       reportGeneratedAt: now,
-      period: '30 days',
+      period: "30 days",
       metrics: {
         totalAuditEvents: recentAudits.length,
-        dataExports: recentAudits.filter(a => a.action === 'data_exported').length,
-        dataDeletions: recentAudits.filter(a => a.action === 'user_data_deleted').length,
-        consentChanges: recentAudits.filter(a => a.action === 'consent_recorded').length,
-        securityEvents: recentAudits.filter(a => a.severity === 'high' || a.severity === 'critical').length
+        dataExports: recentAudits.filter((a) => a.action === "data_exported").length,
+        dataDeletions: recentAudits.filter((a) => a.action === "user_data_deleted").length,
+        consentChanges: recentAudits.filter((a) => a.action === "consent_recorded").length,
+        securityEvents: recentAudits.filter((a) => a.severity === "high" || a.severity === "critical").length,
       },
       dataRetention: this.retentionPolicies,
-      auditSample: recentAudits.slice(0, 10)
+      auditSample: recentAudits.slice(0, 10),
     };
   }
 }
@@ -635,5 +610,5 @@ export const {
   getPrivacySettings,
   logAuditEvent,
   getAuditLogs,
-  generateComplianceReport
+  generateComplianceReport,
 } = dataProtection;
