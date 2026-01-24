@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { logger } from "@/lib/logger";
 import {
@@ -64,7 +64,10 @@ export default function AdminDashboard() {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
-  const [nextRefreshIn, setNextRefreshIn] = useState(30);
+  
+  // Use ref instead of state to avoid re-renders on countdown
+  const nextRefreshIn = useRef(30);
+  const countdownRef = useRef<HTMLSpanElement>(null);
   
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
@@ -99,7 +102,12 @@ export default function AdminDashboard() {
       setOnlineUsers(data.onlineUsers || 0);
       setRecentActivity(data.recentActivity || []);
       setLastUpdate(new Date());
-      setNextRefreshIn(30); // Reset countdown
+      
+      // Reset countdown without triggering re-render
+      nextRefreshIn.current = 30;
+      if (countdownRef.current) {
+        countdownRef.current.textContent = '30s';
+      }
 
       logger.info("Dashboard stats loaded", {
         totalUsers: data.stats.totalUsers,
@@ -134,12 +142,14 @@ export default function AdminDashboard() {
           fetchDashboardStats(true);
         }, 30000);
 
-        // Countdown timer for next refresh (updates every second)
+        // Countdown timer - update DOM directly to avoid re-renders
         const countdownInterval = setInterval(() => {
-          setNextRefreshIn((prev) => {
-            if (prev <= 1) return 30;
-            return prev - 1;
-          });
+          nextRefreshIn.current = nextRefreshIn.current <= 1 ? 30 : nextRefreshIn.current - 1;
+          
+          // Update DOM directly without triggering React re-render
+          if (countdownRef.current) {
+            countdownRef.current.textContent = `${nextRefreshIn.current}s`;
+          }
         }, 1000);
         
         return () => {
@@ -159,7 +169,12 @@ export default function AdminDashboard() {
 
   const handleManualRefresh = () => {
     fetchDashboardStats(false);
-    setNextRefreshIn(30); // Reset countdown on manual refresh
+    
+    // Reset countdown without triggering re-render
+    nextRefreshIn.current = 30;
+    if (countdownRef.current) {
+      countdownRef.current.textContent = '30s';
+    }
   };
 
   const formatTimeAgo = (date: Date) => {
@@ -222,8 +237,8 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-green-700">LIVE DATA</span>
-                  <span className="text-xs text-green-600 tabular-nums">
-                    Next refresh: {nextRefreshIn}s
+                  <span ref={countdownRef} className="text-xs text-green-600 tabular-nums">
+                    Next refresh: 30s
                   </span>
                 </div>
               </div>

@@ -49,31 +49,41 @@
   }
 }
 
+/* Critical mobile scroll fixes */
+html {
+  height: 100%;
+  overflow: hidden; /* Prevent double scrolling */
+}
+
 body {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
   font-feature-settings: "rlig" 1, "calt" 1;
-  /* Enable smooth scrolling on mobile */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
-}
-
-/* Fix for iOS Safari scroll issues */
-html {
-  -webkit-overflow-scrolling: touch;
-  overflow-y: auto;
+  
+  /* Mobile scroll optimization */
   height: 100%;
+  overflow: hidden; /* Body doesn't scroll */
+  position: fixed; /* Prevent iOS bounce on body */
+  width: 100%;
+  touch-action: pan-y; /* Allow vertical scrolling only */
 }
 
-body {
-  min-height: 100%;
+/* Main content area scrolls instead of body */
+#__next, [data-nextjs-scroll-container] {
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
-/* Ensure touch scrolling works on all mobile devices */
-* {
-  -webkit-overflow-scrolling: touch !important;
+/* Desktop: reset body scroll behavior */
+@media (min-width: 768px) {
+  html, body {
+    height: auto;
+    overflow: visible;
+    position: static;
+  }
 }
 
 @layer utilities {
@@ -89,6 +99,15 @@ body {
 
   /* Mobile scroll fix for all pages */
   .mobile-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    height: 100vh;
+    position: relative;
+  }
+
+  /* Allow touch scrolling on specific containers */
+  .scrollable {
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;
     overscroll-behavior-y: contain;
@@ -162,6 +181,17 @@ body {
     /* Prevent layout shifts during scroll */
     img, video {
       content-visibility: auto;
+    }
+
+    /* Critical: Allow vertical pan on mobile */
+    body, html, .mobile-scroll-container {
+      touch-action: pan-y !important;
+    }
+
+    /* Fixed elements should not interfere with scrolling */
+    [class*="fixed"], [class*="sticky"] {
+      transform: translateZ(0); /* GPU acceleration */
+      backface-visibility: hidden;
     }
   }
 
