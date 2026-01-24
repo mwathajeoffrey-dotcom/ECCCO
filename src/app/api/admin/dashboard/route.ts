@@ -136,7 +136,7 @@ export async function GET() {
         },
       },
       include: {
-        user: {
+        User: {
           select: {
             email: true,
           },
@@ -156,7 +156,7 @@ export async function GET() {
         },
       },
       include: {
-        user: {
+        User: {
           select: {
             email: true,
           },
@@ -191,14 +191,14 @@ export async function GET() {
       ...recentQuizzes.map((quiz) => ({
         id: `quiz-${quiz.id}`,
         type: "quiz" as const,
-        userEmail: quiz.user.email || "Anonymous",
+        userEmail: quiz.User.email || "Anonymous",
         timestamp: quiz.createdAt,
         details: `Completed quiz - Score: ${quiz.score}/${quiz.totalQuestions}`,
       })),
       ...recentExams.map((exam) => ({
         id: `exam-${exam.id}`,
         type: "exam" as const,
-        userEmail: exam.user.email || "Anonymous",
+        userEmail: exam.User.email || "Anonymous",
         timestamp: exam.createdAt,
         details: `Completed exam - Score: ${exam.score}/${exam.totalQuestions}`,
       })),

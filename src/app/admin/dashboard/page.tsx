@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { logger } from "@/lib/logger";
 import {
-  LayoutDashboard,
   Users,
   BookOpen,
   Activity,
@@ -12,7 +11,6 @@ import {
   MessageSquare,
   AlertCircle,
   CheckCircle,
-  Clock,
   BarChart3,
   ChevronLeft,
   Wifi,
@@ -22,7 +20,6 @@ import {
   Radio,
   Zap,
   FileText,
-  Mail,
 } from "lucide-react";
 
 interface DashboardStats {
