@@ -212,10 +212,16 @@ export async function GET() {
     ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     // Calculate "online users" - users active in last 5 minutes
-    // Check for any recent activity OR recently created users (just signed up)
+    // Now includes heartbeat tracking via updatedAt field
     const onlineUsers = await prisma.user.count({
       where: {
         OR: [
+          {
+            // Users with recent heartbeat (browsing the site)
+            updatedAt: {
+              gte: fiveMinutesAgo,
+            },
+          },
           {
             // Users who attempted questions recently
             QuestionAttempt: {

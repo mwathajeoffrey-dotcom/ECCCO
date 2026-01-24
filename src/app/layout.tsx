@@ -9,6 +9,7 @@ import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/providers/command-palette-provider";
 import { KeyboardShortcutsProvider } from "@/components/providers/keyboard-shortcuts-provider";
+import { UserHeartbeat } from "@/components/UserHeartbeat";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import "./globals.css";
@@ -132,6 +133,7 @@ export default function RootLayout({
                 <PWAInstallPrompt />
                 <DesktopMenuButton />
                 <MobileBottomNav />
+                <UserHeartbeat />
               </CommandPaletteProvider>
             </KeyboardShortcutsProvider>
           </ClerkProvider>
