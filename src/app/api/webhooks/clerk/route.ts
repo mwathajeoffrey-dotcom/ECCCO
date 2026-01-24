@@ -62,22 +62,26 @@ export async function POST(req: Request) {
       try {
         // Create user in database
         const email = email_addresses?.[0]?.email_address || '';
-        const name = `${first_name || ''} ${last_name || ''}`.trim() || 'User';
+
+        // Generate a unique ID for the User table
+        const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
         const user = await prisma.user.create({
           data: {
-            id,
+            id: userId,
+            clerkUserId: id,
             email,
-            name,
+            updatedAt: new Date(),
           },
         });
 
-        logger.info(`User created in database: ${user.id} (${user.email})`);
+        logger.info(`User created in database: ${user.clerkUserId} (${user.email})`);
 
         return NextResponse.json({
           success: true,
           message: 'User created',
           userId: user.id,
+          clerkUserId: user.clerkUserId,
         });
       } catch (error: any) {
         // If user already exists, that's okay
@@ -98,22 +102,22 @@ export async function POST(req: Request) {
       try {
         // Update user in database
         const email = email_addresses?.[0]?.email_address || '';
-        const name = `${first_name || ''} ${last_name || ''}`.trim() || 'User';
 
         const user = await prisma.user.update({
-          where: { id },
+          where: { clerkUserId: id },
           data: {
             email,
-            name,
+            updatedAt: new Date(),
           },
         });
 
-        logger.info(`User updated in database: ${user.id} (${user.email})`);
+        logger.info(`User updated in database: ${user.clerkUserId} (${user.email})`);
 
         return NextResponse.json({
           success: true,
           message: 'User updated',
           userId: user.id,
+          clerkUserId: user.clerkUserId,
         });
       } catch (error: any) {
         logger.error('Error updating user in database:', error);
@@ -121,22 +125,24 @@ export async function POST(req: Request) {
         if (error.code === 'P2025') {
           try {
             const email = email_addresses?.[0]?.email_address || '';
-            const name = `${first_name || ''} ${last_name || ''}`.trim() || 'User';
+            const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
             const user = await prisma.user.create({
               data: {
-                id,
+                id: userId,
+                clerkUserId: id,
                 email,
-                name,
+                updatedAt: new Date(),
               },
             });
 
-            logger.info(`User created in database (from update): ${user.id}`);
+            logger.info(`User created in database (from update): ${user.clerkUserId}`);
 
             return NextResponse.json({
               success: true,
               message: 'User created',
               userId: user.id,
+              clerkUserId: user.clerkUserId,
             });
           } catch (createError: any) {
             logger.error('Error creating user from update:', createError);
@@ -150,25 +156,29 @@ export async function POST(req: Request) {
 
     if (eventType === 'user.deleted') {
       try {
-        // Soft delete or mark user as deleted
-        // You can also hard delete if you prefer
-        await prisma.user.update({
-          where: { id },
-          data: {
-            // Add a deletedAt field if you want soft deletes
-            // For now, we'll just log it
-          },
+        // Delete user from database
+        await prisma.user.delete({
+          where: { clerkUserId: id },
         });
 
-        logger.info(`User deletion event received: ${id}`);
+        logger.info(`User deleted from database: ${id}`);
 
         return NextResponse.json({
           success: true,
-          message: 'User deletion processed',
+          message: 'User deleted',
         });
       } catch (error: any) {
-        logger.error('Error processing user deletion:', error);
-        return new NextResponse('Error processing deletion', { status: 500 });
+        // If user doesn't exist, that's okay
+        if (error.code === 'P2025') {
+          logger.info(`User ${id} not found in database (already deleted)`);
+          return NextResponse.json({
+            success: true,
+            message: 'User not found',
+          });
+        }
+
+        logger.error('Error deleting user from database:', error);
+        return new NextResponse('Error deleting user', { status: 500 });
       }
     }
 

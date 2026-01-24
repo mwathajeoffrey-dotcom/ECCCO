@@ -37,6 +37,7 @@
     "*.js",
     "*.mjs",
     "*.sh",
-    "*.py"
+    "*.py",
+    "sync-clerk-users.ts"
   ]
 }
