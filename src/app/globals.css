@@ -138,4 +138,47 @@ body {
       #374151 100%
     );
   }
+
+  /* Performance optimizations for mobile scrolling */
+  @media (max-width: 768px) {
+    /* Use hardware acceleration for transforms */
+    .will-change-transform {
+      will-change: transform;
+    }
+
+    /* Reduce animation complexity on mobile */
+    .reduce-motion {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    /* Optimize scroll performance */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    /* Prevent layout shifts during scroll */
+    img, video {
+      content-visibility: auto;
+    }
+  }
+
+  /* Optimize transitions - only animate transform and opacity */
+  .optimized-transition {
+    transition-property: transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* GPU-accelerated animations */
+  @supports (transform: translateZ(0)) {
+    .gpu-accelerated {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+  }
 }
+

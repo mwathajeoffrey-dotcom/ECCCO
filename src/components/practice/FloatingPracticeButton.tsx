@@ -10,17 +10,25 @@ export default function FloatingPracticeButton() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
 
-      // Show button when scrolling up, hide when scrolling down (except at top)
-      if (currentScrollY < lastScrollY || currentScrollY < 100) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false);
+          // Show button when scrolling up, hide when scrolling down (except at top)
+          if (currentScrollY < lastScrollY || currentScrollY < 100) {
+            setIsVisible(true);
+          } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            setIsVisible(false);
+          }
+
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
       }
-
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
