@@ -234,7 +234,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Backdrop - shows on all devices when sidebar is open */}
+      {/* Backdrop - Shows when sidebar is open on all devices */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
