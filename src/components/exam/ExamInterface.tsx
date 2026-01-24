@@ -554,9 +554,15 @@ export default function ExamInterface() {
               {questionsArray.map((question, index) => {
                 const userAnswer = selectedAnswers[index];
                 const isCorrect = userAnswer === question.correctIndex;
-                const options = typeof question.options === "string" ? JSON.parse(question.options) : question.options;
-                const references =
-                  typeof question.references === "string" ? JSON.parse(question.references) : question.references;
+                
+                // Safely handle options that might be undefined
+                const options = question.options 
+                  ? (typeof question.options === "string" ? JSON.parse(question.options) : question.options)
+                  : [];
+                  
+                const references = question.references
+                  ? (typeof question.references === "string" ? JSON.parse(question.references) : question.references)
+                  : [];
 
                 return (
                   <div key={question.id} className="border rounded-lg p-6">
