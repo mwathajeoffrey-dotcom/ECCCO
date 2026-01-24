@@ -3,13 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
-import AppLayout from "@/components/layout/AppLayout";
-import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/providers/command-palette-provider";
 import { KeyboardShortcutsProvider } from "@/components/providers/keyboard-shortcuts-provider";
 import { UserHeartbeat } from "@/components/UserHeartbeat";
+import { RootLayoutContent } from "@/components/layout/RootLayoutContent";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import "./globals.css";
@@ -107,40 +106,37 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="ECCCO Medical" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Mobile scroll container wrapper */}
-        <div className="mobile-scroll-container md:contents">
-          <Script id="chunk-error-handler" strategy="beforeInteractive">
-            {`
-              window.addEventListener('error', (event) => {
-                if (
-                  event.message?.includes('Failed to fetch') ||
-                  event.message?.includes('ChunkLoadError') ||
-                  event.message?.includes('Loading chunk') ||
-                  event.message?.includes('Failed to load chunk')
-                ) {
-                  logger.warn('Chunk load error detected - reloading to get latest version...');
-                  setTimeout(() => window.location.reload(), 100);
-                }
-              });
-            `}
-          </Script>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <ClerkProvider>
-              <KeyboardShortcutsProvider>
-                <CommandPaletteProvider>
-                  <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
-                    <AppLayout>{children}</AppLayout>
-                  </ErrorBoundary>
-                  <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
-                  <PWAInstallPrompt />
-                  <DesktopMenuButton />
-                  <MobileBottomNav />
-                  <UserHeartbeat />
-                </CommandPaletteProvider>
-              </KeyboardShortcutsProvider>
-            </ClerkProvider>
-          </ThemeProvider>
-        </div>
+        <Script id="chunk-error-handler" strategy="beforeInteractive">
+          {`
+            window.addEventListener('error', (event) => {
+              if (
+                event.message?.includes('Failed to fetch') ||
+                event.message?.includes('ChunkLoadError') ||
+                event.message?.includes('Loading chunk') ||
+                event.message?.includes('Failed to load chunk')
+              ) {
+                logger.warn('Chunk load error detected - reloading to get latest version...');
+                setTimeout(() => window.location.reload(), 100);
+              }
+            });
+          `}
+        </Script>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ClerkProvider>
+            <KeyboardShortcutsProvider>
+              <CommandPaletteProvider>
+                <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+                  {/* Root Layout Content manages sidebar state and structure */}
+                  <RootLayoutContent>{children}</RootLayoutContent>
+                </ErrorBoundary>
+                <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
+                <PWAInstallPrompt />
+                <DesktopMenuButton />
+                <UserHeartbeat />
+              </CommandPaletteProvider>
+            </KeyboardShortcutsProvider>
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Sidebar from "@/components/navigation/Sidebar";
 import { Menu } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-export default function AppLayout({ children }: AppLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function AppLayout({ children, setSidebarOpen }: AppLayoutProps) {
   const pathname = usePathname();
 
   // Close sidebar when route changes (important for mobile navigation)
   useEffect(() => {
     setSidebarOpen(false);
-  }, [pathname]);
+  }, [pathname, setSidebarOpen]);
 
   // Pages that should not show the sidebar (auth pages and redirects)
   // Note: /auth/signin handles both signin and signup (December 19th version)
@@ -28,10 +28,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
+    <>
       {/* Floating Menu Button - Visible on ALL devices */}
       <button
         onClick={() => setSidebarOpen(true)}
@@ -42,7 +39,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </button>
 
       {/* Main Content */}
-      <div className="flex-1">{children}</div>
-    </div>
+      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex-1">{children}</div>
+      </div>
+    </>
   );
 }
