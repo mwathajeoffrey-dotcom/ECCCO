@@ -241,8 +241,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-black/60 z-40 cursor-pointer"
             onClick={onClose}
+            aria-label="Close menu"
           />
         )}
       </AnimatePresence>
@@ -260,6 +261,25 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           e.stopPropagation();
         }}
       >
+        {/* Close Button - Visible at top of sidebar */}
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Close menu"
+          >
+            <svg
+              className="w-6 h-6 text-gray-600 dark:text-gray-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
         <nav className="p-4 space-y-2">
           {/* Home Link */}
           <Link
