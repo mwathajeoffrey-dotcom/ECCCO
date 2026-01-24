@@ -52,7 +52,6 @@
 /* Critical mobile scroll fixes */
 html {
   height: 100%;
-  overflow: hidden; /* Prevent double scrolling */
 }
 
 body {
@@ -60,10 +59,8 @@ body {
   background: hsl(var(--background));
   font-feature-settings: "rlig" 1, "calt" 1;
   
-  /* Mobile scroll optimization */
+  /* Mobile scroll optimization - only hide overflow, don't fix position */
   height: 100%;
-  overflow: hidden; /* Body doesn't scroll */
-  position: fixed; /* Prevent iOS bounce on body */
   width: 100%;
   touch-action: pan-y; /* Allow vertical scrolling only */
 }
@@ -101,8 +98,9 @@ body {
   .mobile-scroll-container {
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;
+    overflow-x: hidden;
     overscroll-behavior-y: contain;
-    height: 100vh;
+    min-height: 100vh;
     position: relative;
   }
 
