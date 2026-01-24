@@ -37,13 +37,34 @@ export async function GET(request: NextRequest) {
     // Format to match expected structure - properly parse options from JSON string
     const formattedQuestions = questions.map((q: any) => {
       // Parse options if it's a string, otherwise use as-is
-      let parsedOptions = q.options;
-      if (typeof q.options === "string") {
-        try {
-          parsedOptions = JSON.parse(q.options);
-        } catch (e) {
-          logger.warn("Failed to parse options for question", { questionId: q.id });
-          parsedOptions = [];
+      let parsedOptions = [];
+      if (q.options) {
+        if (typeof q.options === "string") {
+          try {
+            parsedOptions = JSON.parse(q.options);
+          } catch (_e) {
+            logger.warn("Failed to parse options for question", { questionId: q.id, options: q.options });
+            parsedOptions = [];
+          }
+        } else {
+          parsedOptions = q.options;
+        }
+      } else {
+        logger.warn("Question missing options field", { questionId: q.id, question: q.question });
+      }
+
+      // Parse references similarly
+      let parsedReferences = [];
+      if (q.references) {
+        if (typeof q.references === "string") {
+          try {
+            parsedReferences = JSON.parse(q.references);
+          } catch (_e) {
+            logger.warn("Failed to parse references for question", { questionId: q.id });
+            parsedReferences = [];
+          }
+        } else {
+          parsedReferences = q.references;
         }
       }
 
@@ -53,6 +74,7 @@ export async function GET(request: NextRequest) {
         options: parsedOptions,
         correctIndex: q.correctIndex,
         explanation: q.explanation,
+        references: parsedReferences,
         difficulty: q.difficulty,
         topicId: q.topicId,
         topic: {
