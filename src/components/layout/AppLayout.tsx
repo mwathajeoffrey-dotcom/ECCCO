@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/navigation/Sidebar";
 import { Menu } from "lucide-react";
@@ -12,6 +12,11 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+
+  // Close sidebar when route changes (important for mobile navigation)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   // Pages that should not show the sidebar (auth pages and redirects)
   // Note: /auth/signin handles both signin and signup (December 19th version)
