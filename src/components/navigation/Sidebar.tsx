@@ -241,8 +241,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 bg-black/60 z-[9997] cursor-pointer"
-            onClick={onClose}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose?.();
+            }}
             aria-label="Close menu"
           />
         )}
@@ -252,8 +257,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <motion.aside
         initial={false}
         animate={{ x: isOpen ? 0 : "-100%" }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[9998] overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container"
+        transition={{ 
+          type: "spring", 
+          damping: 30, 
+          stiffness: 300,
+          mass: 0.8
+        }}
+        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[9998] overflow-y-auto overflow-x-hidden shadow-2xl sidebar-scroll-container"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onWheel={(e) => {
@@ -265,17 +275,23 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="sticky top-0 z-[9999] bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
           <button
-            onClick={onClose}
-            className="p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose?.();
+            }}
+            className="p-3 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 text-white transition-all duration-200 shadow-md hover:shadow-lg active:scale-95"
             aria-label="Close menu"
+            type="button"
           >
             <svg
-              className="w-6 h-6 text-gray-600 dark:text-gray-300"
+              className="w-6 h-6 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              strokeWidth={2.5}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
