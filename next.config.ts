@@ -44,12 +44,12 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io https://vercel.live wss://ws.pusherapp.com",
-              "frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev",
+              "connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live wss://ws.pusherapp.com https://*.vercel.app https://*.vercel-analytics.com",
+              "frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
   },
   // Image optimization
   images: {
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
