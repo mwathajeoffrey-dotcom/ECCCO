@@ -2,9 +2,19 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-// Check if user is admin
+// Check if user is admin (supports both User IDs and Emails)
 async function isUserAdmin(clerkUserId: string): Promise<boolean> {
+  // Check by User ID first (faster, no database query needed)
+  const adminUserIds = process.env.ADMIN_USER_IDS?.split(",") || [];
+  if (adminUserIds.includes(clerkUserId)) {
+    return true;
+  }
+
+  // Fallback: Check by email
   const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
+  if (adminEmails.length === 0) {
+    return false;
+  }
 
   const user = await prisma.user.findUnique({
     where: { clerkUserId },
@@ -114,6 +124,128 @@ export async function GET() {
       take: 5,
     });
 
+    // Get recent activity feed (last 20 actions)
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    
+    // Get recent quiz attempts
+    const recentQuizzes = await prisma.quizAttempt.findMany({
+      where: {
+        createdAt: {
+          gte: oneHourAgo,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 5,
+    });
+
+    // Get recent exam attempts
+    const recentExams = await prisma.examAttempt.findMany({
+      where: {
+        createdAt: {
+          gte: oneHourAgo,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 5,
+    });
+
+    // Get recent user signups
+    const recentSignups = await prisma.user.findMany({
+      where: {
+        createdAt: {
+          gte: oneHourAgo,
+        },
+      },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 5,
+    });
+
+    // Combine and format recent activity
+    const recentActivityFeed = [
+      ...recentQuizzes.map((quiz) => ({
+        id: `quiz-${quiz.id}`,
+        type: "quiz" as const,
+        userEmail: quiz.user.email || "Anonymous",
+        timestamp: quiz.createdAt,
+        details: `Completed quiz - Score: ${quiz.score}/${quiz.totalQuestions}`,
+      })),
+      ...recentExams.map((exam) => ({
+        id: `exam-${exam.id}`,
+        type: "exam" as const,
+        userEmail: exam.user.email || "Anonymous",
+        timestamp: exam.createdAt,
+        details: `Completed exam - Score: ${exam.score}/${exam.totalQuestions}`,
+      })),
+      ...recentSignups.map((user) => ({
+        id: `signup-${user.id}`,
+        type: "signup" as const,
+        userEmail: user.email || "New User",
+        timestamp: user.createdAt,
+        details: "Signed up for ECCCO",
+      })),
+    ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    // Calculate "online users" - users active in last 5 minutes
+    const onlineUsers = await prisma.user.count({
+      where: {
+        OR: [
+          {
+            QuestionAttempt: {
+              some: {
+                createdAt: {
+                  gte: fiveMinutesAgo,
+                },
+              },
+            },
+          },
+          {
+            QuizAttempt: {
+              some: {
+                createdAt: {
+                  gte: fiveMinutesAgo,
+                },
+              },
+            },
+          },
+          {
+            ExamAttempt: {
+              some: {
+                createdAt: {
+                  gte: fiveMinutesAgo,
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+
     // Calculate system health based on activity
     let systemHealth: "healthy" | "warning" | "error" = "healthy";
     if (activeToday === 0 && totalUsers > 0) {
@@ -138,6 +270,8 @@ export async function GET() {
         recentUsers,
         recentActivity,
         avgQuestionsPerUser,
+        onlineUsers,
+        activeNow: onlineUsers,
       },
       growth: {
         usersByDay: usersByDay.map((day) => ({
@@ -151,6 +285,8 @@ export async function GET() {
           attempts: item._count,
         })),
       },
+      recentActivity: recentActivityFeed.slice(0, 20),
+      onlineUsers,
     });
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
