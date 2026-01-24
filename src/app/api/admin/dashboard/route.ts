@@ -212,10 +212,12 @@ export async function GET() {
     ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     // Calculate "online users" - users active in last 5 minutes
+    // Check for any recent activity OR recently created users (just signed up)
     const onlineUsers = await prisma.user.count({
       where: {
         OR: [
           {
+            // Users who attempted questions recently
             QuestionAttempt: {
               some: {
                 createdAt: {
@@ -225,6 +227,7 @@ export async function GET() {
             },
           },
           {
+            // Users who took quizzes recently
             QuizAttempt: {
               some: {
                 createdAt: {
@@ -234,7 +237,24 @@ export async function GET() {
             },
           },
           {
+            // Users who took exams recently
             ExamAttempt: {
+              some: {
+                createdAt: {
+                  gte: fiveMinutesAgo,
+                },
+              },
+            },
+          },
+          {
+            // Users who just signed up (within last 5 minutes)
+            createdAt: {
+              gte: fiveMinutesAgo,
+            },
+          },
+          {
+            // Users who created notes recently
+            UserNote: {
               some: {
                 createdAt: {
                   gte: fiveMinutesAgo,
