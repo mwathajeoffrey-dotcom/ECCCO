@@ -241,7 +241,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-40 cursor-pointer"
+            className="fixed inset-0 bg-black/60 z-[9997] cursor-pointer"
             onClick={onClose}
             aria-label="Close menu"
           />
@@ -253,7 +253,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         initial={false}
         animate={{ x: isOpen ? 0 : "-100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container"
+        className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[9998] overflow-y-auto overflow-x-hidden shadow-lg sidebar-scroll-container"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onWheel={(e) => {
@@ -262,11 +262,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         }}
       >
         {/* Close Button - Visible at top of sidebar */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="sticky top-0 z-[9999] bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
             aria-label="Close menu"
           >
             <svg

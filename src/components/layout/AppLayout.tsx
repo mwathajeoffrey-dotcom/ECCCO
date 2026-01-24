@@ -32,7 +32,7 @@ export default function AppLayout({ children, setSidebarOpen }: AppLayoutProps) 
       {/* Floating Menu Button - Visible on ALL devices */}
       <button
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-[60] p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110"
+        className="fixed top-4 left-4 z-[9999] p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110"
         aria-label="Open menu"
       >
         <Menu className="w-6 h-6" />

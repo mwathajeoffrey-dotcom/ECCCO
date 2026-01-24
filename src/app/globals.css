@@ -102,6 +102,7 @@ body {
     overscroll-behavior-y: contain;
     min-height: 100vh;
     position: relative;
+    z-index: 1; /* Keep content below fixed elements */
   }
 
   /* Allow touch scrolling on specific containers */
