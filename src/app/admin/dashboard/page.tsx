@@ -64,6 +64,7 @@ export default function AdminDashboard() {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [nextRefreshIn, setNextRefreshIn] = useState(30);
   
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
@@ -98,6 +99,7 @@ export default function AdminDashboard() {
       setOnlineUsers(data.onlineUsers || 0);
       setRecentActivity(data.recentActivity || []);
       setLastUpdate(new Date());
+      setNextRefreshIn(30); // Reset countdown
 
       logger.info("Dashboard stats loaded", {
         totalUsers: data.stats.totalUsers,
@@ -128,11 +130,22 @@ export default function AdminDashboard() {
         await fetchDashboardStats();
         
         // Start auto-refresh every 30 seconds
-        const interval = setInterval(() => {
+        const refreshInterval = setInterval(() => {
           fetchDashboardStats(true);
         }, 30000);
+
+        // Countdown timer for next refresh (updates every second)
+        const countdownInterval = setInterval(() => {
+          setNextRefreshIn((prev) => {
+            if (prev <= 1) return 30;
+            return prev - 1;
+          });
+        }, 1000);
         
-        return () => clearInterval(interval);
+        return () => {
+          clearInterval(refreshInterval);
+          clearInterval(countdownInterval);
+        };
       } catch (err) {
         logger.error("Admin check failed:", err instanceof Error ? err : new Error(String(err)));
         window.location.href = "/login?redirect=/admin/dashboard";
@@ -146,6 +159,7 @@ export default function AdminDashboard() {
 
   const handleManualRefresh = () => {
     fetchDashboardStats(false);
+    setNextRefreshIn(30); // Reset countdown on manual refresh
   };
 
   const formatTimeAgo = (date: Date) => {
@@ -199,28 +213,41 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              {/* Real-time indicator */}
-              <div className="flex items-center space-x-2 px-3 py-1.5 bg-green-50 rounded-lg border border-green-200">
+              {/* Real-time indicator with auto-refresh countdown */}
+              <div className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 shadow-sm">
                 <div className="relative">
                   <Radio className="w-4 h-4 text-green-600" />
                   <span className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                  <span className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full"></span>
                 </div>
-                <span className="text-sm font-medium text-green-700">Live</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-green-700">LIVE DATA</span>
+                  <span className="text-xs text-green-600 tabular-nums">
+                    Next refresh: {nextRefreshIn}s
+                  </span>
+                </div>
               </div>
               
               {/* Last updated */}
-              <div className="text-sm text-gray-500">
-                Updated {formatTimeAgo(lastUpdate)}
+              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                <Eye className="w-4 h-4 text-gray-500" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-500">Last updated</span>
+                  <span className="text-sm font-medium text-gray-700">{formatTimeAgo(lastUpdate)}</span>
+                </div>
               </div>
               
               {/* Manual refresh button */}
               <button
                 onClick={handleManualRefresh}
                 disabled={isRefreshing}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-                title="Refresh dashboard"
+                className="flex items-center space-x-2 px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+                title="Refresh dashboard now"
               >
-                <RefreshCw className={`w-5 h-5 text-gray-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 text-gray-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span className="text-sm font-medium text-gray-700">
+                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
+                </span>
               </button>
               
               <Link href="/admin/users" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -283,7 +310,12 @@ export default function AdminDashboard() {
           </div>
 
           {/* Active Today */}
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 relative overflow-hidden">
+            {/* Live indicator pulse */}
+            {stats.activeToday > 0 && (
+              <div className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            )}
+            
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-50 rounded-lg">
                 <Activity className="w-6 h-6 text-blue-600" />
@@ -291,13 +323,15 @@ export default function AdminDashboard() {
               <div className={`px-2 py-1 rounded text-xs font-semibold ${
                 stats.activeToday > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
               }`}>
-                {stats.activeToday > 0 ? '+' + stats.activeToday : stats.activeToday}
+                {stats.activeToday > 0 ? 'Active' : 'No activity'}
               </div>
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-medium text-gray-600">Active Today</h3>
               <p className="text-4xl font-bold text-gray-900">{stats.activeToday}</p>
-              <p className="text-sm text-gray-500">Last 24 hours</p>
+              <p className="text-sm text-gray-500">
+                {stats.activeToday > 0 ? 'Users attempted questions' : 'Waiting for activity...'}
+              </p>
             </div>
           </div>
 
@@ -319,7 +353,12 @@ export default function AdminDashboard() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 relative overflow-hidden">
+            {/* Live indicator pulse */}
+            {stats.recentActivity && stats.recentActivity > 0 && (
+              <div className="absolute top-2 right-2 w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+            )}
+            
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-orange-50 rounded-lg">
                 <Zap className="w-6 h-6 text-orange-600" />
@@ -331,7 +370,9 @@ export default function AdminDashboard() {
             <div className="space-y-1">
               <h3 className="text-sm font-medium text-gray-600">Recent Activity</h3>
               <p className="text-4xl font-bold text-gray-900">{stats.recentActivity || 0}</p>
-              <p className="text-sm text-gray-500">Actions taken</p>
+              <p className="text-sm text-gray-500">
+                {stats.recentActivity && stats.recentActivity > 0 ? 'Question attempts' : 'No recent activity'}
+              </p>
             </div>
           </div>
         </div>
