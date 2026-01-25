@@ -3,7 +3,7 @@
 import { Menu, BookOpen, FileText, Gamepad2, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MobileMenuDrawer } from "./MobileMenuDrawer";
 
 export function MobileBottomNav() {
@@ -11,6 +11,11 @@ export function MobileBottomNav() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // ✅ FIX: Stable callback using useCallback to prevent infinite re-renders
+  const handleCloseMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -51,8 +56,8 @@ export function MobileBottomNav() {
 
   return (
     <>
-      {/* Mobile Menu Drawer */}
-      <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* Mobile Menu Drawer - NOW WITH STABLE CALLBACK */}
+      <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} />
 
       {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav

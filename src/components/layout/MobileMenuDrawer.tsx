@@ -16,10 +16,9 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  // Close menu on route change
-  useEffect(() => {
-    onClose();
-  }, [pathname, onClose]);
+  // ✅ REMOVED: The problematic useEffect that auto-closed on pathname change
+  // It was causing issues because onClose reference changed on every render
+  // Now we handle closes explicitly via onClick handlers
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -51,6 +50,11 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
       return pathname === "/" || pathname === "/dashboard";
     }
     return pathname.startsWith(href);
+  };
+
+  // ✅ Handle clicks on menu items - close menu after user clicks
+  const handleMenuItemClick = () => {
+    onClose();
   };
 
   return (
@@ -90,8 +94,9 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors z-[80]"
             aria-label="Close menu"
+            type="button"
           >
             <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
@@ -108,6 +113,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                   <Link
                     key={href}
                     href={href}
+                    onClick={handleMenuItemClick}
                     className={`
                       flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                       ${
@@ -138,6 +144,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                 <Link
                   key={href}
                   href={href}
+                  onClick={handleMenuItemClick}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Icon className="w-5 h-5" />
@@ -151,7 +158,10 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
         {/* Footer - Sign Out */}
         <div className="border-t border-gray-200 dark:border-gray-700 p-4">
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              onClose();
+              signOut();
+            }}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="w-5 h-5" />
