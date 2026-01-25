@@ -62,8 +62,10 @@ export function MobileBottomNav() {
 
   return (
     <>
-      {/* Mobile Menu Drawer - NOW WITH STABLE CALLBACK */}
-      <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} />
+      {/* Mobile Menu Drawer - ONLY FOR MOBILE - Hidden on desktop to avoid conflicts */}
+      <div className="md:hidden">
+        <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} />
+      </div>
 
       {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav

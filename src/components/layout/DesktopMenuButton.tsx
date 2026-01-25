@@ -19,8 +19,10 @@ export function DesktopMenuButton() {
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Menu</span>
       </button>
 
-      {/* Menu Drawer - Shared between mobile and desktop */}
-      <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* Menu Drawer - ONLY FOR DESKTOP - Hidden on mobile to avoid conflicts */}
+      <div className="hidden md:block">
+        <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      </div>
     </>
   );
 }
