@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/navigation/Sidebar";
+import SimpleSidebar from "@/components/navigation/SimpleSidebar";
 import AppLayout from "@/components/layout/AppLayout";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
@@ -14,8 +14,8 @@ export function RootLayoutContent({ children }: RootLayoutContentProps) {
 
   return (
     <>
-      {/* Sidebar - OUTSIDE scroll container, fixed to viewport */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {/* Simple Sidebar - OUTSIDE scroll container, fixed to viewport */}
+      <SimpleSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Mobile Bottom Nav - OUTSIDE scroll container, fixed to viewport */}
       <MobileBottomNav />
