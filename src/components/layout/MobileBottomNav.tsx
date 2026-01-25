@@ -17,6 +17,11 @@ export function MobileBottomNav() {
     setIsMenuOpen(false);
   }, []);
 
+  // ✅ Toggle function for Menu button - opens AND closes
+  const handleToggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     let ticking = false;
 
@@ -68,11 +73,11 @@ export function MobileBottomNav() {
         aria-label="Mobile bottom navigation"
       >
         <div className="flex justify-around items-center safe-area-bottom">
-          {/* Menu Button - First position */}
+          {/* Menu Button - First position - TOGGLE OPEN/CLOSE */}
           <button
-            onClick={() => setIsMenuOpen(true)}
+            onClick={handleToggleMenu}
             className="flex flex-col items-center justify-center flex-1 py-2 px-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-            aria-label="Open menu"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             <Menu className="w-6 h-6 mb-1" strokeWidth={2} />
             <span className="text-xs font-normal">Menu</span>
