@@ -5,9 +5,9 @@
 
 async function testNotesAPI() {
   const baseUrl = "http://localhost:3000";
-  
+
   console.log("Testing /api/notes POST endpoint...\n");
-  
+
   const noteData = {
     title: "Test Clinical Note",
     content: "This is a test note created from automated testing",
@@ -17,22 +17,22 @@ async function testNotesAPI() {
     specialty: "Emergency Medicine",
     patientContext: "Test patient",
   };
-  
+
   try {
     const response = await fetch(`${baseUrl}/api/notes`, {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(noteData),
     });
-    
+
     console.log("Response status:", response.status);
     console.log("Response headers:", Object.fromEntries(response.headers.entries()));
-    
+
     const data = await response.json();
     console.log("Response data:", JSON.stringify(data, null, 2));
-    
+
     if (!response.ok) {
       console.error("❌ API call failed!");
       console.error("Error:", data);

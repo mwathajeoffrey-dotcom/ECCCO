@@ -7,13 +7,16 @@
 ## 🚀 QUICK START - Test Right Now
 
 ### 1. Server is Running ✅
+
 ```
 ✅ Dev server: http://localhost:3000
 ✅ Status: Running in terminal
 ```
 
 ### 2. Open in Your Browser
+
 I've opened the Simple Browser for you. You can also open:
+
 - **Main browser:** http://localhost:3000/evidence-search
 - **Press F12** to open DevTools Console
 
@@ -22,15 +25,18 @@ I've opened the Simple Browser for you. You can also open:
 **Step-by-step:**
 
 1. **Click "📝 Take Notes" button**
+
    - Modal should open
    - No errors in console
 
 2. **Fill in the note:**
+
    - Content: "Testing notes feature locally"
    - Tags: "test"
    - Click "Save Note"
 
 3. **Check Console (F12):**
+
    - ✅ Should see: `POST /api/notes → 201`
    - ❌ Should NOT see: CSP errors or 500 errors
 
@@ -43,12 +49,14 @@ I've opened the Simple Browser for you. You can also open:
 ## 📊 PASS/FAIL DECISION
 
 ### ✅ PASS = Ready to Deploy
+
 - No console errors
 - Note saves (201 Created)
 - Note appears in Clinical Notes tab
 - **→ Safe to deploy!**
 
 ### ❌ FAIL = Need to Fix First
+
 - Console errors appear
 - 500 errors
 - Note doesn't save
@@ -59,6 +67,7 @@ I've opened the Simple Browser for you. You can also open:
 ## 🐛 IF IT FAILS LOCALLY
 
 **Tell me:**
+
 1. What error appears in console?
 2. What happens when you click "Save Note"?
 3. Does the note appear in Clinical Notes tab?
@@ -70,6 +79,7 @@ I've opened the Simple Browser for you. You can also open:
 ## ✅ IF IT WORKS LOCALLY
 
 **Great!** Then we know:
+
 1. The code works ✅
 2. Database works ✅
 3. The issue is ONLY on Vercel ✅
@@ -88,7 +98,7 @@ I've opened the Simple Browser for you. You can also open:
 - [ ] Visit /clinical-notes
 - [ ] Note appears?
 
-**If ALL ✅ → We deploy!**  
+**If ALL ✅ → We deploy!**
 **If ANY ❌ → We fix first!**
 
 ---
@@ -96,6 +106,7 @@ I've opened the Simple Browser for you. You can also open:
 ## 💬 NEXT STEPS
 
 **After you test, tell me:**
+
 1. "✅ Works locally!" → I'll help you deploy confidently
 2. "❌ Error: [paste error]" → We'll fix it together
 
@@ -103,4 +114,4 @@ I've opened the Simple Browser for you. You can also open:
 
 ---
 
-*Your approach is 100% correct - always test locally first!*
+_Your approach is 100% correct - always test locally first!_

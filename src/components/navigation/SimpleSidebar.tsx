@@ -17,14 +17,14 @@ export default function SimpleSidebar({ isOpen, onClose }: SimpleSidebarProps) {
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
-    ...(isSignedIn ? [
-      { href: "/dashboard", label: "Dashboard", icon: Trophy },
-      { href: "/practice", label: "Practice", icon: BookOpen },
-      { href: "/quiz-arena", label: "Quiz Arena", icon: Gamepad2 },
-      { href: "/profile", label: "Profile", icon: UserIcon },
-    ] : [
-      { href: "/sign-in", label: "Sign In", icon: LogIn },
-    ]),
+    ...(isSignedIn
+      ? [
+          { href: "/dashboard", label: "Dashboard", icon: Trophy },
+          { href: "/practice", label: "Practice", icon: BookOpen },
+          { href: "/quiz-arena", label: "Quiz Arena", icon: Gamepad2 },
+          { href: "/profile", label: "Profile", icon: UserIcon },
+        ]
+      : [{ href: "/sign-in", label: "Sign In", icon: LogIn }]),
   ];
 
   const handleLinkClick = () => {
@@ -70,7 +70,7 @@ export default function SimpleSidebar({ isOpen, onClose }: SimpleSidebarProps) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
-            
+
             return (
               <Link
                 key={item.href}
@@ -94,11 +94,7 @@ export default function SimpleSidebar({ isOpen, onClose }: SimpleSidebarProps) {
           <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               {user.imageUrl && (
-                <img
-                  src={user.imageUrl}
-                  alt={user.firstName || "User"}
-                  className="w-10 h-10 rounded-full"
-                />
+                <img src={user.imageUrl} alt={user.firstName || "User"} className="w-10 h-10 rounded-full" />
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">

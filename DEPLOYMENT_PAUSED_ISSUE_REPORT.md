@@ -19,18 +19,21 @@ Please tell me **specifically** what's wrong:
 ## Quick Debug Questions:
 
 **When you tap the X button**, what happens?
+
 - [ ] Nothing (doesn't close)
 - [ ] Closes partially (still shows edge)
 - [ ] Closes but bounces back
-- [ ] Other: ___________
+- [ ] Other: ****\_\_\_****
 
 **When sidebar is "closed"**, can you:
+
 - [ ] See the full page content?
 - [ ] Scroll normally?
 - [ ] Tap/interact with page?
 - [ ] Or something is still blocking?
 
 **What looks "wrong" specifically?**
+
 ```
 Describe or screenshot the issue
 ```

@@ -10,30 +10,30 @@ CREATE TABLE IF NOT EXISTS "UserNote" (
   "userId" TEXT NOT NULL,
   title TEXT,
   content TEXT NOT NULL,
-  
+
   -- Quiz/Question related (legacy)
   "questionId" TEXT,
   "questionText" TEXT,
   category TEXT,
-  
+
   -- Clinical Evidence Search related
   "searchQuery" TEXT,
   "evidenceSummary" TEXT,
   specialty TEXT,
   "patientContext" TEXT,
-  
+
   -- Organization
   tags TEXT[] DEFAULT '{}',
-  
+
   -- Versioning
   version INTEGER DEFAULT 1,
-  
+
   -- Timestamps
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatedAt" TIMESTAMP(3) NOT NULL,
-  
+
   -- Foreign key constraint
-  CONSTRAINT "UserNote_userId_fkey" FOREIGN KEY ("userId") 
+  CONSTRAINT "UserNote_userId_fkey" FOREIGN KEY ("userId")
     REFERENCES "User"(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

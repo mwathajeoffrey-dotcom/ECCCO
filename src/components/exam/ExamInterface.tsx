@@ -554,14 +554,18 @@ export default function ExamInterface() {
               {questionsArray.map((question, index) => {
                 const userAnswer = selectedAnswers[index];
                 const isCorrect = userAnswer === question.correctIndex;
-                
+
                 // Safely handle options that might be undefined
-                const options = question.options 
-                  ? (typeof question.options === "string" ? JSON.parse(question.options) : question.options)
+                const options = question.options
+                  ? typeof question.options === "string"
+                    ? JSON.parse(question.options)
+                    : question.options
                   : [];
-                  
+
                 const references = question.references
-                  ? (typeof question.references === "string" ? JSON.parse(question.references) : question.references)
+                  ? typeof question.references === "string"
+                    ? JSON.parse(question.references)
+                    : question.references
                   : [];
 
                 return (
@@ -952,59 +956,59 @@ export default function ExamInterface() {
                         const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
 
                         return (
-                        <button
-                          key={index}
-                          onClick={() => handleAnswerSelect(index)}
-                          disabled={showAnswer && !isExamFinished}
-                          className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
-                            showAnswer && isCorrect
-                              ? "border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200"
-                              : showAnswer && isSelected && !isCorrect
-                              ? "border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200"
-                              : isSelected
-                              ? "border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300"
-                              : "border-gray-300 bg-white hover:bg-gray-50 hover:border-gray-400 text-gray-900"
-                          } ${showAnswer && !isExamFinished ? "cursor-not-allowed" : "cursor-pointer"}`}
-                        >
-                          <div className="flex items-start">
-                            <span
-                              className={`font-medium mr-2 sm:mr-3 text-sm sm:text-base ${
-                                showAnswer && isCorrect
-                                  ? "text-emerald-700"
-                                  : showAnswer && isSelected && !isCorrect
-                                  ? "text-red-700"
-                                  : isSelected
-                                  ? "text-blue-700"
-                                  : "text-gray-700"
-                              }`}
-                            >
-                              {String.fromCharCode(65 + index)}.
-                            </span>
-                            <span
-                              className={`text-sm sm:text-base leading-relaxed flex-1 ${
-                                showAnswer && isCorrect
-                                  ? "text-emerald-900 font-medium"
-                                  : showAnswer && isSelected && !isCorrect
-                                  ? "text-red-900"
-                                  : isSelected
-                                  ? "text-blue-900 font-medium"
-                                  : "text-gray-900"
-                              }`}
-                            >
-                              {option}
-                            </span>
-                            {showAnswer && isCorrect && (
-                              <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
-                            )}
-                            {showAnswer && isSelected && !isCorrect && (
-                              <div className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ml-2 flex-shrink-0">
-                                ✕
-                              </div>
-                            )}
-                          </div>
-                        </button>
-                      );
-                    })}
+                          <button
+                            key={index}
+                            onClick={() => handleAnswerSelect(index)}
+                            disabled={showAnswer && !isExamFinished}
+                            className={`w-full text-left p-3 sm:p-4 rounded-lg border transition-all duration-200 touch-manipulation ${
+                              showAnswer && isCorrect
+                                ? "border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200"
+                                : showAnswer && isSelected && !isCorrect
+                                ? "border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200"
+                                : isSelected
+                                ? "border-blue-500 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300"
+                                : "border-gray-300 bg-white hover:bg-gray-50 hover:border-gray-400 text-gray-900"
+                            } ${showAnswer && !isExamFinished ? "cursor-not-allowed" : "cursor-pointer"}`}
+                          >
+                            <div className="flex items-start">
+                              <span
+                                className={`font-medium mr-2 sm:mr-3 text-sm sm:text-base ${
+                                  showAnswer && isCorrect
+                                    ? "text-emerald-700"
+                                    : showAnswer && isSelected && !isCorrect
+                                    ? "text-red-700"
+                                    : isSelected
+                                    ? "text-blue-700"
+                                    : "text-gray-700"
+                                }`}
+                              >
+                                {String.fromCharCode(65 + index)}.
+                              </span>
+                              <span
+                                className={`text-sm sm:text-base leading-relaxed flex-1 ${
+                                  showAnswer && isCorrect
+                                    ? "text-emerald-900 font-medium"
+                                    : showAnswer && isSelected && !isCorrect
+                                    ? "text-red-900"
+                                    : isSelected
+                                    ? "text-blue-900 font-medium"
+                                    : "text-gray-900"
+                                }`}
+                              >
+                                {option}
+                              </span>
+                              {showAnswer && isCorrect && (
+                                <CheckCircle className="w-5 h-5 text-emerald-600 ml-2 flex-shrink-0" />
+                              )}
+                              {showAnswer && isSelected && !isCorrect && (
+                                <div className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ml-2 flex-shrink-0">
+                                  ✕
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </>
                   ) : (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">

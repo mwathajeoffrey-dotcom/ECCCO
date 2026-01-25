@@ -1,5 +1,5 @@
 -- Check current users in database
-SELECT 
+SELECT
   id,
   "clerkUserId",
   email,

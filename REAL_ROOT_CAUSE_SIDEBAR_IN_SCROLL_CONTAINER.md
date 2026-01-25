@@ -5,13 +5,15 @@
 After investigating localhost, I found the REAL issue:
 
 ### HTML Structure (BROKEN):
+
 ```html
 <body>
-  <div class="mobile-scroll-container">  ← Scroll container
+  <div class="mobile-scroll-container">
+    ← Scroll container
     <AppLayout>
-      <Sidebar position="fixed" />      ← INSIDE scroll container!
-      <button position="fixed" />        ← Hamburger also inside!
-      <Content />
+      <Sidebar position="fixed" /> ← INSIDE scroll container!
+      <button position="fixed" /> ← Hamburger also inside!
+      <content />
     </AppLayout>
     <MobileBottomNav />
   </div>
@@ -19,6 +21,7 @@ After investigating localhost, I found the REAL issue:
 ```
 
 **The Problem:**
+
 - `.mobile-scroll-container` has `overflow-y: auto`
 - Sidebar has `position: fixed`
 - **But `position: fixed` inside a scrolling container doesn't work as expected!**
@@ -28,6 +31,7 @@ After investigating localhost, I found the REAL issue:
 ## Why This Happened
 
 When we added the scroll fix for the admin dashboard countdown:
+
 1. Wrapped everything in `.mobile-scroll-container`
 2. This div scrolls instead of body
 3. Sidebar was already inside AppLayout
@@ -40,9 +44,11 @@ When we added the scroll fix for the admin dashboard countdown:
 Move sidebar rendering outside the scroll container using React Portal.
 
 ### Option 2: Change Sidebar to Absolute
+
 Use `position: absolute` instead of `fixed` with proper container.
 
 ### Option 3: Move Sidebar Outside Scroll Container ✅ (BEST)
+
 Restructure so sidebar and bottom nav are siblings to the scroll container.
 
 ## Implementation
@@ -51,16 +57,17 @@ The correct structure should be:
 
 ```html
 <body>
-  <Sidebar position="fixed" />          ← Outside scroll container!
-  <button position="fixed" />            ← Hamburger outside too!
-  
-  <div class="mobile-scroll-container">  ← Only content scrolls
+  <Sidebar position="fixed" /> ← Outside scroll container!
+  <button position="fixed" /> ← Hamburger outside too!
+
+  <div class="mobile-scroll-container">
+    ← Only content scrolls
     <AppLayout>
-      <Content />
+      <content />
     </AppLayout>
   </div>
-  
-  <MobileBottomNav position="fixed" />   ← Also outside!
+
+  <MobileBottomNav position="fixed" /> ← Also outside!
 </body>
 ```
 
@@ -73,6 +80,7 @@ The correct structure should be:
 ## Why Other Fixes Didn't Work
 
 All our previous fixes were treating symptoms, not the cause:
+
 - ❌ Z-index changes - Didn't address positioning context
 - ❌ Transform adjustments - Fixed positioning was the issue
 - ❌ Close buttons - Sidebar couldn't close because it was stuck in scroll container
@@ -83,6 +91,7 @@ The ROOT issue: **Sidebar must be outside any scrolling container to use `positi
 ##Testing Needed
 
 After fix:
+
 1. Sidebar slides in/out smoothly
 2. Hamburger always visible
 3. Backdrop works correctly

@@ -15,24 +15,29 @@
 1. **Day 1**: Added countdown timer → 60 re-renders/min → mobile scroll janky
 2. **Day 2**: Fixed countdown with `useRef` ✅ BUT ALSO added this:
    ```css
-   body { position: fixed; overflow: hidden; }
+   body {
+     position: fixed;
+     overflow: hidden;
+   }
    ```
 3. **Day 2 continued**: Wrapped everything in `.mobile-scroll-container`
 4. **THE ACTUAL PROBLEM**: **Sidebar got trapped INSIDE the scroll container!**
 
 ###HTML Structure (BROKEN):
+
 ```html
 <body>
   <div class="mobile-scroll-container" style="overflow-y: auto">
     <AppLayout>
-      <Sidebar style="position: fixed" />  ← INSIDE scroll container!
-      ^^^^ THIS IS THE PROBLEM! ^^^^
+      <Sidebar style="position: fixed" /> ← INSIDE scroll container! ^^^^ THIS
+      IS THE PROBLEM! ^^^^
     </AppLayout>
   </div>
 </body>
 ```
 
 **Why This Broke Everything:**
+
 - `position: fixed` inside a scrolling element doesn't work properly
 - Sidebar's "fixed" position was relative to the scroll container, not the viewport
 - Result: Sidebar couldn't hide, got stuck, blocked screen, z-index issues, everything!
@@ -40,17 +45,16 @@
 ## The Fix
 
 ### New Structure (FIXED):
+
 ```html
 <body>
   <!-- Fixed elements OUTSIDE scroll container -->
-  <Sidebar style="position: fixed" />  ✅ Fixed to viewport!
-  <MobileBottomNav style="position: fixed" />  ✅
-  
+  <Sidebar style="position: fixed" /> ✅ Fixed to viewport!
+  <MobileBottomNav style="position: fixed" /> ✅
+
   <!-- Only content scrolls -->
   <div class="mobile-scroll-container">
-    <AppLayout>
-      <Content />  ← Only this scrolls
-    </AppLayout>
+    <AppLayout> <content /> ← Only this scrolls </AppLayout>
   </div>
 </body>
 ```
@@ -58,11 +62,13 @@
 ## Files Changed
 
 1. **`src/components/layout/RootLayoutContent.tsx`** (NEW)
+
    - Manages sidebar state at root level
    - Renders Sidebar OUTSIDE scroll container
    - Renders MobileBottomNav OUTSIDE scroll container
 
 2. **`src/app/layout.tsx`** (MODIFIED)
+
    - Uses RootLayoutContent instead of direct AppLayout
    - Proper component hierarchy
 
@@ -74,6 +80,7 @@
 ## Why All Previous Fixes Didn't Work
 
 Every fix I made was treating **symptoms**, not the **cause**:
+
 - ❌ Z-index changes → Didn't address positioning context
 - ❌ Transform `-100%` → Fixed positioning was the issue
 - ❌ Close buttons → Sidebar couldn't close because stuck in container
@@ -94,6 +101,7 @@ npm run dev
 ```
 
 ### Testing Checklist:
+
 - [ ] **Sidebar slides in/out smoothly**
 - [ ] **Sidebar completely hides when closed**
 - [ ] **Hamburger button always visible**
@@ -106,11 +114,13 @@ npm run dev
 - [ ] **Content fully accessible**
 
 ### If Tests Pass:
+
 ```bash
 git push origin main
 ```
 
 ### If Tests Fail:
+
 Let me know what's broken and I'll investigate further.
 
 ## What This Fixes
@@ -126,6 +136,7 @@ Let me know what's broken and I'll investigate further.
 ## Apology & Lesson Learned
 
 I apologize for not investigating deeply enough at the start. You were right to push me to:
+
 1. Start localhost server
 2. Actually understand the problem
 3. Find the root cause, not treat symptoms

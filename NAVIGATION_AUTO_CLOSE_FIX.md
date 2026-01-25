@@ -1,14 +1,17 @@
 # Navigation Menu Auto-Close Fix
 
 ## Issue Reported
+
 **User Feedback**: "the scrolling works fine but the navigation menu tab is confused"
 
 Looking at the screenshot, the sidebar/navigation menu stays open even after navigating to a new page (Quiz Arena), causing confusion on mobile devices.
 
 ## Root Cause
+
 The `AppLayout.tsx` component manages the sidebar state with `useState(false)`, but there was no mechanism to automatically close the sidebar when the user navigates to a different page.
 
 **Problem Flow:**
+
 1. User opens sidebar menu
 2. User clicks on a navigation link (e.g., "Quiz Arena")
 3. Page navigates to `/quiz-arena`
@@ -29,6 +32,7 @@ useEffect(() => {
 ```
 
 ### Why This Works
+
 - **Pathname Dependency**: The effect runs whenever `pathname` changes
 - **Auto-Close**: Sets `sidebarOpen` to `false` on every route change
 - **Mobile UX**: Ensures clean navigation experience on mobile devices
@@ -39,6 +43,7 @@ useEffect(() => {
 **File Modified**: `src/components/layout/AppLayout.tsx`
 
 **Changes**:
+
 1. Added `useEffect` import from React
 2. Added effect to close sidebar on pathname change
 3. Added ESLint disable comment (this is an intentional pattern for navigation)
@@ -46,6 +51,7 @@ useEffect(() => {
 ## Expected Behavior (After Fix)
 
 ### Mobile Navigation Flow:
+
 1. ✅ User taps hamburger menu button
 2. ✅ Sidebar slides in from left
 3. ✅ User taps "Quiz Arena" link
@@ -54,6 +60,7 @@ useEffect(() => {
 6. ✅ User sees quiz arena content without sidebar overlay
 
 ### User Experience Improvements:
+
 - **Clear Navigation**: No confusion about which page you're on
 - **Clean Interface**: Content is fully visible after navigation
 - **Mobile-Optimized**: Sidebar doesn't block content on small screens

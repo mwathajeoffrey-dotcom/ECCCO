@@ -12,10 +12,13 @@ export async function GET() {
     const user = await currentUser();
 
     if (!userId) {
-      return NextResponse.json({ 
-        error: "Not authenticated",
-        message: "Please sign in first" 
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          error: "Not authenticated",
+          message: "Please sign in first",
+        },
+        { status: 401 }
+      );
     }
 
     return NextResponse.json({
@@ -23,17 +26,17 @@ export async function GET() {
       email: user?.emailAddresses?.[0]?.emailAddress || null,
       firstName: user?.firstName || null,
       lastName: user?.lastName || null,
-      fullName: user?.firstName && user?.lastName 
-        ? `${user.firstName} ${user.lastName}` 
-        : null,
+      fullName: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : null,
       createdAt: user?.createdAt || null,
-      message: "Copy the 'clerkUserId' value and add it to ADMIN_USER_IDS in your .env.local file"
+      message: "Copy the 'clerkUserId' value and add it to ADMIN_USER_IDS in your .env.local file",
     });
-
   } catch (error) {
     console.error("Error fetching user info:", error);
-    return NextResponse.json({ 
-      error: "Failed to fetch user information" 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Failed to fetch user information",
+      },
+      { status: 500 }
+    );
   }
 }

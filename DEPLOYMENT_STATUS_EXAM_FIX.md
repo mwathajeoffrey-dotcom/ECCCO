@@ -5,9 +5,11 @@
 The TypeError `Cannot read properties of undefined (reading 'map')` was happening in **TWO places**:
 
 ### 1. ❌ Exam Interface (during exam)
+
 **Line ~940:** Trying to map over `currentQuestion.options` when it was `undefined`
 
-### 2. ❌ Results Screen (after finishing)  
+### 2. ❌ Results Screen (after finishing)
+
 **Line ~557:** Trying to map over `question.options` and `question.references` when they were `undefined`
 
 ---
@@ -15,11 +17,13 @@ The TypeError `Cannot read properties of undefined (reading 'map')` was happenin
 ## What I Fixed (2 Commits)
 
 ### Commit 1: `63f6827` - Fixed Exam Interface
+
 - Added null check: `currentQuestion && currentQuestion.options ? (...) : (...)`
 - Added fallback message when options missing
 - Added debug panel for development mode
 
 ### Commit 2: `d71438b` - Fixed Results Screen
+
 - Added safe defaults for options: `question.options ? ... : []`
 - Added safe defaults for references: `question.references ? ... : []`
 - Now safely maps over empty arrays instead of crashing on undefined
@@ -29,6 +33,7 @@ The TypeError `Cannot read properties of undefined (reading 'map')` was happenin
 ## Deployment Status
 
 ✅ **Both commits pushed to GitHub**
+
 - Commit 63f6827: Exam interface fix
 - Commit d71438b: Results screen fix
 
@@ -50,18 +55,21 @@ The TypeError `Cannot read properties of undefined (reading 'map')` was happenin
 ## What to Test After Deployment
 
 ### Test 1: Exam Loads Without Crashing
+
 1. Go to https://eccco.vercel.app/exam
 2. Select any topic
 3. **Expected:** Exam loads successfully, no "Application Error"
 4. **Expected:** All 4 answer options (A, B, C, D) display
 
 ### Test 2: Can Complete Exam
+
 1. Answer all questions in the exam
 2. Click "Finish" button
 3. **Expected:** Results screen loads without crash
 4. **Expected:** See your score, all questions with answers
 
 ### Test 3: Results Show Properly
+
 1. On results screen, scroll through questions
 2. **Expected:** Each question shows:
    - Your answer
@@ -85,6 +93,7 @@ The TypeError `Cannot read properties of undefined (reading 'map')` was happenin
 ## What Changed in Code
 
 ### Exam Interface (during exam):
+
 ```typescript
 // BEFORE (crashed on undefined):
 {currentQuestion &&
@@ -99,17 +108,19 @@ The TypeError `Cannot read properties of undefined (reading 'map')` was happenin
 ```
 
 ### Results Screen (after finishing):
+
 ```typescript
 // BEFORE (crashed on undefined):
-const options = typeof question.options === "string" 
-  ? JSON.parse(question.options) 
-  : question.options;
+const options =
+  typeof question.options === "string"
+    ? JSON.parse(question.options)
+    : question.options;
 
 // AFTER (safe with default):
-const options = question.options 
-  ? (typeof question.options === "string" 
-      ? JSON.parse(question.options) 
-      : question.options)
+const options = question.options
+  ? typeof question.options === "string"
+    ? JSON.parse(question.options)
+    : question.options
   : []; // ← Safe default!
 ```
 
@@ -118,6 +129,7 @@ const options = question.options
 ## Why It Was Crashing
 
 Your database questions had:
+
 - `question` field: ✅ exists
 - `correctIndex` field: ✅ exists
 - `options` field: ❌ **undefined** (missing from some questions)
@@ -126,6 +138,7 @@ Your database questions had:
 When the code tried to call `.map()` on undefined, JavaScript threw the TypeError.
 
 Now the code:
+
 1. ✅ Checks if options exist before mapping
 2. ✅ Uses empty array `[]` as fallback
 3. ✅ Won't crash even if data is missing

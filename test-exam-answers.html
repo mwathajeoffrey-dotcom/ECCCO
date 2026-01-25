@@ -1,252 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test Exam Answer Reveal Logic</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .test-section {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .option {
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .option:hover {
-            border-color: #999;
-        }
-        .option.selected {
-            border-color: #3b82f6;
-            background: #dbeafe;
-        }
-        .option.correct {
-            border-color: #10b981;
-            background: #d1fae5;
-        }
-        .option.incorrect {
-            border-color: #ef4444;
-            background: #fee2e2;
-        }
-        .explanation {
-            background: linear-gradient(to right, #dbeafe, #c7d2fe);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 2px solid #3b82f6;
-        }
-        .hidden {
-            display: none;
-        }
-        .toggle-container {
-            background: #dbeafe;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 2px solid #3b82f6;
-        }
-        .stats {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .stat-box {
-            flex: 1;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .stat-box.info {
-            background: #dbeafe;
-        }
-        .stat-box.success {
-            background: #d1fae5;
-        }
-        .stat-box.warning {
-            background: #fef3c7;
-        }
-        button {
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        button.primary {
-            background: #3b82f6;
-            color: white;
-        }
-        button.primary:hover {
-            background: #2563eb;
-        }
-        .debug-info {
-            background: #f3f4f6;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 12px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .test-section {
+        background: white;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .option {
+        padding: 15px;
+        margin: 10px 0;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .option:hover {
+        border-color: #999;
+      }
+      .option.selected {
+        border-color: #3b82f6;
+        background: #dbeafe;
+      }
+      .option.correct {
+        border-color: #10b981;
+        background: #d1fae5;
+      }
+      .option.incorrect {
+        border-color: #ef4444;
+        background: #fee2e2;
+      }
+      .explanation {
+        background: linear-gradient(to right, #dbeafe, #c7d2fe);
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border: 2px solid #3b82f6;
+      }
+      .hidden {
+        display: none;
+      }
+      .toggle-container {
+        background: #dbeafe;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 2px solid #3b82f6;
+      }
+      .stats {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+      }
+      .stat-box {
+        flex: 1;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .stat-box.info {
+        background: #dbeafe;
+      }
+      .stat-box.success {
+        background: #d1fae5;
+      }
+      .stat-box.warning {
+        background: #fef3c7;
+      }
+      button {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+      button.primary {
+        background: #3b82f6;
+        color: white;
+      }
+      button.primary:hover {
+        background: #2563eb;
+      }
+      .debug-info {
+        background: #f3f4f6;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 12px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Exam Answer Reveal Logic Test</h1>
-    
+
     <div class="test-section">
-        <h2>Test Controls</h2>
-        <div class="toggle-container">
-            <label>
-                <input type="checkbox" id="showAnswerToggle" onchange="toggleAnswerReveal()">
-                <strong> Show Correct Answer</strong>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #1e40af;">
-                    Reveal correct answers and explanations after each attempt
-                </p>
-            </label>
+      <h2>Test Controls</h2>
+      <div class="toggle-container">
+        <label>
+          <input
+            type="checkbox"
+            id="showAnswerToggle"
+            onchange="toggleAnswerReveal()"
+          />
+          <strong> Show Correct Answer</strong>
+          <p style="margin: 5px 0 0 0; font-size: 14px; color: #1e40af">
+            Reveal correct answers and explanations after each attempt
+          </p>
+        </label>
+      </div>
+
+      <div class="stats">
+        <div class="stat-box info">
+          <div style="font-size: 24px; font-weight: bold" id="showAnswerState">
+            OFF
+          </div>
+          <div>Show Answer State</div>
         </div>
-        
-        <div class="stats">
-            <div class="stat-box info">
-                <div style="font-size: 24px; font-weight: bold;" id="showAnswerState">OFF</div>
-                <div>Show Answer State</div>
-            </div>
-            <div class="stat-box success">
-                <div style="font-size: 24px; font-weight: bold;" id="questionAnswered">NO</div>
-                <div>Question Answered</div>
-            </div>
-            <div class="stat-box warning">
-                <div style="font-size: 24px; font-weight: bold;" id="shouldShowAnswer">NO</div>
-                <div>Should Show Answer</div>
-            </div>
+        <div class="stat-box success">
+          <div style="font-size: 24px; font-weight: bold" id="questionAnswered">
+            NO
+          </div>
+          <div>Question Answered</div>
         </div>
-        
-        <div class="debug-info" id="debugInfo">
-            Debug Info: Select an option to test
+        <div class="stat-box warning">
+          <div style="font-size: 24px; font-weight: bold" id="shouldShowAnswer">
+            NO
+          </div>
+          <div>Should Show Answer</div>
         </div>
+      </div>
+
+      <div class="debug-info" id="debugInfo">
+        Debug Info: Select an option to test
+      </div>
     </div>
-    
+
     <div class="test-section">
-        <h2>Question 1: What is the most common cause of postpartum hemorrhage?</h2>
-        
-        <div class="option" onclick="selectAnswer(0)">
-            A. Uterine atony
+      <h2>
+        Question 1: What is the most common cause of postpartum hemorrhage?
+      </h2>
+
+      <div class="option" onclick="selectAnswer(0)">A. Uterine atony</div>
+      <div class="option" onclick="selectAnswer(1)">
+        B. Genital tract trauma
+      </div>
+      <div class="option" onclick="selectAnswer(2)">C. Retained placenta</div>
+      <div class="option" onclick="selectAnswer(3)">D. Coagulopathy</div>
+
+      <div id="explanation" class="explanation hidden">
+        <h3>📚 Explanation</h3>
+        <p style="margin: 10px 0">
+          <strong>Correct Answer: A. Uterine atony</strong>
+        </p>
+        <p>
+          Uterine atony is the most common cause of postpartum hemorrhage,
+          accounting for approximately 70-80% of cases. It occurs when the
+          uterus fails to contract adequately after delivery, preventing
+          effective compression of the placental blood vessels.
+        </p>
+        <div
+          style="
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #3b82f6;
+          "
+        >
+          <h4>References:</h4>
+          <ul>
+            <li>Williams Obstetrics, 26th Edition, Chapter 41</li>
+            <li>ACOG Practice Bulletin No. 183: Postpartum Hemorrhage</li>
+          </ul>
         </div>
-        <div class="option" onclick="selectAnswer(1)">
-            B. Genital tract trauma
-        </div>
-        <div class="option" onclick="selectAnswer(2)">
-            C. Retained placenta
-        </div>
-        <div class="option" onclick="selectAnswer(3)">
-            D. Coagulopathy
-        </div>
-        
-        <div id="explanation" class="explanation hidden">
-            <h3>📚 Explanation</h3>
-            <p style="margin: 10px 0;">
-                <strong>Correct Answer: A. Uterine atony</strong>
-            </p>
-            <p>
-                Uterine atony is the most common cause of postpartum hemorrhage, accounting for approximately 70-80% of cases. 
-                It occurs when the uterus fails to contract adequately after delivery, preventing effective compression of the 
-                placental blood vessels.
-            </p>
-            <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 6px; border: 1px solid #3b82f6;">
-                <h4>References:</h4>
-                <ul>
-                    <li>Williams Obstetrics, 26th Edition, Chapter 41</li>
-                    <li>ACOG Practice Bulletin No. 183: Postpartum Hemorrhage</li>
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
-    
+
     <script>
-        let showAnswerAfterAttempt = false;
-        let currentQuestionAnswered = false;
-        let selectedAnswer = null;
-        const correctAnswer = 0; // Option A
-        
-        function updateDebugInfo() {
-            const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
-            
-            document.getElementById('showAnswerState').textContent = showAnswerAfterAttempt ? 'ON' : 'OFF';
-            document.getElementById('questionAnswered').textContent = currentQuestionAnswered ? 'YES' : 'NO';
-            document.getElementById('shouldShowAnswer').textContent = showAnswer ? 'YES' : 'NO';
-            
-            document.getElementById('debugInfo').innerHTML = `
+      let showAnswerAfterAttempt = false;
+      let currentQuestionAnswered = false;
+      let selectedAnswer = null;
+      const correctAnswer = 0; // Option A
+
+      function updateDebugInfo() {
+        const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
+
+        document.getElementById("showAnswerState").textContent =
+          showAnswerAfterAttempt ? "ON" : "OFF";
+        document.getElementById("questionAnswered").textContent =
+          currentQuestionAnswered ? "YES" : "NO";
+        document.getElementById("shouldShowAnswer").textContent = showAnswer
+          ? "YES"
+          : "NO";
+
+        document.getElementById("debugInfo").innerHTML = `
                 Debug Info:<br>
                 - showAnswerAfterAttempt: ${showAnswerAfterAttempt}<br>
                 - currentQuestionAnswered: ${currentQuestionAnswered}<br>
-                - selectedAnswer: ${selectedAnswer !== null ? selectedAnswer : 'null'}<br>
+                - selectedAnswer: ${
+                  selectedAnswer !== null ? selectedAnswer : "null"
+                }<br>
                 - correctAnswer: ${correctAnswer}<br>
                 - showAnswer (computed): ${showAnswer}<br>
                 <br>
                 Logic: showAnswer = showAnswerAfterAttempt(${showAnswerAfterAttempt}) && currentQuestionAnswered(${currentQuestionAnswered}) = ${showAnswer}
             `;
-        }
-        
-        function toggleAnswerReveal() {
-            showAnswerAfterAttempt = document.getElementById('showAnswerToggle').checked;
-            updateDebugInfo();
-            updateUI();
-        }
-        
-        function selectAnswer(index) {
-            selectedAnswer = index;
-            currentQuestionAnswered = true;
-            updateDebugInfo();
-            updateUI();
-        }
-        
-        function updateUI() {
-            const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
-            const options = document.querySelectorAll('.option');
-            
-            // Reset all options
-            options.forEach((opt, idx) => {
-                opt.className = 'option';
-                
-                if (selectedAnswer === idx) {
-                    opt.classList.add('selected');
-                }
-                
-                if (showAnswer) {
-                    if (idx === correctAnswer) {
-                        opt.classList.add('correct');
-                        opt.innerHTML = opt.innerHTML.split('</')[0] + ' ✅';
-                    } else if (idx === selectedAnswer && idx !== correctAnswer) {
-                        opt.classList.add('incorrect');
-                        opt.innerHTML = opt.innerHTML.split('</')[0] + ' ❌';
-                    }
-                }
-            });
-            
-            // Show/hide explanation
-            const explanation = document.getElementById('explanation');
-            if (showAnswer) {
-                explanation.classList.remove('hidden');
-            } else {
-                explanation.classList.add('hidden');
-            }
-        }
-        
-        // Initialize
+      }
+
+      function toggleAnswerReveal() {
+        showAnswerAfterAttempt =
+          document.getElementById("showAnswerToggle").checked;
         updateDebugInfo();
+        updateUI();
+      }
+
+      function selectAnswer(index) {
+        selectedAnswer = index;
+        currentQuestionAnswered = true;
+        updateDebugInfo();
+        updateUI();
+      }
+
+      function updateUI() {
+        const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
+        const options = document.querySelectorAll(".option");
+
+        // Reset all options
+        options.forEach((opt, idx) => {
+          opt.className = "option";
+
+          if (selectedAnswer === idx) {
+            opt.classList.add("selected");
+          }
+
+          if (showAnswer) {
+            if (idx === correctAnswer) {
+              opt.classList.add("correct");
+              opt.innerHTML = opt.innerHTML.split("</")[0] + " ✅";
+            } else if (idx === selectedAnswer && idx !== correctAnswer) {
+              opt.classList.add("incorrect");
+              opt.innerHTML = opt.innerHTML.split("</")[0] + " ❌";
+            }
+          }
+        });
+
+        // Show/hide explanation
+        const explanation = document.getElementById("explanation");
+        if (showAnswer) {
+          explanation.classList.remove("hidden");
+        } else {
+          explanation.classList.add("hidden");
+        }
+      }
+
+      // Initialize
+      updateDebugInfo();
     </script>
-</body>
+  </body>
 </html>

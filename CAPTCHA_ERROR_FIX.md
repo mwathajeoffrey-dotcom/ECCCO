@@ -1,7 +1,7 @@
 # 🔧 CAPTCHA ERROR FIX - Sign In Issue for Users
 
-**Date:** January 24, 2026  
-**Issue:** Users getting CAPTCHA error when signing in on mobile  
+**Date:** January 24, 2026
+**Issue:** Users getting CAPTCHA error when signing in on mobile
 **Status:** 🔄 **IN PROGRESS**
 
 ---
@@ -9,13 +9,14 @@
 ## 🔍 PROBLEM
 
 **Error Message:**
+
 ```
 The CAPTCHA failed to load.
 This may be due to an unsupported browser or a browser extension.
 Please try a different browser or disabling extensions.
 ```
 
-**Reported By:** Your friends trying to sign in on mobile devices  
+**Reported By:** Your friends trying to sign in on mobile devices
 **Impact:** Users cannot access the app
 
 ---
@@ -25,6 +26,7 @@ Please try a different browser or disabling extensions.
 This is a **Clerk Authentication** issue with CAPTCHA/bot protection settings.
 
 ### Possible Causes:
+
 1. **Strict bot protection** enabled in Clerk
 2. **CAPTCHA settings** too restrictive
 3. **Browser compatibility** issues on mobile
@@ -38,14 +40,17 @@ This is a **Clerk Authentication** issue with CAPTCHA/bot protection settings.
 ### **Solution 1: Adjust Clerk Bot Protection Settings** (Recommended)
 
 1. **Go to Clerk Dashboard:**
+
    - Visit: https://dashboard.clerk.com
    - Select your "ECCCO-Exam" application
 
 2. **Navigate to Attack Protection:**
+
    - Click "User & Authentication" → "Attack Protection"
    - Or go to: Settings → Security → Attack Protection
 
 3. **Adjust Bot Protection:**
+
    - **Current Setting:** Likely "Strict" or "CAPTCHA Always"
    - **Change to:** "Standard" or "Invisible CAPTCHA"
    - Or **Disable CAPTCHA** for now (testing only)
@@ -79,14 +84,16 @@ I'll update the CSP headers to explicitly allow Clerk's required domains and CAP
 ## 📋 IMMEDIATE ACTION ITEMS
 
 1. **Check Clerk Dashboard Settings** (You need to do this)
+
    - Go to Clerk Dashboard
    - Find Attack Protection / Bot Protection settings
    - Change from "Strict" to "Standard"
    - Or temporarily disable CAPTCHA
 
 2. **Verify Environment Keys**
-   - Make sure using production keys (pk_live_, sk_live_)
-   - Not test keys (pk_test_, sk_test_)
+
+   - Make sure using production keys (pk*live*, sk*live*)
+   - Not test keys (pk*test*, sk*test*)
 
 3. **Update CSP Headers** (I'll do this)
    - Allow Google reCAPTCHA domains
@@ -97,6 +104,7 @@ I'll update the CSP headers to explicitly allow Clerk's required domains and CAP
 ## 🚀 QUICK FIX (Temporary)
 
 **In Clerk Dashboard:**
+
 1. Go to Settings → Security
 2. Find "Bot Protection" or "Attack Protection"
 3. **Disable CAPTCHA temporarily**
@@ -108,6 +116,7 @@ I'll update the CSP headers to explicitly allow Clerk's required domains and CAP
 ## 📱 MOBILE-SPECIFIC CONSIDERATIONS
 
 Mobile browsers may have issues with:
+
 - Third-party cookies
 - Browser extensions (unlikely on mobile)
 - Privacy settings
@@ -120,6 +129,7 @@ Mobile browsers may have issues with:
 ## ✅ VERIFICATION STEPS
 
 After applying fix:
+
 1. Ask friend to try signing in again
 2. Check if CAPTCHA loads
 3. Verify they can complete sign in

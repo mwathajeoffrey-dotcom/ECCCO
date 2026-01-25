@@ -1,7 +1,9 @@
 # 🚀 Quick Fix: Admin Access Not Working
 
 ## The Problem
+
 You're signed in as "eccco medical" but the admin dashboard shows an error because:
+
 1. The user account doesn't exist in the database yet, OR
 2. The email isn't being checked correctly
 
@@ -16,6 +18,7 @@ You're signed in as "eccco medical" but the admin dashboard shows an error becau
 **OR**
 
 Visit this page to see your user data:
+
 ```
 https://eccco.vercel.app/api/profile
 ```
@@ -27,6 +30,7 @@ It will show your Clerk User ID.
 Since you have `ADMIN_USER_IDS` already set, let's update the admin check to use that:
 
 **Current `.env.local`:**
+
 ```env
 ADMIN_USER_IDS=user_371H3N8bQ5kWMu1ExtSo5nf48AV
 ADMIN_EMAILS=ecccomedical@gmail.com
@@ -37,4 +41,3 @@ ADMIN_EMAILS=ecccomedical@gmail.com
 The admin check should work with BOTH user IDs and emails.
 
 Let me update the code to support both methods...
-

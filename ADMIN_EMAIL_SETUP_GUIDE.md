@@ -9,6 +9,7 @@ This guide will help you set up the professional ECCCO admin email across all pl
 ## ✅ **Step 1: Local Environment** (COMPLETED)
 
 Updated `.env.local`:
+
 ```env
 ADMIN_EMAILS=ecccomedical@gmail.com
 ```
@@ -20,9 +21,11 @@ ADMIN_EMAILS=ecccomedical@gmail.com
 ### Instructions:
 
 1. **Go to Vercel Dashboard:**
+
    - Navigate to: https://vercel.com/mwathajeoffrey-dotcom/eccco/settings/environment-variables
 
 2. **Add New Environment Variable:**
+
    - Click **"Add New"**
    - **Key:** `ADMIN_EMAILS`
    - **Value:** `ecccomedical@gmail.com`
@@ -40,11 +43,13 @@ ADMIN_EMAILS=ecccomedical@gmail.com
 ### Option A: Create New Clerk Account (Recommended)
 
 1. **Sign up to Clerk with ecccomedical@gmail.com:**
+
    - Go to: https://dashboard.clerk.com/sign-up
    - Use email: `ecccomedical@gmail.com`
    - Verify the email
 
 2. **Sign in to your ECCCO app:**
+
    - Visit: https://eccco.vercel.app
    - Click "Sign In"
    - Sign in with `ecccomedical@gmail.com`
@@ -59,9 +64,11 @@ ADMIN_EMAILS=ecccomedical@gmail.com
 If you want to keep your personal account but add ecccomedical:
 
 1. **Go to Clerk User Profile:**
+
    - Visit: https://eccco.vercel.app/profile (or user settings)
-   
+
 2. **Add Secondary Email:**
+
    - Add `ecccomedical@gmail.com` as secondary email
    - Verify it
 
@@ -75,14 +82,17 @@ If you want to keep your personal account but add ecccomedical:
 ## 📧 **Step 4: Update Other Services**
 
 ### Sentry (Error Tracking)
+
 - Go to: https://sentry.io/settings/eccco/
 - Update notification email to `ecccomedical@gmail.com`
 
 ### Supabase (Database)
+
 - Go to: https://supabase.com/dashboard/project/dckhoqbqtxddghojkoer/settings/general
 - Add `ecccomedical@gmail.com` as project member (if needed)
 
 ### GitHub Repository
+
 - Consider adding `ecccomedical@gmail.com` as collaborator
 - Update repository email notifications
 
@@ -91,6 +101,7 @@ If you want to keep your personal account but add ecccomedical:
 ## 🎯 **Step 5: Test Everything**
 
 ### Local Testing:
+
 ```bash
 # Restart dev server to pick up new env vars
 cd /Users/apple/ECCCO
@@ -99,11 +110,13 @@ npm run dev
 ```
 
 ### Test Admin Dashboard:
+
 1. Sign in with `ecccomedical@gmail.com`
 2. Visit: http://localhost:3000/admin/dashboard
 3. Should see dashboard stats without errors ✅
 
 ### Production Testing:
+
 1. Deploy to Vercel (after adding env var)
 2. Sign in with `ecccomedical@gmail.com`
 3. Visit: https://eccco.vercel.app/admin/dashboard
@@ -114,20 +127,24 @@ npm run dev
 ## 🔒 **Security Best Practices**
 
 ### 1. **Enable 2FA on Gmail**
+
 - Go to: https://myaccount.google.com/security
 - Enable Two-Factor Authentication
 - Save backup codes securely
 
 ### 2. **Enable 2FA on Clerk**
+
 - Configure in Clerk Dashboard
 - Require 2FA for admin accounts
 
 ### 3. **Secure Environment Variables**
+
 - Never commit `.env.local` to git (already in `.gitignore`)
 - Store backup of env vars securely (password manager)
 - Rotate API keys periodically
 
 ### 4. **Access Control**
+
 - Only add trusted emails to `ADMIN_EMAILS`
 - Use comma-separated list for multiple admins:
   ```env
@@ -153,20 +170,26 @@ npm run dev
 ## 🐛 **Troubleshooting**
 
 ### Issue: "Failed to fetch stats" error
-**Solution:** 
+
+**Solution:**
+
 1. Verify `ADMIN_EMAILS` is set in Vercel
 2. Redeploy the app
 3. Sign in with `ecccomedical@gmail.com`
 4. Clear browser cache and try again
 
 ### Issue: Still shows "Unauthorized"
+
 **Solution:**
+
 1. Check that email matches exactly: `ecccomedical@gmail.com`
 2. Verify you're signed in to Clerk with that email
 3. Check Vercel logs: `vercel logs eccco`
 
 ### Issue: Environment variable not updating
+
 **Solution:**
+
 1. After adding env var in Vercel, must redeploy
 2. Or click "Redeploy" on latest deployment
 3. Wait 1-2 minutes for propagation
@@ -176,6 +199,7 @@ npm run dev
 ## 📞 **Support**
 
 For questions or issues:
+
 - **Email:** ecccomedical@gmail.com
 - **GitHub Issues:** https://github.com/mwathajeoffrey-dotcom/ECCCO/issues
 
@@ -196,6 +220,7 @@ Once everything is working:
 ## 🚀 **Future Enhancements**
 
 ### Custom Domain Email (Optional)
+
 When you get `eccco.app` or `eccco.com` domain:
 
 1. **Set up Google Workspace** or **Zoho Mail**
@@ -204,6 +229,7 @@ When you get `eccco.app` or `eccco.com` domain:
 4. **Migrate from Gmail to custom domain**
 
 ### Multiple Admin Support
+
 ```env
 ADMIN_EMAILS=ecccomedical@gmail.com,admin@eccco.app,support@eccco.app
 ```

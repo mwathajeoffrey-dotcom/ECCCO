@@ -13,12 +13,12 @@
   <!-- Fixed elements OUTSIDE scroll container -->
   <Sidebar position="fixed" />
   <MobileBottomNav position="fixed" />
-  
+
   <!-- Only content scrolls -->
   <div class="mobile-scroll-container">
     <AppLayout>
       <HamburgerButton position="fixed" />
-      <Content />
+      <content />
     </AppLayout>
   </div>
 </body>
@@ -27,17 +27,21 @@
 ## Code Changes
 
 ### 1. Created `RootLayoutContent.tsx`
+
 New component manages sidebar state at root level:
+
 - Renders Sidebar OUTSIDE scroll container
 - Renders MobileBottomNav OUTSIDE scroll container
 - Passes sidebar state to AppLayout via props
 
 ### 2. Modified `layout.tsx`
+
 - Removed scroll container wrapper
 - Uses RootLayoutContent to manage structure
 - Sidebar/Bottom nav rendered at correct level
 
 ### 3. Modified `AppLayout.tsx`
+
 - No longer renders Sidebar
 - Receives sidebar state as props
 - Still renders hamburger button
@@ -46,6 +50,7 @@ New component manages sidebar state at root level:
 ## Why This Works
 
 **Before (BROKEN):**
+
 ```
 body
   └─ .mobile-scroll-container (overflow-y: auto)
@@ -56,6 +61,7 @@ body
 ```
 
 **After (FIXED):**
+
 ```
 body
   ├─ Sidebar (position: fixed) ✅ Fixed to viewport!
@@ -71,6 +77,7 @@ body
 Server running at: http://localhost:3000
 
 ### Test Checklist:
+
 - [ ] Sidebar slides in/out smoothly
 - [ ] Sidebar completely hides when closed
 - [ ] Hamburger button always visible

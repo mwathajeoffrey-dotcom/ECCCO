@@ -1,7 +1,7 @@
 # 🔧 NOTES SAVE BUG - ROOT CAUSE ANALYSIS & FIX
 
-**Date:** January 24, 2026  
-**Status:** ✅ FIXED  
+**Date:** January 24, 2026
+**Status:** ✅ FIXED
 **Issue:** Clinical notes "Save Note" button failing with 500 errors
 
 ---
@@ -9,12 +9,15 @@
 ## 🔍 ROOT CAUSE ANALYSIS
 
 ### The Problem Chain
+
 1. **CSP Blocking Clerk** ⛔
+
    - Content Security Policy in `next.config.ts` was too restrictive
    - Missing domains: `https://*.clerk.com`, `https://*.vercel.app`, `https://*.vercel-analytics.com`
    - Clerk authentication scripts were being blocked by CSP violations
 
 2. **Authentication Failure** 🔐
+
    - When Clerk scripts can't execute, authentication fails
    - Users appear unauthenticated to the backend
    - The `/api/notes` endpoint relies on `auth()` from Clerk
@@ -25,7 +28,9 @@
    - Result: "Failed to save note" error shown to users
 
 ### Evidence from Console
+
 From the screenshot provided:
+
 - ❌ CSP violation: `clerk.browser.js:19`
 - ❌ POST `/api/notes` → 500 (Internal Server Error)
 - ❌ "Failed to save note: Error: Failed to save note"
@@ -37,19 +42,21 @@ From the screenshot provided:
 ### Updated `next.config.ts` Content Security Policy
 
 **Changed:**
+
 ```typescript
 // BEFORE (too restrictive)
-"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io"
-"connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io https://vercel.live wss://ws.pusherapp.com"
-"frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev"
+"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io";
+"connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.sentry.io https://vercel.live wss://ws.pusherapp.com";
+"frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev";
 
 // AFTER (properly allows Clerk & Vercel)
-"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live"
-"connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live wss://ws.pusherapp.com https://*.vercel.app https://*.vercel-analytics.com"
-"frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com"
+"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live";
+"connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://*.sentry.io https://vercel.live wss://ws.pusherapp.com https://*.vercel.app https://*.vercel-analytics.com";
+"frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com";
 ```
 
 **Added domains:**
+
 - ✅ `https://*.clerk.com` - Clerk's main domain
 - ✅ `https://*.vercel.app` - Vercel deployment domains
 - ✅ `https://*.vercel-analytics.com` - Vercel analytics
@@ -60,6 +67,7 @@ From the screenshot provided:
 ## 🚀 DEPLOYMENT STEPS
 
 1. **Push the CSP fix:**
+
    ```bash
    git add next.config.ts
    git commit -m "fix: Update CSP to allow Clerk authentication on Vercel"
@@ -92,16 +100,20 @@ After deployment, verify:
 ## 📊 TECHNICAL DETAILS
 
 ### Files Modified
+
 1. ✅ `next.config.ts` - Updated CSP headers
 
 ### API Endpoint
+
 - **Endpoint:** `POST /api/notes`
 - **File:** `src/app/api/notes/route.ts`
 - **Authentication:** Uses `auth()` from `@clerk/nextjs/server`
 - **Database:** Prisma with PostgreSQL (Supabase)
 
 ### Database Schema
+
 Table: `UserNote`
+
 - ✅ All required fields exist: `searchQuery`, `evidenceSummary`, `specialty`, `patientContext`
 - ✅ Prisma client generated and up-to-date
 
@@ -110,10 +122,12 @@ Table: `UserNote`
 ## 🎯 WHY THIS HAPPENED
 
 The feature worked in local development because:
+
 - ✅ Local dev uses `http://localhost:3000` (no CSP issues)
 - ✅ Clerk works fine without strict CSP in dev
 
 But failed in production because:
+
 - ❌ Vercel deployment has stricter CSP enforcement
 - ❌ CSP didn't include Clerk's production domains
 - ❌ Blocked Clerk → No auth → API fails
@@ -123,14 +137,16 @@ But failed in production because:
 ## 🛡️ PREVENTION
 
 **Going forward:**
+
 1. Always test new features on Vercel preview deployments before merging
 2. Check browser console for CSP violations
 3. Ensure CSP includes all required third-party domains
 4. Document CSP requirements for all external services
 
 **CSP Checklist for New Services:**
+
 - Authentication: Clerk domains
-- Monitoring: Sentry domains  
+- Monitoring: Sentry domains
 - Hosting: Vercel domains
 - Analytics: Vercel Analytics domains
 
@@ -139,12 +155,14 @@ But failed in production because:
 ## ✨ FEATURE SUMMARY
 
 **Clinical Notes Button** (`/evidence-search`)
+
 - 📝 Allows users to take notes while searching for evidence
 - 🏷️ Supports tags, specialty, patient context
 - 💾 Saves to database via `/api/notes`
 - 📚 Accessible in "Clinical Notes" tab
 
 **User Flow:**
+
 1. User searches for evidence
 2. Clicks "📝 Take Notes" button
 3. Fills in note content
@@ -164,5 +182,5 @@ But failed in production because:
 
 ---
 
-**Fix Applied:** January 24, 2026  
+**Fix Applied:** January 24, 2026
 **Ready for Deployment:** ✅ YES

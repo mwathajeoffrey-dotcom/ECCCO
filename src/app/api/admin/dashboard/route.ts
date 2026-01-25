@@ -127,7 +127,7 @@ export async function GET() {
     // Get recent activity feed (last 20 actions)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-    
+
     // Get recent quiz attempts
     const recentQuizzes = await prisma.quizAttempt.findMany({
       where: {

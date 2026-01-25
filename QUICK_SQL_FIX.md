@@ -1,8 +1,9 @@
 # 🚀 QUICK FIX: Copy-Paste These SQL Queries into Supabase
 
 ## 1️⃣ Check Problem (Copy & Run)
+
 ```sql
-SELECT 
+SELECT
   COUNT(*) as total_questions,
   COUNT(CASE WHEN options IS NULL THEN 1 END) as null_options,
   COUNT(CASE WHEN options = '' THEN 1 END) as empty_options,
@@ -13,22 +14,24 @@ FROM "Question";
 ---
 
 ## 2️⃣ Fix Problem (Copy & Run)
+
 ```sql
 UPDATE "Question"
-SET 
+SET
   options = '["Option A", "Option B", "Option C", "Option D"]',
   correctIndex = 0,
   "updatedAt" = NOW()
-WHERE options IS NULL 
-   OR options = '' 
+WHERE options IS NULL
+   OR options = ''
    OR options = '[]';
 ```
 
 ---
 
 ## 3️⃣ Verify Fix (Copy & Run)
+
 ```sql
-SELECT 
+SELECT
   id,
   LEFT(question, 60) as question_preview,
   options,
@@ -42,6 +45,7 @@ LIMIT 10;
 ## ✅ Done!
 
 After running these 3 queries:
+
 1. Wait 2 minutes for Vercel deployment
 2. Clear browser cache (`Cmd+Shift+Delete`)
 3. Hard refresh app (`Cmd+Shift+R`)
@@ -74,7 +78,7 @@ Query 2 adds **generic placeholder options**. They work to stop crashes, but lat
 
 ```sql
 UPDATE "Question"
-SET 
+SET
   options = '["Real answer A", "Real answer B", "Real answer C", "Real answer D"]',
   correctIndex = 0,  -- Change to 0, 1, 2, or 3 (which is correct)
   explanation = 'Why this answer is correct...',

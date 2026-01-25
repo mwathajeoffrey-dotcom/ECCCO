@@ -58,7 +58,7 @@ body {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
   font-feature-settings: "rlig" 1, "calt" 1;
-  
+
   /* Mobile scroll optimization - only hide overflow, don't fix position */
   height: 100%;
   width: 100%;
@@ -66,7 +66,8 @@ body {
 }
 
 /* Main content area scrolls instead of body */
-#__next, [data-nextjs-scroll-container] {
+#__next,
+[data-nextjs-scroll-container] {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -76,7 +77,8 @@ body {
 
 /* Desktop: reset body scroll behavior */
 @media (min-width: 768px) {
-  html, body {
+  html,
+  body {
     height: auto;
     overflow: visible;
     position: static;
@@ -178,17 +180,21 @@ body {
     }
 
     /* Prevent layout shifts during scroll */
-    img, video {
+    img,
+    video {
       content-visibility: auto;
     }
 
     /* Critical: Allow vertical pan on mobile */
-    body, html, .mobile-scroll-container {
+    body,
+    html,
+    .mobile-scroll-container {
       touch-action: pan-y !important;
     }
 
     /* Fixed elements should not interfere with scrolling */
-    [class*="fixed"], [class*="sticky"] {
+    [class*="fixed"],
+    [class*="sticky"] {
       transform: translateZ(0); /* GPU acceleration */
       backface-visibility: hidden;
     }
@@ -210,4 +216,3 @@ body {
     }
   }
 }
-

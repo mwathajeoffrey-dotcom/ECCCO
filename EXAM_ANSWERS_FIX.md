@@ -1,7 +1,9 @@
 # Fix: Exam Answers Not Showing
 
 ## Problem
+
 Users report that answers are not showing:
+
 1. After completing questions (in results screen)
 2. When "Show Correct Answer" toggle is enabled during exam
 
@@ -10,19 +12,25 @@ Users report that answers are not showing:
 After reviewing the code in `/src/components/exam/ExamInterface.tsx`, the logic appears correct:
 
 ### Answer Reveal Logic
+
 ```typescript
 const showAnswer = showAnswerAfterAttempt && currentQuestionAnswered;
 ```
 
 This should show answers when BOTH conditions are true:
+
 - ✅ `showAnswerAfterAttempt` = true (toggle is ON)
 - ✅ `currentQuestionAnswered` = true (user selected an answer)
 
 ### State Management
+
 ```typescript
 // When answer is selected:
 const handleAnswerSelect = (answerIndex: number) => {
-  setSelectedAnswers(prev => ({ ...prev, [currentQuestionIndex]: answerIndex }));
+  setSelectedAnswers((prev) => ({
+    ...prev,
+    [currentQuestionIndex]: answerIndex,
+  }));
   setCurrentQuestionAnswered(true); // ✅ Sets to true
 };
 
@@ -31,15 +39,18 @@ setCurrentQuestionAnswered(selectedAnswers[index] !== undefined); // ✅ Checks 
 ```
 
 ### UI Rendering
+
 - Correct answers highlighted in GREEN
-- Incorrect answers highlighted in RED  
+- Incorrect answers highlighted in RED
 - Explanation box shown below options
 - References, learning objectives, clinical pearls displayed
 
 ## Possible Issues
 
 ### Issue 1: Console Logs Added for Debugging
+
 I've added comprehensive logging to track:
+
 - Toggle state changes
 - Answer selections
 - Computed `showAnswer` value
@@ -48,6 +59,7 @@ I've added comprehensive logging to track:
 However, the linter blocks `console.log` in production code. These logs need to be replaced with proper debugging or removed.
 
 ### Issue 2: Linter Errors May Prevent Build
+
 The current code has ESLint errors that may prevent the development server from hot-reloading changes.
 
 ## Recommended Solution
@@ -63,12 +75,13 @@ Instead of adding console.logs to the code, users can debug directly in the brow
    ```javascript
    // Check React state using React DevTools
    // Or manually inspect elements:
-   document.querySelector('input[type="checkbox"]').checked
+   document.querySelector('input[type="checkbox"]').checked;
    ```
 
 ### Better Solution: Add Visual Debug Indicators
 
 Add a visible debug panel during development that shows:
+
 - Toggle state: ON/OFF
 - Question answered: YES/NO
 - Should show answer: YES/NO
@@ -86,6 +99,7 @@ This doesn't require console.logs and provides immediate visual feedback.
 ## Testing Checklist
 
 ### During Exam Mode:
+
 - [ ] Can you see the "Show Correct Answer" checkbox?
 - [ ] Does checking it change the checkbox visually?
 - [ ] After checking it AND selecting an answer, do you see:
@@ -97,6 +111,7 @@ This doesn't require console.logs and provides immediate visual feedback.
   - [ ] Clinical Pearls?
 
 ### After Clicking "Finish":
+
 - [ ] Does results screen appear?
 - [ ] Do you see score (percentage)?
 - [ ] Do you see correct/incorrect count?
@@ -125,6 +140,7 @@ If these don't happen, the issue is real. If they DO happen, the feature works a
 ## Alternative: Create Simpler Test Page
 
 I've created `test-exam-answers.html` which demonstrates the exact logic in a simpler environment. Users can:
+
 1. Open test-exam-answers.html in browser
 2. See real-time debug info
 3. Test the toggle and answer selection
@@ -133,6 +149,7 @@ I've created `test-exam-answers.html` which demonstrates the exact logic in a si
 This proves whether the logic is sound or broken.
 
 ## Files Modified (with debug logs - NEEDS CLEANUP)
+
 - `/src/components/exam/ExamInterface.tsx`
   - Added console.logs in `handleAnswerSelect`
   - Added console.logs in `finishExam`

@@ -36,8 +36,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
       const selectedText = value.substring(start, end);
       const textToInsert = selectedText || placeholder;
 
-      const newValue =
-        value.substring(0, start) + before + textToInsert + after + value.substring(end);
+      const newValue = value.substring(0, start) + before + textToInsert + after + value.substring(end);
 
       onChange(newValue);
 
@@ -84,10 +83,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
         if (!textarea) return;
         const start = textarea.selectionStart;
         const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-        const newValue =
-          value.substring(0, lineStart) +
-          "# " +
-          value.substring(lineStart);
+        const newValue = value.substring(0, lineStart) + "# " + value.substring(lineStart);
         onChange(newValue);
         textarea.focus();
       },
@@ -101,10 +97,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
         if (!textarea) return;
         const start = textarea.selectionStart;
         const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-        const newValue =
-          value.substring(0, lineStart) +
-          "## " +
-          value.substring(lineStart);
+        const newValue = value.substring(0, lineStart) + "## " + value.substring(lineStart);
         onChange(newValue);
         textarea.focus();
       },
@@ -118,10 +111,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
         if (!textarea) return;
         const start = textarea.selectionStart;
         const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-        const newValue =
-          value.substring(0, lineStart) +
-          "- " +
-          value.substring(lineStart);
+        const newValue = value.substring(0, lineStart) + "- " + value.substring(lineStart);
         onChange(newValue);
         textarea.focus();
       },
@@ -135,10 +125,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
         if (!textarea) return;
         const start = textarea.selectionStart;
         const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-        const newValue =
-          value.substring(0, lineStart) +
-          "1. " +
-          value.substring(lineStart);
+        const newValue = value.substring(0, lineStart) + "1. " + value.substring(lineStart);
         onChange(newValue);
         textarea.focus();
       },
@@ -152,10 +139,7 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
         if (!textarea) return;
         const start = textarea.selectionStart;
         const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-        const newValue =
-          value.substring(0, lineStart) +
-          "> " +
-          value.substring(lineStart);
+        const newValue = value.substring(0, lineStart) + "> " + value.substring(lineStart);
         onChange(newValue);
         textarea.focus();
       },
@@ -171,63 +155,59 @@ export function RichTextEditor({ value, onChange, placeholder, rows = 12 }: Rich
 
   // Render markdown preview
   const renderPreview = (text: string) => {
-    return text
-      .split("\n")
-      .map((line, i) => {
-        // Headings
-        if (line.startsWith("# ")) {
-          return (
-            <h1 key={i} className="text-2xl font-bold mb-2 mt-4">
-              {line.substring(2)}
-            </h1>
-          );
-        }
-        if (line.startsWith("## ")) {
-          return (
-            <h2 key={i} className="text-xl font-bold mb-2 mt-3">
-              {line.substring(3)}
-            </h2>
-          );
-        }
-        // Bullet list
-        if (line.startsWith("- ")) {
-          return (
-            <li key={i} className="ml-4">
-              {line.substring(2)}
-            </li>
-          );
-        }
-        // Numbered list
-        if (/^\d+\.\s/.test(line)) {
-          return (
-            <li key={i} className="ml-4 list-decimal">
-              {line.replace(/^\d+\.\s/, "")}
-            </li>
-          );
-        }
-        // Quote
-        if (line.startsWith("> ")) {
-          return (
-            <blockquote key={i} className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400">
-              {line.substring(2)}
-            </blockquote>
-          );
-        }
-        // Regular text with inline formatting
-        let formattedLine = line;
-        // Bold
-        formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        // Italic
-        formattedLine = formattedLine.replace(/\*(.*?)\*/g, "<em>$1</em>");
-        // Highlight
-        formattedLine = formattedLine.replace(/==(.*?)==/g, '<mark class="bg-yellow-200 dark:bg-yellow-500">$1</mark>');
-        // Underline
-        formattedLine = formattedLine.replace(/<u>(.*?)<\/u>/g, "<u>$1</u>");
-
+    return text.split("\n").map((line, i) => {
+      // Headings
+      if (line.startsWith("# ")) {
         return (
-          <p key={i} className="mb-2" dangerouslySetInnerHTML={{ __html: formattedLine || "&nbsp;" }} />
+          <h1 key={i} className="text-2xl font-bold mb-2 mt-4">
+            {line.substring(2)}
+          </h1>
         );
-      });
+      }
+      if (line.startsWith("## ")) {
+        return (
+          <h2 key={i} className="text-xl font-bold mb-2 mt-3">
+            {line.substring(3)}
+          </h2>
+        );
+      }
+      // Bullet list
+      if (line.startsWith("- ")) {
+        return (
+          <li key={i} className="ml-4">
+            {line.substring(2)}
+          </li>
+        );
+      }
+      // Numbered list
+      if (/^\d+\.\s/.test(line)) {
+        return (
+          <li key={i} className="ml-4 list-decimal">
+            {line.replace(/^\d+\.\s/, "")}
+          </li>
+        );
+      }
+      // Quote
+      if (line.startsWith("> ")) {
+        return (
+          <blockquote key={i} className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400">
+            {line.substring(2)}
+          </blockquote>
+        );
+      }
+      // Regular text with inline formatting
+      let formattedLine = line;
+      // Bold
+      formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      // Italic
+      formattedLine = formattedLine.replace(/\*(.*?)\*/g, "<em>$1</em>");
+      // Highlight
+      formattedLine = formattedLine.replace(/==(.*?)==/g, '<mark class="bg-yellow-200 dark:bg-yellow-500">$1</mark>');
+      // Underline
+      formattedLine = formattedLine.replace(/<u>(.*?)<\/u>/g, "<u>$1</u>");
+
+      return <p key={i} className="mb-2" dangerouslySetInnerHTML={{ __html: formattedLine || "&nbsp;" }} />;
+    });
   };
 
   return (

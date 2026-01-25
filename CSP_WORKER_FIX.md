@@ -1,7 +1,7 @@
 # 🔧 CSP WORKER-SRC FIX - CRITICAL UPDATE
 
-**Date:** January 24, 2026  
-**Issue:** CSP still blocking Clerk after initial fix  
+**Date:** January 24, 2026
+**Issue:** CSP still blocking Clerk after initial fix
 **Status:** ✅ **FIXED - SECOND ITERATION**
 
 ---
@@ -11,9 +11,9 @@
 After deploying the first CSP fix, the console still showed:
 
 ```
-Creating a worker from 'blob:https://eccco.vercel.app/...' violates 
-the following Content Security Policy directive: "script-src 'self' 
-'unsafe-eval' 'unsafe-inline' ...". Note that 'worker-src' was not 
+Creating a worker from 'blob:https://eccco.vercel.app/...' violates
+the following Content Security Policy directive: "script-src 'self'
+'unsafe-eval' 'unsafe-inline' ...". Note that 'worker-src' was not
 explicitly set, so 'script-src' is used as a fallback.
 ```
 
@@ -24,6 +24,7 @@ explicitly set, so 'script-src' is used as a fallback.
 **Clerk uses Web Workers** to handle authentication in the background. These workers are created from **blob URLs**, which require explicit permission in the CSP.
 
 **The problem:**
+
 - We added Clerk domains to `script-src` ✅
 - But we didn't add `worker-src` ❌
 - Clerk creates workers from blob URLs
@@ -61,10 +62,11 @@ Added `worker-src` directive to allow blob workers:
 
 ## 🎯 WHAT CHANGED
 
-**Commit 1 (ae7e9c8):** Added Clerk and Vercel domains  
+**Commit 1 (ae7e9c8):** Added Clerk and Vercel domains
 **Commit 2 (c16df05):** Added `worker-src 'self' blob:`
 
 **Complete CSP now includes:**
+
 - ✅ `script-src` - Clerk domains
 - ✅ `worker-src 'self' blob:` - Web Workers from blobs
 - ✅ `connect-src` - Clerk + Vercel domains
@@ -74,12 +76,13 @@ Added `worker-src` directive to allow blob workers:
 
 ## 📊 DEPLOYMENT STATUS
 
-**Commit:** `c16df05`  
-**Message:** "fix: Add worker-src to CSP for Clerk blob workers"  
-**Status:** ✅ Pushed to main  
+**Commit:** `c16df05`
+**Message:** "fix: Add worker-src to CSP for Clerk blob workers"
+**Status:** ✅ Pushed to main
 **Vercel:** Auto-deploying now
 
-**Expected result:** 
+**Expected result:**
+
 - ✅ No more CSP errors
 - ✅ Clerk authentication works
 - ✅ Notes save successfully
@@ -103,10 +106,12 @@ After Vercel deployment completes (~2 minutes):
 ## 💡 LESSON LEARNED
 
 **CSP for Clerk requires TWO directives:**
+
 1. `script-src` - For loading Clerk scripts
 2. `worker-src` - For Clerk's background workers
 
 **Always check:**
+
 - Does the service use Web Workers?
 - Does it use Service Workers?
 - Does it use blob or data URLs?
@@ -116,29 +121,31 @@ After Vercel deployment completes (~2 minutes):
 ## 📚 CSP BEST PRACTICES
 
 ### For Clerk Authentication:
+
 ```typescript
-"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com"
-"worker-src 'self' blob:"  // Critical for Clerk!
-"connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.com"
-"frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com"
+"script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com";
+"worker-src 'self' blob:"; // Critical for Clerk!
+"connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.com";
+"frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com";
 ```
 
 ### For Vercel Deployment:
+
 ```typescript
-"connect-src 'self' https://*.vercel.app https://*.vercel-analytics.com https://vercel.live"
-"script-src 'self' https://vercel.live"
+"connect-src 'self' https://*.vercel.app https://*.vercel-analytics.com https://vercel.live";
+"script-src 'self' https://vercel.live";
 ```
 
 ---
 
 ## ✅ STATUS
 
-**First Fix:** Added Clerk/Vercel domains ✅  
-**Second Fix:** Added worker-src for blob workers ✅  
+**First Fix:** Added Clerk/Vercel domains ✅
+**Second Fix:** Added worker-src for blob workers ✅
 **Next:** Wait for Vercel deployment and test ⏱️
 
 **This should now be the COMPLETE fix!** 🎉
 
 ---
 
-*Updated: January 24, 2026 - Second iteration*
+_Updated: January 24, 2026 - Second iteration_

@@ -1,6 +1,6 @@
 # 🎯 HOW TO VERIFY THE NOTES SAVE FIX
 
-**Fix Deployed:** ✅ January 24, 2026  
+**Fix Deployed:** ✅ January 24, 2026
 **Commit:** `ae7e9c8`
 
 ---
@@ -10,8 +10,9 @@
 **Root Cause:** Content Security Policy (CSP) was blocking Clerk authentication scripts from running on the Vercel deployment.
 
 **The Fix:** Updated `next.config.ts` to allow:
+
 - `https://*.clerk.com` (Clerk's main domain)
-- `https://*.vercel.app` (Vercel deployment domains)  
+- `https://*.vercel.app` (Vercel deployment domains)
 - `https://*.vercel-analytics.com` (Vercel analytics)
 
 **Result:** Clerk authentication now works → API can authenticate users → Notes save successfully ✅
@@ -21,14 +22,18 @@
 ## 🧪 VERIFICATION STEPS
 
 ### 1. Wait for Deployment (1-2 minutes)
+
 Visit: https://vercel.com/mwathajeoffrey-dotcom/eccco
+
 - Check that the deployment is complete
 - Should show "Ready" status
 
 ### 2. Test on Production
+
 Visit: **https://eccco.vercel.app/evidence-search**
 
 ### 3. Open Developer Console
+
 - Press `F12` or `Cmd+Option+I` (Mac) / `Ctrl+Shift+I` (Windows)
 - Go to **Console** tab
 - ✅ Should see NO CSP errors (previously showed `clerk.browser.js:19` errors)
@@ -36,6 +41,7 @@ Visit: **https://eccco.vercel.app/evidence-search**
 ### 4. Test the Notes Feature
 
 **Step-by-step:**
+
 1. On the Evidence Search page, enter a query (e.g., "sepsis treatment")
 2. Click **Search** button
 3. Wait for results to load
@@ -53,6 +59,7 @@ Visit: **https://eccco.vercel.app/evidence-search**
 9. ✅ Your note should appear at the top of the list
 
 ### 5. Check Network Tab
+
 - Press `F12` and go to **Network** tab
 - Click "Save Note" again
 - Look for `POST /api/notes`
@@ -63,6 +70,7 @@ Visit: **https://eccco.vercel.app/evidence-search**
 ## ❌ WHAT TO CHECK IF IT STILL FAILS
 
 ### Check Console for Errors
+
 ```javascript
 // Should NOT see:
 ❌ "Violates the following Content Security Policy directive"
@@ -75,6 +83,7 @@ Visit: **https://eccco.vercel.app/evidence-search**
 ```
 
 ### Check Network Tab
+
 ```
 POST /api/notes
 Status: 201 Created  ✅ (good)
@@ -85,13 +94,16 @@ Status: 401 Unauthorized  ❌ (bad - user not logged in)
 ### If Still Failing:
 
 1. **Clear browser cache:**
+
    - Hard reload: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
 
 2. **Check Vercel deployment:**
+
    - Ensure latest commit is deployed
    - Check environment variables are set
 
 3. **Check if you're logged in:**
+
    - Should see your profile in the top-right corner
    - If not, click "Sign In"
 
@@ -104,27 +116,29 @@ Status: 401 Unauthorized  ❌ (bad - user not logged in)
 ## 🔍 TECHNICAL VERIFICATION
 
 ### Expected CSP Headers
+
 ```
 Content-Security-Policy:
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 
-    https://*.clerk.accounts.dev 
-    https://*.accounts.dev 
+  script-src 'self' 'unsafe-eval' 'unsafe-inline'
+    https://*.clerk.accounts.dev
+    https://*.accounts.dev
     https://*.clerk.com ✅ NEW
-    https://*.sentry.io 
+    https://*.sentry.io
     https://vercel.live ✅ NEW
-    
-  connect-src 'self' 
-    https://*.clerk.accounts.dev 
-    https://*.accounts.dev 
+
+  connect-src 'self'
+    https://*.clerk.accounts.dev
+    https://*.accounts.dev
     https://*.clerk.com ✅ NEW
-    https://*.sentry.io 
-    https://vercel.live 
-    wss://ws.pusherapp.com 
+    https://*.sentry.io
+    https://vercel.live
+    wss://ws.pusherapp.com
     https://*.vercel.app ✅ NEW
     https://*.vercel-analytics.com ✅ NEW
 ```
 
 ### To verify CSP in browser:
+
 1. Open DevTools → Network
 2. Click on the page request (usually first one)
 3. Go to Headers → Response Headers
@@ -136,12 +150,14 @@ Content-Security-Policy:
 ## 📊 SUCCESS METRICS
 
 **Before Fix:**
+
 - ❌ CSP violations in console
 - ❌ 500 errors on POST /api/notes
 - ❌ "Failed to save note" error messages
 - ❌ Notes not appearing in Clinical Notes tab
 
 **After Fix:**
+
 - ✅ No CSP violations
 - ✅ 201 Created on POST /api/notes
 - ✅ "Clinical note saved successfully!" message
@@ -172,6 +188,7 @@ Content-Security-Policy:
 ## 🆘 NEED HELP?
 
 If the fix doesn't work:
+
 1. Take a screenshot of browser console
 2. Take a screenshot of Network tab showing the failed request
 3. Check Vercel deployment logs
@@ -181,5 +198,5 @@ The fix should work immediately after Vercel finishes deploying (usually 1-2 min
 
 ---
 
-**Last Updated:** January 24, 2026  
+**Last Updated:** January 24, 2026
 **Status:** ✅ DEPLOYED AND READY TO TEST

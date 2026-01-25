@@ -1,7 +1,7 @@
 # 🚨 URGENT: Fix CAPTCHA Sign-In Error for Your Friends
 
-**Date:** January 24, 2026  
-**Issue:** Users can't sign in - CAPTCHA error on mobile  
+**Date:** January 24, 2026
+**Issue:** Users can't sign in - CAPTCHA error on mobile
 **Priority:** 🔴 **CRITICAL**
 
 ---
@@ -9,6 +9,7 @@
 ## 🎯 THE PROBLEM
 
 Your friends are seeing this error:
+
 ```
 ⚠️ The CAPTCHA failed to load.
 This may be due to an unsupported browser or a browser extension.
@@ -26,25 +27,29 @@ Please try a different browser or disabling extensions.
 You need to adjust Clerk's bot protection settings:
 
 1. **Go to Clerk Dashboard:**
+
    - Visit: https://dashboard.clerk.com
    - Sign in with your account
    - Select your "ECCCO" or "ECCCO-Exam" application
 
 2. **Find Bot Protection Settings:**
+
    - Click "**User & Authentication**" in left sidebar
    - Then click "**Attack Protection**"
-   
+
    OR
-   
+
    - Click "**Settings**" → "**Security**"
    - Look for "**Bot Protection**" or "**CAPTCHA**" section
 
 3. **Change CAPTCHA Settings:**
-   
+
    **Current setting** is probably:
+
    - ❌ "Strict" or "Always show CAPTCHA"
-   
+
    **Change to:**
+
    - ✅ "**Standard**" or "**Invisible CAPTCHA**"
    - ✅ Or temporarily "**Disabled**" (to test)
 
@@ -67,6 +72,7 @@ Vercel will auto-deploy in 1-2 minutes.
 ## 🔍 WHY THIS HAPPENS
 
 **Clerk's bot protection** is blocking legitimate users because:
+
 1. **Mobile browsers** may not support all CAPTCHA features
 2. **CSP headers** were blocking reCAPTCHA scripts (I fixed this)
 3. **Strict settings** treat new users as potential bots
@@ -76,6 +82,7 @@ Vercel will auto-deploy in 1-2 minutes.
 ## 🎯 WHAT I FIXED IN THE CODE
 
 **Updated CSP to allow:**
+
 - ✅ `https://www.google.com` - Google reCAPTCHA
 - ✅ `https://www.gstatic.com` - Google static resources
 - ✅ `https://www.recaptcha.net` - Backup reCAPTCHA domain
@@ -115,17 +122,20 @@ Vercel will auto-deploy in 1-2 minutes.
 ## 🧪 TESTING AFTER FIX
 
 ### **Test 1: Verify Deployment**
+
 1. Wait 2 minutes after pushing
 2. Visit: https://eccco.vercel.app
 3. Check browser console - no CSP errors
 
 ### **Test 2: Sign In Flow**
+
 1. Ask friend to try signing in again
 2. CAPTCHA should load properly
 3. Or if disabled, no CAPTCHA shown
 4. User should be able to sign in ✅
 
 ### **Test 3: Different Browsers**
+
 - Safari (iOS)
 - Chrome (Android)
 - Firefox (Mobile)
@@ -137,6 +147,7 @@ Vercel will auto-deploy in 1-2 minutes.
 ### **If CAPTCHA still doesn't work:**
 
 **Check 1: Environment Variables**
+
 ```bash
 # In Vercel Dashboard → Settings → Environment Variables
 # Make sure you're using PRODUCTION keys:
@@ -145,10 +156,12 @@ CLERK_SECRET_KEY=sk_live_... # NOT sk_test_
 ```
 
 **Check 2: Clerk Instance**
+
 - Make sure friends are accessing the correct URL
 - Not a preview/development deployment
 
 **Check 3: Browser Console**
+
 - Ask friend to open browser dev tools
 - Check for specific CAPTCHA errors
 - Share screenshot with you
@@ -198,6 +211,7 @@ After making changes:
 ## 🎯 QUICK SUMMARY
 
 **What you need to do:**
+
 1. ⚡ **Go to Clerk Dashboard** (Most important!)
 2. 🔧 **Change bot protection** from "Strict" to "Standard"
 3. 💾 **Save changes** in Clerk
@@ -205,6 +219,7 @@ After making changes:
 5. 🧪 **Test with friends**
 
 **What I did:**
+
 - ✅ Updated CSP to allow reCAPTCHA domains
 - ✅ Created this guide
 - ✅ Ready to commit changes
@@ -236,9 +251,9 @@ git push origin main
 
 ---
 
-**Status:** 🟡 Code fixed - Waiting for Clerk settings adjustment  
+**Status:** 🟡 Code fixed - Waiting for Clerk settings adjustment
 **ETA:** 5 minutes total (2 min Clerk + 2 min deployment + 1 min test)
 
 ---
 
-*Your friends will be able to sign in once both fixes are deployed!* ✅
+_Your friends will be able to sign in once both fixes are deployed!_ ✅

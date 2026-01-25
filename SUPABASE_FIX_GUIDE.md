@@ -9,14 +9,17 @@ Your questions in Supabase have **NULL or empty `options` fields**, which causes
 ## ✅ Step 1: Access Supabase SQL Editor
 
 1. **Open Supabase Dashboard**
+
    - Go to https://supabase.com/dashboard
    - Log in with your account
 
 2. **Select Your Project**
+
    - Click on your ECCCO project
    - Should be the project connected to your app
 
 3. **Open SQL Editor**
+
    - In the left sidebar, click **"SQL Editor"**
    - Or go to: https://supabase.com/dashboard/project/YOUR-PROJECT-ID/sql
 
@@ -32,7 +35,7 @@ Copy and paste this SQL query into the editor:
 
 ```sql
 -- See how many questions have missing options
-SELECT 
+SELECT
   COUNT(*) as total_questions,
   COUNT(CASE WHEN options IS NULL THEN 1 END) as null_options,
   COUNT(CASE WHEN options = '' THEN 1 END) as empty_options,
@@ -44,6 +47,7 @@ FROM "Question";
 **Click "Run" or press Ctrl+Enter**
 
 ### Expected Output:
+
 ```
 total_questions | null_options | empty_options | empty_array | valid_options
 ----------------|--------------|---------------|-------------|---------------
@@ -51,6 +55,7 @@ total_questions | null_options | empty_options | empty_array | valid_options
 ```
 
 This shows:
+
 - Total questions: 30
 - Questions with NULL options: 25 (BROKEN ❌)
 - Questions with empty string: 3 (BROKEN ❌)
@@ -65,20 +70,20 @@ This shows:
 
 ```sql
 -- List the first 20 broken questions
-SELECT 
+SELECT
   id,
   LEFT(question, 80) as question_preview,
   "topicId",
   difficulty,
-  CASE 
+  CASE
     WHEN options IS NULL THEN '❌ NULL'
     WHEN options = '' THEN '❌ EMPTY STRING'
     WHEN options = '[]' THEN '❌ EMPTY ARRAY'
     ELSE '✅ HAS DATA'
   END as status
 FROM "Question"
-WHERE options IS NULL 
-   OR options = '' 
+WHERE options IS NULL
+   OR options = ''
    OR options = '[]'
 ORDER BY "createdAt" DESC
 LIMIT 20;
@@ -87,6 +92,7 @@ LIMIT 20;
 **Click "Run"**
 
 ### Expected Output:
+
 ```
 id          | question_preview                                     | topicId | difficulty | status
 ------------|------------------------------------------------------|---------|------------|-------------
@@ -108,18 +114,19 @@ Copy and paste this SQL:
 ```sql
 -- Add placeholder options to all broken questions
 UPDATE "Question"
-SET 
+SET
   options = '["Option A", "Option B", "Option C", "Option D"]',
   correctIndex = 0,
   "updatedAt" = NOW()
-WHERE options IS NULL 
-   OR options = '' 
+WHERE options IS NULL
+   OR options = ''
    OR options = '[]';
 ```
 
 **Click "Run"**
 
 ### Expected Output:
+
 ```
 UPDATE 30
 ```
@@ -136,7 +143,7 @@ Run this to check:
 
 ```sql
 -- Verify all questions now have options
-SELECT 
+SELECT
   id,
   LEFT(question, 60) as question_preview,
   options,
@@ -147,6 +154,7 @@ LIMIT 10;
 ```
 
 ### Expected Output:
+
 ```
 id       | question_preview                                 | options                                              | correctIndex
 ---------|--------------------------------------------------|------------------------------------------------------|-------------
@@ -161,14 +169,17 @@ pals-002 | Which rhythm requires immediate defib...        | ["Option A", "Optio
 ## ✅ Step 6: Test Your App
 
 1. **Wait 2-3 minutes** for Vercel to finish deploying the code fixes
+
    - Check: https://vercel.com/mwathajeoffrey-dotcom/eccco
 
 2. **Clear browser cache**
+
    - Chrome/Safari: `Cmd + Shift + Delete` (Mac) or `Ctrl + Shift + Delete` (Windows)
    - Select "Cached images and files"
    - Click "Clear data"
 
 3. **Hard refresh the app**
+
    - Mac: `Cmd + Shift + R`
    - Windows: `Ctrl + Shift + R`
 
@@ -190,7 +201,7 @@ Now that the app works, you should replace the placeholder options with real med
 ```sql
 -- Update a specific question with real answers
 UPDATE "Question"
-SET 
+SET
   options = '["Correct answer text here", "Wrong answer 1", "Wrong answer 2", "Wrong answer 3"]',
   correctIndex = 0,  -- 0=A is correct, 1=B is correct, etc.
   explanation = 'Detailed explanation of why the answer is correct',
@@ -203,7 +214,7 @@ WHERE id = 'pals-001';  -- Replace with actual question ID
 
 ```sql
 UPDATE "Question"
-SET 
+SET
   options = '[
     "0.01 mg/kg IV/IO (1:10,000 solution)",
     "0.1 mg/kg IV/IO (1:10,000 solution)",
@@ -220,11 +231,13 @@ WHERE id = 'pals-001';
 ### Tips for Writing Good Questions:
 
 1. **Options should be an array of strings** (use `JSON.stringify()` in code, or write manually)
+
    ```json
    ["Option A text", "Option B text", "Option C text", "Option D text"]
    ```
 
 2. **correctIndex** is zero-based:
+
    - `0` = Option A is correct
    - `1` = Option B is correct
    - `2` = Option C is correct
@@ -244,10 +257,10 @@ Save this as a bookmark to check question quality:
 
 ```sql
 -- Check for any invalid questions
-SELECT 
+SELECT
   id,
   LEFT(question, 60) as preview,
-  CASE 
+  CASE
     WHEN options IS NULL OR options = '' OR options = '[]' THEN '❌ Missing options'
     WHEN correctIndex IS NULL THEN '❌ Missing correctIndex'
     WHEN correctIndex < 0 THEN '❌ Invalid correctIndex (negative)'
@@ -313,26 +326,34 @@ Run this periodically to ensure all questions are valid!
 ## 🚨 Common Issues
 
 ### Issue: "Cannot update Question table"
+
 **Solution:** Check table permissions in Supabase
+
 ```sql
 -- Grant update permissions (if needed)
 GRANT UPDATE ON "Question" TO authenticated;
 ```
 
 ### Issue: "Syntax error near FROM"
+
 **Solution:** Make sure you're using double quotes for table name:
+
 - ✅ `FROM "Question"` (correct)
 - ❌ `FROM Question` (wrong - might fail)
 
 ### Issue: "Still seeing crashes after update"
+
 **Solutions:**
+
 1. Clear browser cache completely
 2. Wait for Vercel deployment to complete (check vercel.com)
 3. Try incognito/private browsing mode
 4. Hard refresh: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
 
 ### Issue: "Options showing as string, not array"
+
 **Solution:** Make sure to use proper JSON array format:
+
 ```sql
 -- ✅ Correct:
 options = '["A", "B", "C", "D"]'
@@ -364,10 +385,12 @@ After completing all steps, verify:
 If you get stuck:
 
 1. **Check Supabase logs**
+
    - Dashboard → Logs → Database Logs
    - Look for any error messages
 
 2. **Verify table structure**
+
    ```sql
    -- See table schema
    SELECT column_name, data_type, is_nullable
@@ -376,6 +399,7 @@ If you get stuck:
    ```
 
 3. **Check one specific question**
+
    ```sql
    -- See full data for one question
    SELECT *
@@ -394,6 +418,7 @@ If you get stuck:
 ## 🎉 Once Fixed
 
 Your app will:
+
 - ✅ Load exams without crashes
 - ✅ Display all answer choices (A, B, C, D)
 - ✅ Show correct/incorrect after selecting answers

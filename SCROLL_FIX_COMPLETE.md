@@ -11,12 +11,13 @@
 ## 🔍 What Happened
 
 ### The Problem:
+
 ```typescript
 // Countdown timer I added:
 const [nextRefreshIn, setNextRefreshIn] = useState(30);
 
 setInterval(() => {
-  setNextRefreshIn(prev => prev - 1); // ❌ Updates state EVERY SECOND
+  setNextRefreshIn((prev) => prev - 1); // ❌ Updates state EVERY SECOND
 }, 1000);
 
 // This caused:
@@ -31,6 +32,7 @@ setInterval(() => {
 ## ✅ The Fix
 
 ### Replaced State with Refs:
+
 ```typescript
 // NEW: No state, no re-renders
 const nextRefreshIn = useRef(30);
@@ -38,7 +40,7 @@ const countdownRef = useRef<HTMLSpanElement>(null);
 
 setInterval(() => {
   nextRefreshIn.current--;
-  
+
   // Update DOM directly, bypass React
   if (countdownRef.current) {
     countdownRef.current.textContent = `${nextRefreshIn.current}s`;
@@ -55,23 +57,25 @@ setInterval(() => {
 
 ## 📊 Performance Impact
 
-| Metric | Before (State) | After (Refs) |
-|--------|----------------|--------------|
-| **Re-renders/min** | 60 | 0 |
-| **Scroll FPS** | 20-30 | 60 |
-| **Mobile scroll** | Janky ❌ | Smooth ✅ |
-| **Countdown works** | Yes | Yes ✅ |
+| Metric              | Before (State) | After (Refs) |
+| ------------------- | -------------- | ------------ |
+| **Re-renders/min**  | 60             | 0            |
+| **Scroll FPS**      | 20-30          | 60           |
+| **Mobile scroll**   | Janky ❌       | Smooth ✅    |
+| **Countdown works** | Yes            | Yes ✅       |
 
 ---
 
 ## 🧪 Test NOW on Your Phone
 
 1. **Open dashboard on phone:**
+
    ```
    https://eccco.vercel.app/admin/dashboard
    ```
 
 2. **Scroll up and down:**
+
    ```
    ✅ Should be buttery smooth now
    ✅ No jank or sticking
@@ -95,11 +99,13 @@ setInterval(() => {
 **The Timeline:**
 
 1. **Before countdown timer:**
+
    - Scroll worked perfectly ✅
    - Dashboard refreshed every 30s
    - Zero re-renders between refreshes
 
 2. **After I added countdown (broken):**
+
    - Countdown updated every second
    - 60 state changes per minute
    - 60 React re-renders per minute ❌
@@ -115,10 +121,10 @@ setInterval(() => {
 
 ## 🎉 Summary
 
-**What I broke:** Mobile scrolling by adding countdown with `useState`  
-**Why it broke:** 60 re-renders/min interfered with scroll handlers  
-**How I fixed it:** Changed from `useState` to `useRef`  
-**Result:** Zero re-renders, smooth scrolling restored  
+**What I broke:** Mobile scrolling by adding countdown with `useState`
+**Why it broke:** 60 re-renders/min interfered with scroll handlers
+**How I fixed it:** Changed from `useState` to `useRef`
+**Result:** Zero re-renders, smooth scrolling restored
 
 **Your phone scrolling should be perfect again!** 🚀
 

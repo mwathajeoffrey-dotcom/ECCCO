@@ -67,7 +67,7 @@ export default function AdminDashboard() {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
-  
+
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
     activeToday: 0,
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
       if (!isAutoRefresh) {
         setIsRefreshing(true);
       }
-      
+
       const response = await fetch("/api/admin/dashboard");
 
       if (!response.ok) {
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
       });
     } catch (err) {
       logger.error("Failed to fetch stats:", err instanceof Error ? err : new Error(String(err)));
-      setStats(prev => ({ ...prev, systemHealth: "error" }));
+      setStats((prev) => ({ ...prev, systemHealth: "error" }));
     } finally {
       setIsRefreshing(false);
     }
@@ -129,12 +129,12 @@ export default function AdminDashboard() {
 
         setIsAdmin(true);
         await fetchDashboardStats();
-        
+
         // Start auto-refresh every 30 seconds
         const interval = setInterval(() => {
           fetchDashboardStats(true);
         }, 30000);
-        
+
         return () => clearInterval(interval);
       } catch (err) {
         logger.error("Admin check failed:", err instanceof Error ? err : new Error(String(err)));
@@ -163,11 +163,16 @@ export default function AdminDashboard() {
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case "quiz": return <BarChart3 className="w-4 h-4" />;
-      case "exam": return <FileText className="w-4 h-4" />;
-      case "question": return <BookOpen className="w-4 h-4" />;
-      case "signup": return <UserCheck className="w-4 h-4" />;
-      default: return <Activity className="w-4 h-4" />;
+      case "quiz":
+        return <BarChart3 className="w-4 h-4" />;
+      case "exam":
+        return <FileText className="w-4 h-4" />;
+      case "question":
+        return <BookOpen className="w-4 h-4" />;
+      case "signup":
+        return <UserCheck className="w-4 h-4" />;
+      default:
+        return <Activity className="w-4 h-4" />;
     }
   };
 
@@ -210,12 +215,10 @@ export default function AdminDashboard() {
                 </div>
                 <span className="text-sm font-medium text-green-700">Live</span>
               </div>
-              
+
               {/* Last updated */}
-              <div className="text-sm text-gray-500">
-                Updated {formatTimeAgo(lastUpdate)}
-              </div>
-              
+              <div className="text-sm text-gray-500">Updated {formatTimeAgo(lastUpdate)}</div>
+
               {/* Manual refresh button */}
               <button
                 onClick={handleManualRefresh}
@@ -223,9 +226,9 @@ export default function AdminDashboard() {
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
                 title="Refresh dashboard"
               >
-                <RefreshCw className={`w-5 h-5 text-gray-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-5 h-5 text-gray-600 ${isRefreshing ? "animate-spin" : ""}`} />
               </button>
-              
+
               <Link href="/admin/users" className="text-gray-700 hover:text-blue-600 font-medium">
                 Users ({stats.totalUsers})
               </Link>
@@ -240,24 +243,20 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* System Health Alert */}
         {stats.systemHealth !== "healthy" && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            stats.systemHealth === "error" 
-              ? "bg-red-50 border-red-200" 
-              : "bg-yellow-50 border-yellow-200"
-          }`}>
+          <div
+            className={`mb-6 p-4 rounded-lg border ${
+              stats.systemHealth === "error" ? "bg-red-50 border-red-200" : "bg-yellow-50 border-yellow-200"
+            }`}
+          >
             <div className="flex items-start space-x-3">
-              <AlertCircle className={`w-5 h-5 mt-0.5 ${
-                stats.systemHealth === "error" ? "text-red-600" : "text-yellow-600"
-              }`} />
+              <AlertCircle
+                className={`w-5 h-5 mt-0.5 ${stats.systemHealth === "error" ? "text-red-600" : "text-yellow-600"}`}
+              />
               <div>
-                <h3 className={`font-semibold ${
-                  stats.systemHealth === "error" ? "text-red-900" : "text-yellow-900"
-                }`}>
+                <h3 className={`font-semibold ${stats.systemHealth === "error" ? "text-red-900" : "text-yellow-900"}`}>
                   System Status: {stats.systemHealth === "error" ? "Attention Required" : "Warning"}
                 </h3>
-                <p className={`text-sm mt-1 ${
-                  stats.systemHealth === "error" ? "text-red-700" : "text-yellow-700"
-                }`}>
+                <p className={`text-sm mt-1 ${stats.systemHealth === "error" ? "text-red-700" : "text-yellow-700"}`}>
                   Last checked: {formatTimeAgo(lastUpdate)}
                 </p>
               </div>
@@ -291,10 +290,12 @@ export default function AdminDashboard() {
               <div className="p-3 bg-blue-50 rounded-lg">
                 <Activity className="w-6 h-6 text-blue-600" />
               </div>
-              <div className={`px-2 py-1 rounded text-xs font-semibold ${
-                stats.activeToday > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
-              }`}>
-                {stats.activeToday > 0 ? '+' + stats.activeToday : stats.activeToday}
+              <div
+                className={`px-2 py-1 rounded text-xs font-semibold ${
+                  stats.activeToday > 0 ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {stats.activeToday > 0 ? "+" + stats.activeToday : stats.activeToday}
               </div>
             </div>
             <div className="space-y-1">
@@ -327,9 +328,7 @@ export default function AdminDashboard() {
               <div className="p-3 bg-orange-50 rounded-lg">
                 <Zap className="w-6 h-6 text-orange-600" />
               </div>
-              <div className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-semibold">
-                Last hour
-              </div>
+              <div className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-semibold">Last hour</div>
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-medium text-gray-600">Recent Activity</h3>
@@ -406,14 +405,13 @@ export default function AdminDashboard() {
               {recentActivity.length > 0 ? (
                 <div className="space-y-3">
                   {recentActivity.slice(0, 10).map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        {getActivityIcon(activity.type)}
-                      </div>
+                    <div
+                      key={activity.id}
+                      className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="p-2 bg-blue-100 rounded-lg">{getActivityIcon(activity.type)}</div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {activity.userEmail}
-                        </p>
+                        <p className="text-sm font-medium text-gray-900 truncate">{activity.userEmail}</p>
                         <p className="text-sm text-gray-600">{activity.details || `Completed ${activity.type}`}</p>
                         <p className="text-xs text-gray-500 mt-1">{formatTimeAgo(activity.timestamp)}</p>
                       </div>
@@ -445,13 +443,13 @@ export default function AdminDashboard() {
                     <span className="font-semibold text-gray-900">{stats.avgQuestionsPerUser || 0}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full" 
-                      style={{ width: `${Math.min((stats.avgQuestionsPerUser || 0) / 100 * 100, 100)}%` }}
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{ width: `${Math.min(((stats.avgQuestionsPerUser || 0) / 100) * 100, 100)}%` }}
                     ></div>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-gray-600">User Engagement Rate</span>
@@ -460,8 +458,8 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-green-600 h-2 rounded-full" 
+                    <div
+                      className="bg-green-600 h-2 rounded-full"
                       style={{ width: `${stats.totalUsers > 0 ? (stats.activeToday / stats.totalUsers) * 100 : 0}%` }}
                     ></div>
                   </div>
@@ -473,30 +471,30 @@ export default function AdminDashboard() {
             <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-3">
-                <Link 
+                <Link
                   href="/admin/users"
                   className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-center group"
                 >
                   <Users className="w-6 h-6 mx-auto mb-2 text-gray-600 group-hover:text-blue-600" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700">Manage Users</span>
                 </Link>
-                
-                <Link 
+
+                <Link
                   href="/admin/feedback"
                   className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-center group"
                 >
                   <MessageSquare className="w-6 h-6 mx-auto mb-2 text-gray-600 group-hover:text-green-600" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-green-700">View Feedback</span>
                 </Link>
-                
-                <Link 
+
+                <Link
                   href="/admin/evidence"
                   className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-center group"
                 >
                   <BookOpen className="w-6 h-6 mx-auto mb-2 text-gray-600 group-hover:text-purple-600" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-purple-700">Evidence</span>
                 </Link>
-                
+
                 <button
                   onClick={handleManualRefresh}
                   className="p-4 border-2 border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all text-center group"
@@ -512,10 +510,15 @@ export default function AdminDashboard() {
         {/* System Health */}
         <div className="mt-6 bg-white rounded-lg shadow border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <CheckCircle className={`w-5 h-5 ${
-              stats.systemHealth === "healthy" ? "text-green-600" :
-              stats.systemHealth === "warning" ? "text-yellow-600" : "text-red-600"
-            }`} />
+            <CheckCircle
+              className={`w-5 h-5 ${
+                stats.systemHealth === "healthy"
+                  ? "text-green-600"
+                  : stats.systemHealth === "warning"
+                  ? "text-yellow-600"
+                  : "text-red-600"
+              }`}
+            />
             <span>System Health</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

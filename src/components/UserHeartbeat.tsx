@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 /**
  * Component that sends heartbeat pings to track online users
@@ -16,10 +16,10 @@ export function UserHeartbeat() {
     // Send initial heartbeat
     const sendHeartbeat = async () => {
       try {
-        await fetch('/api/heartbeat', { method: 'POST' });
+        await fetch("/api/heartbeat", { method: "POST" });
       } catch (error) {
         // Silently fail - heartbeat is not critical
-        console.debug('Heartbeat failed:', error);
+        console.debug("Heartbeat failed:", error);
       }
     };
 

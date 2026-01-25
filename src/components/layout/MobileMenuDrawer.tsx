@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
@@ -52,26 +52,23 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
     return pathname.startsWith(href);
   };
 
-  // ✅ Handle clicks on menu items - close menu after user clicks
-  const handleMenuItemClick = () => {
-    onClose();
-  };
+  // ❌ REMOVED: Don't auto-close when clicking links
+  // Menu should only close via X button or Menu button toggle
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop - Does NOT close menu when clicked */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity duration-300 md:hidden ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Drawer */}
+      {/* Drawer - COMPLETELY HIDDEN when closed */}
       <div
         className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-gray-900 z-[70] transition-transform duration-300 ease-out md:hidden ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none invisible"
         }`}
         role="dialog"
         aria-modal="true"
@@ -113,7 +110,6 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                   <Link
                     key={href}
                     href={href}
-                    onClick={handleMenuItemClick}
                     className={`
                       flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                       ${
@@ -144,7 +140,6 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                 <Link
                   key={href}
                   href={href}
-                  onClick={handleMenuItemClick}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Icon className="w-5 h-5" />
@@ -158,10 +153,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
         {/* Footer - Sign Out */}
         <div className="border-t border-gray-200 dark:border-gray-700 p-4">
           <button
-            onClick={() => {
-              onClose();
-              signOut();
-            }}
+            onClick={() => signOut()}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="w-5 h-5" />
