@@ -10,6 +10,7 @@ export function MobileBottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  // ✅ CRITICAL: Menu MUST start closed
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // ✅ FIX: Stable callback using useCallback to prevent infinite re-renders

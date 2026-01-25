@@ -57,12 +57,15 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 
   return (
     <>
-      {/* Backdrop - Does NOT close menu when clicked */}
+      {/* Backdrop - EMERGENCY: Click to close menu if stuck */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity duration-300 md:hidden ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100 cursor-pointer" : "opacity-0 pointer-events-none"
         }`}
+        onClick={onClose}
         aria-hidden="true"
+        role="button"
+        aria-label="Close menu"
       />
 
       {/* Drawer - COMPLETELY HIDDEN when closed */}
