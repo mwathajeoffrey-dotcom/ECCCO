@@ -112,10 +112,7 @@ export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileM
           <div className="fixed top-4 right-4 z-[99999] bg-black/70 text-white text-xs rounded-md px-3 py-2 flex items-center gap-2">
             <span className="font-mono">{`drawer:${source}`}</span>
             <span>{isOpen ? "OPEN" : "CLOSED"}</span>
-            <button
-              onClick={onClose}
-              className="ml-2 bg-red-500 hover:bg-red-600 text-white rounded px-2 py-1 text-xs"
-            >
+            <button onClick={onClose} className="ml-2 bg-red-500 hover:bg-red-600 text-white rounded px-2 py-1 text-xs">
               Force Close
             </button>
           </div>
@@ -212,7 +209,7 @@ export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileM
     </>
   );
 }
-"use client";
+("use client");
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -326,10 +323,7 @@ export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileM
           <div className="fixed top-4 right-4 z-[99999] bg-black/70 text-white text-xs rounded-md px-3 py-2 flex items-center gap-2">
             <span className="font-mono">{`drawer:${source}`}</span>
             <span>{isOpen ? "OPEN" : "CLOSED"}</span>
-            <button
-              onClick={onClose}
-              className="ml-2 bg-red-500 hover:bg-red-600 text-white rounded px-2 py-1 text-xs"
-            >
+            <button onClick={onClose} className="ml-2 bg-red-500 hover:bg-red-600 text-white rounded px-2 py-1 text-xs">
               Force Close
             </button>
           </div>

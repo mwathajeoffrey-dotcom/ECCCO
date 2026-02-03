@@ -11,14 +11,16 @@ Based on the screenshot and investigation, the mobile navigation menu (sidebar) 
 ## Root Cause Analysis
 
 ### Problem 1: useEffect Dependency Hell
+
 ```tsx
 // Current code in MobileMenuDrawer.tsx (lines 20-23)
 useEffect(() => {
   onClose();
-}, [pathname, onClose]);  // ❌ onClose changes on every render!
+}, [pathname, onClose]); // ❌ onClose changes on every render!
 ```
 
 **Issue**: The `onClose` callback is created fresh on every render in `MobileBottomNav.tsx`:
+
 ```tsx
 <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 ```
@@ -26,11 +28,12 @@ useEffect(() => {
 This creates an infinite loop or prevents the effect from working correctly.
 
 ### Problem 2: Body Overflow Lock
+
 ```tsx
 // Lines 25-35 in MobileMenuDrawer.tsx
 useEffect(() => {
   if (isOpen) {
-    document.body.style.overflow = "hidden";  // Locks scrolling
+    document.body.style.overflow = "hidden"; // Locks scrolling
   } else {
     document.body.style.overflow = "";
   }
@@ -43,7 +46,9 @@ useEffect(() => {
 **Issue**: When the menu doesn't close properly, `isOpen` stays true, keeping `overflow: hidden` on the body.
 
 ### Problem 3: Z-Index Layering
+
 From the image, the menu is visible but the X button might be behind other elements:
+
 - Backdrop: z-[60]
 - Drawer: z-[70]
 - But no explicit z-index on the close button
@@ -60,7 +65,7 @@ From the image, the menu is visible but the X button might be behind other eleme
 import { Menu, BookOpen, FileText, Gamepad2, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";  // Add useCallback
+import { useState, useEffect, useCallback } from "react"; // Add useCallback
 import { MobileMenuDrawer } from "./MobileMenuDrawer";
 
 export function MobileBottomNav() {
@@ -152,7 +157,13 @@ export function MobileBottomNav() {
                 aria-current={active ? "page" : undefined}
               >
                 <Icon className="w-6 h-6 mb-1" strokeWidth={active ? 2.5 : 2} />
-                <span className={`text-xs ${active ? "font-semibold" : "font-normal"}`}>{label}</span>
+                <span
+                  className={`text-xs ${
+                    active ? "font-semibold" : "font-normal"
+                  }`}
+                >
+                  {label}
+                </span>
               </Link>
             );
           })}
@@ -173,7 +184,18 @@ export function MobileBottomNav() {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
+import {
+  X,
+  Home,
+  BookOpen,
+  FileText,
+  Gamepad2,
+  User,
+  Settings,
+  HelpCircle,
+  LogOut,
+  ChevronRight,
+} from "lucide-react";
 import { useUser, useClerk } from "@clerk/nextjs";
 
 interface MobileMenuDrawerProps {
@@ -202,11 +224,36 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
   }, [isOpen]);
 
   const mainMenuItems = [
-    { icon: Home, label: "Dashboard", href: "/dashboard", description: "Your progress & stats" },
-    { icon: BookOpen, label: "Practice", href: "/practice", description: "ACLS & PALS questions" },
-    { icon: FileText, label: "Exam Mode", href: "/exam", description: "Timed practice exams" },
-    { icon: Gamepad2, label: "Quiz Arena", href: "/quiz-arena", description: "Multiplayer quizzes" },
-    { icon: User, label: "Profile", href: "/profile", description: "Your account settings" },
+    {
+      icon: Home,
+      label: "Dashboard",
+      href: "/dashboard",
+      description: "Your progress & stats",
+    },
+    {
+      icon: BookOpen,
+      label: "Practice",
+      href: "/practice",
+      description: "ACLS & PALS questions",
+    },
+    {
+      icon: FileText,
+      label: "Exam Mode",
+      href: "/exam",
+      description: "Timed practice exams",
+    },
+    {
+      icon: Gamepad2,
+      label: "Quiz Arena",
+      href: "/quiz-arena",
+      description: "Multiplayer quizzes",
+    },
+    {
+      icon: User,
+      label: "Profile",
+      href: "/profile",
+      description: "Your account settings",
+    },
   ];
 
   const secondaryMenuItems = [
@@ -257,8 +304,12 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
               />
             )}
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{user?.firstName || "Student"}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">{user?.primaryEmailAddress?.emailAddress}</p>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {user?.firstName || "Student"}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                {user?.primaryEmailAddress?.emailAddress}
+              </p>
             </div>
           </div>
           <button
@@ -282,7 +333,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                   <Link
                     key={href}
                     href={href}
-                    onClick={handleMenuItemClick}  // ✅ Close on click
+                    onClick={handleMenuItemClick} // ✅ Close on click
                     className={`
                       flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                       ${
@@ -293,12 +344,25 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                     `}
                     aria-current={active ? "page" : undefined}
                   >
-                    <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={active ? 2.5 : 2} />
+                    <Icon
+                      className="w-5 h-5 flex-shrink-0"
+                      strokeWidth={active ? 2.5 : 2}
+                    />
                     <div className="flex-1 min-w-0">
-                      <p className={`font-medium ${active ? "font-semibold" : ""}`}>{label}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
+                      <p
+                        className={`font-medium ${
+                          active ? "font-semibold" : ""
+                        }`}
+                      >
+                        {label}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {description}
+                      </p>
                     </div>
-                    {active && <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+                    {active && (
+                      <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    )}
                   </Link>
                 );
               })}
@@ -313,7 +377,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                 <Link
                   key={href}
                   href={href}
-                  onClick={handleMenuItemClick}  // ✅ Close on click
+                  onClick={handleMenuItemClick} // ✅ Close on click
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Icon className="w-5 h-5" />
@@ -328,7 +392,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
         <div className="border-t border-gray-200 dark:border-gray-700 p-4">
           <button
             onClick={() => {
-              onClose();  // ✅ Close menu first
+              onClose(); // ✅ Close menu first
               signOut();
             }}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -346,21 +410,25 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 ## What Changed
 
 ### ✅ Fix #1: Stable onClose Callback
+
 - Added `useCallback` to `MobileBottomNav.tsx`
 - `onClose` reference stays the same across renders
 - No more infinite re-renders or broken effects
 
 ### ✅ Fix #2: Manual Close on Link Click
+
 - Removed auto-close `useEffect` that depended on pathname
 - Added explicit `onClick={handleMenuItemClick}` to all menu links
 - User action triggers close (more predictable)
 
 ### ✅ Fix #3: Explicit Z-Index on Close Button
+
 - Added `z-[80]` to close button
 - Ensures it's always above other drawer elements
 - More clickable, more visible
 
 ### ✅ Fix #4: Type Button on Close Button
+
 - Added `type="button"` to prevent form submission
 - Better semantic HTML
 
@@ -369,11 +437,13 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 ### On Mobile Device (or DevTools Mobile View):
 
 1. **Open Menu**
+
    - [ ] Tap Menu button in bottom navigation
    - [ ] Drawer slides in from left smoothly
    - [ ] Backdrop appears (dark overlay)
 
 2. **Close with X Button**
+
    - [ ] X button is clearly visible (top right of drawer)
    - [ ] Tap X button
    - [ ] Drawer slides out completely
@@ -381,11 +451,13 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
    - [ ] Can see full screen again
 
 3. **Close with Backdrop**
+
    - [ ] Open menu again
    - [ ] Tap on dark background (outside drawer)
    - [ ] Drawer closes
 
 4. **Close with Navigation**
+
    - [ ] Open menu
    - [ ] Tap "Practice" link
    - [ ] Menu closes
@@ -401,29 +473,34 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 ## Why This is Production Ready
 
 ### 1. **No More Infinite Loops**
-   - Stable `onClose` reference via `useCallback`
-   - No dependency hell
+
+- Stable `onClose` reference via `useCallback`
+- No dependency hell
 
 ### 2. **Predictable Behavior**
-   - Explicit close actions (click X, click backdrop, click link)
-   - No "magic" auto-close that might fail
+
+- Explicit close actions (click X, click backdrop, click link)
+- No "magic" auto-close that might fail
 
 ### 3. **Better UX**
-   - User knows what will close the menu
-   - X button always works
-   - Backdrop click always works
-   - Link click always navigates AND closes
+
+- User knows what will close the menu
+- X button always works
+- Backdrop click always works
+- Link click always navigates AND closes
 
 ### 4. **Proper Z-Index**
-   - Backdrop: z-60
-   - Drawer: z-70
-   - Close button: z-80
-   - Clear layering hierarchy
+
+- Backdrop: z-60
+- Drawer: z-70
+- Close button: z-80
+- Clear layering hierarchy
 
 ### 5. **Clean Code**
-   - Removed problematic effect
-   - Simple, maintainable logic
-   - Easy to debug
+
+- Removed problematic effect
+- Simple, maintainable logic
+- Easy to debug
 
 ## Deployment Steps
 
@@ -437,12 +514,14 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 ## Expected Behavior After Fix
 
 ### Before (Broken):
+
 - Menu opens ✅
 - X button doesn't work ❌
 - Menu stays open ❌
 - Can't close it ❌
 
 ### After (Fixed):
+
 - Menu opens ✅
 - X button works ✅
 - Backdrop close works ✅

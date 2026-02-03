@@ -3,6 +3,8 @@
 import { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import ScrollSanitizer from "@/components/layout/ScrollSanitizer";
+import TouchUnlocker from "@/components/layout/TouchUnlocker";
+import ScrollDebugger from "@/components/layout/ScrollDebugger";
 
 interface RootLayoutContentProps {
   children: React.ReactNode;
@@ -14,6 +16,8 @@ export function RootLayoutContent({ children }: RootLayoutContentProps) {
   return (
     <>
       <ScrollSanitizer />
+      <TouchUnlocker />
+      <ScrollDebugger />
       {/* Scrollable Content Container */}
       <div className="mobile-scroll-container md:contents">
         <AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>

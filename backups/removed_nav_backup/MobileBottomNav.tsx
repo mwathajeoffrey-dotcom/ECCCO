@@ -115,7 +115,7 @@ export function MobileBottomNav() {
     </>
   );
 }
-"use client";
+("use client");
 
 import { Menu, BookOpen, FileText, Gamepad2, User } from "lucide-react";
 import Link from "next/link";

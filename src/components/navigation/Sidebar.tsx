@@ -103,14 +103,26 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     );
   };
 
-  // Lock body scroll when mouse is over sidebar
-  const handleMouseEnter = () => {
-    document.body.style.overflow = "hidden";
-  };
+  // Use ref-counted scroll lock when the sidebar is open to avoid leaking
+  // body overflow changes. Avoid hover-based locking which can persist on
+  // touch devices and cause scroll to be blocked.
+  useEffect(() => {
+    let didLock = false;
+    if (isOpen) {
+      import("@/lib/scrollLock").then((mod) => {
+        mod.lockScroll();
+        didLock = true;
+      });
+    }
 
-  const handleMouseLeave = () => {
-    document.body.style.overflow = "unset";
-  };
+    return () => {
+      if (didLock) {
+        import("@/lib/scrollLock").then((mod) => mod.unlockScroll());
+      } else {
+        import("@/lib/scrollLock").then((mod) => mod.forceUnlockAll());
+      }
+    };
+  }, [isOpen]);
 
   const navigationSections: NavSection[] = [
     {
@@ -264,8 +276,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           mass: 0.8,
         }}
         className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[9998] overflow-y-auto overflow-x-hidden shadow-2xl sidebar-scroll-container"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        // Removed hover-based scroll locking for reliability on touch devices
+        // ...existing props
         onWheel={(e) => {
           // Prevent scroll from propagating to body
           e.stopPropagation();
