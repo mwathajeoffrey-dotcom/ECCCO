@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
+import ScrollSanitizer from "@/components/layout/ScrollSanitizer";
 
 interface RootLayoutContentProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ export function RootLayoutContent({ children }: RootLayoutContentProps) {
 
   return (
     <>
+      <ScrollSanitizer />
       {/* Scrollable Content Container */}
       <div className="mobile-scroll-container md:contents">
         <AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
