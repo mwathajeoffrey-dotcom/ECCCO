@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { MobileMenuDrawer } from "./MobileMenuDrawer";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export function MobileBottomNav() {
   const pathname = usePathname();
@@ -63,9 +64,12 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Mobile Menu Drawer - ONLY FOR MOBILE - Hidden on desktop to avoid conflicts */}
-      <div className="md:hidden">
-        <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} source="mobile" />
-      </div>
+      {/* Only mount the mobile drawer when <768px to avoid duplicate instances */}
+      {!useMediaQuery("(min-width: 768px)") && (
+        <div>
+          <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} source="mobile" />
+        </div>
+      )}
 
       {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav

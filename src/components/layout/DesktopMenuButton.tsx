@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { MobileMenuDrawer } from "./MobileMenuDrawer";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export function DesktopMenuButton() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,9 +21,11 @@ export function DesktopMenuButton() {
       </button>
 
       {/* Menu Drawer - ONLY FOR DESKTOP - Hidden on mobile to avoid conflicts */}
-      <div className="hidden md:block">
-        <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} source="desktop" />
-      </div>
+      {useMediaQuery("(min-width: 768px)") && (
+        <div>
+          <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} source="desktop" />
+        </div>
+      )}
     </>
   );
 }
