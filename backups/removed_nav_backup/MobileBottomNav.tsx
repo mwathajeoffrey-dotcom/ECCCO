@@ -11,15 +11,12 @@ export function MobileBottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  // ✅ CRITICAL: Menu MUST start closed
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ✅ FIX: Stable callback using useCallback to prevent infinite re-renders
   const handleCloseMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
 
-  // ✅ Toggle function for Menu button - opens AND closes
   const handleToggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
   }, []);
@@ -32,7 +29,6 @@ export function MobileBottomNav() {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
 
-          // Show nav when scrolling up, hide when scrolling down
           if (currentScrollY < lastScrollY || currentScrollY < 100) {
             setIsVisible(true);
           } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -63,15 +59,12 @@ export function MobileBottomNav() {
 
   return (
     <>
-      {/* Mobile Menu Drawer - ONLY FOR MOBILE - Hidden on desktop to avoid conflicts */}
-      {/* Only mount the mobile drawer when <768px to avoid duplicate instances */}
       {!useMediaQuery("(min-width: 768px)") && (
         <div>
           <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} source="mobile" />
         </div>
       )}
 
-      {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav
         className={`md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-30 transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "translate-y-full"
@@ -80,7 +73,6 @@ export function MobileBottomNav() {
         aria-label="Mobile bottom navigation"
       >
         <div className="flex justify-around items-center safe-area-bottom">
-          {/* Menu Button - First position - TOGGLE OPEN/CLOSE */}
           <button
             onClick={handleToggleMenu}
             onKeyDown={(e) => {
@@ -98,7 +90,6 @@ export function MobileBottomNav() {
             <span className="text-xs font-normal">Menu</span>
           </button>
 
-          {/* Other nav items */}
           {navItems.map(({ icon: Icon, label, href }) => {
             const active = isActive(href);
 
