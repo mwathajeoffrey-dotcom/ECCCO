@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
@@ -66,6 +66,18 @@ export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileM
     }
   }, [isOpen, source]);
 
+  // On-screen debug badge (visible when URL includes ?navDebug=1)
+  // Avoid calling setState in effect synchronously; compute initial value
+  let initialShowDebug = false;
+  if (typeof window !== "undefined") {
+    try {
+      initialShowDebug = new URLSearchParams(window.location.search).has("navDebug");
+    } catch {
+      initialShowDebug = false;
+    }
+  }
+  const [showDebugBadge] = useState(initialShowDebug);
+
   const mainMenuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard", description: "Your progress & stats" },
     { icon: BookOpen, label: "Practice", href: "/practice", description: "ACLS & PALS questions" },
@@ -113,6 +125,19 @@ export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileM
         aria-modal="true"
         aria-label="Navigation menu"
       >
+        {/* Debug badge (only when ?navDebug=1) */}
+        {showDebugBadge && (
+          <div className="fixed top-4 right-4 z-[99999] bg-black/70 text-white text-xs rounded-md px-3 py-2 flex items-center gap-2">
+            <span className="font-mono">{`drawer:${source}`}</span>
+            <span>{isOpen ? "OPEN" : "CLOSED"}</span>
+            <button
+              onClick={onClose}
+              className="ml-2 bg-red-500 hover:bg-red-600 text-white rounded px-2 py-1 text-xs"
+            >
+              Force Close
+            </button>
+          </div>
+        )}
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
