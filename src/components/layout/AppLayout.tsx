@@ -29,7 +29,7 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
   }
 
   return (
-    <>
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Enhanced Sidebar - Desktop (visible) + Mobile (drawer) */}
       <EnhancedSidebar 
         isOpen={sidebarOpen} 
@@ -37,7 +37,7 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 flex flex-col min-h-screen">
         {/* Menu Toggle Button - Always visible on mobile (md:hidden) */}
         <button
           onClick={(e) => {
@@ -53,10 +53,10 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         </button>
 
         {/* Page Content */}
-        <main className="flex-1 md:pt-0 pt-16">
+        <main className="flex-1 w-full md:pt-0 pt-16">
           {children}
         </main>
       </div>
-    </>
+    </div>
   );
 }
