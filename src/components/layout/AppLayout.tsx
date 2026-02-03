@@ -19,6 +19,28 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
     setSidebarOpen(false);
   }, [pathname, setSidebarOpen]);
 
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const isMobile = window.innerWidth < 768;
+      
+      // Only close on mobile and if sidebar is open
+      if (!isMobile || !sidebarOpen) return;
+      
+      // Don't close if clicking the sidebar itself or menu button
+      if (target.closest('aside') || target.closest('button[aria-label="Toggle menu"]')) {
+        return;
+      }
+      
+      // Close sidebar
+      setSidebarOpen(false);
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [sidebarOpen, setSidebarOpen]);
+
   // Pages that should not show the sidebar (auth pages and redirects)
   // Note: /auth/signin handles both signin and signup (December 19th version)
   const noSidebarPages = ["/sign-in", "/sign-up", "/login", "/auth"];
@@ -36,16 +58,8 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         onClose={() => setSidebarOpen(false)} 
       />
 
-      {/* Main Content Area - Click to close sidebar on mobile */}
-      <div 
-        className="flex-1 flex flex-col min-h-screen"
-        onClick={() => {
-          // Close sidebar when clicking on content area (mobile only)
-          if (sidebarOpen && window.innerWidth < 768) {
-            setSidebarOpen(false);
-          }
-        }}
-      >
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
         {/* Menu Toggle Button - Always visible on mobile (md:hidden) */}
         <button
           onClick={(e) => {
