@@ -1,0 +1,6 @@
+# Deployment trigger - Mobile scroll fix
+# Timestamp: 2026-02-03
+# Commit: 15c7547
+# Status: Triggering Vercel redeploy
+
+This file forces Vercel to detect a new change and trigger a deployment.
