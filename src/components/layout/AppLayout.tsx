@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
+import EnhancedSidebar from "@/components/navigation/EnhancedSidebar";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface AppLayoutProps {
   setSidebarOpen: (open: boolean) => void;
 }
 
-export default function AppLayout({ children, setSidebarOpen }: AppLayoutProps) {
+export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: AppLayoutProps) {
   const pathname = usePathname();
 
   // Close sidebar when route changes (important for mobile navigation)
@@ -29,23 +30,32 @@ export default function AppLayout({ children, setSidebarOpen }: AppLayoutProps) 
 
   return (
     <>
-      {/* Floating Menu Button - Visible on ALL devices */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setSidebarOpen(true);
-        }}
-        className="fixed top-4 left-4 z-[9999] p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
-        aria-label="Open menu"
-        type="button"
-      >
-        <Menu className="w-6 h-6" />
-      </button>
+      {/* Enhanced Sidebar - Desktop (visible) + Mobile (drawer) */}
+      <EnhancedSidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+      />
 
-      {/* Main Content */}
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex-1">{children}</div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Menu Toggle Button - Always visible on mobile (md:hidden) */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSidebarOpen(!sidebarOpen);
+          }}
+          className="md:hidden fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
+          aria-label="Toggle menu"
+          type="button"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        {/* Page Content */}
+        <main className="flex-1 md:pt-0 pt-16">
+          {children}
+        </main>
       </div>
     </>
   );

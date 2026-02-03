@@ -5,6 +5,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import ScrollSanitizer from "@/components/layout/ScrollSanitizer";
 import TouchUnlocker from "@/components/layout/TouchUnlocker";
 import ScrollDebugger from "@/components/layout/ScrollDebugger";
+import { NewMobileNav } from "@/components/layout/NewMobileNav";
 
 interface RootLayoutContentProps {
   children: React.ReactNode;
@@ -24,6 +25,8 @@ export function RootLayoutContent({ children }: RootLayoutContentProps) {
           {children}
         </AppLayout>
       </div>
+      {/* New Phone-Friendly Navigation */}
+      <NewMobileNav />
     </>
   );
 }
