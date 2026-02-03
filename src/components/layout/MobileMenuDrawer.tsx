@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, Home, BookOpen, FileText, Gamepad2, User, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
@@ -31,6 +31,29 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  // Focus management: focus first link when opened
+  const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
+  useEffect(() => {
+    if (isOpen) {
+      // small timeout to allow element to mount and animation to start
+      const t = setTimeout(() => {
+        firstLinkRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(t);
+    }
+  }, [isOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", onKey);
+    }
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
 
   const mainMenuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard", description: "Your progress & stats" },
@@ -70,6 +93,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 
       {/* Drawer - COMPLETELY HIDDEN when closed */}
       <div
+        id="mobile-menu-drawer"
         className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-gray-900 z-[70] transition-transform duration-300 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none invisible"
         }`}
@@ -106,13 +130,15 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="px-2">
             <div className="space-y-1">
-              {mainMenuItems.map(({ icon: Icon, label, href, description }) => {
+              {mainMenuItems.map(({ icon: Icon, label, href, description }, idx) => {
                 const active = isActive(href);
 
                 return (
                   <Link
                     key={href}
                     href={href}
+                    onClick={onClose}
+                    ref={idx === 0 ? firstLinkRef : undefined}
                     className={`
                       flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                       ${
@@ -143,6 +169,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
                 <Link
                   key={href}
                   href={href}
+                  onClick={onClose}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Icon className="w-5 h-5" />
@@ -156,7 +183,10 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
         {/* Footer - Sign Out */}
         <div className="border-t border-gray-200 dark:border-gray-700 p-4">
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              signOut();
+              onClose();
+            }}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="w-5 h-5" />

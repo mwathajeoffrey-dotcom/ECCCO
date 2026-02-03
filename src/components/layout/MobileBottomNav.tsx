@@ -79,6 +79,14 @@ export function MobileBottomNav() {
           {/* Menu Button - First position - TOGGLE OPEN/CLOSE */}
           <button
             onClick={handleToggleMenu}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggleMenu();
+              }
+            }}
+            aria-controls="mobile-menu-drawer"
+            aria-expanded={isMenuOpen}
             className="flex flex-col items-center justify-center flex-1 py-2 px-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
