@@ -3,14 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useUser, SignOutButton } from "@clerk/nextjs";
-import Sidebar from "@/components/navigation/Sidebar";
+// Sidebar removed for mass testing. Backups are in /backups/removed_nav_backup/
 import {
   BookOpen,
   Clock,
-  Trophy,
-  BarChart3,
-  FileText,
-  Users,
   Brain,
   HeartPulse,
   Activity,
@@ -19,21 +15,20 @@ import {
   BookMarked,
   Sparkles,
   Target,
+  BarChart3,
   MessageSquare,
-  Calendar,
-  Menu,
   LogOut,
   User,
 } from "lucide-react";
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Sidebar removed for testing
+  // (no-op state removed)
   const { isSignedIn, user } = useUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+  {/* Sidebar removed (see backups) */}
 
       {/* Header - Scrolls with page */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm">
@@ -41,14 +36,7 @@ export default function Home() {
           <div className="flex items-center justify-between gap-4">
             {/* Left Side: Menu Button + Logo Icon + Text */}
             <div className="flex items-center gap-3">
-              {/* Menu Toggle Button */}
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
-                aria-label="Toggle menu"
-              >
-                <Menu className="w-6 h-6 text-gray-700" />
-              </button>
+              {/* Menu toggle removed for testing */}
 
               {/* Logo Icon + Text */}
               <Link href="/" className="flex items-center gap-3">
