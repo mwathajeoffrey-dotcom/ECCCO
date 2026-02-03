@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import PWAInstallPrompt from "@/components/ui/PWAInstallPrompt";
-import { DesktopMenuButton } from "@/components/layout/DesktopMenuButton";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/providers/command-palette-provider";
 import { KeyboardShortcutsProvider } from "@/components/providers/keyboard-shortcuts-provider";
@@ -131,7 +130,6 @@ export default function RootLayout({
                 </ErrorBoundary>
                 <Toaster position="top-right" richColors closeButton expand={false} duration={4000} />
                 <PWAInstallPrompt />
-                <DesktopMenuButton />
                 <UserHeartbeat />
               </CommandPaletteProvider>
             </KeyboardShortcutsProvider>
