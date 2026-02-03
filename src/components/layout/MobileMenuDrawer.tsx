@@ -9,9 +9,11 @@ import { useUser, useClerk } from "@clerk/nextjs";
 interface MobileMenuDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  // optional source to help debug which wrapper mounted this instance
+  source?: "mobile" | "desktop";
 }
 
-export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
+export function MobileMenuDrawer({ isOpen, onClose, source = "mobile" }: MobileMenuDrawerProps) {
   const pathname = usePathname();
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -55,6 +57,15 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
+  // Debugging: log which drawer instance is open
+  useEffect(() => {
+    if (isOpen) {
+      console.warn(`[MobileMenuDrawer] OPEN (source=${source})`);
+    } else {
+      console.warn(`[MobileMenuDrawer] CLOSED (source=${source})`);
+    }
+  }, [isOpen, source]);
+
   const mainMenuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard", description: "Your progress & stats" },
     { icon: BookOpen, label: "Practice", href: "/practice", description: "ACLS & PALS questions" },
@@ -94,6 +105,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
       {/* Drawer - COMPLETELY HIDDEN when closed */}
       <div
         id="mobile-menu-drawer"
+        data-source={source}
         className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-gray-900 z-[70] transition-transform duration-300 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none invisible"
         }`}

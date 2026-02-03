@@ -21,7 +21,7 @@ export function DesktopMenuButton() {
 
       {/* Menu Drawer - ONLY FOR DESKTOP - Hidden on mobile to avoid conflicts */}
       <div className="hidden md:block">
-        <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} source="desktop" />
       </div>
     </>
   );
