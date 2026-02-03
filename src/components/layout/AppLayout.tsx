@@ -36,8 +36,16 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         onClose={() => setSidebarOpen(false)} 
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      {/* Main Content Area - Click to close sidebar on mobile */}
+      <div 
+        className="flex-1 flex flex-col min-h-screen"
+        onClick={() => {
+          // Close sidebar when clicking on content area (mobile only)
+          if (sidebarOpen && window.innerWidth < 768) {
+            setSidebarOpen(false);
+          }
+        }}
+      >
         {/* Menu Toggle Button - Always visible on mobile (md:hidden) */}
         <button
           onClick={(e) => {
