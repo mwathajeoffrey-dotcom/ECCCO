@@ -57,7 +57,9 @@ html {
 body {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
-  font-feature-settings: "rlig" 1, "calt" 1;
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1;
 
   /* Mobile scroll optimization - only hide overflow, don't fix position */
   height: 100%;
@@ -197,20 +199,6 @@ body {
     [class*="sticky"] {
       transform: translateZ(0); /* GPU acceleration */
       backface-visibility: hidden;
-    }
-
-    /* Emergency: hide leftover navigation drawers/overlays that may be stuck on mobile */
-    /* These selectors target the known drawer/sidebar classes and ids used previously. */
-    #mobile-menu-drawer,
-    .sidebar-scroll-container,
-    .removed-nav-drawer,
-    [data-nav-drawer],
-    [class*="-menu-drawer"],
-    [class*="sidebar"] {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-      touch-action: auto !important;
     }
   }
 
