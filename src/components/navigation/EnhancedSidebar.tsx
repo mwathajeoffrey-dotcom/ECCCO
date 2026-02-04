@@ -342,7 +342,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
         />
       )}
 
-      {/* Sidebar - Simple CSS transition approach */}
+      {/* Sidebar - Collapsible on ALL screen sizes (desktop + mobile) */}
       <aside
         className={`
           fixed left-0 top-0 bottom-0 w-80 
@@ -351,7 +351,6 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
           z-40 overflow-y-auto overflow-x-hidden shadow-xl 
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          md:translate-x-0 md:static md:transform-none
         `}
       >
         {/* Header */}

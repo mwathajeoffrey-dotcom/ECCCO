@@ -36,7 +36,7 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen">
-        {/* Menu Toggle Button - Only visible on mobile (md:hidden) */}
+        {/* Menu Toggle Button - NOW VISIBLE ON ALL SCREENS */}
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -45,15 +45,15 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
             console.log("🔘 Hamburger button clicked! Current:", sidebarOpen, "→ New:", newState);
             setSidebarOpen(newState);
           }}
-          className="md:hidden fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
+          className="fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
           aria-label={sidebarOpen ? "Close menu" : "Open menu"}
           type="button"
         >
           <Menu className="w-6 h-6" />
         </button>
 
-        {/* Page Content */}
-        <main className="flex-1 md:pt-0 pt-16 pb-20 md:pb-0">{children}</main>
+        {/* Page Content - Add padding for hamburger button on all screens */}
+        <main className="flex-1 pt-16 pb-20 md:pb-0">{children}</main>
 
         {/* Mobile Bottom Navigation - Only on mobile - Controls same sidebar */}
         <MobileBottomNav onMenuClick={() => setSidebarOpen(true)} />
