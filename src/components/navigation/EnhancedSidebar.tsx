@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Trophy,
   FileText,
@@ -333,35 +332,21 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       {/* Overlay for mobile */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 z-30 md:hidden"
-            onClick={() => {
-              onClose?.();
-            }}
-            aria-hidden="true"
-          />
-        )}
-      </AnimatePresence>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-200"
+          onClick={() => {
+            onClose?.();
+          }}
+          aria-hidden="true"
+        />
+      )}
 
-      {/* Sidebar - Slide in/out on mobile, always visible on desktop */}
-      <motion.aside
-        initial={false}
-        animate={{
-          x: isOpen ? 0 : "-100%",
-        }}
-        transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 300,
-          mass: 0.8,
-        }}
-        className="fixed left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 overflow-y-auto overflow-x-hidden shadow-xl md:relative md:translate-x-0"
+      {/* Sidebar - Simple CSS transition approach */}
+      <aside
+        className={`fixed left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 overflow-y-auto overflow-x-hidden shadow-xl transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white dark:bg-gray-900 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -407,16 +392,9 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               </button>
 
               {/* Section Items */}
-              <AnimatePresence>
-                {expandedSections.has(section.title) && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="ml-3 border-l border-gray-200 dark:border-gray-700 pl-3 space-y-1">
-                      {section.items.map((item) => (
+              {expandedSections.has(section.title) && (
+                <div className="ml-3 border-l border-gray-200 dark:border-gray-700 pl-3 space-y-1 transition-all duration-200">
+                  {section.items.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
@@ -444,9 +422,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
                         </Link>
                       ))}
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  )}
             </div>
           ))}
 
@@ -463,7 +439,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
             </SignOutButton>
           )}
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }
