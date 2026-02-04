@@ -51,7 +51,8 @@
 
 /* Critical mobile scroll fixes */
 html {
-  height: 100%;
+  /* Mobile-first: let content determine height */
+  min-height: 100vh;
 }
 
 body {
@@ -61,20 +62,17 @@ body {
     "rlig" 1,
     "calt" 1;
 
-  /* Mobile scroll optimization - only hide overflow, don't fix position */
-  height: 100%;
+  /* Mobile scroll: body scrolls naturally */
+  min-height: 100vh;
   width: 100%;
-  touch-action: pan-y; /* Allow vertical scrolling only */
-}
-
-/* Main content area scrolls instead of body */
-#__next,
-[data-nextjs-scroll-container] {
-  height: 100%;
-  overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+}
+
+/* Main content area */
+#__next {
+  min-height: 100vh;
+  width: 100%;
 }
 
 /* Desktop: reset body scroll behavior */
