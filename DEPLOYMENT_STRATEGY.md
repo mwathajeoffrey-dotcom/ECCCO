@@ -3,6 +3,7 @@
 ## ⚠️ THE PROBLEM
 
 Your **production deployment on Vercel** still has the old sidebar code:
+
 - Old `EnhancedSidebar.tsx`
 - Old `AppLayout.tsx`
 - Old hamburger menu buttons
@@ -14,6 +15,7 @@ When you deploy new code, the build cache might interfere!
 ## ✅ SOLUTION: Clean Deployment Strategy
 
 ### Step 1: Commit the Deletions NOW
+
 ```bash
 cd /Users/apple/ECCCO
 
@@ -24,7 +26,7 @@ git add -A
 git commit -m "chore: remove all sidebar and navigation code for fresh rebuild
 
 - Deleted EnhancedSidebar.tsx
-- Deleted AppLayout.tsx  
+- Deleted AppLayout.tsx
 - Cleaned RootLayoutContent.tsx
 - Ready for new sidebar implementation"
 
@@ -33,17 +35,20 @@ git push origin main
 ```
 
 ### Step 2: Clear Vercel Build Cache
+
 ```bash
 # This forces Vercel to rebuild from scratch
 vercel --force
 ```
 
 **OR** in Vercel Dashboard:
+
 1. Go to your project settings
 2. Settings → General → "Clear Build Cache"
 3. Redeploy
 
 ### Step 3: Deploy Clean State
+
 ```bash
 # Deploy with force flag to ensure fresh build
 vercel --prod --force
@@ -57,6 +62,7 @@ vercel --prod
 ## 🛡️ PREVENT CORRUPTION: Best Practices
 
 ### Option A: Branch Strategy (Recommended)
+
 ```bash
 # Create a new branch for sidebar development
 git checkout -b feature/new-sidebar
@@ -71,26 +77,33 @@ git push origin main
 ```
 
 **Benefits:**
+
 - Production stays clean until you're ready
 - Can test new sidebar without affecting live site
 - Easy to rollback if needed
 
 ### Option B: Feature Flag (Advanced)
+
 Add an environment variable to toggle features:
 
 ```typescript
 // In your code
-const ENABLE_NEW_SIDEBAR = process.env.NEXT_PUBLIC_ENABLE_NEW_SIDEBAR === 'true';
+const ENABLE_NEW_SIDEBAR =
+  process.env.NEXT_PUBLIC_ENABLE_NEW_SIDEBAR === "true";
 
 // Use old or new based on flag
-{ENABLE_NEW_SIDEBAR ? <NewSidebar /> : null}
+{
+  ENABLE_NEW_SIDEBAR ? <NewSidebar /> : null;
+}
 ```
 
 Then in Vercel:
+
 - Dev: `NEXT_PUBLIC_ENABLE_NEW_SIDEBAR=true`
 - Prod: `NEXT_PUBLIC_ENABLE_NEW_SIDEBAR=false` (until ready)
 
 ### Option C: Immediate Clean Deploy (Fastest)
+
 ```bash
 # 1. Commit deletions
 git add -A
@@ -111,15 +124,18 @@ vercel ls --prod
 ### After Deployment, Check:
 
 1. **Visit your production site**
+
    ```
    https://your-app.vercel.app
    ```
 
 2. **Open browser console**
+
    - Look for errors about missing `EnhancedSidebar`
    - Look for errors about missing `AppLayout`
 
 3. **Expected behavior:**
+
    - ✅ No sidebar visible
    - ✅ No hamburger menu button
    - ✅ No console errors about sidebar
@@ -136,6 +152,7 @@ vercel ls --prod
 ## 📋 RECOMMENDED WORKFLOW
 
 ### Now (Clean Slate):
+
 ```bash
 # 1. Commit deletions
 git add .
@@ -147,6 +164,7 @@ vercel --prod --force
 ```
 
 ### When Building New Sidebar:
+
 ```bash
 # 1. Create feature branch
 git checkout -b feature/new-sidebar
@@ -174,6 +192,7 @@ vercel --prod
 ## 🚨 EMERGENCY: If Deployment Gets Corrupted
 
 ### Quick Fix:
+
 ```bash
 # 1. Force clean build
 rm -rf .next node_modules
@@ -188,6 +207,7 @@ vercel --prod --force
 ```
 
 ### Nuclear Option:
+
 ```bash
 # Delete all Vercel deployments
 vercel remove eccco --yes
@@ -221,16 +241,16 @@ echo "Check your production site - no sidebar should appear"
 
 ## 📊 SUMMARY
 
-| Action | Command | Purpose |
-|--------|---------|---------|
-| Commit deletions | `git add -A && git commit` | Save clean state |
-| Push to GitHub | `git push` | Update remote |
-| Clear Vercel cache | `vercel --force` | Fresh build |
-| Deploy to prod | `vercel --prod --force` | Update live site |
+| Action                | Command                               | Purpose          |
+| --------------------- | ------------------------------------- | ---------------- |
+| Commit deletions      | `git add -A && git commit`            | Save clean state |
+| Push to GitHub        | `git push`                            | Update remote    |
+| Clear Vercel cache    | `vercel --force`                      | Fresh build      |
+| Deploy to prod        | `vercel --prod --force`               | Update live site |
 | Create feature branch | `git checkout -b feature/new-sidebar` | Safe development |
 
 ---
 
-**Status:** Ready to execute clean deployment  
-**Risk Level:** ⚠️ MEDIUM (old code still on Vercel)  
+**Status:** Ready to execute clean deployment
+**Risk Level:** ⚠️ MEDIUM (old code still on Vercel)
 **Recommended:** Execute commits and force redeploy NOW
