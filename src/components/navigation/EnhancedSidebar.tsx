@@ -341,7 +341,10 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 bg-black/50 z-30 md:hidden"
-            onClick={onClose}
+            onClick={() => {
+              console.log("🔘 Overlay clicked - closing drawer");
+              onClose?.();
+            }}
             aria-hidden="true"
           />
         )}
@@ -350,14 +353,17 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar - Slide in/out on mobile, always visible on desktop */}
       <motion.aside
         initial={false}
-        animate={{ x: isOpen ? 0 : "-100%" }}
+        animate={{
+          x: isOpen ? 0 : "-100%",
+        }}
         transition={{
           type: "spring",
-          damping: 25,
-          stiffness: 400,
-          mass: 0.6,
+          damping: 30,
+          stiffness: 300,
+          mass: 0.8,
         }}
-        className="fixed md:static left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 md:z-0 md:translate-x-0 overflow-y-auto overflow-x-hidden shadow-xl md:shadow-none"
+        className="fixed left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 overflow-y-auto overflow-x-hidden shadow-xl md:relative md:translate-x-0 md:block"
+        style={{ transform: typeof window !== 'undefined' && window.innerWidth >= 768 ? 'translateX(0)' : undefined }}
       >
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white dark:bg-gray-900 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -372,7 +378,10 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={() => {
+                console.log("🔘 X button clicked - closing drawer");
+                onClose?.();
+              }}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Close menu"
             >
@@ -415,6 +424,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
                           key={item.href}
                           href={item.href}
                           onClick={() => {
+                            console.log("🔘 Nav link clicked:", item.label, "- closing drawer");
                             if (isOpen) onClose?.();
                           }}
                           className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group ${

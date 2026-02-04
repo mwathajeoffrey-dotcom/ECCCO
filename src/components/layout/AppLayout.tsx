@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import EnhancedSidebar from "@/components/navigation/EnhancedSidebar";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -40,7 +41,9 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setSidebarOpen(!sidebarOpen);
+            const newState = !sidebarOpen;
+            console.log("🔘 Hamburger button clicked! Current:", sidebarOpen, "→ New:", newState);
+            setSidebarOpen(newState);
           }}
           className="md:hidden fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
           aria-label={sidebarOpen ? "Close menu" : "Open menu"}
@@ -50,7 +53,10 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         </button>
 
         {/* Page Content */}
-        <main className="flex-1 md:pt-0 pt-16">{children}</main>
+        <main className="flex-1 md:pt-0 pt-16 pb-20 md:pb-0">{children}</main>
+
+        {/* Mobile Bottom Navigation - Only on mobile - Controls same sidebar */}
+        <MobileBottomNav onMenuClick={() => setSidebarOpen(true)} />
       </div>
     </div>
   );

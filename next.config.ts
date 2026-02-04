@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  // 🚀 CRITICAL: Generate unique build ID for each deployment to force complete cache busting
+  generateBuildId: async () => {
+    // Use timestamp + random string to ensure absolutely unique builds
+    return `build-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+  },
+
   async headers() {
     return [
       {
