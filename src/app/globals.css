@@ -52,7 +52,6 @@
 /* Critical mobile scroll fixes */
 html {
   height: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -60,18 +59,17 @@ body {
   background: hsl(var(--background));
   font-feature-settings: "rlig" 1, "calt" 1;
 
-  /* Mobile scroll optimization */
+  /* Mobile scroll optimization - only hide overflow, don't fix position */
   height: 100%;
   width: 100%;
-  overflow: hidden;
   touch-action: pan-y; /* Allow vertical scrolling only */
 }
 
 /* Main content area scrolls instead of body */
 #__next,
 [data-nextjs-scroll-container] {
-  height: auto;
-  overflow-y: visible;
+  height: 100%;
+  overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
@@ -104,18 +102,9 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior-y: contain;
-    height: 100vh;
-    width: 100%;
+    min-height: 100vh;
     position: relative;
     z-index: 1; /* Keep content below fixed elements */
-  }
-
-  @media (min-width: 768px) {
-    .mobile-scroll-container {
-      height: auto;
-      min-height: 100vh;
-      width: auto;
-    }
   }
 
   /* Allow touch scrolling on specific containers */
@@ -210,9 +199,19 @@ body {
       backface-visibility: hidden;
     }
 
-    /* Note: Removed overly broad drawer hiding rule that was preventing scrolling.
-       Drawer visibility is now controlled by component state in MobileMenuDrawer.tsx
-       The rule was causing collateral damage to legitimate scrollable containers. */
+    /* Emergency: hide leftover navigation drawers/overlays that may be stuck on mobile */
+    /* These selectors target the known drawer/sidebar classes and ids used previously. */
+    #mobile-menu-drawer,
+    .sidebar-scroll-container,
+    .removed-nav-drawer,
+    [data-nav-drawer],
+    [class*="-menu-drawer"],
+    [class*="sidebar"] {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      touch-action: auto !important;
+    }
   }
 
   /* Optimize transitions - only animate transform and opacity */

@@ -64,12 +64,6 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
   );
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Debug logging
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("🔍 EnhancedSidebar - isOpen prop:", isOpen);
-  }, [isOpen]);
-
   // Check admin status
   useEffect(() => {
     const checkRoles = async () => {
@@ -354,10 +348,16 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
       </AnimatePresence>
 
       {/* Sidebar - Slide in/out on mobile, always visible on desktop */}
-      <aside
-        className={`fixed md:relative left-0 top-0 bottom-0 h-screen md:h-auto w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 md:z-0 overflow-y-auto overflow-x-hidden shadow-xl md:shadow-none transition-transform duration-300 ease-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0`}
+      <motion.aside
+        initial={false}
+        animate={{ x: isOpen ? 0 : "-100%" }}
+        transition={{
+          type: "spring",
+          damping: 25,
+          stiffness: 400,
+          mass: 0.6,
+        }}
+        className="fixed md:static left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 md:z-0 md:translate-x-0 overflow-y-auto overflow-x-hidden shadow-xl md:shadow-none"
       >
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white dark:bg-gray-900 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -457,7 +457,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
             </SignOutButton>
           )}
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }
