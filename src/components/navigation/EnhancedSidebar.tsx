@@ -63,6 +63,12 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
   );
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Debug logging for isOpen changes
+  useEffect(() => {
+    console.warn('🎯 EnhancedSidebar isOpen:', isOpen);
+    console.warn('🎯 Window width:', typeof window !== 'undefined' ? window.innerWidth : 'SSR');
+  }, [isOpen]);
+
   // Check admin status
   useEffect(() => {
     const checkRoles = async () => {

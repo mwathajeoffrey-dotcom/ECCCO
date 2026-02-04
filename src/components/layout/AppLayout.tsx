@@ -56,7 +56,10 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         <main className="flex-1 pt-16 pb-20 md:pb-0">{children}</main>
 
         {/* Mobile Bottom Navigation - Only on mobile - Controls same sidebar */}
-        <MobileBottomNav onMenuClick={() => setSidebarOpen(true)} />
+        <MobileBottomNav onMenuClick={() => {
+          console.warn('📱 Mobile Menu button clicked! Setting sidebar to true');
+          setSidebarOpen(true);
+        }} />
       </div>
     </div>
   );
