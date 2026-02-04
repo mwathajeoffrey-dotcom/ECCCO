@@ -21,12 +21,14 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
+    if (!sidebarOpen) return; // Don't add listener if sidebar is closed
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       const isMobile = window.innerWidth < 768;
       
-      // Only close on mobile and if sidebar is open
-      if (!isMobile || !sidebarOpen) return;
+      // Only close on mobile
+      if (!isMobile) return;
       
       // Don't close if clicking the sidebar itself or menu button
       if (target.closest('aside') || target.closest('button[aria-label="Toggle menu"]')) {
@@ -37,8 +39,15 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
       setSidebarOpen(false);
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    // Small delay to prevent immediate closure when opening
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside, true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside, true);
+    };
   }, [sidebarOpen, setSidebarOpen]);
 
   // Pages that should not show the sidebar (auth pages and redirects)
