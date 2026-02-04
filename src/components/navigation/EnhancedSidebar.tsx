@@ -344,9 +344,15 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar - Simple CSS transition approach */}
       <aside
-        className={`fixed left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 overflow-y-auto overflow-x-hidden shadow-xl transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`
+          fixed left-0 top-0 bottom-0 w-80 
+          bg-white dark:bg-gray-900 
+          border-r border-gray-200 dark:border-gray-700 
+          z-40 overflow-y-auto overflow-x-hidden shadow-xl 
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:translate-x-0 md:static md:transform-none
+        `}
       >
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white dark:bg-gray-900 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
