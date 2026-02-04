@@ -1,10 +1,9 @@
 /**
  * Monitoring & Analytics Service
  * Tracks performance, errors, and user behavior with privacy-first approach
- * Integrates with Sentry for error tracking and custom analytics
+ * Simple console-based logging for development
  */
 
-import * as Sentry from "@sentry/nextjs";
 import { logger } from "./logger";
 
 export interface PerformanceMetric {
@@ -19,7 +18,7 @@ export interface UserEvent {
   category: string;
   label?: string;
   value?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface WebVitals {
@@ -49,12 +48,6 @@ class MonitoringService {
       unit,
       ...tags,
     });
-
-    if (this.isProduction) {
-      Sentry.metrics.distribution(name, value, {
-        unit,
-      });
-    }
   }
 
   /**
@@ -68,15 +61,6 @@ class MonitoringService {
       value,
       ...metadata,
     });
-
-    if (this.isProduction) {
-      Sentry.addBreadcrumb({
-        category,
-        message: action,
-        data: { label, value, ...metadata },
-        level: "info",
-      });
-    }
   }
 
   /**
@@ -92,9 +76,7 @@ class MonitoringService {
     });
 
     if (this.isProduction) {
-      Sentry.metrics.distribution(`web-vital.${name.toLowerCase()}`, value, {
-        unit: "millisecond",
-      });
+      console.warn(`[Web Vital] ${name}: ${value}ms (${rating})`, { id });
     }
   }
 
@@ -200,10 +182,8 @@ class MonitoringService {
     });
 
     if (this.isProduction) {
-      // Sentry metrics API - using gauge instead of increment
-      Sentry.metrics.gauge("cache.operation", hit ? 1 : 0, {
-        unit: "none",
-      });
+      // Simple cache metric logging
+      console.warn(`[Cache] ${hit ? "HIT" : "MISS"}: ${namespace}/${key}`);
     }
   }
 
@@ -212,10 +192,7 @@ class MonitoringService {
    */
   setUserContext(userId: string, role?: string): void {
     if (this.isProduction) {
-      Sentry.setUser({
-        id: userId,
-        role,
-      });
+      console.warn(`[User Context] ID: ${userId}, Role: ${role || "none"}`);
     }
   }
 
@@ -224,14 +201,14 @@ class MonitoringService {
    */
   clearUserContext(): void {
     if (this.isProduction) {
-      Sentry.setUser(null);
+      console.warn("[User Context] Cleared");
     }
   }
 
   /**
    * Track feature usage
    */
-  trackFeatureUsage(featureName: string, metadata?: Record<string, any>): void {
+  trackFeatureUsage(featureName: string, metadata?: Record<string, unknown>): void {
     this.trackEvent({
       action: "feature_used",
       category: "feature",
@@ -264,7 +241,7 @@ export const track = {
   apiCall: <T>(endpoint: string, method: string, fn: () => Promise<T>) => monitoring.trackApiCall(endpoint, method, fn),
   dbQuery: <T>(operation: string, model: string, fn: () => Promise<T>) => monitoring.trackDbQuery(operation, model, fn),
   cache: (hit: boolean, key: string, namespace: string) => monitoring.trackCacheEvent(hit, key, namespace),
-  featureUsage: (featureName: string, metadata?: Record<string, any>) =>
+  featureUsage: (featureName: string, metadata?: Record<string, unknown>) =>
     monitoring.trackFeatureUsage(featureName, metadata),
   pageView: (path: string, title?: string) => monitoring.trackPageView(path, title),
 };

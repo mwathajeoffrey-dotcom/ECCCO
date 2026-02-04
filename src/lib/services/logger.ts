@@ -1,10 +1,8 @@
 /**
  * Structured Logger Service
  * Replaces console.log with proper logging that includes context, levels, and timestamps
- * Integrates with Sentry for error tracking in production
+ * Simple console-based logging for development and production
  */
-
-import * as Sentry from "@sentry/nextjs";
 
 export enum LogLevel {
   DEBUG = "debug",
@@ -14,7 +12,7 @@ export enum LogLevel {
 }
 
 export interface LogContext {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface LogEntry {
@@ -90,17 +88,8 @@ class Logger {
       context,
     };
 
-    logger.debug(this.formatLog(entry));
-
-    // Send to Sentry as breadcrumb in production
-    if (this.isProduction) {
-      Sentry.addBreadcrumb({
-        category: "info",
-        message,
-        data: context,
-        level: "info",
-      });
-    }
+    // eslint-disable-next-line no-console
+    console.info(this.formatLog(entry));
   }
 
   /**
@@ -114,21 +103,11 @@ class Logger {
       context,
     };
 
-    logger.warn(this.formatLog(entry));
-
-    // Send to Sentry as breadcrumb in production
-    if (this.isProduction) {
-      Sentry.addBreadcrumb({
-        category: "warning",
-        message,
-        data: context,
-        level: "warning",
-      });
-    }
+    console.warn(this.formatLog(entry));
   }
 
   /**
-   * Log error messages and send to Sentry
+   * Log error messages
    */
   error(message: string, error?: Error, context?: LogContext): void {
     const entry: LogEntry = {
@@ -139,22 +118,10 @@ class Logger {
       error,
     };
 
-    logger.error(this.formatLog(entry));
+    console.error(this.formatLog(entry));
 
     if (error && error.stack) {
-      logger.error(error.stack);
-    }
-
-    // Send to Sentry in production
-    if (this.isProduction && error) {
-      Sentry.captureException(error, {
-        contexts: {
-          custom: context || {},
-        },
-        tags: {
-          category: "application_error",
-        },
-      });
+      console.error(error.stack);
     }
   }
 

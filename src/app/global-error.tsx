@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
-import { useEffect } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import Link from 'next/link';
-import * as Sentry from '@sentry/nextjs';
+import { useEffect } from "react";
+import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import Link from "next/link";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -19,12 +18,8 @@ interface GlobalErrorProps {
  */
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
   useEffect(() => {
-    // Log to Sentry in production
-    if (process.env.NODE_ENV === 'production') {
-      Sentry.captureException(error);
-    } else {
-      logger.error('Global Error:', error instanceof Error ? error : new Error(String(error)));
-    }
+    // Log error
+    logger.error("Global Error:", error instanceof Error ? error : new Error(String(error)));
   }, [error]);
 
   return (
@@ -40,33 +35,27 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                   <AlertTriangle className="w-10 h-10 text-red-600" />
                 </div>
               </div>
-              
+
               {/* Title */}
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
                 Oops! Something went wrong
               </h1>
-              
+
               {/* Description */}
               <p className="text-lg text-gray-600 text-center mb-8 max-w-md mx-auto">
-                We encountered an unexpected error. Our team has been automatically notified 
-                and is working to fix this issue. Your patient data remains secure.
+                We encountered an unexpected error. Our team has been automatically notified and is working to fix this
+                issue. Your patient data remains secure.
               </p>
 
               {/* Error Details (Development Only) */}
-              {process.env.NODE_ENV === 'development' && (
+              {process.env.NODE_ENV === "development" && (
                 <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-8">
                   <h3 className="font-semibold text-red-900 mb-2 flex items-center">
                     <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-2"></span>
                     Development Error Details
                   </h3>
-                  <p className="text-sm text-red-800 font-mono break-all mb-2">
-                    {error.message}
-                  </p>
-                  {error.digest && (
-                    <p className="text-xs text-red-600 mt-2">
-                      Error ID: {error.digest}
-                    </p>
-                  )}
+                  <p className="text-sm text-red-800 font-mono break-all mb-2">{error.message}</p>
+                  {error.digest && <p className="text-xs text-red-600 mt-2">Error ID: {error.digest}</p>}
                   {error.stack && (
                     <details className="mt-4">
                       <summary className="text-sm text-red-700 cursor-pointer hover:text-red-900">
@@ -89,7 +78,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                   <RefreshCw className="w-5 h-5" />
                   Try Again
                 </button>
-                
+
                 <Link
                   href="/"
                   className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
@@ -102,27 +91,20 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               {/* Support Information */}
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-500 text-center">
-                  Need immediate help?{' '}
-                  <a 
-                    href="mailto:support@eccco-platform.com" 
-                    className="text-blue-600 hover:text-blue-700 font-medium"
-                  >
+                  Need immediate help?{" "}
+                  <a href="mailto:support@eccco-platform.com" className="text-blue-600 hover:text-blue-700 font-medium">
                     Contact our support team
                   </a>
                 </p>
-                {error.digest && (
-                  <p className="text-xs text-gray-400 text-center mt-2">
-                    Reference ID: {error.digest}
-                  </p>
-                )}
+                {error.digest && <p className="text-xs text-gray-400 text-center mt-2">Reference ID: {error.digest}</p>}
               </div>
             </div>
 
             {/* Medical Safety Note */}
             <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <p className="text-sm text-yellow-800 text-center">
-                <span className="font-semibold">Important:</span> This error does not affect 
-                patient data integrity. All medical information remains securely stored and unchanged.
+                <span className="font-semibold">Important:</span> This error does not affect patient data integrity. All
+                medical information remains securely stored and unchanged.
               </p>
             </div>
           </div>

@@ -4,7 +4,6 @@ import { logger } from "@/lib/logger";
 
 import React, { Component, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Bug, ChevronDown, ChevronUp } from "lucide-react";
-import * as Sentry from "@sentry/nextjs";
 
 interface Props {
   children: ReactNode;
@@ -23,7 +22,6 @@ interface State {
   error?: Error;
   errorInfo?: React.ErrorInfo;
   errorId?: string;
-  eventId?: string; // Sentry event ID
   retryCount: number;
   showDetails: boolean;
 }
@@ -56,26 +54,6 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Report to Sentry in production
-    if (process.env.NODE_ENV === "production") {
-      const eventId = Sentry.captureException(error, {
-        contexts: {
-          react: {
-            componentStack: errorInfo.componentStack,
-          },
-        },
-        tags: {
-          componentName,
-          retryCount: this.state.retryCount,
-        },
-        extra: {
-          errorId: this.state.errorId,
-          props: this.props,
-        },
-      });
-      this.setState({ eventId });
-    }
-
     // Log the error to console
     logger.error("Component Error", error instanceof Error ? error : new Error(String(error)), {
       componentName,
@@ -88,12 +66,14 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     // Call custom error handler
     onError?.(error, errorInfo);
 
-    // Log error details
+    // Log error details in development
     if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
       console.group(`🚨 Error in ${componentName}`);
       logger.error("Error:", error instanceof Error ? error : new Error(String(error)));
       logger.error("Error Info", errorInfo instanceof Error ? errorInfo : new Error(String(errorInfo)));
       logger.error("Component Stack:", errorInfo.componentStack);
+      // eslint-disable-next-line no-console
       console.groupEnd();
     }
   }
@@ -169,12 +149,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                   } Please refresh the page if the problem persists.`}
               </p>
 
-              {this.state.errorId && (
-                <p className="text-xs text-gray-500 mb-4">
-                  Error ID: {this.state.errorId}
-                  {this.state.eventId && ` | Sentry ID: ${this.state.eventId}`}
-                </p>
-              )}
+              {this.state.errorId && <p className="text-xs text-gray-500 mb-4">Error ID: {this.state.errorId}</p>}
 
               {/* Retry information */}
               {this.state.retryCount > 0 && (
@@ -182,22 +157,6 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
                   <p className="text-sm text-yellow-800">
                     Retry attempt {this.state.retryCount} of {this.maxRetries}
                   </p>
-                </div>
-              )}
-
-              {/* Report to Sentry button (production only) */}
-              {process.env.NODE_ENV === "production" && this.state.eventId && (
-                <div className="mb-4">
-                  <button
-                    onClick={() => {
-                      if (this.state.eventId) {
-                        Sentry.showReportDialog({ eventId: this.state.eventId });
-                      }
-                    }}
-                    className="text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    Report feedback to our team
-                  </button>
                 </div>
               )}
 
@@ -298,7 +257,7 @@ export function withEnhancedErrorBoundary<T extends object>(
     onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
     isolate?: boolean;
     retryable?: boolean;
-  }
+  },
 ) {
   const WrappedComponent = (props: T) => (
     <EnhancedErrorBoundary
