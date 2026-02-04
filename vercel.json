@@ -2,12 +2,23 @@
   "framework": "nextjs",
   "buildCommand": "npx prisma generate && npm run build",
   "installCommand": "npm install --legacy-peer-deps && npx prisma generate",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
   },
   "headers": [
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
     {
       "source": "/api/(.*)",
       "headers": [
@@ -22,7 +33,7 @@
       "headers": [
         {
           "key": "X-Frame-Options",
-          "value": "DENY"
+          "value": "SAMEORIGIN"
         },
         {
           "key": "X-Content-Type-Options",

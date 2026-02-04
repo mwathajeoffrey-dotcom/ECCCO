@@ -10,13 +10,30 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      // Static assets - ALLOW caching with deployment ID
       {
-        source: "/(.*)",
+        source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",
-            value: "no-store, must-revalidate",
+            value: "public, max-age=31536000, immutable",
           },
+        ],
+      },
+      // API routes - NO caching
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+      // Pages and other routes - Security headers only, let Next.js handle caching
+      {
+        source: "/:path*",
+        headers: [
           // Security Headers
           {
             key: "X-DNS-Prefetch-Control",
