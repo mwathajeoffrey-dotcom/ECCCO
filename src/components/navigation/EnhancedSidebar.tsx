@@ -64,6 +64,12 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
   );
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Debug logging
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("🔍 EnhancedSidebar - isOpen prop:", isOpen);
+  }, [isOpen]);
+
   // Check admin status
   useEffect(() => {
     const checkRoles = async () => {

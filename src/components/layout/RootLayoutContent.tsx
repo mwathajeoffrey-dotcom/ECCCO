@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import ScrollSanitizer from "@/components/layout/ScrollSanitizer";
 import TouchUnlocker from "@/components/layout/TouchUnlocker";
 import ScrollDebugger from "@/components/layout/ScrollDebugger";
+import { NewMobileNav } from "@/components/layout/NewMobileNav";
 
 interface RootLayoutContentProps {
   children: React.ReactNode;
@@ -12,6 +13,12 @@ interface RootLayoutContentProps {
 
 export function RootLayoutContent({ children }: RootLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Debug logging
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("🔍 RootLayoutContent - Sidebar state:", sidebarOpen);
+  }, [sidebarOpen]);
 
   return (
     <>
@@ -24,6 +31,8 @@ export function RootLayoutContent({ children }: RootLayoutContentProps) {
           {children}
         </AppLayout>
       </div>
+      {/* Bottom Tab Navigation - Mobile Only */}
+      <NewMobileNav />
     </>
   );
 }

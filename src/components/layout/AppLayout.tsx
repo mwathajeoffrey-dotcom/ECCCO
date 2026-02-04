@@ -14,6 +14,12 @@ interface AppLayoutProps {
 export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: AppLayoutProps) {
   const pathname = usePathname();
 
+  // Debug logging
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log("🔍 AppLayout - Sidebar state:", sidebarOpen);
+  }, [sidebarOpen]);
+
   // Close sidebar when route changes (important for mobile navigation)
   useEffect(() => {
     setSidebarOpen(false);
@@ -30,8 +36,16 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
       // Only close on mobile
       if (!isMobile) return;
       
-      // Don't close if clicking the sidebar itself or menu button
-      if (target.closest('aside') || target.closest('button[aria-label="Toggle menu"]')) {
+      // Don't close if clicking:
+      // - The sidebar itself
+      // - Menu button  
+      // - Bottom navigation tabs
+      if (
+        target.closest('aside') || 
+        target.closest('button[aria-label="Toggle menu"]') ||
+        target.closest('nav.mobile-nav-tabs') ||
+        target.closest('[data-mobile-nav]')
+      ) {
         return;
       }
       
@@ -74,7 +88,10 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setSidebarOpen(!sidebarOpen);
+            const newState = !sidebarOpen;
+            // eslint-disable-next-line no-console
+            console.log("🔘 Menu button clicked! Current:", sidebarOpen, "→ New:", newState);
+            setSidebarOpen(newState);
           }}
           className="md:hidden fixed top-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 active:scale-105"
           aria-label="Toggle menu"
