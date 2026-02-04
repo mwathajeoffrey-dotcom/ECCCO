@@ -404,7 +404,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
                           key={item.href}
                           href={item.href}
                           onClick={() => {
-                            if (isOpen) onClose?.();
+                            onClose?.();
                           }}
                           className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group ${
                             isActive(item.href)
