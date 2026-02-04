@@ -51,7 +51,7 @@ export default function AppLayout({ children, sidebarOpen, setSidebarOpen }: App
         <main className="flex-1 pb-20 md:pb-0 md:pl-0">{children}</main>
 
         {/* Mobile Bottom Navigation - Only visible on mobile */}
-        <MobileBottomNav onMenuClick={() => setSidebarOpen(true)} />
+        <MobileBottomNav />
       </div>
     </div>
   );
