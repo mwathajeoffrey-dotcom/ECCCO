@@ -63,12 +63,6 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
   );
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Debug logging for isOpen changes
-  useEffect(() => {
-    console.warn('🎯 EnhancedSidebar isOpen:', isOpen);
-    console.warn('🎯 Window width:', typeof window !== 'undefined' ? window.innerWidth : 'SSR');
-  }, [isOpen]);
-
   // Check admin status
   useEffect(() => {
     const checkRoles = async () => {
@@ -337,7 +331,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Overlay for mobile */}
+      {/* Overlay - ONLY visible on mobile when sidebar is open */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-200"
@@ -348,15 +342,16 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
         />
       )}
 
-      {/* Sidebar - Collapsible on ALL screen sizes (desktop + mobile) */}
+      {/* Sidebar - Always visible on desktop (>=768px), drawer on mobile (<768px) */}
       <aside
         className={`
-          fixed left-0 top-0 bottom-0 w-80 
-          bg-white dark:bg-gray-900 
-          border-r border-gray-200 dark:border-gray-700 
-          z-40 overflow-y-auto overflow-x-hidden shadow-xl 
+          fixed md:static left-0 top-0 bottom-0 w-80
+          bg-white dark:bg-gray-900
+          border-r border-gray-200 dark:border-gray-700
+          z-40 overflow-y-auto overflow-x-hidden shadow-xl
           transform transition-transform duration-300 ease-in-out
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:translate-x-0
+          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
         {/* Header */}
@@ -371,11 +366,12 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
                 <p className="text-xs text-gray-500 dark:text-gray-400">Emergency Care</p>
               </div>
             </div>
+            {/* X Button - ONLY visible on mobile */}
             <button
               onClick={() => {
                 onClose?.();
               }}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
@@ -406,34 +402,32 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               {expandedSections.has(section.title) && (
                 <div className="ml-3 border-l border-gray-200 dark:border-gray-700 pl-3 space-y-1 transition-all duration-200">
                   {section.items.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => {
-                            onClose?.();
-                          }}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group ${
-                            isActive(item.href)
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                              : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-200"
-                          }`}
-                        >
-                          <item.icon className="w-4 h-4 flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate">{item.label}</div>
-                            {item.description && (
-                              <div className="text-xs opacity-70 truncate">{item.description}</div>
-                            )}
-                          </div>
-                          {item.badge && (
-                            <span className="px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded-full font-semibold flex-shrink-0">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => {
+                        onClose?.();
+                      }}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group ${
+                        isActive(item.href)
+                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-200"
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">{item.label}</div>
+                        {item.description && <div className="text-xs opacity-70 truncate">{item.description}</div>}
+                      </div>
+                      {item.badge && (
+                        <span className="px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded-full font-semibold flex-shrink-0">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 

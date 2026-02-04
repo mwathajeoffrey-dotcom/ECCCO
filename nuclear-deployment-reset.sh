@@ -34,23 +34,23 @@ echo ""
 
 for i in {1..5}; do
     echo "🗑️  Deletion pass #$i..."
-    
+
     # Fetch ALL deployments
     DEPLOYMENTS=$(curl -s -X GET \
       "https://api.vercel.com/v6/deployments?projectId=eccco&limit=100&target=production" \
       -H "Authorization: Bearer $AUTH_TOKEN")
-    
+
     DEPLOYMENT_IDS=$(echo "$DEPLOYMENTS" | grep -o '"uid":"dpl_[^"]*' | cut -d'"' -f4)
-    
+
     COUNT=$(echo "$DEPLOYMENT_IDS" | grep -c "dpl_" || echo "0")
-    
+
     if [ "$COUNT" -eq 0 ]; then
         echo "✅ No more deployments found"
         break
     fi
-    
+
     echo "   Found $COUNT deployments, deleting all..."
-    
+
     echo "$DEPLOYMENT_IDS" | while read -r DEPLOYMENT_ID; do
         if [ -n "$DEPLOYMENT_ID" ]; then
             curl -s -X DELETE \
@@ -59,7 +59,7 @@ for i in {1..5}; do
             echo "   ✅ Deleted: $DEPLOYMENT_ID"
         fi
     done
-    
+
     echo "   ⏸️  Waiting 2 seconds..."
     sleep 2
 done

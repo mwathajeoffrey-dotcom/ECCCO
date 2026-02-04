@@ -3,16 +3,26 @@
 import { Menu, BookOpen, FileText, Gamepad2, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { MobileMenuDrawer } from "./MobileMenuDrawer";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
-interface MobileBottomNavProps {
-  onMenuClick?: () => void;
-}
-
-export function MobileBottomNav({ onMenuClick }: MobileBottomNavProps) {
+export function MobileBottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  // ✅ CRITICAL: Menu MUST start closed
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // ✅ FIX: Stable callback using useCallback to prevent infinite re-renders
+  const handleCloseMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
+  // ✅ Toggle function for Menu button - opens AND closes
+  const handleToggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -53,6 +63,14 @@ export function MobileBottomNav({ onMenuClick }: MobileBottomNavProps) {
 
   return (
     <>
+      {/* Mobile Menu Drawer - ONLY FOR MOBILE - Hidden on desktop to avoid conflicts */}
+      {/* Only mount the mobile drawer when <768px to avoid duplicate instances */}
+      {!useMediaQuery("(min-width: 768px)") && (
+        <div>
+          <MobileMenuDrawer isOpen={isMenuOpen} onClose={handleCloseMenu} source="mobile" />
+        </div>
+      )}
+
       {/* Mobile Bottom Navigation - Only visible on mobile (<768px) */}
       <nav
         className={`md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-30 transition-transform duration-300 ${
@@ -62,14 +80,19 @@ export function MobileBottomNav({ onMenuClick }: MobileBottomNavProps) {
         aria-label="Mobile bottom navigation"
       >
         <div className="flex justify-around items-center safe-area-bottom">
-          {/* Menu Button - Opens the EnhancedSidebar */}
+          {/* Menu Button - First position - TOGGLE OPEN/CLOSE */}
           <button
-            onClick={() => {
-              console.log("🔘 Bottom nav Menu clicked!");
-              onMenuClick?.();
+            onClick={handleToggleMenu}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggleMenu();
+              }
             }}
+            aria-controls="mobile-menu-drawer"
+            aria-expanded={isMenuOpen}
             className="flex flex-col items-center justify-center flex-1 py-2 px-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-            aria-label="Open menu"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             <Menu className="w-6 h-6 mb-1" strokeWidth={2} />
             <span className="text-xs font-normal">Menu</span>

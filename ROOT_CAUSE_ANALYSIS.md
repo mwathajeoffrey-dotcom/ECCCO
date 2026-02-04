@@ -9,6 +9,7 @@ You're absolutely right - **this is NOT a code issue!** The navigation works per
 ## 🔬 DIFFERENCES BETWEEN LOCAL AND PRODUCTION
 
 ### Local Development (Works ✅):
+
 ```
 - Fresh build every time (no cache)
 - Single build ID per session
@@ -20,6 +21,7 @@ You're absolutely right - **this is NOT a code issue!** The navigation works per
 ```
 
 ### Vercel Production (Breaks ❌):
+
 ```
 - Aggressive CDN caching (Edge Network)
 - Static asset caching (31536000 seconds = 1 year!)
@@ -35,9 +37,11 @@ You're absolutely right - **this is NOT a code issue!** The navigation works per
 ## 🎯 IDENTIFIED ISSUES
 
 ### 1. **Cache-Control Headers Conflict**
+
 **Problem**: Your `next.config.ts` sets `Cache-Control: no-store, must-revalidate` for ALL routes, but Vercel's Edge Network still caches static assets aggressively.
 
 **Current Config**:
+
 ```typescript
 source: "/(.*)",  // Applies to EVERYTHING
 headers: [
@@ -51,19 +55,25 @@ headers: [
 **Issue**: This conflicts with Next.js static optimization and causes unpredictable caching behavior.
 
 ### 2. **Service Workers Not Being Cleared**
+
 **Problem**: The cache cleaner script (`clear-cache.js`) runs client-side AFTER the page loads, but by then:
+
 - Service workers already intercepted the request
 - Cached chunks already loaded
 - React already hydrated with old code
 
 ### 3. **Vercel Edge Network Caching**
+
 **Problem**: Vercel's CDN caches static assets at the edge, even with cache headers. The CDN has its own cache rules that override your headers for performance.
 
 ### 4. **Next.js Build Optimization**
+
 **Problem**: Next.js generates chunk files with content hashes, but if the same components are in multiple deployments, it reuses chunk names, causing cache hits with old code.
 
 ### 5. **Multiple Deployment Sources**
+
 **Problem**: Every git push triggers auto-deployment, but:
+
 - Old deployments remain active on Vercel
 - Some users hit old deployment URLs
 - Preview deployments conflict with production
@@ -80,6 +90,7 @@ Sentry is reporting errors because:
 4. **State Synchronization Errors**: Old state shape doesn't match new component props
 
 **Example Error Pattern**:
+
 ```javascript
 Error: Minified React error #418
 // Translation: "There was a mismatch between server and client rendering"
@@ -114,6 +125,7 @@ The cache cleaner script we added has a **fundamental timing problem**:
 We need to fix this at the **INFRASTRUCTURE level**, not code level:
 
 ### Option 1: Force Vercel to Purge CDN Cache (BEST)
+
 Vercel has a deployment protection feature that's causing this. We need to:
 
 1. **Delete all old deployments** from Vercel dashboard
@@ -122,6 +134,7 @@ Vercel has a deployment protection feature that's causing this. We need to:
 4. **Purge CDN cache** via Vercel API or dashboard
 
 ### Option 2: Use Vercel's Skew Protection (NEW FEATURE)
+
 Vercel recently added "Skew Protection" to prevent serving old cached code with new HTML:
 
 ```json
@@ -150,12 +163,15 @@ Vercel recently added "Skew Protection" to prevent serving old cached code with 
 ```
 
 ### Option 3: Use Different Deployment Strategy
+
 Instead of continuous deployment, use:
+
 1. **Production Branch Protection**: Only deploy from `production` branch
 2. **Manual Promotions**: Test in preview, then promote to production
 3. **Deployment Slots**: Like Azure, have staging/production slots
 
 ### Option 4: Add Deployment ID to Every Request (NUCLEAR)
+
 Force every asset request to include deployment ID in URL:
 
 ```typescript
@@ -163,10 +179,11 @@ Force every asset request to include deployment ID in URL:
 const DEPLOYMENT_ID = Date.now();
 
 export default {
-  assetPrefix: process.env.NODE_ENV === 'production' 
-    ? `https://your-app.vercel.app/_next?v=${DEPLOYMENT_ID}`
-    : undefined,
-}
+  assetPrefix:
+    process.env.NODE_ENV === "production"
+      ? `https://your-app.vercel.app/_next?v=${DEPLOYMENT_ID}`
+      : undefined,
+};
 ```
 
 ---
@@ -174,6 +191,7 @@ export default {
 ## 🔧 IMMEDIATE ACTION PLAN
 
 ### Step 1: Clean Up Vercel Dashboard (DO THIS NOW)
+
 1. Go to https://vercel.com/mwathajeoffrey-dotcom/eccco
 2. Click "Deployments" tab
 3. **Delete ALL old deployments** except the latest
@@ -181,6 +199,7 @@ export default {
 5. Ensure production domain points to latest deployment ONLY
 
 ### Step 2: Disable Problematic Cache Headers
+
 The `Cache-Control: no-store` on ALL routes is counterproductive. We need selective caching:
 
 ```typescript
@@ -210,9 +229,11 @@ async headers() {
 ```
 
 ### Step 3: Add Vercel Skew Protection
+
 Update `vercel.json` to use Vercel's built-in protection against code/data mismatches.
 
 ### Step 4: Test Deployment Process
+
 1. Make a small change (like adding a comment)
 2. Deploy
 3. Immediately test in Incognito
@@ -226,24 +247,30 @@ Update `vercel.json` to use Vercel's built-in protection against code/data misma
 Look for these specific errors:
 
 ### Hydration Errors:
+
 ```
 Error: Minified React error #418
 Error: Hydration failed
 ```
+
 **Meaning**: Server HTML doesn't match client JavaScript (cached old JS)
 
 ### Chunk Loading Errors:
+
 ```
 ChunkLoadError: Loading chunk XXX failed
 Failed to fetch dynamically imported module
 ```
+
 **Meaning**: Browser trying to load chunks that don't exist (old URLs)
 
 ### Component Errors:
+
 ```
 Cannot read property 'onClose' of undefined
 MobileMenuDrawer is not defined
 ```
+
 **Meaning**: Old components referenced in cached code
 
 ---
@@ -265,6 +292,7 @@ I'll create a **Vercel-specific deployment configuration** that:
 ## 🚨 WHY YOUR OBSERVATION IS CRITICAL
 
 You noticed the pattern:
+
 - ✅ Works on localhost (fresh build every time)
 - ❌ Breaks on Vercel (cached assets from old deployments)
 

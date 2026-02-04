@@ -12,11 +12,13 @@ className={`... ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x
 ```
 
 **On Mobile (< 768px):**
+
 - ✅ Works correctly - sidebar animates based on `isOpen`
 - Hamburger button visible
 - Sidebar slides in/out
 
 **On Desktop (≥ 768px):**
+
 - ❌ `md:translate-x-0` ALWAYS applies
 - Overrides the conditional translation
 - Sidebar appears "stuck" open
@@ -27,11 +29,13 @@ className={`... ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x
 **Are you testing on mobile or desktop viewport?**
 
 If testing on **desktop**:
+
 - The sidebar SHOULD be permanently visible
 - There's no hamburger button on desktop (`md:hidden`)
 - This is the **intended design**
 
 If testing on **mobile**:
+
 - The animation should work
 - If it doesn't, we have a different issue
 
@@ -58,6 +62,7 @@ Added `md:transform-none` to ensure no transform on desktop.
 ## 🚀 Next Deployment:
 
 Commit and deploy this fix, then test on:
+
 - ✅ Mobile viewport (< 768px) - Should animate
 - ✅ Desktop viewport (≥ 768px) - Should be permanently visible
 

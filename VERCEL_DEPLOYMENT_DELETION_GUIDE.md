@@ -7,10 +7,13 @@ Vercel does **NOT** allow deployment deletion through the CLI. You **MUST** use 
 ## 📍 Step-by-Step Manual Deletion Process
 
 ### 1. Open Vercel Dashboard
+
 Go to: **https://vercel.com/mwathajeoffrey-dotcom/eccco/deployments**
 
 ### 2. Identify Old Deployments
+
 You'll see a list like:
+
 ```
 ✓ Production    eccco-abc123.vercel.app    main    2 minutes ago
 ✓ Production    eccco-xyz456.vercel.app    main    15 minutes ago  ← DELETE THIS
@@ -19,6 +22,7 @@ You'll see a list like:
 ```
 
 ### 3. Delete Each Old Deployment
+
 For **EACH** deployment (except the newest):
 
 1. **Click** on the deployment row (the whole row is clickable)
@@ -29,11 +33,14 @@ For **EACH** deployment (except the newest):
 6. **REPEAT** for each old deployment
 
 ### 4. How to Tell Which to Keep
+
 - **KEEP**: The deployment with the **MOST RECENT** timestamp
 - **DELETE**: Everything else marked "Production"
 
 ### 5. Verification
+
 After deletion, the deployments page should show:
+
 - **Only 1 production deployment** remaining
 - That deployment should be the one from your latest `git push`
 
@@ -54,6 +61,7 @@ If manual deletion is too tedious:
 ## 🎯 Why This Matters
 
 Multiple active production deployments = Vercel randomly routes users between old and new code.
+
 - User hits OLD deployment → sees deleted `MobileMenuDrawer` → **BROKEN NAVIGATION**
 - User hits NEW deployment → sees `EnhancedSidebar` → **WORKING NAVIGATION**
 

@@ -15,29 +15,29 @@ RUN_COUNT=0
 
 while [ $RUN_COUNT -lt $MAX_RUNS ]; do
     RUN_COUNT=$((RUN_COUNT + 1))
-    
+
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "🔄 CLEANUP RUN #$RUN_COUNT of $MAX_RUNS"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    
+
     # Check how many Ready deployments exist
     READY_COUNT=$(vercel ls eccco --prod 2>&1 | grep "● Ready" | wc -l | tr -d ' ')
-    
+
     echo "📊 Currently: $READY_COUNT 'Ready' deployments found"
-    
+
     if [ "$READY_COUNT" -le 1 ]; then
         echo "✅ SUCCESS! Only 1 or 0 'Ready' deployments remaining."
         echo "✅ Cleanup complete!"
         break
     fi
-    
+
     echo "🗑️  Running deletion script..."
     echo ""
-    
+
     # Run the force-delete script
     ./force-delete-deployments.sh
-    
+
     echo ""
     echo "⏸️  Waiting 3 seconds before next run..."
     sleep 3

@@ -58,21 +58,21 @@ COUNTER=0
 echo "$ALL_DEPLOYMENTS" | while read -r LINE; do
     DEPLOYMENT_ID=$(echo "$LINE" | awk '{print $1}')
     DEPLOYMENT_STATE=$(echo "$LINE" | awk '{print $2}')
-    
+
     COUNTER=$((COUNTER + 1))
-    
+
     # Skip the first (newest) deployment
     if [ "$DEPLOYMENT_ID" = "$NEWEST_ID" ]; then
         echo "✅ Keeping: $DEPLOYMENT_ID (state: $DEPLOYMENT_STATE) - NEWEST"
         continue
     fi
-    
+
     echo "🗑️  Deleting: $DEPLOYMENT_ID ..."
-    
+
     DELETE_RESPONSE=$(curl -s -X DELETE \
       "https://api.vercel.com/v13/deployments/$DEPLOYMENT_ID" \
       -H "Authorization: Bearer $AUTH_TOKEN")
-    
+
     if echo "$DELETE_RESPONSE" | grep -q '"state":"DELETED"'; then
         echo "   ✅ Successfully deleted!"
     elif echo "$DELETE_RESPONSE" | grep -q '"error"'; then
@@ -81,7 +81,7 @@ echo "$ALL_DEPLOYMENTS" | while read -r LINE; do
     else
         echo "   ⚠️  Unknown response (may have succeeded)"
     fi
-    
+
     # Rate limiting - pause between deletions
     sleep 1
 done

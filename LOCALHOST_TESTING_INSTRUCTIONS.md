@@ -30,6 +30,7 @@ http://localhost:3000
 ### 3. Test on Mobile Viewport
 
 **In Chrome DevTools:**
+
 1. Click the device toggle button (or press `Cmd+Shift+M`)
 2. Select "iPhone 12 Pro" or any mobile device
 3. Refresh the page
@@ -37,13 +38,15 @@ http://localhost:3000
 ### 4. Test These Actions
 
 #### ✅ Test 1: Open Drawer
+
 - **Action:** Click the blue hamburger button (top-left)
-- **Expected:** 
+- **Expected:**
   - Drawer slides in from left
   - Dark overlay appears
   - Console shows: `🔘 Hamburger button clicked!`
 
 #### ✅ Test 2: Close with Button
+
 - **Action:** Click the blue hamburger button again
 - **Expected:**
   - Drawer slides out to left
@@ -51,18 +54,21 @@ http://localhost:3000
   - Console shows: `🔘 Hamburger button clicked!`
 
 #### ✅ Test 3: Close with X
+
 - **Action:** With drawer open, click the X button (top-right of drawer)
 - **Expected:**
   - Drawer slides out
   - Console shows: `🔘 X button clicked - closing drawer`
 
 #### ✅ Test 4: Close with Overlay
+
 - **Action:** With drawer open, click the dark area behind drawer
 - **Expected:**
   - Drawer slides out
   - Console shows: `🔘 Overlay clicked - closing drawer`
 
 #### ✅ Test 5: Navigate and Close
+
 - **Action:** With drawer open, click "Evidence Search" link
 - **Expected:**
   - Page navigates to /evidence-search
@@ -88,19 +94,25 @@ When you test, you should see logs like:
 ## 🐛 IF IT DOESN'T WORK
 
 ### Issue: Drawer doesn't slide
+
 **Check:**
+
 - Is the animation smooth or instant?
 - Do you see the drawer at all?
 - Check console for any errors (red text)
 
 ### Issue: Button doesn't respond
+
 **Check:**
+
 - Do you see the console log when clicking?
 - Is there a JavaScript error blocking it?
 - Try hard refresh: `Cmd+Shift+R`
 
 ### Issue: Drawer stuck open/closed
+
 **Check:**
+
 - Look at console logs - what's the state value?
 - Try clicking multiple times
 - Check if there are duplicate drawers rendering
@@ -112,6 +124,7 @@ When you test, you should see logs like:
 Switch to desktop viewport (>768px):
 
 **Expected:**
+
 - ✅ Sidebar ALWAYS visible on left
 - ✅ NO hamburger button
 - ✅ NO overlay
