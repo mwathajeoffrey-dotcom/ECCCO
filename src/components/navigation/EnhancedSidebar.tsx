@@ -369,7 +369,7 @@ export default function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               onClick={() => {
                 onClose?.();
               }}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
