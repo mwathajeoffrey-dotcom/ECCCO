@@ -96,6 +96,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* 🔥 CRITICAL: Load cache cleaner FIRST to force fresh assets */}
+        <Script src="/clear-cache.js" strategy="beforeInteractive" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3B82F6" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
