@@ -13,10 +13,17 @@ export function NewAppLayout({ children }: NewAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleToggleSidebar = () => {
+    // Debug logging
+    if (typeof window !== "undefined") {
+      console.warn("🍔 Hamburger clicked! Current state:", sidebarOpen, "→ New state:", !sidebarOpen);
+    }
     setSidebarOpen((prev) => !prev);
   };
 
   const handleCloseSidebar = () => {
+    if (typeof window !== "undefined") {
+      console.warn("❌ Closing sidebar");
+    }
     setSidebarOpen(false);
   };
 
@@ -25,10 +32,10 @@ export function NewAppLayout({ children }: NewAppLayoutProps) {
       {/* Sidebar - Hidden by default, opens on hamburger click */}
       <NewSidebar isOpen={sidebarOpen} onClose={handleCloseSidebar} />
 
-      {/* Floating Hamburger Button - Always visible */}
+      {/* Floating Hamburger Button - Always visible, highest z-index */}
       <button
         onClick={handleToggleSidebar}
-        className="fixed top-4 left-4 z-30 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        className="fixed top-4 left-4 z-[60] p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         aria-label="Toggle menu"
       >
         <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" strokeWidth={2} />
