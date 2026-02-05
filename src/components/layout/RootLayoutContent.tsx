@@ -1,11 +1,11 @@
 "use client";
 
-import { NewAppLayout } from "./NewAppLayout";
+import { AppLayout } from "./AppLayout";
 
 interface RootLayoutContentProps {
   children: React.ReactNode;
 }
 
 export function RootLayoutContent({ children }: RootLayoutContentProps) {
-  return <NewAppLayout>{children}</NewAppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }
