@@ -49,10 +49,18 @@
   }
 }
 
-/* Critical mobile scroll fixes */
+/* ========================================
+   CRITICAL MOBILE SCROLL FIX
+   Ultra simplified - Production deployment
+   ======================================== */
+
+/* Step 1: Let HTML and BODY scroll naturally */
 html {
-  /* Mobile-first: let content determine height */
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  /* CRITICAL: Remove all scroll restrictions */
+  overflow: visible !important;
+  position: static !important;
 }
 
 body {
@@ -62,27 +70,24 @@ body {
     "rlig" 1,
     "calt" 1;
 
-  /* Mobile scroll: body scrolls naturally */
-  min-height: 100vh;
+  /* CRITICAL: Natural document scroll */
+  height: auto !important;
+  min-height: 100%;
   width: 100%;
-  overflow-x: hidden;
+  overflow: visible !important;
+  position: static !important;
+
+  /* Enable smooth momentum scrolling on iOS */
   -webkit-overflow-scrolling: touch;
 }
 
-/* Main content area */
+/* Step 2: Main Next.js container */
 #__next {
-  min-height: 100vh;
+  min-height: 100%;
   width: 100%;
-}
-
-/* Desktop: reset body scroll behavior */
-@media (min-width: 768px) {
-  html,
-  body {
-    height: auto;
-    overflow: visible;
-    position: static;
-  }
+  position: relative;
+  /* Allow content to flow naturally */
+  overflow: visible !important;
 }
 
 @layer utilities {
@@ -96,15 +101,11 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Mobile scroll fix for all pages */
+  /* Mobile scroll container - MINIMAL interference */
   .mobile-scroll-container {
-    -webkit-overflow-scrolling: touch;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior-y: contain;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1; /* Keep content below fixed elements */
+    min-height: 100%;
+    width: 100%;
+    /* Do NOT set overflow, position, or z-index - let it flow naturally */
   }
 
   /* Allow touch scrolling on specific containers */
@@ -185,18 +186,20 @@ body {
       content-visibility: auto;
     }
 
-    /* Critical: Allow vertical pan on mobile */
+    /* REMOVED: touch-action restriction was blocking scroll */
+    /* Allow ALL touch gestures for natural mobile scrolling */
     body,
-    html,
-    .mobile-scroll-container {
-      touch-action: pan-y !important;
+    html {
+      touch-action: auto !important;
     }
 
-    /* Fixed elements should not interfere with scrolling */
+    /* Fixed elements: GPU acceleration for performance */
     [class*="fixed"],
     [class*="sticky"] {
-      transform: translateZ(0); /* GPU acceleration */
+      transform: translateZ(0);
       backface-visibility: hidden;
+      /* Ensure fixed elements don't block scrolling */
+      pointer-events: auto;
     }
   }
 
