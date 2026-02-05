@@ -71,7 +71,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://www.gstatic.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com wss://ws.pusherapp.com https://*.vercel.app https://*.vercel-analytics.com https://www.google.com https://www.recaptcha.net",
+              "connect-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://clerk-telemetry.com wss://ws.pusherapp.com https://*.vercel.app https://*.vercel-analytics.com https://www.google.com https://www.recaptcha.net",
               "frame-src 'self' https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://www.google.com https://www.recaptcha.net https://recaptcha.google.com",
               "object-src 'none'",
               "base-uri 'self'",

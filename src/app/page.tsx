@@ -22,14 +22,10 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  // Sidebar removed for testing
-  // (no-op state removed)
   const { isSignedIn, user } = useUser();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Sidebar removed (see backups) */}
-
+    <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header - Scrolls with page */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sidebar Test Instructions</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        line-height: 1.6;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #3b82f6;
+        margin-bottom: 10px;
+      }
+      h2 {
+        color: #1e40af;
+        margin-top: 30px;
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 8px;
+      }
+      .status {
+        background: #10b981;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .checklist {
+        background: #fef3c7;
+        padding: 20px;
+        border-left: 4px solid #f59e0b;
+        margin: 20px 0;
+      }
+      .checklist h3 {
+        margin-top: 0;
+        color: #92400e;
+      }
+      ul {
+        margin: 10px 0;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code {
+        background: #1f2937;
+        color: #10b981;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Monaco", "Courier New", monospace;
+      }
+      .url {
+        background: #1f2937;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: center;
+        font-weight: 600;
+      }
+      .url a {
+        color: #60a5fa;
+        text-decoration: none;
+      }
+      .url a:hover {
+        text-decoration: underline;
+      }
+      .test-section {
+        background: #eff6ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .desktop-test {
+        border-left: 4px solid #3b82f6;
+      }
+      .mobile-test {
+        border-left: 4px solid #10b981;
+      }
+      .issue {
+        background: #fee2e2;
+        border-left: 4px solid #ef4444;
+        padding: 15px;
+        margin: 15px 0;
+      }
+      .fix {
+        background: #d1fae5;
+        border-left: 4px solid #10b981;
+        padding: 15px;
+        margin: 15px 0;
+      }
+      .screenshot {
+        background: #f3f4f6;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-family: monospace;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎨 New Sidebar Testing Guide</h1>
+      <div class="status">✅ BUILD SUCCESSFUL - READY TO TEST</div>
+
+      <div class="url">
+        Open:
+        <a href="http://localhost:3000" target="_blank"
+          >http://localhost:3000</a
+        >
+      </div>
+
+      <h2>🖥️ Desktop Mode Testing (Width ≥ 768px)</h2>
+      <div class="test-section desktop-test">
+        <h3>✅ What You Should See:</h3>
+        <ul>
+          <li>
+            ✅ <strong>Sidebar visible</strong> on the left side (256px width)
+          </li>
+          <li>✅ <strong>ECCCO logo</strong> at the top of sidebar</li>
+          <li>
+            ✅ <strong>9 navigation items</strong>: Dashboard, Practice, Exams,
+            Quiz Arena, Analytics, Study, Bookmarks, Settings, Profile
+          </li>
+          <li>
+            ✅ <strong>Main content</strong> has left margin (content pushed
+            right)
+          </li>
+          <li>✅ <strong>Header visible</strong> at top</li>
+          <li>❌ <strong>NO hamburger button</strong> visible</li>
+          <li>❌ <strong>NO bottom navigation</strong> visible</li>
+        </ul>
+
+        <h3>🧪 Test Actions:</h3>
+        <ol>
+          <li>Open browser at full width (> 768px)</li>
+          <li>Click on sidebar navigation items</li>
+          <li>Verify active link is highlighted in blue</li>
+          <li>Scroll the page - sidebar should remain fixed</li>
+          <li>Try dark mode if available</li>
+        </ol>
+      </div>
+
+      <h2>📱 Mobile Mode Testing (Width < 768px)</h2>
+      <div class="test-section mobile-test">
+        <h3>✅ What You Should See:</h3>
+        <ul>
+          <li>❌ <strong>Sidebar HIDDEN</strong> (not visible)</li>
+          <li>✅ <strong>Bottom navigation bar</strong> at bottom of screen</li>
+          <li>
+            ✅ <strong>5 items in bottom nav</strong>:
+            <ul>
+              <li>
+                1. ☰ Menu (left corner) - <strong>Hamburger button</strong>
+              </li>
+              <li>2. 📚 Practice</li>
+              <li>3. 📝 Exam</li>
+              <li>4. 🎯 Quiz</li>
+              <li>5. 👤 Profile</li>
+            </ul>
+          </li>
+          <li>✅ <strong>Content takes full width</strong></li>
+        </ul>
+
+        <h3>🧪 Test Actions:</h3>
+        <ol>
+          <li>
+            <strong>Resize browser</strong> to mobile width (< 768px) OR use
+            DevTools Device Toolbar
+          </li>
+          <li>
+            <strong>Click hamburger (☰ Menu)</strong> in bottom-left corner
+          </li>
+          <li>✅ Sidebar should <strong>slide in from left</strong></li>
+          <li>✅ Dark <strong>backdrop overlay</strong> should appear</li>
+          <li>✅ Content should be <strong>slightly dimmed</strong></li>
+          <li><strong>Click outside sidebar</strong> (on backdrop)</li>
+          <li>✅ Sidebar should <strong>slide out and close</strong></li>
+          <li><strong>Open sidebar again</strong></li>
+          <li><strong>Click X button</strong> in top-right of sidebar</li>
+          <li>✅ Sidebar should <strong>close</strong></li>
+          <li><strong>Open sidebar again</strong></li>
+          <li><strong>Click a navigation link</strong></li>
+          <li>✅ Sidebar should <strong>close and navigate</strong></li>
+        </ol>
+      </div>
+
+      <div class="checklist">
+        <h3>🔍 Browser DevTools Testing</h3>
+        <p><strong>Steps:</strong></p>
+        <ol>
+          <li>Press <code>F12</code> or <code>Cmd+Option+I</code> (Mac)</li>
+          <li>
+            Toggle Device Toolbar: <code>Cmd+Shift+M</code> (Mac) or
+            <code>Ctrl+Shift+M</code> (Windows)
+          </li>
+          <li>
+            Select <strong>iPhone 12 Pro</strong> or <strong>Pixel 5</strong>
+          </li>
+          <li>Test hamburger functionality</li>
+          <li>
+            Switch to <strong>Responsive</strong> and set width to
+            <code>375px</code>
+          </li>
+          <li>
+            Test at <code>767px</code> (mobile) and <code>768px</code> (desktop)
+            to verify breakpoint
+          </li>
+        </ol>
+      </div>
+
+      <h2>🐛 Known Issues to Check</h2>
+
+      <div class="issue">
+        <strong>Issue 1: Hamburger Not Opening Sidebar</strong>
+        <ul>
+          <li>
+            <strong>Check:</strong> Click the ☰ Menu button in bottom-left
+          </li>
+          <li><strong>Expected:</strong> Sidebar slides in from left</li>
+          <li>
+            <strong>If broken:</strong> Check browser console (F12) for errors
+          </li>
+        </ul>
+      </div>
+
+      <div class="issue">
+        <strong>Issue 2: Sidebar Not Visible on Desktop</strong>
+        <ul>
+          <li><strong>Check:</strong> Browser width must be ≥ 768px</li>
+          <li><strong>Expected:</strong> Sidebar always visible on left</li>
+          <li><strong>If broken:</strong> Check if content has left margin</li>
+        </ul>
+      </div>
+
+      <div class="issue">
+        <strong>Issue 3: Scroll Not Working</strong>
+        <ul>
+          <li><strong>Check:</strong> Try scrolling page up and down</li>
+          <li><strong>Expected:</strong> Smooth natural scrolling</li>
+          <li><strong>If broken:</strong> This was fixed in globals.css</li>
+        </ul>
+      </div>
+
+      <h2>✅ Success Criteria</h2>
+      <div class="fix">
+        <strong>Desktop (≥ 768px):</strong>
+        <ul>
+          <li>✅ Sidebar visible on left</li>
+          <li>✅ No hamburger button</li>
+          <li>✅ No bottom nav</li>
+          <li>✅ Content has left margin</li>
+          <li>✅ Navigation works</li>
+        </ul>
+      </div>
+
+      <div class="fix">
+        <strong>Mobile (< 768px):</strong>
+        <ul>
+          <li>✅ Sidebar hidden by default</li>
+          <li>✅ Hamburger in bottom-left corner</li>
+          <li>✅ Bottom nav visible with 5 items</li>
+          <li>✅ Click hamburger → Sidebar slides in</li>
+          <li>✅ Backdrop appears</li>
+          <li>✅ Click outside → Closes</li>
+          <li>✅ Click X → Closes</li>
+          <li>✅ Click nav link → Closes and navigates</li>
+        </ul>
+      </div>
+
+      <h2>🚨 If Something's Broken</h2>
+      <div class="screenshot">
+        <strong>1. Check Browser Console (F12):</strong>
+        - Look for JavaScript errors (red text) - Look for React errors - Look
+        for component errors
+
+        <strong>2. Verify Components Are Loaded:</strong>
+        - Right-click sidebar area → Inspect - Look for
+        <code>NewSidebar</code> component - Check if classes include
+        <code>translate-x-0</code> or <code>-translate-x-full</code>
+
+        <strong>3. Check State:</strong>
+        - Hamburger click should toggle <code>isOpen</code> state - Mobile:
+        <code>translate-x-0</code> = open, <code>-translate-x-full</code> =
+        closed - Desktop: Always <code>translate-x-0</code>
+
+        <strong>4. Verify CSS:</strong>
+        - Check if Tailwind classes are working - Look for
+        <code>md:translate-x-0</code> class on sidebar - Check
+        <code>z-50</code> for sidebar, <code>z-40</code> for backdrop
+      </div>
+
+      <h2>📸 Visual Reference</h2>
+      <div class="screenshot">
+        <strong>Desktop Layout:</strong>
+        ┌──────────────┬─────────────────────────────────┐ │ │ Header │ │
+        SIDEBAR ├─────────────────────────────────┤ │ (256px) │ │ │ │ Main
+        Content │ │ • Dashboard │ (Auto margin-left: 256px) │ │ • Practice │ │ │
+        • Exams │ │ │ • Quiz Arena │ │ │ • Analytics │ │ │ • Study │ │ │ •
+        Bookmarks │ │ │ • Settings │ │ │ • Profile │ │ │ │ │
+        └──────────────┴─────────────────────────────────┘
+
+        <strong>Mobile Layout (Sidebar Closed):</strong>
+        ┌─────────────────────────────────────┐ │ Header │
+        ├─────────────────────────────────────┤ │ │ │ Main Content │ │ (Full
+        width) │ │ │ │ │ │ │ ├──────┬────────┬────────┬────────┬───┤ │ ☰ │ 📚 │
+        📝 │ 🎯 │👤 │ │ Menu │Practice│ Exam │ Quiz │Pro│
+        └──────┴────────┴────────┴────────┴───┘
+
+        <strong>Mobile Layout (Sidebar Open):</strong>
+        ┌──────────────┬──────────────────────┐ │ │░░░░░░░░░░░░░░░░░░░░░░│ ←
+        Backdrop │ SIDEBAR │░░ Header ░░░░░│ │ (256px) │░░ ░░░░│ │
+        ├──────────────────░░░░│ │ ECCCO [X] │░░ ░░░░│ │──────────────│░░ Main
+        Content ░░░░│ │ • Dashboard │░░ (Dimmed) ░░░░│ │ • Practice │░░ ░░░░│ │
+        • Exams │░░ ░░░░│ │ • Quiz Arena │░░ ░░░░│ │ • Analytics │░░ ░░░░│ │ •
+        Study │░░ ░░░░│ │ • Bookmarks │░░ ░░░░│ │ • Settings │░░ ░░░░│ │ •
+        Profile │░░ ░░░░│ │ ├──────────────────░░░░│ │ © 2026
+        │░░☰│📚│📝│🎯│👤░░░░░│ └──────────────┴──────────────────────┘
+      </div>
+
+      <h2>🎯 Next Steps After Testing</h2>
+      <ol>
+        <li><strong>Test both desktop and mobile modes</strong></li>
+        <li><strong>Report any issues found</strong></li>
+        <li>
+          <strong>If all works: Approve for production deployment</strong>
+        </li>
+        <li><strong>If broken: I'll fix immediately</strong></li>
+      </ol>
+
+      <div class="url" style="background: #10b981; margin-top: 30px">
+        🚀 START TESTING:
+        <a href="http://localhost:3000" target="_blank" style="color: white"
+          >http://localhost:3000</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

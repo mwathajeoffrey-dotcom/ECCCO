@@ -39,46 +39,8 @@ export default function Header({ title = "ECCCO", subtitle, currentPage }: Heade
             </div>
           </Link>
 
-          {/* Navigation and Auth */}
+          {/* Auth Section Only - Navigation is now in the sidebar */}
           <div className="flex items-center space-x-4 sm:space-x-8">
-            {/* Navigation Links */}
-            <nav className="hidden md:flex space-x-6">
-              <Link
-                href="/modules"
-                className={`font-medium text-sm ${
-                  currentPage === "modules" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
-                }`}
-              >
-                Modules
-              </Link>
-              <Link
-                href="/practice"
-                className={`font-medium text-sm ${
-                  currentPage === "practice" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
-                }`}
-              >
-                Practice
-              </Link>
-              <Link
-                href="/exam"
-                className={`font-medium text-sm ${
-                  currentPage === "exam" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
-                }`}
-              >
-                Exams
-              </Link>
-              {isSignedIn && (
-                <Link
-                  href="/dashboard"
-                  className={`font-medium text-sm ${
-                    currentPage === "dashboard" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
-                  }`}
-                >
-                  Dashboard
-                </Link>
-              )}
-            </nav>
-
             {/* Authentication Section */}
             <div className="relative">
               {isLoading ? (

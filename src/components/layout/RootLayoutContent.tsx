@@ -1,9 +1,11 @@
 "use client";
 
+import { NewAppLayout } from "./NewAppLayout";
+
 interface RootLayoutContentProps {
   children: React.ReactNode;
 }
 
 export function RootLayoutContent({ children }: RootLayoutContentProps) {
-  return <div className="mobile-scroll-container md:contents">{children}</div>;
+  return <NewAppLayout>{children}</NewAppLayout>;
 }
