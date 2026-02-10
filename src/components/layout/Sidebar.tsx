@@ -23,11 +23,12 @@ import {
 
 interface SidebarProps {
   isOpen: boolean;
-  onClose: () => void;
+    onClose: () => void;
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const pathname = usePathname();
+
+    const pathname = usePathname();
   const { user } = useUser();
 
   const isAdmin =
@@ -41,19 +42,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/60 z-40" onClick={onClose} />}
+      {isOpen && <div className="fixed lg:hidden inset-0 bg-black/60 z-40" onClick={onClose} />}
 
-      {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-full w-64
-          bg-white dark:bg-gray-900
-          border-r border-gray-200 dark:border-gray-700
-          transform transition-transform duration-300 ease-in-out
-          z-50
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
-      >
+    <aside
+      className={`
+        fixed inset-y-0 left-0 z-50 w-64
+        bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
+        /* Hide on mobile, show on desktop */
+        transition-transform duration-300 ease-in-out
+        ${isOpen ? "" : "hidden lg:block"}
+      `}
+    >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <Link href="/" className="flex items-center gap-2" onClick={onClose}>
@@ -65,7 +64,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <p className="text-xs text-gray-500">Emergency Care</p>
             </div>
           </Link>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+          <button onClick={onClose} className="p-2 lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -212,10 +211,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             )}
           </div>
         </nav>
-      </aside>
+    </aside>
     </>
   );
 }
+
 
 interface NavLinkProps {
   href: string;
